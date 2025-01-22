@@ -44,7 +44,7 @@ BEGIN
 
     IF @Action = 'INSERT'
     BEGIN
-        INSERT INTO Tours (TourName, Destination, StartDate, EndDate, Price, Capacity, Description, ImageURL, StatusID, RegionID, TourTypeID)
+        INSERT INTO Tours (tour_name, Destination, start_date, end_date, Price, Capacity, Description, image_url, status_id, region_id, tour_type_id)
         VALUES (@TourName, @Destination, @StartDate, @EndDate, @Price, @Capacity, @Description, @ImageURL, @StatusID, @RegionID, @TourTypeID);
         
         PRINT 'Tour inserted successfully.';
@@ -59,18 +59,18 @@ BEGIN
         
         UPDATE Tours
         SET 
-            TourName = @TourName,
+            tour_name = @TourName,
             Destination = @Destination,
-            StartDate = @StartDate,
-            EndDate = @EndDate,
+            start_date = @StartDate,
+            end_date = @EndDate,
             Price = @Price,
             Capacity = @Capacity,
             Description = @Description,
-            ImageURL = @ImageURL,
-            StatusID = @StatusID,
-            RegionID = @RegionID,
-            TourTypeID = @TourTypeID
-        WHERE TourID = @TourID;
+            image_url = @ImageURL,
+            status_id = @StatusID,
+            region_id = @RegionID,
+            tour_type_id = @TourTypeID
+        WHERE Tour_ID = @TourID;
         
         PRINT 'Tour updated successfully.';
     END
@@ -82,7 +82,7 @@ BEGIN
             RETURN;
         END
         
-        DELETE FROM Tours WHERE TourID = @TourID;
+        DELETE FROM Tours WHERE tour_id = @TourID;
         
         PRINT 'Tour deleted successfully.';
     END
@@ -115,7 +115,7 @@ BEGIN
     END
 
     -- Thêm người dùng mới vào bảng Users
-    INSERT INTO Users (FullName, Email, PhoneNumber, Password, RoleID, StatusID)
+    INSERT INTO Users (full_name, Email, phone_number, Password, role_id, status_id)
     VALUES (@FullName, @Email, @PhoneNumber, @Password, @RoleID, @StatusID);
 
     SELECT 'Người dùng đã được thêm thành công!' AS SuccessMessage;
@@ -134,7 +134,7 @@ BEGIN
 
     BEGIN TRY
         -- Kiểm tra xem UserID có tồn tại không
-        IF NOT EXISTS (SELECT 1 FROM Users WHERE UserID = @UserID)
+        IF NOT EXISTS (SELECT 1 FROM Users WHERE user_id = @UserID)
         BEGIN
             PRINT 'Error: UserID does not exist.';
             RETURN;
@@ -142,40 +142,40 @@ BEGIN
 
         -- Truy xuất dữ liệu đặt chỗ
 		select
-			u.UserID
-			,u.FullName
-			,b.BookingDate
-			,b.TotalPrice
-			,b.TotalPersons
-			,t.TourName
-			,b.StatusID
-			,st.StatusName
-			,b.BookingID
-			,r.RegionName
-			,tt.TourTypeName
-			,b.StatusID
-			,st.StatusName
+			u.user_id
+			,u.full_name
+			,b.booking_date
+			,b.total_price
+			,b.total_persons
+			,t.tour_name
+			,b.status_id
+			,st.status_name
+			,b.booking_id
+			,r.region_name
+			,tt.tour_type_name
+			,b.status_id
+			,st.status_name
 		from Users u
-			join Bookings b on u.UserID = b.UserID
-			join BookingDetails bd on b.BookingID = bd.BookingID
-			join Tours t on t.TourID = b.TourID
-			join Statuses st on st.StatusID = b.StatusID
-			join Regions r on r.RegionID = t.RegionID
-			join TourTypes tt on tt.TourTypeID = t.TourTypeID
-		where u.UserID = @UserID
+			join Bookings b on u.user_id = b.user_id
+			join booking_details bd on b.booking_id = bd.booking_id
+			join Tours t on t.tour_id = b.tour_id
+			join Statuses st on st.status_id = b.status_id
+			join Regions r on r.region_id = t.region_id
+			join tour_types tt on tt.tour_type_id = t.tour_type_id
+		where u.user_id = @UserID
 		group by 
-			b.BookingID
-			,u.UserID
-			,u.FullName
-			,b.BookingDate
-			,b.TotalPrice
-			,b.TotalPersons
-			,t.TourName
-			,b.StatusID
-			,st.StatusName
-			,r.RegionName
-			,tt.TourTypeName
-		order by b.BookingID;
+			b.booking_id
+			,u.user_id
+			,u.full_name
+			,b.booking_date
+			,b.total_price
+			,b.total_persons
+			,t.tour_name
+			,b.status_id
+			,st.status_name
+			,r.region_name
+			,tt.tour_type_name
+		order by b.booking_id;
 
         -- Kiểm tra nếu không có kết quả trả về
         IF @@ROWCOUNT = 0
@@ -205,12 +205,12 @@ BEGIN
         r.*,
         tt.*
     FROM Tours t
-    JOIN Regions r ON r.RegionID = t.RegionID
-    JOIN TourTypes tt ON tt.TourTypeID = t.TourTypeID
+    JOIN Regions r ON r.region_id = t.region_id
+    JOIN tour_types tt ON tt.tour_type_id = t.tour_type_id
     WHERE
-        (@TourTypeID IS NULL OR tt.TourTypeID = @TourTypeID)  -- Nếu TourTypeID là NULL, bỏ qua điều kiện này
+        (@TourTypeID IS NULL OR tt.tour_type_id = @TourTypeID)  -- Nếu TourTypeID là NULL, bỏ qua điều kiện này
     AND
-        (@RegionID IS NULL OR r.RegionID = @RegionID);        -- Nếu RegionID là NULL, bỏ qua điều kiện này
+        (@RegionID IS NULL OR r.region_id = @RegionID);        -- Nếu RegionID là NULL, bỏ qua điều kiện này
 END;
 GO
 
@@ -224,16 +224,16 @@ CREATE PROCEDURE GetScheduleByTourID
 AS
 BEGIN
     SELECT 
-        s.DayNumber,
-        s.StartTime,
-        s.EndTime,
+        s.Day_Number,
+        s.Start_Time,
+        s.End_Time,
         s.Activity,
         s.Description,
-        s.TourID,
-        t.TourName
+        s.Tour_ID,
+        t.tour_name
     FROM Tours t
-    LEFT JOIN Schedule s ON t.TourID = s.TourID
-    WHERE t.TourID = @TourID;  -- Lọc theo TourID được truyền vào
+    LEFT JOIN schedules s ON t.tour_id = s.Tour_ID
+    WHERE t.tour_id = @TourID;  -- Lọc theo TourID được truyền vào
 END;
 GO
 
@@ -253,7 +253,7 @@ BEGIN
     WHERE 
         (@MinPrice IS NULL OR Price >= @MinPrice)  -- Nếu @MinPrice là NULL thì không áp dụng điều kiện này
         AND (@MaxPrice IS NULL OR Price <= @MaxPrice)  -- Nếu @MaxPrice là NULL thì không áp dụng điều kiện này
-        AND (@StartDate IS NULL OR StartDate >= @StartDate)  -- Nếu @StartDate là NULL thì không áp dụng điều kiện này
-        AND (@EndDate IS NULL OR EndDate <= @EndDate);  -- Nếu @EndDate là NULL thì không áp dụng điều kiện này
+        AND (@StartDate IS NULL OR start_date >= @StartDate)  -- Nếu @StartDate là NULL thì không áp dụng điều kiện này
+        AND (@EndDate IS NULL OR end_date <= @EndDate);  -- Nếu @EndDate là NULL thì không áp dụng điều kiện này
 END;
 GO

@@ -29,4 +29,9 @@ public class TourGuideAssignment {
 
     @Column(nullable = false)
     private java.sql.Date assignmentDate;
+    
+    @ManyToOne
+    @JoinColumn(name = "statusId", nullable = false)
+    private Status status;
+    
 }

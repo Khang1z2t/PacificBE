@@ -13,7 +13,7 @@ import lombok.Setter;
 @Setter
 @Data
 @Entity
-@Table(name = "Transportation")
+@Table(name = "Transportations")
 public class Transportation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,6 +29,7 @@ public class Transportation {
     @Column(nullable = false)
     private Double price;
 
+    @Lob
     private String description;
 
     @ManyToOne

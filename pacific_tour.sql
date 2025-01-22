@@ -9,217 +9,15 @@ GO
 USE pacific_tour;
 GO
 
--- Table: Roles
-CREATE TABLE Roles (
-    RoleID TINYINT PRIMARY KEY,
-    RoleName NVARCHAR(50) NOT NULL,
-    Description NVARCHAR(255)
-);
-
--- Table: Statuses
-CREATE TABLE Statuses (
-    StatusID INT IDENTITY(1,1) PRIMARY KEY,
-    StatusName NVARCHAR(255) NOT NULL,
-    Description NVARCHAR(MAX)
-);
-
--- Table: Region
-CREATE TABLE Regions (
-    RegionID INT IDENTITY(1,1) PRIMARY KEY,
-    RegionName NVARCHAR(255) NOT NULL,
-    Description NVARCHAR(MAX)
-);
-
--- Table: TourType
-CREATE TABLE TourTypes (
-    TourTypeID INT IDENTITY(1,1) PRIMARY KEY,
-    TourTypeName NVARCHAR(255) NOT NULL,
-    Description NVARCHAR(MAX)
-);
-
--- Table: Users
-CREATE TABLE Users (
-    UserID INT IDENTITY(1,1) PRIMARY KEY,
-    FullName NVARCHAR(255) NOT NULL,
-    Email NVARCHAR(255) UNIQUE NOT NULL,
-    PhoneNumber NVARCHAR(20),
-    Password NVARCHAR(255) NOT NULL,
-    RoleID TINYINT FOREIGN KEY REFERENCES Roles(RoleID),
-    StatusID INT FOREIGN KEY REFERENCES Statuses(StatusID)
-);
-
--- Table: Tours
-CREATE TABLE Tours (
-    TourID INT IDENTITY(1,1) PRIMARY KEY,
-    TourName NVARCHAR(255) NOT NULL,
-    Destination NVARCHAR(255),
-    StartDate DATE NOT NULL,
-    EndDate DATE NOT NULL,
-    Price DECIMAL(18, 2) NOT NULL,
-    Capacity INT NOT NULL,
-    Description NVARCHAR(MAX),
-    ImageURL NVARCHAR(255),
-    StatusID INT FOREIGN KEY REFERENCES Statuses(StatusID),
-    RegionID INT FOREIGN KEY REFERENCES Regions(RegionID),
-    TourTypeID INT FOREIGN KEY REFERENCES TourTypes(TourTypeID)
-);
-
--- Table: Bookings
-CREATE TABLE Bookings (
-    BookingID INT IDENTITY(1,1) PRIMARY KEY,
-    UserID INT FOREIGN KEY REFERENCES Users(UserID),
-    TourID INT FOREIGN KEY REFERENCES Tours(TourID),
-    BookingDate DATE,
-    TotalPrice DECIMAL(18, 2) NOT NULL,
-    StatusID INT FOREIGN KEY REFERENCES Statuses(StatusID),
-    TotalPersons INT NOT NULL
-);
-
--- Table: BookingDetails
-CREATE TABLE BookingDetails (
-    BookingDetailID INT IDENTITY(1,1) PRIMARY KEY,
-    BookingID INT FOREIGN KEY REFERENCES Bookings(BookingID),
-    PassengerName NVARCHAR(255) NOT NULL,
-    PassengerAge INT NOT NULL,
-    PassengerGender NVARCHAR(10),
-    SpecialRequest NVARCHAR(MAX),
-    AdultCount INT DEFAULT 0 NOT NULL,
-    ChildCount INT DEFAULT 0 NOT NULL
-);
-
--- Table: Schedule
-CREATE TABLE Schedule (
-    ScheduleID INT IDENTITY(1,1) PRIMARY KEY,
-    TourID INT FOREIGN KEY REFERENCES Tours(TourID),
-    DayNumber INT NOT NULL,
-    StartTime TIME NOT NULL,
-    EndTime TIME NOT NULL,
-    Activity NVARCHAR(255) NOT NULL,
-    Description NVARCHAR(MAX),
-    StatusID INT FOREIGN KEY REFERENCES Statuses(StatusID)
-);
-
--- Table: Rooms
-CREATE TABLE Rooms (
-    RoomID INT IDENTITY(1,1) PRIMARY KEY,
-    TourID INT FOREIGN KEY REFERENCES Tours(TourID),
-    RoomType NVARCHAR(50) NOT NULL,
-    Capacity INT NOT NULL,
-    Price DECIMAL(18, 2) NOT NULL,
-    Description NVARCHAR(MAX),
-    StatusID INT FOREIGN KEY REFERENCES Statuses(StatusID)
-);
-
--- Table: Transportation
-CREATE TABLE Transportation (
-    TransportID INT IDENTITY(1,1) PRIMARY KEY,
-    TourID INT FOREIGN KEY REFERENCES Tours(TourID),
-    TransportType NVARCHAR(50) NOT NULL,
-    Price DECIMAL(18, 2) NOT NULL,
-    Description NVARCHAR(MAX),
-    StatusID INT FOREIGN KEY REFERENCES Statuses(StatusID)
-);
-
--- Table: Services
-CREATE TABLE Services (
-    ServiceID INT IDENTITY(1,1) PRIMARY KEY,
-    ServiceName NVARCHAR(255) NOT NULL,
-    Price DECIMAL(18, 2) NOT NULL,
-    Description NVARCHAR(MAX),
-    StatusID INT FOREIGN KEY REFERENCES Statuses(StatusID)
-);
-
--- Table: BookingServices
-CREATE TABLE BookingServices (
-    BookingServiceID INT IDENTITY(1,1) PRIMARY KEY,
-    BookingID INT FOREIGN KEY REFERENCES Bookings(BookingID),
-    ServiceID INT FOREIGN KEY REFERENCES Services(ServiceID),
-    Quantity INT NOT NULL
-);
-
--- Table: Vouchers
-CREATE TABLE Vouchers (
-    VoucherID INT IDENTITY(1,1) PRIMARY KEY,
-    Code NVARCHAR(50) UNIQUE NOT NULL,
-    Discount DECIMAL(18, 2) NOT NULL,
-    DiscountType NVARCHAR(50) NOT NULL,
-    StartDate DATE NOT NULL,
-    EndDate DATE NOT NULL,
-    MinSpend DECIMAL(18, 2) DEFAULT 0,
-    MaxDiscount DECIMAL(18, 2),
-    StatusID INT FOREIGN KEY REFERENCES Statuses(StatusID),
-    Description NVARCHAR(MAX)
-);
-
--- Table: BookingVouchers
-CREATE TABLE BookingVouchers (
-    BookingVoucherID INT IDENTITY(1,1) PRIMARY KEY,
-    BookingID INT FOREIGN KEY REFERENCES Bookings(BookingID),
-    VoucherID INT FOREIGN KEY REFERENCES Vouchers(VoucherID),
-    AppliedDate DATE,
-    DiscountAmount DECIMAL(18, 2) NOT NULL
-);
-
--- Table: Payment
-CREATE TABLE Payment (
-    PaymentID INT IDENTITY(1,1) PRIMARY KEY,
-    BookingID INT FOREIGN KEY REFERENCES Bookings(BookingID),
-    PaymentDate DATE,
-    Amount DECIMAL(18, 2) NOT NULL,
-    PaymentMethod NVARCHAR(50) NOT NULL,
-    StatusID INT FOREIGN KEY REFERENCES Statuses(StatusID)
-);
-
--- Table: Feedback
-CREATE TABLE Feedback (
-    FeedbackID INT IDENTITY(1,1) PRIMARY KEY,
-    UserID INT FOREIGN KEY REFERENCES Users(UserID),
-    TourID INT FOREIGN KEY REFERENCES Tours(TourID),
-    Rating INT NOT NULL,
-    Comment NVARCHAR(MAX),
-    FeedbackDate DATE,
-    StatusID INT FOREIGN KEY REFERENCES Statuses(StatusID)
-);
-
--- Table: Notifications
-CREATE TABLE Notifications (
-    NotificationID INT IDENTITY(1,1) PRIMARY KEY,
-    UserID INT FOREIGN KEY REFERENCES Users(UserID),
-    Message NVARCHAR(MAX) NOT NULL,
-    NotificationDate DATE,
-    StatusID INT FOREIGN KEY REFERENCES Statuses(StatusID)
-);
-
--- Table: TourGuide
-CREATE TABLE TourGuide (
-    GuideID INT IDENTITY(1,1) PRIMARY KEY,
-    FullName NVARCHAR(255) NOT NULL,
-    PhoneNumber NVARCHAR(20),
-    Email NVARCHAR(255) UNIQUE NOT NULL,
-    ExperienceYears INT NOT NULL,
-    Description NVARCHAR(MAX),
-    StatusID INT FOREIGN KEY REFERENCES Statuses(StatusID)
-);
-
--- Table: TourGuideAssignment
-CREATE TABLE TourGuideAssignment (
-    AssignmentID INT IDENTITY(1,1) PRIMARY KEY,
-    TourID INT FOREIGN KEY REFERENCES Tours(TourID),
-    GuideID INT FOREIGN KEY REFERENCES TourGuide(GuideID),
-    AssignedDate DATE NOT NULL,
-    StatusID INT FOREIGN KEY REFERENCES Statuses(StatusID)
-);
-
-
 -- Thêm dữ liệu mặc định
 -- Thêm dữ liệu cho bảng Roles
-INSERT INTO Roles (RoleID, RoleName, Description) VALUES
-(1, 'Customer', 'Khách hàng'),
-(2, 'Admin', 'Quản trị viên'),
-(3, 'Employee', 'Nhân viên');
+INSERT INTO Roles (role_name, description) VALUES
+('Admin', 'Quản trị viên'),
+('Employee', 'Nhân viên'),
+('Customer', 'Khách hàng');
 
 -- Thêm dữ liệu cho bảng Statuses
-INSERT INTO Statuses (StatusName, Description) VALUES
+INSERT INTO Statuses (status_name, description) VALUES
 ('Active', 'Hoạt động'),
 ('Inactive', 'Ngưng hoạt động'),
 ('Maintenance', 'Bảo trì'),
@@ -231,38 +29,44 @@ INSERT INTO Statuses (StatusName, Description) VALUES
 ;
 
 -- Dữ liệu mẫu cho bảng Regions
-INSERT INTO Regions (RegionName) VALUES
-('North'),
-('South'),
-('Other');
+INSERT INTO Regions (region_name) VALUES
+('Bắc'),
+('Trung'),
+('Nam'),
+('Khác')
+;
 
 -- Dữ liệu mẫu cho bảng TourTypes
-INSERT INTO TourTypes (TourTypeName) VALUES
-('Domestic'),
-('International');
+INSERT INTO Tour_Types (tour_type_name) VALUES
+('Trong nước'),
+('Ngoài nước');
 
 -- Dữ liệu mẫu cho bảng Users
-INSERT INTO Users (FullName, Email, PhoneNumber, Password, RoleID, StatusID)
+INSERT INTO Users (full_name, email, phone_number, password, role_id, status_id)
 VALUES
-('Nguyen Van A', 'nguyenvana@example.com', '0901234567', 'password123', 3, 2),
-('Tran Thi B', 'tranthib@example.com', '0912345678', 'password456', 3, 2),
-('Admin User', 'admin@example.com', '0987654321', 'adminpass', 1, 2);
+('Nguyen Van A', 'nguyenvana@example.com', '0901234567', 'password123', 3, 1),
+('Tran Thi B', 'tranthib@example.com', '0912345678', 'password456', 3, 1),
+('Admin User', 'admin@example.com', '0987654321', 'adminpass', 1, 1),
+('Employee User', 'emp@example.com', '0987654321', 'emppass', 2, 1),
+('Employee2 User', 'emp2@example.com', '0987654321', 'emp2pass', 2, 2)
+;
 
 -- Dữ liệu mẫu cho bảng Tours (Cập nhật)
-INSERT INTO Tours (TourName, Destination, StartDate, EndDate, Price, Capacity, Description, ImageURL, StatusID, RegionID, TourTypeID)
+INSERT INTO Tours (tour_name, destination, start_date, end_date, price, capacity, description, image_url, status_id, region_id, tour_type_id)
 VALUES
-('Tour Ha Long Bay', 'Quang Ninh', '2025-02-01', '2025-02-05', 5000000, 30, 'Tham quan Vịnh Hạ Long', '/images/halong.jpg', 2, 1, 1),
-('Tour Da Nang', 'Da Nang', '2025-03-10', '2025-03-15', 7000000, 20, 'Tham quan Đà Nẵng và Hội An', '/images/danang.jpg', 2, 1, 1),
-('Tour Sapa', 'Lào Cai', '2025-04-01', '2025-04-05', 4000000, 25, 'Khám phá Sapa mù sương', '/images/sapa.jpg', 2, 1, 1),
-('Tour Nha Trang', 'Khánh Hòa', '2025-05-10', '2025-05-15', 6000000, 20, 'Tham quan biển Nha Trang', '/images/nhatrang.jpg', 2, 1, 1),
+('Tour Ha Long Bay', 'Quang Ninh', '2025-02-01', '2025-02-05', 5000000, 30, 'Tham quan Vịnh Hạ Long', '/images/halong.jpg', 1, 3, 1),
+('Tour Da Nang', 'Da Nang', '2025-03-10', '2025-03-15', 7000000, 20, 'Tham quan Đà Nẵng và Hội An', '/images/danang.jpg', 1, 1, 1),
+('Tour Sapa', 'Lào Cai', '2025-04-01', '2025-04-05', 4000000, 25, 'Khám phá Sapa mù sương', '/images/sapa.jpg', 2, 2, 1),
+('Tour Nha Trang', 'Khánh Hòa', '2025-05-10', '2025-05-15', 6000000, 20, 'Tham quan biển Nha Trang', '/images/nhatrang.jpg', 2, 3, 1),
 ('Tour Hà Nội - Hạ Long', 'Hà Nội, Hạ Long', '2025-02-01', '2025-02-05', 5000000, 30, 'Khám phá miền Bắc', 'hanoi.jpg', 1, 1, 1),
-('Tour Bangkok - Pattaya', 'Bangkok, Pattaya', '2025-03-01', '2025-03-05', 15000000, 20, 'Tour Thái Lan', 'thailand.jpg', 1, 2, 2),
-('Tour Mỹ', 'Washington', '2025-03-01', '2025-03-05', 15000000, 20, 'Tour Mỹ', 'thailand.jpg', 1, 3, 2),
-('Tour Trung Quốc', 'Bắc Kinh', '2025-03-01', '2025-03-05', 15000000, 20, 'Tour Trung Quốc', 'thailand.jpg', 1, 3, 2);
+('Tour Bangkok - Pattaya', 'Bangkok, Pattaya', '2025-03-01', '2025-03-05', 15000000, 20, 'Tour Thái Lan', 'thailand.jpg', 1, 4, 2),
+('Tour Mỹ', 'Washington', '2025-03-01', '2025-03-05', 15000000, 20, 'Tour Mỹ', 'my.jpg', 1, 4, 2),
+('Tour Trung Quốc', 'Bắc Kinh', '2025-03-01', '2025-03-05', 15000000, 20, 'Tour Trung Quốc', 'trungquoc.jpg', 1, 4, 2)
+;
 
 
 -- Dữ liệu mẫu cho bảng Bookings
-INSERT INTO Bookings (UserID, TourID, BookingDate, TotalPrice, TotalPersons, StatusID)
+INSERT INTO Bookings (User_ID, Tour_ID, Booking_Date, Total_Price, Total_Persons, Status_ID)
 VALUES
 (1, 1, GETDATE(), 10000000, 2, 1),
 (2, 2, GETDATE(), 7000000, 1, 1),
@@ -275,7 +79,7 @@ VALUES
 ;
 
 -- Dữ liệu mẫu cho bảng BookingDetails
-INSERT INTO BookingDetails (BookingID, PassengerName, PassengerAge, PassengerGender, AdultCount, ChildCount, SpecialRequest)
+INSERT INTO Booking_Details (Booking_ID, Passenger_Name, Passenger_Age, Passenger_Gender, Adult_Count, Child_Count, Special_Request)
 VALUES
 (1, 'Nguyen Van A', 30, 'Male', 1, 0, 'Yêu cầu ăn chay'),
 (1, 'Tran Thi B', 28, 'Female', 1, 0, NULL),
@@ -290,7 +94,7 @@ VALUES
 ;
 
 -- Dữ liệu mẫu cho bảng Schedule
-INSERT INTO Schedule (TourID, DayNumber, StartTime, EndTime, Activity, Description, StatusID)
+INSERT INTO Schedules (Tour_ID, Day_Number, Start_Time, End_Time, Activity, Description, Status_ID)
 VALUES
 (1, 1, '08:00', '12:00', 'Tham quan đảo Ti Tốp', 'Thưởng ngoạn cảnh đẹp và chụp ảnh', 2),
 (1, 2, '14:00', '18:00', 'Khám phá hang Sửng Sốt', 'Tham quan hang động lớn nhất vịnh', 2),
@@ -300,7 +104,7 @@ VALUES
 ;
 
 -- Dữ liệu mẫu cho bảng Rooms
-INSERT INTO Rooms (TourID, RoomType, Capacity, Price, Description, StatusID)
+INSERT INTO Rooms (Tour_ID, Room_Type, Capacity, Price, Description, Status_ID)
 VALUES
 (1, 'Phòng đôi', 2, 1500000, 'Phòng dành cho 2 người, view biển', 2),
 (2, 'Phòng gia đình', 4, 3000000, 'Phòng dành cho gia đình, rộng rãi', 2),
@@ -309,7 +113,7 @@ VALUES
 ;
 
 -- Dữ liệu mẫu cho bảng Transportation
-INSERT INTO Transportation (TourID, TransportType, Price, Description, StatusID)
+INSERT INTO Transportations (Tour_ID, Transport_Type, Price, Description, Status_ID)
 VALUES
 (1, 'Xe du lịch', 500000, 'Xe đưa đón từ Hà Nội đến Hạ Long', 2),
 (2, 'Tàu cao tốc', 1000000, 'Tàu cao tốc di chuyển trên sông', 2),
@@ -318,7 +122,7 @@ VALUES
 ;
 
 -- Dữ liệu mẫu cho bảng Services
-INSERT INTO Services (ServiceName, Price, Description, StatusID)
+INSERT INTO Services (Service_Name, Price, Description, Status_ID)
 VALUES
 ('Hướng dẫn viên', 300000, 'Hướng dẫn viên du lịch chuyên nghiệp', 2),
 ('Dịch vụ ảnh', 200000, 'Chụp ảnh và quay phim lưu niệm', 2),
@@ -327,7 +131,7 @@ VALUES
 ;
 
 -- Dữ liệu mẫu cho bảng Vouchers
-INSERT INTO Vouchers (Code, Discount, DiscountType, StartDate, EndDate, MinSpend, MaxDiscount, StatusID, Description)
+INSERT INTO Vouchers (Code, Discount, Discount_Type, Start_Date, End_Date, Min_Spend, Max_Discount, Status_ID, Description)
 VALUES
 ('SUMMER2025', 10, 'percent', '2025-01-01', '2025-06-30', 5000000, 1000000, 2, 'Khuyến mãi mùa hè'),
 ('NEWYEAR2025', 500000, 'amount', '2025-01-01', '2025-01-31', 0, NULL, 2, 'Ưu đãi năm mới'),
@@ -336,7 +140,7 @@ VALUES
 ;
 
 -- Dữ liệu mẫu cho bảng BookingVouchers
-INSERT INTO BookingVouchers (BookingID, VoucherID, AppliedDate, DiscountAmount)
+INSERT INTO Booking_Vouchers (Booking_ID, Voucher_ID, Applied_Date, Discount_Amount)
 VALUES
 (1, 1, GETDATE(), 500000),
 (2, 2, GETDATE(), 500000),
@@ -345,40 +149,44 @@ VALUES
 ;
 
 -- Dữ liệu mẫu cho bảng Payment
-INSERT INTO Payment (BookingID, PaymentDate, Amount, PaymentMethod, StatusID)
+INSERT INTO Payments (Booking_ID, Payment_Date, Amount, Payment_Method, Status_ID)
 VALUES
 (1, GETDATE(), 9500000, 'Chuyển khoản', 2),
 (2, GETDATE(), 6500000, 'Tiền mặt', 2),
 (3, GETDATE(), 6800000, 'Chuyển khoản', 2),
-(4, GETDATE(), 11000000, 'Thẻ tín dụng', 2);
+(4, GETDATE(), 11000000, 'Thẻ tín dụng', 2)
+;
 
 -- Dữ liệu mẫu cho bảng Feedback
-INSERT INTO Feedback (UserID, TourID, Rating, Comment, FeedbackDate, StatusID)
+INSERT INTO Feedback (User_ID, Tour_ID, Rating, Comment, Feedback_Date, Status_ID)
 VALUES
 (1, 1, 5, 'Chuyến đi tuyệt vời, mọi thứ đều hoàn hảo!', GETDATE(), 2),
 (2, 2, 4, 'Dịch vụ tốt nhưng thời gian hơi ngắn.', GETDATE(), 2),
 (1, 3, 5, 'Phong cảnh đẹp, dịch vụ tốt.', GETDATE(), 2),
-(2, 4, 4, 'Dịch vụ tốt nhưng giá hơi cao.', GETDATE(), 2);
+(2, 4, 4, 'Dịch vụ tốt nhưng giá hơi cao.', GETDATE(), 2)
+;
 
 -- Dữ liệu mẫu cho bảng Notifications
-INSERT INTO Notifications (UserID, Message, NotificationDate, StatusID)
+INSERT INTO Notifications (User_ID, Message, Notification_Date, Status_ID)
 VALUES
 (1, 'Đặt tour thành công! Cảm ơn bạn đã sử dụng dịch vụ.', GETDATE(), 2),
 (2, 'Tour Đà Nẵng của bạn đã được phê duyệt.', GETDATE(), 2),
 (1, 'Tour Sapa của bạn đã được xác nhận.', GETDATE(), 2),
-(2, 'Bạn có khuyến mãi 15% cho tour tiếp theo.', GETDATE(), 2);
+(2, 'Bạn có khuyến mãi 15% cho tour tiếp theo.', GETDATE(), 2)
+;
 
 -- Dữ liệu mẫu cho bảng TourGuide
-INSERT INTO TourGuide (FullName, PhoneNumber, Email, ExperienceYears, Description, StatusID)
+INSERT INTO Tour_Guides (Full_Name, Phone_Number, Email, Experience_Years, Description, Status_ID)
 VALUES
 ('Nguyen Van Tien', '0912345678', 'tiennv@example.com', 5, 'Hướng dẫn viên chuyên nghiệp, am hiểu miền Bắc', 2),
 ('Tran Thi Lan', '0923456789', 'lantr@example.com', 3, 'Hướng dẫn viên năng động, chuyên tour miền Trung', 2),
 ('Le Hoang Minh', '0934567890', 'minhlh@example.com', 7, 'Hướng dẫn viên giàu kinh nghiệm, chuyên tour quốc tế', 2),
 ('Pham Thi Mai', '0945678901', 'maipt@example.com', 4, 'Hướng dẫn viên tận tâm, chuyên tour miền Nam', 2),
-('Do Quang Huy', '0956789012', 'huydq@example.com', 6, 'Hướng dẫn viên chuyên nghiệp, thông thạo nhiều ngôn ngữ', 2);
+('Do Quang Huy', '0956789012', 'huydq@example.com', 6, 'Hướng dẫn viên chuyên nghiệp, thông thạo nhiều ngôn ngữ', 2)
+;
 
 -- Dữ liệu mẫu cho bảng TourGuideAssignment
-INSERT INTO TourGuideAssignment (TourID, GuideID, AssignedDate, StatusID)
+INSERT INTO Tour_Guide_Assignments (Tour_ID, tour_Guide_Id, Assignment_Date, Status_ID)
 VALUES
 (1, 1, '2025-01-20', 2), -- Nguyen Van Tien được phân công cho Tour Ha Long Bay
 (2, 2, '2025-01-25', 2), -- Tran Thi Lan được phân công cho Tour Da Nang
@@ -399,7 +207,7 @@ SELECT * FROM Statuses;
 SELECT * FROM Regions;
 
 -- Lấy tất cả dữ liệu từ bảng TourTypes
-SELECT * FROM TourTypes;
+SELECT * FROM Tour_Types;
 
 -- Lấy tất cả dữ liệu từ bảng Users
 SELECT * FROM Users;
@@ -411,31 +219,31 @@ SELECT * FROM Tours;
 SELECT * FROM Bookings;
 
 -- Lấy tất cả dữ liệu từ bảng BookingDetails
-SELECT * FROM BookingDetails;
+SELECT * FROM Booking_Details;
 
 -- Lấy tất cả dữ liệu từ bảng Schedule
-SELECT * FROM Schedule;
+SELECT * FROM Schedules;
 
 -- Lấy tất cả dữ liệu từ bảng Rooms
 SELECT * FROM Rooms;
 
 -- Lấy tất cả dữ liệu từ bảng Transportation
-SELECT * FROM Transportation;
+SELECT * FROM Transportations;
 
 -- Lấy tất cả dữ liệu từ bảng Services
 SELECT * FROM Services;
 
 -- Lấy tất cả dữ liệu từ bảng BookingServices
-SELECT * FROM BookingServices;
+SELECT * FROM Booking_Services;
 
 -- Lấy tất cả dữ liệu từ bảng Vouchers
 SELECT * FROM Vouchers;
 
 -- Lấy tất cả dữ liệu từ bảng BookingVouchers
-SELECT * FROM BookingVouchers;
+SELECT * FROM Booking_Vouchers;
 
 -- Lấy tất cả dữ liệu từ bảng Payment
-SELECT * FROM Payment;
+SELECT * FROM Payments;
 
 -- Lấy tất cả dữ liệu từ bảng Feedback
 SELECT * FROM Feedback;
@@ -444,10 +252,13 @@ SELECT * FROM Feedback;
 SELECT * FROM Notifications;
 
 -- Lấy tất cả dữ liệu từ bảng Notifications
-SELECT * FROM TourGuide;
+SELECT * FROM Tour_Guides;
 
 -- Lấy tất cả dữ liệu từ bảng Notifications
-SELECT * FROM TourGuideAssignment;
+SELECT * FROM Tour_Guide_Assignments;
+
+--reset các cột identity
+DBCC CHECKIDENT ('...', RESEED, 0);
 
 --thử câu lệch
 select

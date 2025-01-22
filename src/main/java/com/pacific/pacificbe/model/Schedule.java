@@ -13,7 +13,7 @@ import lombok.Setter;
 @Setter
 @Data
 @Entity
-@Table(name = "Schedule")
+@Table(name = "Schedules")
 public class Schedule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

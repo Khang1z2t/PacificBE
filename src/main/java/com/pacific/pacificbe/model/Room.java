@@ -32,6 +32,7 @@ public class Room {
     @Column(nullable = false)
     private Double price;
 
+    @Lob
     private String description;
 
     @ManyToOne

@@ -13,7 +13,7 @@ import lombok.Setter;
 @Setter
 @Data
 @Entity
-@Table(name = "Payment")
+@Table(name = "Payments")
 public class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

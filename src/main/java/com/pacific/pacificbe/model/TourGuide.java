@@ -27,6 +27,14 @@ public class TourGuide {
 
     @Column(nullable = false, length = 20)
     private String phoneNumber;
-
-    private String specialization;
+    
+    @Column(nullable = false, length = 20)
+    private String experienceYears;
+    
+    @Lob
+    private String Description;
+    
+    @ManyToOne
+    @JoinColumn(name = "statusId", nullable = false)
+    private Status status;
 }

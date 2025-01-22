@@ -25,6 +25,7 @@ public class Service {
     @Column(nullable = false)
     private Double price;
 
+    @Lob
     private String description;
 
     @ManyToOne

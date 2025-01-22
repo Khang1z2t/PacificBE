@@ -43,5 +43,6 @@ public class Voucher {
     @JoinColumn(name = "statusId", nullable = false)
     private Status status;
 
+    @Lob
     private String description;
 }

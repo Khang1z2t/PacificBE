@@ -37,5 +37,6 @@ public class BookingDetail {
 
     private Integer childCount;
 
+    @Lob
     private String specialRequest;
 }

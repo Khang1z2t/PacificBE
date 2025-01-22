@@ -25,6 +25,7 @@ public class Tour {
     @Column(nullable = false, length = 255)
     private String destination;
 
+    @Lob
     private String description;
 
     @Column(nullable = false)

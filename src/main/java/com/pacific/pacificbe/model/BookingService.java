@@ -30,5 +30,6 @@ public class BookingService {
     @Column(nullable = false)
     private Double servicePrice;
 
+    @Lob
     private String specialRequest;
 }
