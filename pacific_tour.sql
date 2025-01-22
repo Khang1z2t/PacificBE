@@ -9,47 +9,48 @@ GO
 USE pacific_tour;
 GO
 
--- Bảng Roles
+-- Table: Roles
 CREATE TABLE Roles (
     RoleID TINYINT PRIMARY KEY,
     RoleName NVARCHAR(50) NOT NULL,
-    Description NVARCHAR(255) NULL
+    Description NVARCHAR(255)
 );
 
--- Bảng Statuses
+-- Table: Statuses
 CREATE TABLE Statuses (
-    StatusID INT PRIMARY KEY IDENTITY(1,1),
+    StatusID INT IDENTITY(1,1) PRIMARY KEY,
     StatusName NVARCHAR(255) NOT NULL,
-    Description NVARCHAR(MAX) NULL
+    Description NVARCHAR(MAX)
 );
 
--- Bảng Regions
+-- Table: Region
 CREATE TABLE Regions (
-    RegionID INT PRIMARY KEY IDENTITY(1,1),
-    RegionName NVARCHAR(50) NOT NULL
+    RegionID INT IDENTITY(1,1) PRIMARY KEY,
+    RegionName NVARCHAR(255) NOT NULL,
+    Description NVARCHAR(MAX)
 );
 
--- Bảng TourTypes
+-- Table: TourType
 CREATE TABLE TourTypes (
-    TourTypeID INT PRIMARY KEY IDENTITY(1,1),
-    TourTypeName NVARCHAR(50) NOT NULL
+    TourTypeID INT IDENTITY(1,1) PRIMARY KEY,
+    TourTypeName NVARCHAR(255) NOT NULL,
+    Description NVARCHAR(MAX)
 );
 
-
--- Bảng Users
+-- Table: Users
 CREATE TABLE Users (
-    UserID INT PRIMARY KEY IDENTITY(1,1),
+    UserID INT IDENTITY(1,1) PRIMARY KEY,
     FullName NVARCHAR(255) NOT NULL,
     Email NVARCHAR(255) UNIQUE NOT NULL,
     PhoneNumber NVARCHAR(20),
     Password NVARCHAR(255) NOT NULL,
-    RoleID TINYINT NOT NULL FOREIGN KEY REFERENCES Roles(RoleID),
-    StatusID INT NOT NULL FOREIGN KEY REFERENCES Statuses(StatusID)
+    RoleID TINYINT FOREIGN KEY REFERENCES Roles(RoleID),
+    StatusID INT FOREIGN KEY REFERENCES Statuses(StatusID)
 );
 
--- Bảng Tours
+-- Table: Tours
 CREATE TABLE Tours (
-    TourID INT PRIMARY KEY IDENTITY(1,1),
+    TourID INT IDENTITY(1,1) PRIMARY KEY,
     TourName NVARCHAR(255) NOT NULL,
     Destination NVARCHAR(255),
     StartDate DATE NOT NULL,
@@ -58,88 +59,87 @@ CREATE TABLE Tours (
     Capacity INT NOT NULL,
     Description NVARCHAR(MAX),
     ImageURL NVARCHAR(255),
-    StatusID INT NOT NULL FOREIGN KEY REFERENCES Statuses(StatusID),
-    RegionID INT NOT NULL FOREIGN KEY REFERENCES Regions(RegionID),
-    TourTypeID INT NOT NULL FOREIGN KEY REFERENCES TourTypes(TourTypeID)
+    StatusID INT FOREIGN KEY REFERENCES Statuses(StatusID),
+    RegionID INT FOREIGN KEY REFERENCES Regions(RegionID),
+    TourTypeID INT FOREIGN KEY REFERENCES TourTypes(TourTypeID)
 );
 
-
--- Bảng Bookings
+-- Table: Bookings
 CREATE TABLE Bookings (
-    BookingID INT PRIMARY KEY IDENTITY(1,1),
-    UserID INT NOT NULL FOREIGN KEY REFERENCES Users(UserID),
-    TourID INT NOT NULL FOREIGN KEY REFERENCES Tours(TourID),
-    BookingDate DATE NOT NULL DEFAULT GETDATE(),
+    BookingID INT IDENTITY(1,1) PRIMARY KEY,
+    UserID INT FOREIGN KEY REFERENCES Users(UserID),
+    TourID INT FOREIGN KEY REFERENCES Tours(TourID),
+    BookingDate DATE,
     TotalPrice DECIMAL(18, 2) NOT NULL,
-    TotalPersons INT NOT NULL,
-    StatusID INT NOT NULL FOREIGN KEY REFERENCES Statuses(StatusID)
+    StatusID INT FOREIGN KEY REFERENCES Statuses(StatusID),
+    TotalPersons INT NOT NULL
 );
 
--- Bảng BookingDetails
+-- Table: BookingDetails
 CREATE TABLE BookingDetails (
-    BookingDetailID INT PRIMARY KEY IDENTITY(1,1),
-    BookingID INT NOT NULL FOREIGN KEY REFERENCES Bookings(BookingID),
+    BookingDetailID INT IDENTITY(1,1) PRIMARY KEY,
+    BookingID INT FOREIGN KEY REFERENCES Bookings(BookingID),
     PassengerName NVARCHAR(255) NOT NULL,
     PassengerAge INT NOT NULL,
     PassengerGender NVARCHAR(10),
-    AdultCount INT NOT NULL DEFAULT 0,
-    ChildCount INT NOT NULL DEFAULT 0,
-    SpecialRequest NVARCHAR(MAX)
+    SpecialRequest NVARCHAR(MAX),
+    AdultCount INT DEFAULT 0 NOT NULL,
+    ChildCount INT DEFAULT 0 NOT NULL
 );
 
--- Bảng Schedule
+-- Table: Schedule
 CREATE TABLE Schedule (
-    ScheduleID INT PRIMARY KEY IDENTITY(1,1),
-    TourID INT NOT NULL FOREIGN KEY REFERENCES Tours(TourID),
+    ScheduleID INT IDENTITY(1,1) PRIMARY KEY,
+    TourID INT FOREIGN KEY REFERENCES Tours(TourID),
     DayNumber INT NOT NULL,
     StartTime TIME NOT NULL,
     EndTime TIME NOT NULL,
     Activity NVARCHAR(255) NOT NULL,
     Description NVARCHAR(MAX),
-    StatusID INT NOT NULL FOREIGN KEY REFERENCES Statuses(StatusID)
+    StatusID INT FOREIGN KEY REFERENCES Statuses(StatusID)
 );
 
--- Bảng Rooms
+-- Table: Rooms
 CREATE TABLE Rooms (
-    RoomID INT PRIMARY KEY IDENTITY(1,1),
-    TourID INT NOT NULL FOREIGN KEY REFERENCES Tours(TourID),
+    RoomID INT IDENTITY(1,1) PRIMARY KEY,
+    TourID INT FOREIGN KEY REFERENCES Tours(TourID),
     RoomType NVARCHAR(50) NOT NULL,
     Capacity INT NOT NULL,
     Price DECIMAL(18, 2) NOT NULL,
     Description NVARCHAR(MAX),
-    StatusID INT NOT NULL FOREIGN KEY REFERENCES Statuses(StatusID)
+    StatusID INT FOREIGN KEY REFERENCES Statuses(StatusID)
 );
 
--- Bảng Transportation
+-- Table: Transportation
 CREATE TABLE Transportation (
-    TransportID INT PRIMARY KEY IDENTITY(1,1),
-    TourID INT NOT NULL FOREIGN KEY REFERENCES Tours(TourID),
+    TransportID INT IDENTITY(1,1) PRIMARY KEY,
+    TourID INT FOREIGN KEY REFERENCES Tours(TourID),
     TransportType NVARCHAR(50) NOT NULL,
     Price DECIMAL(18, 2) NOT NULL,
     Description NVARCHAR(MAX),
-    StatusID INT NOT NULL FOREIGN KEY REFERENCES Statuses(StatusID)
+    StatusID INT FOREIGN KEY REFERENCES Statuses(StatusID)
 );
 
--- Bảng Services
+-- Table: Services
 CREATE TABLE Services (
-    ServiceID INT PRIMARY KEY IDENTITY(1,1),
+    ServiceID INT IDENTITY(1,1) PRIMARY KEY,
     ServiceName NVARCHAR(255) NOT NULL,
     Price DECIMAL(18, 2) NOT NULL,
     Description NVARCHAR(MAX),
-    StatusID INT NOT NULL FOREIGN KEY REFERENCES Statuses(StatusID)
+    StatusID INT FOREIGN KEY REFERENCES Statuses(StatusID)
 );
 
--- Bảng BookingServices
+-- Table: BookingServices
 CREATE TABLE BookingServices (
-    BookingServiceID INT PRIMARY KEY IDENTITY(1,1),
-    BookingID INT NOT NULL FOREIGN KEY REFERENCES Bookings(BookingID),
-    ServiceID INT NOT NULL FOREIGN KEY REFERENCES Services(ServiceID),
+    BookingServiceID INT IDENTITY(1,1) PRIMARY KEY,
+    BookingID INT FOREIGN KEY REFERENCES Bookings(BookingID),
+    ServiceID INT FOREIGN KEY REFERENCES Services(ServiceID),
     Quantity INT NOT NULL
 );
 
--- Bảng Vouchers
+-- Table: Vouchers
 CREATE TABLE Vouchers (
-    VoucherID INT PRIMARY KEY IDENTITY(1,1),
+    VoucherID INT IDENTITY(1,1) PRIMARY KEY,
     Code NVARCHAR(50) UNIQUE NOT NULL,
     Discount DECIMAL(18, 2) NOT NULL,
     DiscountType NVARCHAR(50) NOT NULL,
@@ -147,47 +147,67 @@ CREATE TABLE Vouchers (
     EndDate DATE NOT NULL,
     MinSpend DECIMAL(18, 2) DEFAULT 0,
     MaxDiscount DECIMAL(18, 2),
-    StatusID INT NOT NULL FOREIGN KEY REFERENCES Statuses(StatusID),
+    StatusID INT FOREIGN KEY REFERENCES Statuses(StatusID),
     Description NVARCHAR(MAX)
 );
 
--- Bảng BookingVouchers
+-- Table: BookingVouchers
 CREATE TABLE BookingVouchers (
-    BookingVoucherID INT PRIMARY KEY IDENTITY(1,1),
-    BookingID INT NOT NULL FOREIGN KEY REFERENCES Bookings(BookingID),
-    VoucherID INT NOT NULL FOREIGN KEY REFERENCES Vouchers(VoucherID),
-    AppliedDate DATE NOT NULL DEFAULT GETDATE(),
+    BookingVoucherID INT IDENTITY(1,1) PRIMARY KEY,
+    BookingID INT FOREIGN KEY REFERENCES Bookings(BookingID),
+    VoucherID INT FOREIGN KEY REFERENCES Vouchers(VoucherID),
+    AppliedDate DATE,
     DiscountAmount DECIMAL(18, 2) NOT NULL
 );
 
--- Bảng Payment
+-- Table: Payment
 CREATE TABLE Payment (
-    PaymentID INT PRIMARY KEY IDENTITY(1,1),
-    BookingID INT NOT NULL FOREIGN KEY REFERENCES Bookings(BookingID),
-    PaymentDate DATE NOT NULL DEFAULT GETDATE(),
+    PaymentID INT IDENTITY(1,1) PRIMARY KEY,
+    BookingID INT FOREIGN KEY REFERENCES Bookings(BookingID),
+    PaymentDate DATE,
     Amount DECIMAL(18, 2) NOT NULL,
     PaymentMethod NVARCHAR(50) NOT NULL,
-    StatusID INT NOT NULL FOREIGN KEY REFERENCES Statuses(StatusID)
+    StatusID INT FOREIGN KEY REFERENCES Statuses(StatusID)
 );
 
--- Bảng Feedback
+-- Table: Feedback
 CREATE TABLE Feedback (
-    FeedbackID INT PRIMARY KEY IDENTITY(1,1),
-    UserID INT NOT NULL FOREIGN KEY REFERENCES Users(UserID),
-    TourID INT NOT NULL FOREIGN KEY REFERENCES Tours(TourID),
-    Rating INT CHECK (Rating BETWEEN 1 AND 5),
+    FeedbackID INT IDENTITY(1,1) PRIMARY KEY,
+    UserID INT FOREIGN KEY REFERENCES Users(UserID),
+    TourID INT FOREIGN KEY REFERENCES Tours(TourID),
+    Rating INT NOT NULL,
     Comment NVARCHAR(MAX),
-    FeedbackDate DATE NOT NULL DEFAULT GETDATE(),
-    StatusID INT NOT NULL FOREIGN KEY REFERENCES Statuses(StatusID)
+    FeedbackDate DATE,
+    StatusID INT FOREIGN KEY REFERENCES Statuses(StatusID)
 );
 
--- Bảng Notifications
+-- Table: Notifications
 CREATE TABLE Notifications (
-    NotificationID INT PRIMARY KEY IDENTITY(1,1),
-    UserID INT NOT NULL FOREIGN KEY REFERENCES Users(UserID),
+    NotificationID INT IDENTITY(1,1) PRIMARY KEY,
+    UserID INT FOREIGN KEY REFERENCES Users(UserID),
     Message NVARCHAR(MAX) NOT NULL,
-    NotificationDate DATE NOT NULL DEFAULT GETDATE(),
-    StatusID INT NOT NULL FOREIGN KEY REFERENCES Statuses(StatusID)
+    NotificationDate DATE,
+    StatusID INT FOREIGN KEY REFERENCES Statuses(StatusID)
+);
+
+-- Table: TourGuide
+CREATE TABLE TourGuide (
+    GuideID INT IDENTITY(1,1) PRIMARY KEY,
+    FullName NVARCHAR(255) NOT NULL,
+    PhoneNumber NVARCHAR(20),
+    Email NVARCHAR(255) UNIQUE NOT NULL,
+    ExperienceYears INT NOT NULL,
+    Description NVARCHAR(MAX),
+    StatusID INT FOREIGN KEY REFERENCES Statuses(StatusID)
+);
+
+-- Table: TourGuideAssignment
+CREATE TABLE TourGuideAssignment (
+    AssignmentID INT IDENTITY(1,1) PRIMARY KEY,
+    TourID INT FOREIGN KEY REFERENCES Tours(TourID),
+    GuideID INT FOREIGN KEY REFERENCES TourGuide(GuideID),
+    AssignedDate DATE NOT NULL,
+    StatusID INT FOREIGN KEY REFERENCES Statuses(StatusID)
 );
 
 
@@ -348,6 +368,26 @@ VALUES
 (1, 'Tour Sapa của bạn đã được xác nhận.', GETDATE(), 2),
 (2, 'Bạn có khuyến mãi 15% cho tour tiếp theo.', GETDATE(), 2);
 
+-- Dữ liệu mẫu cho bảng TourGuide
+INSERT INTO TourGuide (FullName, PhoneNumber, Email, ExperienceYears, Description, StatusID)
+VALUES
+('Nguyen Van Tien', '0912345678', 'tiennv@example.com', 5, 'Hướng dẫn viên chuyên nghiệp, am hiểu miền Bắc', 2),
+('Tran Thi Lan', '0923456789', 'lantr@example.com', 3, 'Hướng dẫn viên năng động, chuyên tour miền Trung', 2),
+('Le Hoang Minh', '0934567890', 'minhlh@example.com', 7, 'Hướng dẫn viên giàu kinh nghiệm, chuyên tour quốc tế', 2),
+('Pham Thi Mai', '0945678901', 'maipt@example.com', 4, 'Hướng dẫn viên tận tâm, chuyên tour miền Nam', 2),
+('Do Quang Huy', '0956789012', 'huydq@example.com', 6, 'Hướng dẫn viên chuyên nghiệp, thông thạo nhiều ngôn ngữ', 2);
+
+-- Dữ liệu mẫu cho bảng TourGuideAssignment
+INSERT INTO TourGuideAssignment (TourID, GuideID, AssignedDate, StatusID)
+VALUES
+(1, 1, '2025-01-20', 2), -- Nguyen Van Tien được phân công cho Tour Ha Long Bay
+(2, 2, '2025-01-25', 2), -- Tran Thi Lan được phân công cho Tour Da Nang
+(3, 1, '2025-02-01', 2), -- Nguyen Van Tien được phân công cho Tour Sapa
+(4, 4, '2025-02-15', 2), -- Pham Thi Mai được phân công cho Tour Nha Trang
+(6, 3, '2025-03-01', 2), -- Le Hoang Minh được phân công cho Tour Bangkok - Pattaya
+(7, 5, '2025-03-10', 2), -- Do Quang Huy được phân công cho Tour Mỹ
+(8, 5, '2025-03-20', 2); -- Do Quang Huy được phân công cho Tour Trung Quốc
+
 
 -- Lấy tất cả dữ liệu từ bảng Roles
 SELECT * FROM Roles;
@@ -402,6 +442,12 @@ SELECT * FROM Feedback;
 
 -- Lấy tất cả dữ liệu từ bảng Notifications
 SELECT * FROM Notifications;
+
+-- Lấy tất cả dữ liệu từ bảng Notifications
+SELECT * FROM TourGuide;
+
+-- Lấy tất cả dữ liệu từ bảng Notifications
+SELECT * FROM TourGuideAssignment;
 
 --thử câu lệch
 select
@@ -460,7 +506,7 @@ select
 	,t.TourName
 from Tours t
 	left join Schedule s on t.TourID = s.TourID
-	where t.TourID = 1
+	where t.TourID = 8
 
 select 
 * 

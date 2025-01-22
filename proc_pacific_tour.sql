@@ -24,10 +24,9 @@ GO
 IF OBJECT_ID('dbo.ManageTour', 'P') IS NOT NULL
     DROP PROCEDURE dbo.ManageTour;
 GO
-
 CREATE PROCEDURE dbo.ManageTour
-    @Action NVARCHAR(10),  -- Tham số chỉ định hành động (Add, Update, Delete)
-    @TourID INT = NULL,    -- Tham số ID của tour (chỉ cần khi cập nhật hoặc xóa)
+    @Action NVARCHAR(10), -- Loại thao tác: 'INSERT', 'UPDATE', 'DELETE'
+    @TourID INT = NULL, -- ID của tour (NULL khi thêm mới)
     @TourName NVARCHAR(255) = NULL,
     @Destination NVARCHAR(255) = NULL,
     @StartDate DATE = NULL,
@@ -36,58 +35,63 @@ CREATE PROCEDURE dbo.ManageTour
     @Capacity INT = NULL,
     @Description NVARCHAR(MAX) = NULL,
     @ImageURL NVARCHAR(255) = NULL,
-    @StatusID INT = NULL
+    @StatusID INT = NULL,
+    @RegionID INT = NULL,
+    @TourTypeID INT = NULL
 AS
 BEGIN
-    -- Kiểm tra hành động và thực hiện tương ứng
-    IF @Action = 'Add'
-    BEGIN
-        -- Thêm một tour mới 
-        INSERT INTO Tours (TourName, Destination, StartDate, EndDate, Price, Capacity, Description, ImageURL, StatusID)
-        VALUES (@TourName, @Destination, @StartDate, @EndDate, @Price, @Capacity, @Description, @ImageURL, @StatusID);
-        SELECT 'Tour đã được thêm thành công!' AS Message;
-    END
+    SET NOCOUNT ON;
 
-    ELSE IF @Action = 'Update'
+    IF @Action = 'INSERT'
     BEGIN
-        -- Cập nhật thông tin của một tour
+        INSERT INTO Tours (TourName, Destination, StartDate, EndDate, Price, Capacity, Description, ImageURL, StatusID, RegionID, TourTypeID)
+        VALUES (@TourName, @Destination, @StartDate, @EndDate, @Price, @Capacity, @Description, @ImageURL, @StatusID, @RegionID, @TourTypeID);
+        
+        PRINT 'Tour inserted successfully.';
+    END
+    ELSE IF @Action = 'UPDATE'
+    BEGIN
         IF @TourID IS NULL
         BEGIN
-            SELECT 'TourID là bắt buộc khi cập nhật.' AS ErrorMessage;
+            PRINT 'Error: TourID is required for UPDATE.';
             RETURN;
         END
+        
         UPDATE Tours
         SET 
-            TourName = ISNULL(@TourName, TourName),
-            Destination = ISNULL(@Destination, Destination),
-            StartDate = ISNULL(@StartDate, StartDate),
-            EndDate = ISNULL(@EndDate, EndDate),
-            Price = ISNULL(@Price, Price),
-            Capacity = ISNULL(@Capacity, Capacity),
-            Description = ISNULL(@Description, Description),
-            ImageURL = ISNULL(@ImageURL, ImageURL),
-            StatusID = ISNULL(@StatusID, StatusID)
+            TourName = @TourName,
+            Destination = @Destination,
+            StartDate = @StartDate,
+            EndDate = @EndDate,
+            Price = @Price,
+            Capacity = @Capacity,
+            Description = @Description,
+            ImageURL = @ImageURL,
+            StatusID = @StatusID,
+            RegionID = @RegionID,
+            TourTypeID = @TourTypeID
         WHERE TourID = @TourID;
-        SELECT 'Tour đã được cập nhật thành công!' AS Message;
+        
+        PRINT 'Tour updated successfully.';
     END
-
-    ELSE IF @Action = 'Delete'
+    ELSE IF @Action = 'DELETE'
     BEGIN
-        -- Xóa một tour
         IF @TourID IS NULL
         BEGIN
-            SELECT 'TourID là bắt buộc khi xóa.' AS ErrorMessage;
+            PRINT 'Error: TourID is required for DELETE.';
             RETURN;
         END
+        
         DELETE FROM Tours WHERE TourID = @TourID;
-        SELECT 'Tour đã được xóa thành công!' AS Message;
+        
+        PRINT 'Tour deleted successfully.';
     END
-
     ELSE
     BEGIN
-        SELECT 'Hành động không hợp lệ. Vui lòng chọn Add, Update hoặc Delete.' AS ErrorMessage;
+        PRINT 'Error: Invalid Action. Use INSERT, UPDATE, or DELETE.';
     END
 END;
+GO
 
 -- Procedure thêm users
 -- Kiểm tra và xóa Stored Procedure nếu đã tồn tại
@@ -116,13 +120,12 @@ BEGIN
 
     SELECT 'Người dùng đã được thêm thành công!' AS SuccessMessage;
 END;
-
+GO
 
 -- Procedure tìm kiếm booking của người dùng
 IF OBJECT_ID('dbo.GetUserBookings', 'P') IS NOT NULL
     DROP PROCEDURE dbo.GetUserBookings;
 GO
-
 CREATE PROCEDURE dbo.GetUserBookings
     @UserID INT
 AS
@@ -209,6 +212,7 @@ BEGIN
     AND
         (@RegionID IS NULL OR r.RegionID = @RegionID);        -- Nếu RegionID là NULL, bỏ qua điều kiện này
 END;
+GO
 
 -- Procedure tìm kiếm lịch trình theo tour
 IF OBJECT_ID('dbo.GetScheduleByTourID', 'P') IS NOT NULL
@@ -231,6 +235,7 @@ BEGIN
     LEFT JOIN Schedule s ON t.TourID = s.TourID
     WHERE t.TourID = @TourID;  -- Lọc theo TourID được truyền vào
 END;
+GO
 
 -- Procedure tìm kiếm tour theo giá, ngày
 IF OBJECT_ID('dbo.GetToursByPriceAndDate', 'P') IS NOT NULL
@@ -251,3 +256,4 @@ BEGIN
         AND (@StartDate IS NULL OR StartDate >= @StartDate)  -- Nếu @StartDate là NULL thì không áp dụng điều kiện này
         AND (@EndDate IS NULL OR EndDate <= @EndDate);  -- Nếu @EndDate là NULL thì không áp dụng điều kiện này
 END;
+GO
