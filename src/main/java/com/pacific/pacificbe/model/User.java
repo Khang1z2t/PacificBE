@@ -9,34 +9,44 @@ import lombok.Setter;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
 @Data
 @Entity
 @Table(name = "Users")
-public class User {
+public class User extends BaseEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "user_id", nullable = false, unique = true)
+    private String userId;
 
-    @Column(nullable = false, length = 255)
-    private String fullName;
+    @Column(name = "username", nullable = false, length = 50)
+    private String username;
 
-    @Column(nullable = false, unique = true, length = 255)
-    private String email;
-
-    @Column(nullable = false, length = 20)
-    private String phoneNumber;
-
-    @Column(nullable = false, length = 255)
+    @Column(name = "password", nullable = false, length = 255)
     private String password;
 
-    @ManyToOne
-    @JoinColumn(name = "roleId", nullable = false)
-    private Role role;
+    @Column(name = "email", nullable = false, unique = true, length = 100)
+    private String email;
 
-    @ManyToOne
-    @JoinColumn(name = "statusId", nullable = false)
-    private Status status;
+    @Column(name = "first_name", nullable = false, length = 50)
+    private String firstName;
+
+    @Column(name = "last_name", nullable = false, length = 50)
+    private String lastName;
+
+    @Column(name = "phone_number", length = 15)
+    private String phoneNumber;
+
+    @Column(name = "address", length = 255)
+    private String address;
+
+    @Column(name = "status")
+    private String status;
+
+    @Column(name = "role", nullable = false, length = 50)
+    private String role;
+
+    @Column(name = "avatar_url")
+    private String avatarUrl;
+
 }
 
