@@ -19,15 +19,18 @@ import java.util.function.Function;
 public class JwtServiceImpl implements JwtService {
     private final String SECRET_KEY = "fab39c91102ea48b21f64faf96c23b6cd3ac0491d600839623a59cfcd2e1d2dcfcf495439bb8ed7e7a435a5d7131444655fd5b3c21d0078cc27dfdeebd816129";
 
+    @Override
     public String extractUserName(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
+    @Override
     public <T> T extractClaim(String token, Function<Claims, T> claimmsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimmsResolver.apply(claims);
     }
 
+    @Override
     public String generateToken(UserDetails userDetails) {
         return generateToken(new HashMap<>(), userDetails);
     }
@@ -46,6 +49,7 @@ public class JwtServiceImpl implements JwtService {
                 .compact();
     }
 
+    @Override
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String userName = extractUserName(token);
         return (userName.equals(userDetails.getUsername())) && !isTokenExpired(token);
