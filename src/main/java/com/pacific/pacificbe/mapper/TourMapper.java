@@ -4,10 +4,12 @@ import com.pacific.pacificbe.dto.TourDTO;
 import com.pacific.pacificbe.model.Tours;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
+import lombok.RequiredArgsConstructor;
 
 @Component
-public class TourMaper {
-    private final ModelMapper modelMapper = new ModelMapper();
+@RequiredArgsConstructor
+public class TourMapper {
+    private final ModelMapper modelMapper;
 
     public TourDTO toDTO(Tours tours) {
         return modelMapper.map(tours, TourDTO.class);

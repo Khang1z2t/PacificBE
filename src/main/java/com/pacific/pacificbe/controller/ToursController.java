@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pacific.pacificbe.dto.TourDTO;
-import com.pacific.pacificbe.mapper.TourMaper;
+import com.pacific.pacificbe.mapper.TourMapper;
 import com.pacific.pacificbe.services.TourService;
 
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ToursController {
     private final TourService toursService;
-    private final TourMaper toursMapper;
+    private final TourMapper toursMapper;
 
     @GetMapping("/all")
     public ResponseEntity<List<TourDTO>> getAllTours() {
