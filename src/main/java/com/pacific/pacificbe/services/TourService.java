@@ -1,21 +1,25 @@
 package com.pacific.pacificbe.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
+import com.pacific.pacificbe.model.Tours;
 import com.pacific.pacificbe.repository.TourRepository;
 
-import java.math.BigDecimal;
-import java.sql.Date;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class TourService {
+    private final TourRepository toursRepository;
 
-    @Autowired
-    private TourRepository tourRepository;
-
-    public void manageTour(String action, Integer tourID, String tourName, String destination, Date startDate, Date endDate, BigDecimal price, Integer capacity, String description, String imageURL, Integer statusID, Integer regionID, Integer tourTypeID) {
-        tourRepository.manageTour(action, tourID, tourName, destination, startDate, endDate, price, capacity, description, imageURL, statusID, regionID, tourTypeID);
+    public List<Tours> getAllTours() {
+        return toursRepository.findAll();
+    }
+    
+    public Tours getTourById(Long id) {
+        return toursRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Tour không tồn tại với ID: " + id));
     }
 }
-
