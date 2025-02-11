@@ -7,15 +7,12 @@ import lombok.Setter;
 import org.hibernate.annotations.Nationalized;
 
 import java.math.BigDecimal;
-import java.time.Instant;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "payment")
-public class Payment {
+@Table(name = "invoice")
+public class Invoice extends BaseEntity {
     @Id
     @Size(max = 255)
     @Column(name = "id", nullable = false)
@@ -23,35 +20,33 @@ public class Payment {
     private String id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "booking_id")
-    private Booking booking;
+    @JoinColumn(name = "payment_id")
+    private Payment payment;
+
+    @Size(max = 255)
+    @Column(name = "invoice_number")
+    private String invoiceNumber;
+
+    @Column(name = "subtotal", precision = 19, scale = 4)
+    private BigDecimal subtotal;
+
+    @Column(name = "discount", precision = 19, scale = 4)
+    private BigDecimal discount;
+
+    @Column(name = "tax", precision = 19, scale = 4)
+    private BigDecimal tax;
 
     @Column(name = "total_price", precision = 19, scale = 4)
     private BigDecimal totalPrice;
 
     @Size(max = 255)
     @Nationalized
-    @Column(name = "payment_method")
-    private String paymentMethod;
-
-    @Size(max = 255)
-    @Nationalized
-    @Column(name = "paymet_status")
-    private String paymetStatus;
-
-    @Size(max = 255)
-    @Column(name = "transaction_id")
-    private String transactionId;
-
-    @Column(name = "payment_date")
-    private Instant paymentDate;
+    @Column(name = "status")
+    private String status;
 
     @Size(max = 255)
     @Nationalized
     @Column(name = "notes")
     private String notes;
-
-    @OneToMany(mappedBy = "payment")
-    private Set<Invoice> invoices = new LinkedHashSet<>();
 
 }

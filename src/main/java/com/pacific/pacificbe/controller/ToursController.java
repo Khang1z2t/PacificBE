@@ -3,6 +3,12 @@ package com.pacific.pacificbe.controller;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.pacific.pacificbe.dto.ApiResponse;
+import com.pacific.pacificbe.dto.response.TourResponse;
+import com.pacific.pacificbe.utils.UrlMapping;
+import io.swagger.v3.oas.annotations.Operation;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,30 +17,33 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.pacific.pacificbe.dto.TourDTO;
 import com.pacific.pacificbe.mapper.TourMapper;
-import com.pacific.pacificbe.model.Tours;
+import com.pacific.pacificbe.model.Tour;
 import com.pacific.pacificbe.services.TourService;
 
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/tours")
+@RequestMapping(UrlMapping.TOURS)
 @RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ToursController {
-    private final TourService toursService;
-    private final TourMapper toursMapper;
+    TourService tourService;
 
-    @GetMapping("/all")
-    public ResponseEntity<List<TourDTO>> getAllTours() {
-        List<TourDTO> toursList = toursService.getAllTours()
-                .stream()
-                .map(toursMapper::toDTO)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(toursList);
+    @GetMapping(UrlMapping.GET_ALL_TOURS)
+    @Operation(summary = "Lấy danh sách tour")
+    public ResponseEntity<ApiResponse<List<TourResponse>>> getAllTours() {
+        return ResponseEntity.ok(ApiResponse.<List<TourResponse>>
+                        builder()
+                .data(tourService.getAllTours())
+                .build());
     }
-    
-    @GetMapping("/{id}")
-    public ResponseEntity<TourDTO> getTourById(@PathVariable (name = "id") Long id) {
-        Tours tour = toursService.getTourById(id);
-        return ResponseEntity.ok(toursMapper.toDTO(tour));
+
+    @GetMapping(UrlMapping.GET_TOUR_BY_ID)
+    @Operation(summary = "Lấy tour theo id")
+    public ResponseEntity<ApiResponse<TourResponse>> getTourById(@PathVariable String id) {
+        return ResponseEntity.ok(ApiResponse.<TourResponse>builder()
+                .data(tourService.getTourById(id))
+                .build());
     }
+
 }

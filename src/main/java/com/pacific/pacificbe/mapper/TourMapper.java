@@ -1,19 +1,30 @@
 package com.pacific.pacificbe.mapper;
 
-import com.pacific.pacificbe.dto.TourDTO;
-import com.pacific.pacificbe.model.Tours;
+import com.pacific.pacificbe.dto.response.TourResponse;
+import com.pacific.pacificbe.model.Tour;
+import com.pacific.pacificbe.model.TourImage;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Component
-public class TourMaper {
-    private final ModelMapper modelMapper = new ModelMapper();
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+public class TourMapper {
+    ModelMapper modelMapper;
 
-    public TourDTO toDTO(Tours tours) {
-        return modelMapper.map(tours, TourDTO.class);
-    }
+    public TourResponse toTourResponse(Tour tour) {
+        TourResponse tourResponse = modelMapper.map(tour, TourResponse.class);
+        List<String> imageUrls = tour.getTourImages().stream()
+                .map(TourImage::getImageUrl)
+                .collect(Collectors.toList());
+        tourResponse.setTourImages(imageUrls);
+        return tourResponse;    }
 
-    public Tours toEntity(TourDTO dto) {
-        return modelMapper.map(dto, Tours.class);
-    }
+
 }

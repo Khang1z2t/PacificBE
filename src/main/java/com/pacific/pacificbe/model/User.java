@@ -10,7 +10,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,8 +22,7 @@ import java.util.List;
 public class User extends BaseEntity implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "user_id", nullable = false, unique = true)
-    private String userId;
+    private String id;
 
     @Column(name = "username", nullable = false, length = 50)
     private String username;
@@ -38,8 +39,8 @@ public class User extends BaseEntity implements UserDetails {
     @Column(name = "last_name", nullable = false, length = 50)
     private String lastName;
 
-    @Column(name = "phone_number", length = 15)
-    private String phoneNumber;
+    @Column(name = "phone", length = 15)
+    private String phone;
 
     @Column(name = "address", length = 255)
     private String address;
@@ -52,6 +53,24 @@ public class User extends BaseEntity implements UserDetails {
 
     @Column(name = "avatar_url")
     private String avatarUrl;
+
+    @Column(name = "deposit")
+    private Double deposit;
+
+    @OneToMany(mappedBy = "user")
+    private Set<Booking> bookings = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "user")
+    private Set<Chat> chats = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "admin")
+    private Set<Chat> chats2 = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "user")
+    private Set<History> histories = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "user")
+    private Set<Review> reviews = new LinkedHashSet<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

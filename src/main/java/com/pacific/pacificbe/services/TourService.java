@@ -1,25 +1,12 @@
 package com.pacific.pacificbe.services;
 
+
+import com.pacific.pacificbe.dto.response.TourResponse;
+
 import java.util.List;
 
-import org.springframework.stereotype.Service;
+public interface TourService {
+    List<TourResponse> getAllTours();
 
-import com.pacific.pacificbe.model.Tours;
-import com.pacific.pacificbe.repository.TourRepository;
-
-import lombok.RequiredArgsConstructor;
-
-@Service
-@RequiredArgsConstructor
-public class TourService {
-    private final TourRepository toursRepository;
-
-    public List<Tours> getAllTours() {
-        return toursRepository.findAll();
-    }
-    
-    public Tours getTourById(Long id) {
-        return toursRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Tour không tồn tại với ID: " + id));
-    }
+    TourResponse getTourById(String id);
 }
