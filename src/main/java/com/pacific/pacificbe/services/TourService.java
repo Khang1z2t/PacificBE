@@ -17,4 +17,9 @@ public class TourService {
     public List<Tours> getAllTours() {
         return toursRepository.findAll();
     }
+    
+    public Tours getTourById(Long id) {
+        return toursRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Tour không tồn tại với ID: " + id));
+    }
 }

@@ -5,11 +5,13 @@ import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pacific.pacificbe.dto.TourDTO;
 import com.pacific.pacificbe.mapper.TourMapper;
+import com.pacific.pacificbe.model.Tours;
 import com.pacific.pacificbe.services.TourService;
 
 import lombok.RequiredArgsConstructor;
@@ -28,5 +30,11 @@ public class ToursController {
                 .map(toursMapper::toDTO)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(toursList);
+    }
+    
+    @GetMapping("/{id}")
+    public ResponseEntity<TourDTO> getTourById(@PathVariable (name = "id") Long id) {
+        Tours tour = toursService.getTourById(id);
+        return ResponseEntity.ok(toursMapper.toDTO(tour));
     }
 }
