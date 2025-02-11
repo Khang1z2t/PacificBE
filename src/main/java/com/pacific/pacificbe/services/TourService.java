@@ -1,20 +1,21 @@
 package com.pacific.pacificbe.services;
 
-import java.util.List;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.pacific.pacificbe.model.Tours;
 import com.pacific.pacificbe.repository.TourRepository;
 
-import lombok.RequiredArgsConstructor;
+import java.math.BigDecimal;
+import java.sql.Date;
 
 @Service
-@RequiredArgsConstructor
 public class TourService {
-    private final TourRepository toursRepository;
 
-    public List<Tours> getAllTours() {
-        return toursRepository.findAllTours();
+    @Autowired
+    private TourRepository tourRepository;
+
+    public void manageTour(String action, Integer tourID, String tourName, String destination, Date startDate, Date endDate, BigDecimal price, Integer capacity, String description, String imageURL, Integer statusID, Integer regionID, Integer tourTypeID) {
+        tourRepository.manageTour(action, tourID, tourName, destination, startDate, endDate, price, capacity, description, imageURL, statusID, regionID, tourTypeID);
     }
 }
+
