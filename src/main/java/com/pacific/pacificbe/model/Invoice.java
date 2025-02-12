@@ -36,17 +36,16 @@ public class Invoice extends BaseEntity {
     @Column(name = "tax", precision = 19, scale = 4)
     private BigDecimal tax;
 
-    @Column(name = "total_price", precision = 19, scale = 4)
-    private BigDecimal totalPrice;
+    @Column(name = "total_amount", precision = 19, scale = 4)
+    private BigDecimal totalAmount;
 
     @Size(max = 255)
-    @Nationalized
     @Column(name = "status")
     private String status;
 
-    @Size(max = 255)
     @Nationalized
-    @Column(name = "notes")
-    private String notes;
+    @Lob
+    @Column(name = "note")
+    private String note;
 
 }

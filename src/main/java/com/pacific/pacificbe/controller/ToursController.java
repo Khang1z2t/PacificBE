@@ -1,7 +1,6 @@
 package com.pacific.pacificbe.controller;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import com.pacific.pacificbe.dto.ApiResponse;
 import com.pacific.pacificbe.dto.response.TourResponse;
@@ -15,9 +14,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.pacific.pacificbe.dto.TourDTO;
-import com.pacific.pacificbe.mapper.TourMapper;
-import com.pacific.pacificbe.model.Tour;
 import com.pacific.pacificbe.services.TourService;
 
 import lombok.RequiredArgsConstructor;

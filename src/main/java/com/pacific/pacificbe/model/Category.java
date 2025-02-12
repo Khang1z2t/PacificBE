@@ -12,7 +12,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-@Table(name = "category")
+@Table(name = "categories")
 public class Category {
     @Id
     @Size(max = 255)
@@ -31,15 +31,14 @@ public class Category {
     private String description;
 
     @Size(max = 255)
+    @Nationalized
     @Column(name = "slug")
     private String slug;
 
     @Size(max = 255)
+    @Nationalized
     @Column(name = "status")
     private String status;
-
-    @Column(name = "display_order")
-    private Integer displayOrder;
 
     @OneToMany(mappedBy = "cate")
     private Set<Tour> tours = new LinkedHashSet<>();

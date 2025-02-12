@@ -1,6 +1,8 @@
 package com.pacific.pacificbe.mapper;
 
+import com.pacific.pacificbe.dto.response.GuideResponse;
 import com.pacific.pacificbe.dto.response.TourResponse;
+import com.pacific.pacificbe.model.Guide;
 import com.pacific.pacificbe.model.Tour;
 import com.pacific.pacificbe.model.TourImage;
 import lombok.AccessLevel;
@@ -17,14 +19,20 @@ import java.util.stream.Collectors;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class TourMapper {
     ModelMapper modelMapper;
+    GuideMapper guideMapper;
 
     public TourResponse toTourResponse(Tour tour) {
         TourResponse tourResponse = modelMapper.map(tour, TourResponse.class);
         List<String> imageUrls = tour.getTourImages().stream()
                 .map(TourImage::getImageUrl)
-                .collect(Collectors.toList());
+                .toList();
         tourResponse.setTourImages(imageUrls);
-        return tourResponse;    }
 
+        List<GuideResponse> guideResponses = tour.getGuides().stream()
+                .map(guideMapper::toGuideResponse)
+                .collect(Collectors.toList());
+        tourResponse.setGuides(guideResponses);
+        return tourResponse;
+    }
 
 }

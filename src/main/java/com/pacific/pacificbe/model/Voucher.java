@@ -6,11 +6,13 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Nationalized;
 
+import java.time.Instant;
+
 @Getter
 @Setter
 @Entity
-@Table(name = "transport")
-public class Transport {
+@Table(name = "voucher")
+public class Voucher {
     @Id
     @Size(max = 255)
     @Column(name = "id", nullable = false)
@@ -18,20 +20,21 @@ public class Transport {
     private String id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tour_id")
-    private Tour tour;
+    @JoinColumn(name = "payment_id")
+    private Payment payment;
 
     @Size(max = 255)
     @Nationalized
-    @Column(name = "transport_type")
-    private String transportType;
+    @Column(name = "voucher_name")
+    private String voucherName;
 
-    @Column(name = "capacity")
-    private Integer capacity;
+    @Column(name = "quantity")
+    private Integer quantity;
 
-    @Size(max = 255)
-    @Nationalized
-    @Column(name = "status")
-    private String status;
+    @Column(name = "date_issued")
+    private Instant dateIssued;
+
+    @Column(name = "due_date")
+    private Instant dueDate;
 
 }

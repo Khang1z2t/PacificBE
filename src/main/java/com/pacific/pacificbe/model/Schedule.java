@@ -9,20 +9,17 @@ import org.hibernate.annotations.Nationalized;
 @Getter
 @Setter
 @Entity
-@Table(name = "itinerary")
-public class Itinerary extends BaseEntity {
+@Table(name = "schedule")
+public class Schedule {
     @Id
     @Size(max = 255)
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @Size(max = 255)
-    @Column(name = "tour_id")
-    private String tourId;
-
-    @Column(name = "day_number")
-    private Integer dayNumber;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tour_id")
+    private Tour tour;
 
     @Size(max = 255)
     @Nationalized

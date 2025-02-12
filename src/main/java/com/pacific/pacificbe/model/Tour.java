@@ -8,8 +8,8 @@ import lombok.Setter;
 import org.hibernate.annotations.Nationalized;
 
 import java.math.BigDecimal;
-import java.time.Instant;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -23,6 +23,19 @@ public class Tour extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cate_id")
+    private Category cate;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JsonIgnore
+    @JoinTable(
+            name = "tour_guide",
+            joinColumns = @JoinColumn(name = "tour_id"),
+            inverseJoinColumns = @JoinColumn(name = "guide_id")
+    )
+    private Set<Guide> guides = new LinkedHashSet<>();
+
     @Size(max = 255)
     @Nationalized
     @Column(name = "title")
@@ -33,18 +46,14 @@ public class Tour extends BaseEntity {
     @Column(name = "description")
     private String description;
 
-    @Size(max = 255)
-    @Column(name = "theme_url")
-    private String themeUrl;
-
-    @Column(name = "capacity")
-    private Integer capacity;
+    @Column(name = "quantity")
+    private Long quantity;
 
     @Column(name = "base_price", precision = 19, scale = 4)
     private BigDecimal basePrice;
 
-    @Column(name = "childrent_price", precision = 19, scale = 4)
-    private BigDecimal childrentPrice;
+    @Column(name = "children_price", precision = 19, scale = 4)
+    private BigDecimal childrenPrice;
 
     @Size(max = 255)
     @Nationalized
@@ -58,25 +67,36 @@ public class Tour extends BaseEntity {
 
     @Size(max = 255)
     @Nationalized
-    @Column(name = "meeting_point")
-    private String meetingPoint;
+    @Column(name = "metting_point")
+    private String mettingPoint;
 
-    @Column(name = "status")
-    private Instant status;
+    @Lob
+    @Column(name = "theme_url")
+    private String themeUrl;
 
     @Size(max = 255)
-    @Column(name = "guide_id")
-    private String guideId;
+    @Column(name = "status")
+    private String status;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cate_id")
-    private Category cate;
+    @OneToMany(mappedBy = "tour")
+    private Set<Booking> bookings = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "tour")
+    private Set<Hotel> hotels = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "tour")
     private Set<Review> reviews = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "tour", fetch = FetchType.LAZY)
-    @JsonIgnore
+    @OneToMany(mappedBy = "tour")
+    private Set<Schedule> schedules = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "tour")
     private Set<TourImage> tourImages = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "tour")
+    private Set<Transport> transports = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "tour")
+    private Set<Wishlist> wishlists = new LinkedHashSet<>();
 
 }

@@ -10,8 +10,8 @@ import java.time.Instant;
 @Getter
 @Setter
 @Entity
-@Table(name = "history")
-public class History {
+@Table(name = "wishlist")
+public class Wishlist {
     @Id
     @Size(max = 255)
     @Column(name = "id", nullable = false)
@@ -22,21 +22,9 @@ public class History {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Size(max = 255)
-    @Column(name = "action_type")
-    private String actionType;
-
-    @Size(max = 255)
-    @Column(name = "target_type")
-    private String targetType;
-
-    @Size(max = 255)
-    @Column(name = "id_type")
-    private String idType;
-
-    @Size(max = 255)
-    @Column(name = "ip_address")
-    private String ipAddress;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tour_id")
+    private Tour tour;
 
     @Column(name = "create_at")
     private Instant createAt;

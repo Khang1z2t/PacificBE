@@ -9,8 +9,8 @@ import org.hibernate.annotations.Nationalized;
 @Getter
 @Setter
 @Entity
-@Table(name = "chat_message")
-public class ChatMessage extends BaseEntity {
+@Table(name = "hotel")
+public class Hotel {
     @Id
     @Size(max = 255)
     @Column(name = "id", nullable = false)
@@ -18,19 +18,20 @@ public class ChatMessage extends BaseEntity {
     private String id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "chat_id")
-    private Chat chat;
-
-    @Size(max = 255)
-    @Column(name = "sender_id")
-    private String senderId;
+    @JoinColumn(name = "tour_id")
+    private Tour tour;
 
     @Size(max = 255)
     @Nationalized
-    @Column(name = "message")
-    private String message;
+    @Column(name = "hotel_type")
+    private String hotelType;
 
-    @Column(name = "is_read")
-    private Boolean isRead;
+    @Column(name = "rating")
+    private Double rating;
+
+    @Nationalized
+    @Lob
+    @Column(name = "description")
+    private String description;
 
 }

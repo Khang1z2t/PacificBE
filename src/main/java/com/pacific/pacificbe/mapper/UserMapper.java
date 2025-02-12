@@ -1,7 +1,5 @@
 package com.pacific.pacificbe.mapper;
 
-import com.pacific.pacificbe.model.User;
-
 public interface UserMapper {
 //    User toUser(UserCreationRequest request);
 

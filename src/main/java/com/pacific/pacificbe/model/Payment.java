@@ -15,7 +15,7 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "payment")
-public class Payment {
+public class Payment extends BaseEntity {
     @Id
     @Size(max = 255)
     @Column(name = "id", nullable = false)
@@ -26,8 +26,8 @@ public class Payment {
     @JoinColumn(name = "booking_id")
     private Booking booking;
 
-    @Column(name = "total_price", precision = 19, scale = 4)
-    private BigDecimal totalPrice;
+    @Column(name = "amount", precision = 19, scale = 4)
+    private BigDecimal amount;
 
     @Size(max = 255)
     @Nationalized
@@ -36,8 +36,8 @@ public class Payment {
 
     @Size(max = 255)
     @Nationalized
-    @Column(name = "paymet_status")
-    private String paymetStatus;
+    @Column(name = "payment_status")
+    private String paymentStatus;
 
     @Size(max = 255)
     @Column(name = "transaction_id")
@@ -46,12 +46,15 @@ public class Payment {
     @Column(name = "payment_date")
     private Instant paymentDate;
 
-    @Size(max = 255)
     @Nationalized
-    @Column(name = "notes")
-    private String notes;
+    @Lob
+    @Column(name = "note")
+    private String note;
 
     @OneToMany(mappedBy = "payment")
     private Set<Invoice> invoices = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "payment")
+    private Set<Voucher> vouchers = new LinkedHashSet<>();
 
 }

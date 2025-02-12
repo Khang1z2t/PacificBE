@@ -1,76 +1,80 @@
 package com.pacific.pacificbe.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Nationalized;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
+@Getter
+@Setter
 @Entity
-@Table(name = "Users")
+@Table(name = "users")
 public class User extends BaseEntity implements UserDetails {
     @Id
+    @Size(max = 255)
+    @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @Column(name = "username", nullable = false, length = 50)
+    @Size(max = 100)
+    @Column(name = "username", length = 100)
     private String username;
 
-    @Column(name = "password", nullable = false, length = 255)
+    @Size(max = 255)
+    @Column(name = "password")
     private String password;
 
-    @Column(name = "email", nullable = false, unique = true, length = 100)
-    private String email;
-
-    @Column(name = "first_name", nullable = false, length = 50)
+    @Size(max = 255)
+    @Nationalized
+    @Column(name = "first_name")
     private String firstName;
 
-    @Column(name = "last_name", nullable = false, length = 50)
+    @Size(max = 255)
+    @Nationalized
+    @Column(name = "last_name")
     private String lastName;
 
-    @Column(name = "phone", length = 15)
+    @Size(max = 20)
+    @Column(name = "phone", length = 20)
     private String phone;
 
-    @Column(name = "address", length = 255)
-    private String address;
+    @Size(max = 255)
+    @Column(name = "email")
+    private String email;
 
-    @Column(name = "status")
-    private String status;
+    @Column(name = "role")
+    private Boolean role;
 
-    @Column(name = "role", nullable = false, length = 50)
-    private String role;
+    @Column(name = "deposit", precision = 19, scale = 4)
+    private BigDecimal deposit;
 
+    @Size(max = 255)
     @Column(name = "avatar_url")
     private String avatarUrl;
 
-    @Column(name = "deposit")
-    private Double deposit;
+    @Column(name = "email_verify")
+    private Boolean emailVerify;
+
+    @Column(name = "phone_verify")
+    private Boolean phoneVerify;
 
     @OneToMany(mappedBy = "user")
     private Set<Booking> bookings = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "user")
-    private Set<Chat> chats = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "admin")
-    private Set<Chat> chats2 = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "user")
-    private Set<History> histories = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "user")
     private Set<Review> reviews = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "user")
+    private Set<Wishlist> wishlists = new LinkedHashSet<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -97,4 +101,3 @@ public class User extends BaseEntity implements UserDetails {
         return UserDetails.super.isEnabled();
     }
 }
-

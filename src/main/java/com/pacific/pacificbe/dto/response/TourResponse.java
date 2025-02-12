@@ -1,13 +1,8 @@
 package com.pacific.pacificbe.dto.response;
 
-import com.pacific.pacificbe.model.Guide;
-import com.pacific.pacificbe.model.Itinerary;
-import io.swagger.v3.oas.annotations.Operation;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.awt.*;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -22,12 +17,12 @@ public class TourResponse {
     String themeUrl;
     String capacity;
     Double basePrice;
-    Double childrentPrice;
+    Double childrenPrice;
     String duration;
     String destination;
     String meetingPoint;
     String status;
     List<?> tourImages;
-    String guideId;
+    List<?> guides;
 
 }

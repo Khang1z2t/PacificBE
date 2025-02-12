@@ -2,12 +2,11 @@ package com.pacific.pacificbe.services.impl;
 
 import com.pacific.pacificbe.dto.response.TourResponse;
 import com.pacific.pacificbe.mapper.TourMapper;
-import com.pacific.pacificbe.repository.TourReponsitory;
+import com.pacific.pacificbe.repository.TourRepository;
 import com.pacific.pacificbe.services.TourService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,7 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class TourServiceImpl implements TourService {
-    TourReponsitory tourReponsitory;
+    TourRepository tourReponsitory;
     TourMapper tourMapper;
 
     @Override

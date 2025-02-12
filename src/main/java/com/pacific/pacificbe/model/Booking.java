@@ -30,9 +30,9 @@ public class Booking extends BaseEntity {
     @JoinColumn(name = "promotion_id")
     private Promotion promotion;
 
-    @Size(max = 255)
-    @Column(name = "tour_id")
-    private String tourId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tour_id")
+    private Tour tour;
 
     @Column(name = "booking_date")
     private Instant bookingDate;
@@ -57,14 +57,14 @@ public class Booking extends BaseEntity {
 
     @Size(max = 255)
     @Nationalized
-    @Column(name = "sepecial_request")
-    private String sepecialRequest;
+    @Column(name = "special_request")
+    private String specialRequest;
 
     @Column(name = "adult_quantity")
-    private Integer adultQuantity;
+    private Long adultQuantity;
 
     @Column(name = "children_quantity")
-    private Integer childrenQuantity;
+    private Long childrenQuantity;
 
     @OneToMany(mappedBy = "booking")
     private Set<Payment> payments = new LinkedHashSet<>();

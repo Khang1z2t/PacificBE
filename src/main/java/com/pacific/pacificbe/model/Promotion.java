@@ -15,16 +15,16 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "promotions")
-public class Promotion extends BaseEntity {
+public class Promotion {
     @Id
     @Size(max = 255)
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @Size(max = 225)
+    @Size(max = 255)
     @Nationalized
-    @Column(name = "description", length = 225)
+    @Column(name = "description")
     private String description;
 
     @Column(name = "discount", precision = 19, scale = 4)
@@ -35,6 +35,9 @@ public class Promotion extends BaseEntity {
 
     @Column(name = "due_date")
     private Instant dueDate;
+
+    @Column(name = "quantity")
+    private Long quantity;
 
     @OneToMany(mappedBy = "promotion")
     private Set<Booking> bookings = new LinkedHashSet<>();

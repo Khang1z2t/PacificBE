@@ -6,11 +6,14 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Nationalized;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 @Getter
 @Setter
 @Entity
-@Table(name = "guide")
-public class Guide {
+@Table(name = "guides")
+public class Guide extends BaseEntity {
     @Id
     @Size(max = 255)
     @Column(name = "id", nullable = false)
@@ -28,16 +31,17 @@ public class Guide {
     private String lastName;
 
     @Size(max = 20)
-    @Nationalized
     @Column(name = "phone", length = 20)
     private String phone;
 
-    @Size(max = 100)
-    @Nationalized
-    @Column(name = "email", length = 100)
+    @Size(max = 255)
+    @Column(name = "email")
     private String email;
 
     @Column(name = "experience_year")
-    private Double experienceYear;
+    private Integer experienceYear;
+
+    @ManyToMany(mappedBy = "guides")
+    private Set<Tour> tours = new LinkedHashSet<>();
 
 }

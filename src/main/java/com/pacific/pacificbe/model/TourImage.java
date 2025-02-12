@@ -10,7 +10,7 @@ import java.time.Instant;
 @Getter
 @Setter
 @Entity
-@Table(name = "tour_image")
+@Table(name = "tour_images")
 public class TourImage {
     @Id
     @Size(max = 255)
@@ -22,7 +22,7 @@ public class TourImage {
     @JoinColumn(name = "tour_id")
     private Tour tour;
 
-    @Size(max = 255)
+    @Lob
     @Column(name = "image_url")
     private String imageUrl;
 
