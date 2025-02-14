@@ -1,6 +1,7 @@
 package com.pacific.pacificbe.controller;
 
 import com.pacific.pacificbe.dto.ApiResponse;
+import com.pacific.pacificbe.dto.ApiResponse.ApiResponseBuilder;
 import com.pacific.pacificbe.dto.request.LoginRequest;
 import com.pacific.pacificbe.dto.response.AuthenticationResponse;
 import com.pacific.pacificbe.dto.response.UserResponse;
@@ -21,12 +22,12 @@ import org.springframework.web.bind.annotation.RestController;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AuthController {
     AuthService authService;
-
+    
     @PostMapping("/login")
     @Operation(summary = "API đăng nhập")
     ResponseEntity<ApiResponse<AuthenticationResponse>> login(@RequestBody LoginRequest request) {
-        return ResponseEntity.ok(ApiResponse.<AuthenticationResponse>builder()
-                .data(authService.loginUser(request))
+        return ResponseEntity.ok(((ApiResponseBuilder<AuthenticationResponse>) ApiResponse.<AuthenticationResponse>builder()
+                .data(authService.loginUser(request)))
                 .build());
     }
 
