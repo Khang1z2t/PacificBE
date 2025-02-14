@@ -11,4 +11,8 @@ public class UrlMapping {
     public static final String GET_TOUR_BY_ID = "/{id}";
     public static final String GET_ALL_TOURS = "/all";
     /*============================ End Tour API ===================================*/
+
+    /*============================ Start User API ===================================*/
+    /*============================ End User API ===================================*/
+
 }
