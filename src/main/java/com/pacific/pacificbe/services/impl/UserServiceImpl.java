@@ -1,8 +1,7 @@
 package com.pacific.pacificbe.services.impl;
 
-import com.pacific.pacificbe.dto.request.LoginRequest;
-import com.pacific.pacificbe.dto.response.AuthenticationResponse;
-//import com.pacific.pacificbe.mapper.UserMapper;
+
+import com.pacific.pacificbe.mapper.UserMapper;
 import com.pacific.pacificbe.repository.UserRepository;
 import com.pacific.pacificbe.services.UserService;
 import lombok.AccessLevel;
@@ -17,7 +16,8 @@ import org.springframework.stereotype.Service;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserServiceImpl implements UserService {
     UserRepository userRepository;
-//    UserMapper userMapper;
+    UserMapper userMapper;
+
 
 
 }

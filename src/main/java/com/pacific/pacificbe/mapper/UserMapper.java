@@ -1,9 +1,24 @@
 package com.pacific.pacificbe.mapper;
 
-public interface UserMapper {
-//    User toUser(UserCreationRequest request);
+import com.pacific.pacificbe.dto.response.UserResponse;
+import com.pacific.pacificbe.model.User;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Component;
 
-//    UserResponse toUserResponse(User user);
+@Component
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+public class UserMapper {
+    ModelMapper modelMapper;
 
-//    void updateUser(@MappingTarget User user, UserUpdateRequest request);
+    public UserResponse toUserResponse(User user) {
+        return modelMapper.map(user, UserResponse.class);
+    }
+
+    public User toUser(UserResponse userResponse) {
+        return modelMapper.map(userResponse, User.class);
+    }
 }

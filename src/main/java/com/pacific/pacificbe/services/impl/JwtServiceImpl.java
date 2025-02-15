@@ -13,6 +13,7 @@ import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.Function;
 
 @Service
@@ -25,9 +26,14 @@ public class JwtServiceImpl implements JwtService {
     }
 
     @Override
-    public <T> T extractClaim(String token, Function<Claims, T> claimmsResolver) {
+    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
-        return claimmsResolver.apply(claims);
+        return claimsResolver.apply(claims);
+    }
+
+    @Override
+    public String generateToken(Map<String, Object> extraClaims) {
+        return generateToken(extraClaims, null);
     }
 
     @Override
@@ -35,14 +41,11 @@ public class JwtServiceImpl implements JwtService {
         return generateToken(new HashMap<>(), userDetails);
     }
 
-    public String generateToken(
-            Map<String, Object> extraClaims,
-            UserDetails userDetails
-    ) {
+    public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
-                .setSubject(userDetails.getUsername())
+                .setSubject(userDetails == null ? UUID.randomUUID().toString() : userDetails.toString())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
