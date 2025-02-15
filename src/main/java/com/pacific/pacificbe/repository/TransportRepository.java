@@ -1,8 +1,7 @@
 package com.pacific.pacificbe.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-
 import com.pacific.pacificbe.model.Transport;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface TransportRepository extends JpaRepository<Transport, String>{
 

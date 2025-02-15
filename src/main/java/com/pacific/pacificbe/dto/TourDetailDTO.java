@@ -1,28 +1,19 @@
 package com.pacific.pacificbe.dto;
 
-import java.math.BigDecimal;
-import java.util.Date;
-
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class TourDTO {
+public class TourDetailDTO {
     String id;
-    String title;
-    Integer quantity;
-    Boolean available;
-    BigDecimal priceAdults;
-    BigDecimal priceChildren;
-    Double ratingAvg;
-    String status;
     String itinerary;
     String startDate;
     String endDate;
     Integer duration;
-
 }

@@ -34,10 +34,10 @@ public class SearchTourController {
             @RequestParam(required = false) BigDecimal minPrice,
             @RequestParam(required = false) BigDecimal maxPrice) {
 
-        List<TourResponse> result = tourService.searchTours(destination, departureDate, returnDate, minPrice, maxPrice);
+//        List<TourResponse> result = tourService.searchTours(destination, departureDate, returnDate, minPrice, maxPrice);
         return ResponseEntity.ok(
                 ApiResponse.<List<TourResponse>>builder()
-                        .data(result)
+                        .data(null)
                         .build()
         );
     }

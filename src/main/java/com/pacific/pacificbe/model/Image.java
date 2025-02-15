@@ -9,13 +9,11 @@ import org.hibernate.annotations.Nationalized;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import java.math.BigDecimal;
-
 @Getter
 @Setter
 @Entity
-@Table(name = "review")
-public class Review extends BaseEntity {
+@Table(name = "image")
+public class Image {
     @Id
     @Size(max = 255)
     @Column(name = "id", nullable = false)
@@ -25,31 +23,18 @@ public class Review extends BaseEntity {
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "booking_id", nullable = false)
-    private Booking booking;
-
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "tour_id", nullable = false)
-    private Tour tour;
-
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "tour_details_id", nullable = false)
     private TourDetail tourDetails;
 
-    @Column(name = "rating", precision = 2, scale = 1)
-    private BigDecimal rating;
-
+    @Size(max = 500)
+    @NotNull
     @Nationalized
-    @Lob
-    @Column(name = "comment")
-    private String comment;
+    @Column(name = "image_url", nullable = false, length = 500)
+    private String imageUrl;
+
+    @Size(max = 255)
+    @Nationalized
+    @Column(name = "description")
+    private String description;
 
 }

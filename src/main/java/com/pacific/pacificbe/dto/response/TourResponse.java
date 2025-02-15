@@ -3,6 +3,10 @@ package com.pacific.pacificbe.dto.response;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.math.BigDecimal;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -13,15 +17,20 @@ import java.util.List;
 public class TourResponse {
     String id;
     String title;
-    String description;
-    String themeUrl;
-    String capacity;
-    Double basePrice;
-    Double childrenPrice;
-    String duration;
-    String destination;
-    String meetingPoint;
+    Integer quantity;
+    Boolean available;
+    BigDecimal priceAdults;
+    BigDecimal priceChildren;
+    Double ratingAvg;
     String status;
-    List<?> tourImages;
-    List<?> guides;
+
+    String itinerary;
+    String startDate;
+    String endDate;
+    Integer duration;
+
+    Boolean active;
+    LocalDateTime createdAt;
+    LocalDateTime updatedAt;
+    LocalDateTime deletedAt;
 }

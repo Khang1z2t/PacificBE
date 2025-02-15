@@ -5,13 +5,11 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.Instant;
-
 @Getter
 @Setter
 @Entity
-@Table(name = "tour_images")
-public class TourImage {
+@Table(name = "tour_category")
+public class TourCategory {
     @Id
     @Size(max = 255)
     @Column(name = "id", nullable = false)
@@ -22,11 +20,8 @@ public class TourImage {
     @JoinColumn(name = "tour_id")
     private Tour tour;
 
-    @Lob
-    @Column(name = "image_url")
-    private String imageUrl;
-
-    @Column(name = "create_at")
-    private Instant createAt;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
 
 }

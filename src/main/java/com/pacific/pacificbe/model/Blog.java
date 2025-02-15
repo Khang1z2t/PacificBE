@@ -5,21 +5,27 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Nationalized;
-
-import java.util.LinkedHashSet;
-import java.util.Set;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "category")
-public class Category {
+@Table(name = "blog")
+public class Blog extends BaseEntity {
     @Id
     @Size(max = 255)
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @Size(max = 255)
     @NotNull
@@ -27,17 +33,16 @@ public class Category {
     @Column(name = "title", nullable = false)
     private String title;
 
-    @Size(max = 50)
+    @NotNull
     @Nationalized
-    @Column(name = "type", length = 50)
-    private String type;
+    @Lob
+    @Column(name = "content", nullable = false)
+    private String content;
 
     @Size(max = 50)
     @Nationalized
+    @ColumnDefault("'draft'")
     @Column(name = "status", length = 50)
     private String status;
-
-    @OneToMany(mappedBy = "category")
-    private Set<com.pacific.pacificbe.model.TourCategory> tourCategories = new LinkedHashSet<>();
 
 }

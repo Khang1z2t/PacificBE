@@ -1,40 +1,78 @@
 package com.pacific.pacificbe.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Nationalized;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
-import java.time.Instant;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "voucher")
-public class Voucher {
+public class Voucher extends BaseEntity {
     @Id
     @Size(max = 255)
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "payment_id")
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "payment_id", nullable = false)
     private Payment payment;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.SET_NULL)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "tour_id", nullable = false)
+    private Tour tour;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "booking_id", nullable = false)
+    private Booking booking;
 
     @Size(max = 255)
     @Nationalized
-    @Column(name = "voucher_name")
-    private String voucherName;
+    @Column(name = "name_voucher")
+    private String nameVoucher;
+
+    @Size(max = 255)
+    @NotNull
+    @Nationalized
+    @Column(name = "code_voucher", nullable = false)
+    private String codeVoucher;
+
+    @Column(name = "discount", precision = 5, scale = 2)
+    private BigDecimal discount;
 
     @Column(name = "quantity")
     private Integer quantity;
 
-    @Column(name = "date_issued")
-    private Instant dateIssued;
+    @Size(max = 50)
+    @Nationalized
+    @ColumnDefault("'pending'")
+    @Column(name = "status", length = 50)
+    private String status;
 
-    @Column(name = "due_date")
-    private Instant dueDate;
+    @NotNull
+    @Column(name = "start_date", nullable = false)
+    private LocalDate startDate;
+
+    @NotNull
+    @Column(name = "end_date", nullable = false)
+    private LocalDate endDate;
 
 }

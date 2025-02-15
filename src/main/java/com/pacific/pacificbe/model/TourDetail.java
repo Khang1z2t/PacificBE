@@ -5,19 +5,19 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Nationalized;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "promotion")
-public class Promotion extends BaseEntity {
+@Table(name = "tour_details")
+public class TourDetail {
     @Id
     @Size(max = 255)
     @Column(name = "id", nullable = false)
@@ -26,36 +26,15 @@ public class Promotion extends BaseEntity {
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "booking_id", nullable = false)
-    private Booking booking;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @OnDelete(action = OnDeleteAction.SET_NULL)
-    @JoinColumn(name = "user_id")
-    private User user;
-
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "tour_id", nullable = false)
     private Tour tour;
 
-    @Size(max = 255)
     @NotNull
     @Nationalized
-    @Column(name = "name_promotion", nullable = false)
-    private String namePromotion;
-
-    @Column(name = "discount", precision = 5, scale = 2)
-    private BigDecimal discount;
-
-    @Column(name = "quantity")
-    private Integer quantity;
-
-    @Size(max = 50)
-    @Nationalized
-    @ColumnDefault("'pending'")
-    @Column(name = "status", length = 50)
-    private String status;
+    @Lob
+    @Column(name = "itinerary", nullable = false)
+    private String itinerary;
 
     @NotNull
     @Column(name = "start_date", nullable = false)
@@ -64,5 +43,18 @@ public class Promotion extends BaseEntity {
     @NotNull
     @Column(name = "end_date", nullable = false)
     private LocalDate endDate;
+
+    @NotNull
+    @Column(name = "duration", nullable = false)
+    private Integer duration;
+
+    @OneToMany(mappedBy = "tourDetails")
+    private Set<Combo> combos = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "tourDetails")
+    private Set<Image> images = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "tourDetails")
+    private Set<Review> reviews = new LinkedHashSet<>();
 
 }

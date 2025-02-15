@@ -1,14 +1,17 @@
 package com.pacific.pacificbe.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Nationalized;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -17,7 +20,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-@Table(name = "users")
+@Table(name = "\"user\"")
 public class User extends BaseEntity implements UserDetails {
     @Id
     @Size(max = 255)
@@ -25,53 +28,89 @@ public class User extends BaseEntity implements UserDetails {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @Size(max = 100)
-    @Column(name = "username", length = 100)
+    @Size(max = 50)
+    @NotNull
+    @Nationalized
+    @Column(name = "username", nullable = false, length = 50)
     private String username;
 
     @Size(max = 255)
-    @Column(name = "password")
+    @NotNull
+    @Nationalized
+    @Column(name = "password", nullable = false)
     private String password;
 
-    @Size(max = 255)
+    @Size(max = 50)
     @Nationalized
-    @Column(name = "first_name")
+    @Column(name = "first_name", length = 50)
     private String firstName;
 
-    @Size(max = 255)
+    @Size(max = 50)
     @Nationalized
-    @Column(name = "last_name")
+    @Column(name = "last_name", length = 50)
     private String lastName;
 
+    @ColumnDefault("0")
+    @Column(name = "deposit", precision = 18, scale = 2)
+    private BigDecimal deposit;
+
+    @Size(max = 50)
+    @Nationalized
+    @Column(name = "gender", length = 50)
+    private String gender;
+
+    @Column(name = "birthday")
+    private LocalDate birthday;
+
+    @Size(max = 100)
+    @Nationalized
+    @Column(name = "email", length = 100)
+    private String email;
+
     @Size(max = 20)
+    @Nationalized
     @Column(name = "phone", length = 20)
     private String phone;
 
     @Size(max = 255)
-    @Column(name = "email")
-    private String email;
+    @Nationalized
+    @Column(name = "address")
+    private String address;
 
-    @Column(name = "role")
-    private Boolean role;
+    @Size(max = 50)
+    @Nationalized
+    @ColumnDefault("'active'")
+    @Column(name = "status", length = 50)
+    private String status;
 
-    @Column(name = "deposit", precision = 19, scale = 4)
-    private BigDecimal deposit;
+    @Size(max = 20)
+    @Nationalized
+    @Column(name = "role", length = 20)
+    private String role;
 
-    @Size(max = 255)
-    @Column(name = "avatar_url")
-    private String avatarUrl;
-
-    @Column(name = "email_verify")
-    private Boolean emailVerify;
-
-    @Column(name = "phone_verify")
-    private Boolean phoneVerify;
+    @OneToMany(mappedBy = "user")
+    private Set<Blog> blogs = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "user")
     private Set<Booking> bookings = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "user")
+    private Set<Invoice> invoices = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "user")
+    private Set<Payment> payments = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "user")
+    private Set<Promotion> promotions = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "user")
     private Set<Review> reviews = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "user")
+    private Set<Support> supports = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "user")
+    private Set<Voucher> vouchers = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "user")
     private Set<Wishlist> wishlists = new LinkedHashSet<>();

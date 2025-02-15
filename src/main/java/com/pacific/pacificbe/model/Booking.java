@@ -1,13 +1,16 @@
 package com.pacific.pacificbe.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Nationalized;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.math.BigDecimal;
-import java.time.Instant;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -22,54 +25,65 @@ public class Booking extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "promotion_id")
-    private Promotion promotion;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tour_id")
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "tour_id", nullable = false)
     private Tour tour;
 
-    @Column(name = "booking_date")
-    private Instant bookingDate;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.SET_NULL)
+    @JoinColumn(name = "combo_id")
+    private Combo combo;
 
-    @Column(name = "total_price", precision = 19, scale = 4)
-    private BigDecimal totalPrice;
+    @Column(name = "num_adults")
+    private Integer numAdults;
 
-    @Size(max = 255)
+    @Column(name = "num_children")
+    private Integer numChildren;
+
+    @ColumnDefault("[num_adults]+[num_children]")
+    @Column(name = "total_number")
+    private Integer totalNumber;
+
+    @Column(name = "total_amount", precision = 10, scale = 2)
+    private BigDecimal totalAmount;
+
+    @Size(max = 50)
     @Nationalized
-    @Column(name = "status")
-    private String status;
-
-    @Size(max = 255)
-    @Nationalized
-    @Column(name = "cancel_reason")
-    private String cancelReason;
-
-    @Size(max = 255)
-    @Nationalized
-    @Column(name = "booking_status")
+    @ColumnDefault("'pending'")
+    @Column(name = "booking_status", length = 50)
     private String bookingStatus;
 
+    @Size(max = 50)
+    @Nationalized
+    @Column(name = "payment_method", length = 50)
+    private String paymentMethod;
+
     @Size(max = 255)
     @Nationalized
-    @Column(name = "special_request")
-    private String specialRequest;
+    @Column(name = "special_requests")
+    private String specialRequests;
 
-    @Column(name = "adult_quantity")
-    private Long adultQuantity;
-
-    @Column(name = "children_quantity")
-    private Long childrenQuantity;
+    @OneToMany(mappedBy = "booking")
+    private Set<Invoice> invoices = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "booking")
     private Set<Payment> payments = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "booking")
+    private Set<Promotion> promotions = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "booking")
     private Set<Review> reviews = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "booking")
+    private Set<Voucher> vouchers = new LinkedHashSet<>();
 
 }

@@ -6,6 +6,10 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Nationalized;
 
+import java.math.BigDecimal;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 @Getter
 @Setter
 @Entity
@@ -21,17 +25,20 @@ public class Hotel {
     @JoinColumn(name = "tour_id")
     private Tour tour;
 
+    @Size(max = 50)
+    @Nationalized
+    @Column(name = "type_hotel", length = 50)
+    private String typeHotel;
+
     @Size(max = 255)
     @Nationalized
-    @Column(name = "hotel_type")
-    private String hotelType;
+    @Column(name = "name")
+    private String name;
 
-    @Column(name = "rating")
-    private Double rating;
+    @Column(name = "price", precision = 10, scale = 2)
+    private BigDecimal price;
 
-    @Nationalized
-    @Lob
-    @Column(name = "description")
-    private String description;
+    @OneToMany(mappedBy = "hotel")
+    private Set<Combo> combos = new LinkedHashSet<>();
 
 }

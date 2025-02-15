@@ -1,9 +1,11 @@
 package com.pacific.pacificbe.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Nationalized;
 
 import java.math.BigDecimal;
@@ -12,40 +14,55 @@ import java.math.BigDecimal;
 @Setter
 @Entity
 @Table(name = "invoice")
-public class Invoice extends BaseEntity {
+public class Invoice {
     @Id
     @Size(max = 255)
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "payment_id")
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "payment_id", nullable = false)
     private Payment payment;
 
-    @Size(max = 255)
-    @Column(name = "invoice_number")
-    private String invoiceNumber;
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-    @Column(name = "subtotal", precision = 19, scale = 4)
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "tour_id", nullable = false)
+    private Tour tour;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "booking_id", nullable = false)
+    private Booking booking;
+
+    @Column(name = "subtotal", precision = 18, scale = 2)
     private BigDecimal subtotal;
 
-    @Column(name = "discount", precision = 19, scale = 4)
+    @ColumnDefault("0")
+    @Column(name = "discount", precision = 5, scale = 2)
     private BigDecimal discount;
 
-    @Column(name = "tax", precision = 19, scale = 4)
-    private BigDecimal tax;
+    @ColumnDefault("10")
+    @Column(name = "VAT", precision = 5, scale = 2)
+    private BigDecimal vat;
 
-    @Column(name = "total_amount", precision = 19, scale = 4)
+    @Column(name = "total_amount", precision = 18, scale = 2)
     private BigDecimal totalAmount;
 
-    @Size(max = 255)
-    @Column(name = "status")
-    private String status;
-
+    @Size(max = 50)
     @Nationalized
-    @Lob
-    @Column(name = "note")
+    @Column(name = "payment_status", length = 50)
+    private String paymentStatus;
+
+    @Size(max = 500)
+    @Nationalized
+    @Column(name = "note", length = 500)
     private String note;
 
 }

@@ -9,15 +9,11 @@ import org.hibernate.annotations.Nationalized;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import java.math.BigDecimal;
-import java.util.LinkedHashSet;
-import java.util.Set;
-
 @Getter
 @Setter
 @Entity
-@Table(name = "transport")
-public class Transport extends BaseEntity {
+@Table(name = "destination")
+public class Destination {
     @Id
     @Size(max = 255)
     @Column(name = "id", nullable = false)
@@ -30,23 +26,33 @@ public class Transport extends BaseEntity {
     @JoinColumn(name = "tour_id", nullable = false)
     private Tour tour;
 
-    @Size(max = 50)
-    @NotNull
-    @Nationalized
-    @Column(name = "type_transport", nullable = false, length = 50)
-    private String typeTransport;
-
     @Size(max = 255)
     @NotNull
     @Nationalized
     @Column(name = "name", nullable = false)
     private String name;
 
+    @Size(max = 500)
     @NotNull
-    @Column(name = "price", nullable = false, precision = 10, scale = 2)
-    private BigDecimal price;
+    @Nationalized
+    @Column(name = "full_address", nullable = false, length = 500)
+    private String fullAddress;
 
-    @OneToMany(mappedBy = "transport")
-    private Set<Combo> combos = new LinkedHashSet<>();
+    @Size(max = 255)
+    @Nationalized
+    @Column(name = "region")
+    private String region;
+
+    @Size(max = 255)
+    @NotNull
+    @Nationalized
+    @Column(name = "country", nullable = false)
+    private String country;
+
+    @Size(max = 255)
+    @NotNull
+    @Nationalized
+    @Column(name = "city", nullable = false)
+    private String city;
 
 }
