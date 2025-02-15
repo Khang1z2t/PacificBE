@@ -1,5 +1,6 @@
 package com.pacific.pacificbe.services.impl;
 
+import com.pacific.pacificbe.model.User;
 import com.pacific.pacificbe.services.JwtService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -32,11 +33,6 @@ public class JwtServiceImpl implements JwtService {
     }
 
     @Override
-    public String generateToken(Map<String, Object> extraClaims) {
-        return generateToken(extraClaims, null);
-    }
-
-    @Override
     public String generateToken(UserDetails userDetails) {
         return generateToken(new HashMap<>(), userDetails);
     }
@@ -45,7 +41,7 @@ public class JwtServiceImpl implements JwtService {
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
-                .setSubject(userDetails == null ? UUID.randomUUID().toString() : userDetails.toString())
+                .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)

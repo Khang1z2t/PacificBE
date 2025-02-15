@@ -11,6 +11,7 @@ import com.pacific.pacificbe.model.User;
 import com.pacific.pacificbe.repository.UserRepository;
 import com.pacific.pacificbe.services.AuthService;
 import com.pacific.pacificbe.services.JwtService;
+import com.pacific.pacificbe.utils.enums.UserRole;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -53,7 +54,11 @@ public class AuthServiceImpl implements AuthService {
 
         if (!user.isActive()) throw new AppException(ErrorCode.USER_NOT_ACTIVE);
 
-        var jwtToken = jwtService.generateToken(user);
+        Map<String, Object> extraClaims = new HashMap<>();
+        extraClaims.put("uid", user.getId());
+        extraClaims.put("role", user.getRole());
+
+        var jwtToken = jwtService.generateToken(extraClaims, user);
 
         return AuthenticationResponse.builder()
                 .accessToken(jwtToken)
@@ -73,11 +78,13 @@ public class AuthServiceImpl implements AuthService {
         User user = new User();
         user.setUsername(request.getUsername());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setActive(true);
+        user.setRole(UserRole.USER.toString());
         user = userRepository.save(user);
 
         Map<String, Object> extraClaims = new HashMap<>();
-        extraClaims.put("id", user.getId());
-        extraClaims.put("username", user.getUsername());
+        extraClaims.put("uid", user.getId());
+        extraClaims.put("role", user.getRole());
 
         return UserRegisterResponse.builder()
                 .id(user.getId())
@@ -88,7 +95,7 @@ public class AuthServiceImpl implements AuthService {
                 .role(user.getRole())
                 .createdAt(user.getCreatedAt())
                 .accessToken(jwtService
-                        .generateToken(extraClaims))
+                        .generateToken(extraClaims, user))
                 .build();
     }
 
