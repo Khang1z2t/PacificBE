@@ -2,17 +2,49 @@ package com.pacific.pacificbe.utils;
 
 public class UrlMapping {
     public static final String API = "/api";
-    public static final String USERS = API + "/users";
+    public static final String AUTH = API + "/auth";
     public static final String LOGIN = "/login";
     public static final String REGISTER = "/register";
+    public static final String LOGOUT = "/logout";
+    public static final String RESET_PASSWORD = "/reset-password";
+
+    public static final String COUNT_ALL_USERS = "/count/users";
+    public static final String COUNT_ALL_TOURS = "/count/tours";
+    public static final String COUNT_ALL_GUIDES = "/count/guides";
+    public static final String COUNT_ALL_BOOKINGS = "/count/bookings";
 
     /*============================ Start Tour API ===================================*/
     public static final String TOURS = API + "/tours";
     public static final String GET_TOUR_BY_ID = "/{id}";
+    public static final String GET_TOUR_BY_NO = "/no/{tourNo}";
     public static final String GET_ALL_TOURS = "/all";
+    public static final String ADD_TOUR = "/add";
+    public static final String UPDATE_TOUR = "/update";
+    public static final String DELETE_TOUR = "/delete/{id}";
+    public static final String SEARCH_TOURS = "/search";
+
     /*============================ End Tour API ===================================*/
 
+    /*============================ Start Booking API ===================================*/
+    public static final String BOOKINGS = API + "/bookings";
+    public static final String GET_ALL_BOOKINGS = "/all";
+    public static final String GET_BOOKING_BY_ID = "/book/{id}";
+    public static final String GET_BOOKING_BY_NO = "/book/no/{bookingNo}";
+    public static final String GET_BOOKING_BY_USER = "/book/user/{userId}";
+    public static final String BOOK_TOUR =  "/book-tour";
+    public static final String UPDATE_BOOKING = "/book/{id}/update";
+    public static final String DELETE_BOOKING = "/book/{id}/delete";
+    public static final String APPROVE_BOOKING = "/book/{id}/approve";
+    public static final String CANCEL_BOOKING = "/book/{id}/cancel";
+    public static final String DECLINE_BOOKINGS = "/book/{id}/decline";
+    /*============================ End Booking API ===================================*/
+
+
     /*============================ Start User API ===================================*/
+    public static final String USERS = API + "/users";
+    public static final String GET_USER_BY_ID = "/{id}";
+    public static final String GET_ALL_USERS = "/all";
+
     /*============================ End User API ===================================*/
 
 }
