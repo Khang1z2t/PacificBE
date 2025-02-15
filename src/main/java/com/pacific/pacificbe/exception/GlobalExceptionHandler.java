@@ -67,7 +67,7 @@ public class GlobalExceptionHandler {
             log.info(attributes.toString());
 
         } catch (IllegalArgumentException e) {
-
+            log.error("Invalid key: ", e);
         }
 
         ApiResponse apiResponse = new ApiResponse();
