@@ -14,10 +14,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(UrlMapping.AUTH)
@@ -39,6 +36,14 @@ public class AuthController {
     ResponseEntity<ApiResponse<UserRegisterResponse>> register(@RequestBody UserRegisterRequest request) {
         return ResponseEntity.ok((ApiResponse.<UserRegisterResponse>builder()
                 .data(authService.registerUser(request)))
+                .build());
+    }
+
+    @GetMapping(UrlMapping.AUTHENTICATE_TOKEN)
+    @Operation(summary = "API xác thực token")
+    ResponseEntity<ApiResponse<UserResponse>> authenticateToken() {
+        return ResponseEntity.ok((ApiResponse.<UserResponse>builder()
+                .data(authService.authenticateToken()))
                 .build());
     }
 }

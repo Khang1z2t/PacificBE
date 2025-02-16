@@ -1,5 +1,6 @@
 package com.pacific.pacificbe.mapper;
 
+import com.pacific.pacificbe.dto.request.UserRegisterRequest;
 import com.pacific.pacificbe.dto.response.UserResponse;
 import com.pacific.pacificbe.model.User;
 import lombok.AccessLevel;
@@ -20,5 +21,9 @@ public class UserMapper {
 
     public User toUser(UserResponse userResponse) {
         return modelMapper.map(userResponse, User.class);
+    }
+
+    public User toUser(UserRegisterRequest userRegisterRequest) {
+        return modelMapper.map(userRegisterRequest, User.class);
     }
 }

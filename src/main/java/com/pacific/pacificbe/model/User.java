@@ -88,6 +88,10 @@ public class User extends BaseEntity implements UserDetails {
     @Column(name = "role", length = 20)
     private String role;
 
+    @Size(max = 255)
+    @Column(name = "avatar_url")
+    private String avatarUrl;
+
     @OneToMany(mappedBy = "user")
     private Set<Blog> blogs = new LinkedHashSet<>();
 

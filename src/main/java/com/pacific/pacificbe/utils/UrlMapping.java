@@ -6,6 +6,7 @@ public class UrlMapping {
     public static final String LOGIN = "/login";
     public static final String REGISTER = "/register";
     public static final String LOGOUT = "/logout";
+    public static final String AUTHENTICATE_TOKEN = "/authenticate-token";
     public static final String RESET_PASSWORD = "/reset-password";
 
     public static final String COUNT_ALL_USERS = "/count/users";

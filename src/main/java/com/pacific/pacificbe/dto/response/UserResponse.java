@@ -26,6 +26,7 @@ public class UserResponse {
     LocalDate birthday;
     BigDecimal deposit;
     String status;
+    String avatarUrl;
     String role;
 
     Boolean active;

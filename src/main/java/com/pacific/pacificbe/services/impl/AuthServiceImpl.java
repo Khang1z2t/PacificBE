@@ -4,6 +4,7 @@ import com.pacific.pacificbe.dto.request.LoginRequest;
 import com.pacific.pacificbe.dto.request.UserRegisterRequest;
 import com.pacific.pacificbe.dto.response.AuthenticationResponse;
 import com.pacific.pacificbe.dto.response.UserRegisterResponse;
+import com.pacific.pacificbe.dto.response.UserResponse;
 import com.pacific.pacificbe.exception.AppException;
 import com.pacific.pacificbe.exception.ErrorCode;
 import com.pacific.pacificbe.mapper.UserMapper;
@@ -20,6 +21,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -75,11 +77,11 @@ public class AuthServiceImpl implements AuthService {
             throw new AppException(ErrorCode.USER_ALREADY_EXISTS);
         }
 
-        User user = new User();
-        user.setUsername(request.getUsername());
+        User user = userMapper.toUser(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setActive(true);
         user.setRole(UserRole.USER.toString());
+        user.setAvatarUrl("https://drive.google.com/file/d/1_RTHRBB6K8yU2nsiSJU5LHU2d9FPbfvX/view?usp=drive_link");
         user = userRepository.save(user);
 
         Map<String, Object> extraClaims = new HashMap<>();
@@ -97,6 +99,13 @@ public class AuthServiceImpl implements AuthService {
                 .accessToken(jwtService
                         .generateToken(extraClaims, user))
                 .build();
+    }
+
+    @Override
+    public UserResponse authenticateToken() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
+        return userMapper.toUserResponse(user);
     }
 
 
