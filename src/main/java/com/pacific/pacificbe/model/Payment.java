@@ -1,19 +1,23 @@
 package com.pacific.pacificbe.model;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
+import java.math.BigDecimal;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.Nationalized;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.Nationalized;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-
-import java.math.BigDecimal;
-import java.time.Instant;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -25,16 +29,6 @@ public class Payment extends BaseEntity {
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
-
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "booking_id")
-    private Booking booking;
 
     @Column(name = "total_amount", precision = 18, scale = 2)
     private BigDecimal totalAmount;
@@ -61,9 +55,18 @@ public class Payment extends BaseEntity {
     private String note;
 
     @OneToMany(mappedBy = "payment")
-    private Set<Invoice> invoices = new LinkedHashSet<>();
+    private Set<Booking> bookings = new LinkedHashSet<>();;
 
     @OneToMany(mappedBy = "payment")
     private Set<Voucher> vouchers = new LinkedHashSet<>();
+    
+    @OneToOne(mappedBy = "payment")
+    private Invoice invoice;
+    
+//    @NotNull
+//    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+//    @OnDelete(action = OnDeleteAction.CASCADE)
+//    @JoinColumn(name = "user_id", nullable = false)
+//    private User user;
 
 }

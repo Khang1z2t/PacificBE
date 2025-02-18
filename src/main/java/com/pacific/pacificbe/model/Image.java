@@ -13,18 +13,18 @@ import org.hibernate.annotations.OnDeleteAction;
 @Setter
 @Entity
 @Table(name = "image")
-public class Image {
+public class Image extends BaseEntity{
     @Id
     @Size(max = 255)
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
-
+    
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "tour_details_id", nullable = false)
-    private TourDetail tourDetails;
+    @JoinColumn(name = "tour_id", nullable = false)
+    private Tour tour;
 
     @Size(max = 500)
     @NotNull
@@ -36,5 +36,11 @@ public class Image {
     @Nationalized
     @Column(name = "description")
     private String description;
+    
+//  @NotNull
+//  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+//  @OnDelete(action = OnDeleteAction.CASCADE)
+//  @JoinColumn(name = "tour_details_id", nullable = false)
+//  private TourDetail tourDetails;
 
 }

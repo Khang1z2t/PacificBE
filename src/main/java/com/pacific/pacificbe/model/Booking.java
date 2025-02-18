@@ -25,30 +25,13 @@ public class Booking extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @Column(name = "adult_num")
+    private Integer adult_nums;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "tour_id", nullable = false)
-    private Tour tour;
+    @Column(name = "children_num")
+    private Integer childrennums;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @OnDelete(action = OnDeleteAction.SET_NULL)
-    @JoinColumn(name = "combo_id")
-    private Combo combo;
-
-    @Column(name = "num_adults")
-    private Integer numAdults;
-
-    @Column(name = "num_children")
-    private Integer numChildren;
-
-    @ColumnDefault("[num_adults]+[num_children]")
+//    @ColumnDefault("[adult_num]+[children_num]")
     @Column(name = "total_number")
     private Integer totalNumber;
 
@@ -71,19 +54,38 @@ public class Booking extends BaseEntity {
     @Column(name = "special_requests")
     private String specialRequests;
 
-    @OneToMany(mappedBy = "booking")
-    private Set<Invoice> invoices = new LinkedHashSet<>();
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-    @OneToMany(mappedBy = "booking")
-    private Set<Payment> payments = new LinkedHashSet<>();
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "tour_id", nullable = false)
+    private Tour tour;
 
-    @OneToMany(mappedBy = "booking")
-    private Set<Promotion> promotions = new LinkedHashSet<>();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.SET_NULL)
+    @JoinColumn(name = "combo_id")
+    private Combo combo;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.SET_NULL)
+    @JoinColumn(name = "payment_id")
+    private Payment payment;
 
     @OneToMany(mappedBy = "booking")
     private Set<Review> reviews = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "booking")
-    private Set<Voucher> vouchers = new LinkedHashSet<>();
 
+//    @OneToMany(mappedBy = "booking")
+//    private Set<Voucher> vouchers = new LinkedHashSet<>();
+
+//    @OneToMany(mappedBy = "booking")
+//    private Set<Invoice> invoices = new LinkedHashSet<>();
+    
+//  @OneToMany(mappedBy = "booking")
+//  private Set<Promotion> promotions = new LinkedHashSet<>();
 }
