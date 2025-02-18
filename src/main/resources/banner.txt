@@ -1,0 +1,16 @@
+${AnsiColor.BRIGHT_BLACK} .+"+.+"+.+"+.+"+.+"+.+"+.+"+.+"+.+"+.+"+.+"+.+"+.+"+.+"+.+"+.+"+.+"+.+"+.
+(${AnsiColor.BRIGHT_RED}     ███████████                      ███     ██████   ███               ${AnsiColor.BRIGHT_BLACK})
+ )${AnsiColor.BRIGHT_RED}   ░░███░░░░░███                    ░░░     ███░░███ ░░░               ${AnsiColor.BRIGHT_BLACK}(
+(${AnsiColor.BRIGHT_RED}     ░███    ░███  ██████    ██████  ████   ░███ ░░░  ████   ██████      ${AnsiColor.BRIGHT_BLACK})
+ )${AnsiColor.BRIGHT_RED}    ░██████████  ░░░░░███  ███░░███░░███  ███████   ░░███  ███░░███    ${AnsiColor.BRIGHT_BLACK}(
+(${AnsiColor.BRIGHT_RED}     ░███░░░░░░    ███████ ░███ ░░░  ░███ ░░░███░     ░███ ░███ ░░░      ${AnsiColor.BRIGHT_BLACK})
+ )${AnsiColor.BRIGHT_RED}    ░███         ███░░███ ░███      ░███   ░███      ░███ ░███         ${AnsiColor.BRIGHT_BLACK}(
+(${AnsiColor.BRIGHT_RED}     ░███         ███░░███ ░███  ███ ░███   ░███      ░███ ░███  ███     ${AnsiColor.BRIGHT_BLACK})
+ )${AnsiColor.BRIGHT_RED}    █████       ░░████████░░██████  █████  █████     █████░░██████     ${AnsiColor.BRIGHT_BLACK}(
+(${AnsiColor.BRIGHT_RED}     ░░░░░         ░░░░░░░░  ░░░░░░  ░░░░░  ░░░░░     ░░░░░  ░░░░░░      ${AnsiColor.BRIGHT_BLACK})
+ "+.+"+.+"+.+"+.+"+.+"+.+"+.+"+.+"+.+"+.+"+.+"+.+"+.+"+.+"+.+"+.+"+.+"+.+"${AnsiColor.BRIGHT_WHITE}
+
+ >> Application: ${AnsiColor.BRIGHT_YELLOW}Pacific${AnsiColor.BRIGHT_WHITE}
+ >> Spring Boot version: ${AnsiColor.BRIGHT_GREEN}${spring-boot.version}${AnsiColor.BRIGHT_WHITE}
+ >> JDK version: ${AnsiColor.BRIGHT_CYAN}${java.version}${AnsiColor.BRIGHT_WHITE}
+ >> OS: ${AnsiColor.BRIGHT_MAGENTA}${os.name} - ${os.version} - ${os.arch}${AnsiColor.BRIGHT_WHITE}

@@ -38,7 +38,7 @@ public class TourMapper {
     public List<TourResponse> toTourResponseList(List<Tour> tours) {
         return tours.stream()
                 .map(this::toTourResponse)
-                .collect(Collectors.toList());
+                .toList();
     }
 
 

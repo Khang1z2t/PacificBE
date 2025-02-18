@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ToursController {
-    
+
     TourService tourService;
 
     @GetMapping(UrlMapping.GET_ALL_TOURS)
@@ -37,10 +38,7 @@ public class ToursController {
     @GetMapping(UrlMapping.GET_TOUR_BY_ID)
     @Operation(summary = "Lấy tour theo id")
     public ResponseEntity<ApiResponse<TourResponse>> getTourById(@PathVariable String id) {
-        return ResponseEntity.ok(
-                ApiResponse.<TourResponse>builder()
-                        .data(tourService.getTourById(id))
-                        .build()
-        );
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new ApiResponse<>(200, "Complete", tourService.getTourById(id)));
     }
 }
