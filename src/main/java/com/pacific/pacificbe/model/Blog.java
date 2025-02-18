@@ -13,7 +13,7 @@ import org.hibernate.annotations.OnDeleteAction;
 @Getter
 @Setter
 @Entity
-@Table(name = "blog")
+@Table(name = "blogs")
 public class Blog extends BaseEntity {
     @Id
     @Size(max = 255)
