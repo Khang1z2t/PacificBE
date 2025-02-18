@@ -1,14 +1,18 @@
 package com.pacific.pacificbe.model;
 
-import jakarta.persistence.*;
+import java.math.BigDecimal;
+
+import org.hibernate.annotations.Nationalized;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.Nationalized;
-
-import java.math.BigDecimal;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -21,9 +25,9 @@ public class Hotel {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tour_id")
-    private Tour tour;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "tour_id")
+//    private Tour tour;
 
     @Size(max = 50)
     @Nationalized
@@ -38,7 +42,7 @@ public class Hotel {
     @Column(name = "price", precision = 10, scale = 2)
     private BigDecimal price;
 
-    @OneToMany(mappedBy = "hotel")
-    private Set<Combo> combos = new LinkedHashSet<>();
+//    @OneToMany(mappedBy = "hotel")
+//    private Set<Combo> combos = new LinkedHashSet<>();
 
 }

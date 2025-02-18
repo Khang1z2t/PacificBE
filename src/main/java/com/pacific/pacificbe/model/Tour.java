@@ -29,8 +29,8 @@ public class Tour extends BaseEntity {
     @Column(name = "title", nullable = false)
     private String title;
 
-    @Column(name = "quantity")
-    private Integer quantity;
+    @Column(name = "quantity_max")
+    private Integer quantityMax;
 
     @ColumnDefault("1")
     @Column(name = "available")
@@ -44,47 +44,65 @@ public class Tour extends BaseEntity {
 
     @Column(name = "rating_avg")
     private Double ratingAvg;
+    
+    @Column(name = "duration")
+    private Integer duration;
 
     @Size(max = 50)
     @Nationalized
     @Column(name = "status", length = 50)
     private String status;
-
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "catagory_id")
+    private Category Categories;
+    
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "guide_id")
     private Guide guide;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "promotion_id")
+    private Promotion promotion;
 
     @OneToMany(mappedBy = "tour")
-    private Set<Booking> bookings = new LinkedHashSet<>();
-
+	private Set<TourDetail> tourDetails = new LinkedHashSet<>();
+    
     @OneToMany(mappedBy = "tour")
-    private Set<Destination> destinations = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "tour")
-    private Set<Hotel> hotels = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "tour")
-    private Set<Invoice> invoices = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "tour")
-    private Set<Promotion> promotions = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "tour")
-    private Set<Review> reviews = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "tour")
-    private Set<TourCategory> tourCategories = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "tour")
-    private Set<TourDetail> tourDetails = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "tour")
-    private Set<Transport> transports = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "tour")
-    private Set<Voucher> vouchers = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "tour")
-    private Set<Wishlist> wishlists = new LinkedHashSet<>();
+	private Set<Image> images = new LinkedHashSet<>();
+    
+    
+//    @OneToOne(mappedBy = "tour")
+//	  private Set<Guide> guides = new LinkedHashSet<>();
+	  
+// 	  @OneToMany(mappedBy = "tour")
+// 	  private Set<TourCategory> tourCategories = new LinkedHashSet<>();
+    
+//    @OneToMany(mappedBy = "tour")
+//    private Set<Booking> bookings = new LinkedHashSet<>();
+//
+//    @OneToMany(mappedBy = "tour")
+//    private Set<Destination> destinations = new LinkedHashSet<>();
+//
+//    @OneToMany(mappedBy = "tour")
+//    private Set<Hotel> hotels = new LinkedHashSet<>();
+//
+//    @OneToMany(mappedBy = "tour")
+//    private Set<Invoice> invoices = new LinkedHashSet<>();
+//
+//    @OneToMany(mappedBy = "tour")
+//    private Set<Promotion> promotions = new LinkedHashSet<>();
+//
+//    @OneToMany(mappedBy = "tour")
+//    private Set<Review> reviews = new LinkedHashSet<>();
+//
+//    @OneToMany(mappedBy = "tour")
+//    private Set<Transport> transports = new LinkedHashSet<>();
+//
+//    @OneToMany(mappedBy = "tour")
+//    private Set<Voucher> vouchers = new LinkedHashSet<>();
+//
+//    @OneToMany(mappedBy = "tour")
+//    private Set<Wishlist> wishlists = new LinkedHashSet<>();
 
 }

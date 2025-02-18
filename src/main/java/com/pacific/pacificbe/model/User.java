@@ -99,26 +99,26 @@ public class User extends BaseEntity implements UserDetails {
     private Set<Booking> bookings = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "user")
-    private Set<Invoice> invoices = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "user")
-    private Set<Payment> payments = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "user")
-    private Set<Promotion> promotions = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "user")
     private Set<Review> reviews = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "user")
     private Set<Support> supports = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "user")
-    private Set<Voucher> vouchers = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "user")
     private Set<Wishlist> wishlists = new LinkedHashSet<>();
 
+//  @OneToMany(mappedBy = "user")
+//  private Set<Invoice> invoices = new LinkedHashSet<>();
+
+//  @OneToMany(mappedBy = "user")
+//  private Set<Payment> payments = new LinkedHashSet<>();
+
+//  @OneToMany(mappedBy = "user")
+//  private Set<Promotion> promotions = new LinkedHashSet<>();
+
+//  @OneToMany(mappedBy = "user")
+//  private Set<Voucher> vouchers = new LinkedHashSet<>();
+    
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();
