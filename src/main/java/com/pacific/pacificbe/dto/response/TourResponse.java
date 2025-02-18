@@ -17,17 +17,12 @@ import java.util.List;
 public class TourResponse {
     String id;
     String title;
-    Integer quantity;
     Boolean available;
     BigDecimal priceAdults;
     BigDecimal priceChildren;
     Double ratingAvg;
     String status;
-
-    String itinerary;
-    String startDate;
-    String endDate;
-    Integer duration;
+    List<?> images;
 
     Boolean active;
     LocalDateTime createdAt;

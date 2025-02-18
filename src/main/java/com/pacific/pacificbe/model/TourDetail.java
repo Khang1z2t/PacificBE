@@ -25,7 +25,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "tour_details")
-public class TourDetail {
+public class TourDetail extends BaseEntity {
     @Id
     @Size(max = 255)
     @Column(name = "id", nullable = false)
@@ -37,25 +37,25 @@ public class TourDetail {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "tour_id", nullable = false)
     private Tour tour;
-    
+
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "destinaton_id", nullable = false)
     private Destination destination;
-    
+
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "transport_id", nullable = false)
     private Transport transport;
-    
+
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "hotel_id", nullable = false)
     private Hotel hotel;
-    
+
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -79,6 +79,11 @@ public class TourDetail {
     @NotNull
     @Column(name = "duration", nullable = false)
     private Integer duration;
+
+    @NotNull
+    @Column(name = "quantity", nullable = false)
+    private Integer quantity;
+
 
 //    @OneToMany(mappedBy = "tourDetails")
 //    private Set<Combo> combos = new LinkedHashSet<>();

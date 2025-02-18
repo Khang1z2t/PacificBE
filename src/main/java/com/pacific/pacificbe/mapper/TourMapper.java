@@ -2,6 +2,7 @@ package com.pacific.pacificbe.mapper;
 
 import com.pacific.pacificbe.dto.response.TourDetailResponse;
 import com.pacific.pacificbe.dto.response.TourResponse;
+import com.pacific.pacificbe.model.Image;
 import com.pacific.pacificbe.model.Tour;
 import com.pacific.pacificbe.model.TourDetail;
 import lombok.AccessLevel;
@@ -23,15 +24,9 @@ public class TourMapper {
 
     public TourResponse toTourResponse(Tour tour) {
         TourResponse tourResponse = modelMapper.map(tour, TourResponse.class);
-
-        Optional<TourDetail> tourDetailOptional = tour.getTourDetails().stream().findFirst();
-        if (tourDetailOptional.isPresent()) {
-            TourDetail tourDetail = tourDetailOptional.get();
-            tourResponse.setItinerary(tourDetail.getItinerary());
-            tourResponse.setStartDate(tourDetail.getStartDate().toString());
-            tourResponse.setEndDate(tourDetail.getEndDate().toString());
-            tourResponse.setDuration(tourDetail.getDuration());
-        }
+        tourResponse.setImages(tour.getImages().stream()
+                .map(Image::getImageUrl)
+                .collect(Collectors.toList()));
         return tourResponse;
     }
 

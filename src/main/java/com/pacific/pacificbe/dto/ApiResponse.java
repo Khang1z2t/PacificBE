@@ -14,10 +14,7 @@ import lombok.Builder;
 public class ApiResponse<T> {
     @Builder.Default
     private int code = 200;
-    private String message;
+    private String message = null;
     private T data;
 
-    public static <T> ApiResponseBuilder<T> builder() {
-        return new ApiResponseBuilder<>();
-    }
 }

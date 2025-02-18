@@ -1,6 +1,8 @@
 package com.pacific.pacificbe.services.impl;
 
 import com.pacific.pacificbe.dto.response.TourResponse;
+import com.pacific.pacificbe.exception.AppException;
+import com.pacific.pacificbe.exception.ErrorCode;
 import com.pacific.pacificbe.mapper.TourMapper;
 import com.pacific.pacificbe.model.Tour;
 import com.pacific.pacificbe.repository.TourRepository;
@@ -29,9 +31,10 @@ public class TourServiceImpl implements TourService {
     @Override
     public TourResponse getTourById(String id) {
         Tour tour = tourRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Tour not found with id: " + id));
+                .orElseThrow(() -> new AppException(ErrorCode.TOUR_NOT_FOUND));
         return tourMapper.toTourResponse(tour);
     }
+
 
     @Override
     public List<TourResponse> searchTours(String destination, LocalDate departureDate, LocalDate returnDate, BigDecimal minPrice, BigDecimal maxPrice) {

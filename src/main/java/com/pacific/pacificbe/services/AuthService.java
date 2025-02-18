@@ -7,9 +7,5 @@ import com.pacific.pacificbe.dto.response.UserRegisterResponse;
 import com.pacific.pacificbe.dto.response.UserResponse;
 
 public interface AuthService {
-    AuthenticationResponse loginUser(LoginRequest request);
 
-    UserRegisterResponse registerUser(UserRegisterRequest request);
-
-    UserResponse authenticateToken();
 }

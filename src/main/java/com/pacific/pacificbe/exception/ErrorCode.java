@@ -17,6 +17,12 @@ public enum ErrorCode {
     EMAIL_ALREADY_EXISTS(1010, "Email already exists", HttpStatus.BAD_REQUEST),
     INVALID_TOKEN(1011, "Invalid token", HttpStatus.BAD_REQUEST),
     USER_NOT_ACTIVE(1012, "User is not active", HttpStatus.BAD_REQUEST),
+
+    CANT_SEND_MAIL(1099, "Can't send mail", HttpStatus.INTERNAL_SERVER_ERROR),
+
+
+//    Tour Error
+    TOUR_NOT_FOUND(2001, "Tour not found", HttpStatus.NOT_FOUND),
     ;
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
