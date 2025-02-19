@@ -18,6 +18,9 @@ public class UrlMapping {
     public static final String TOURS = API + "/tours";
     public static final String GET_TOUR_BY_ID = "/{id}";
     public static final String GET_TOUR_BY_NO = "/no/{tourNo}";
+    public static final String GET_TOUR_BY_CATEGORY = "category/{category}";
+    public static final String GET_TOUR_BY_RATING = "rating/{rating}";
+    public static final String GET_TOUR_BY_DESTINATION = "destination/{destination}";
     public static final String GET_ALL_TOURS = "/all";
     public static final String ADD_TOUR = "/add";
     public static final String UPDATE_TOUR = "/update";

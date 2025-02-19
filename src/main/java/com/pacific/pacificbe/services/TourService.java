@@ -15,4 +15,10 @@ public interface TourService {
                                    LocalDate returnDate, 
                                    BigDecimal minPrice, 
                                    BigDecimal maxPrice);
+    
+    List<TourResponse> getTourCategory(String category);
+    
+    List<TourResponse> getTourRating(Double rating);
+    
+    List<TourResponse> getTourDestination(String destination);
 }

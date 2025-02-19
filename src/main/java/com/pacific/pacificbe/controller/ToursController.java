@@ -41,4 +41,22 @@ public class ToursController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ApiResponse<>(200, "Complete", tourService.getTourById(id)));
     }
+    
+    @GetMapping(UrlMapping.GET_TOUR_BY_CATEGORY)
+    @Operation(summary = "Lấy tour theo category")
+    public List<TourResponse> getTourCategory(@PathVariable("category") String category) {
+        return tourService.getTourCategory(category);
+    }
+    
+    @GetMapping(UrlMapping.GET_TOUR_BY_RATING)
+    @Operation(summary = "Lấy tour theo rating")
+    public List<TourResponse> getToursByRating(@PathVariable("rating") Double rating) {
+        return tourService.getTourRating(rating);
+    }
+
+    @GetMapping(UrlMapping.GET_TOUR_BY_DESTINATION)
+    @Operation(summary = "Lấy tour theo điểm đến")
+    public List<TourResponse> getTourDestination(@PathVariable("destination") String destination) {
+        return tourService.getTourDestination(destination);
+    }
 }

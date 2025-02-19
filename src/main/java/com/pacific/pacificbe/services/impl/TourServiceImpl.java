@@ -11,6 +11,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -40,6 +41,30 @@ public class TourServiceImpl implements TourService {
     public List<TourResponse> searchTours(String destination, LocalDate departureDate, LocalDate returnDate, BigDecimal minPrice, BigDecimal maxPrice) {
         return List.of();
     }
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<TourResponse> getTourRating(Double rating) {
+	    if (rating == null) {
+	        throw new IllegalArgumentException("Rating must not be null");
+	    }
+	    List<Tour> tours = tourRepository.findTourRating(rating);
+	    return tourMapper.toTourResponseList(tours);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<TourResponse> getTourCategory(String category) {
+	    List<Tour> tours = tourRepository.findTourCategory(category);
+	    return tourMapper.toTourResponseList(tours);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<TourResponse> getTourDestination(String destination) {
+	    List<Tour> tours = tourRepository.findTourDestination(destination);
+	    return tourMapper.toTourResponseList(tours);
+	}
 //
 //    @Override
 //    public List<TourResponse> searchTours(String destination, LocalDate departureDate, LocalDate returnDate,
