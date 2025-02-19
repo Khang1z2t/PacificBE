@@ -11,8 +11,8 @@ import java.util.Optional;
 
 @Repository
 public interface TourRepository extends JpaRepository<Tour, String> {
-    Optional<Tour> findById(String tourName);
-    
+    List<Tour> findToursByActiveIsTrue();
+
     @Procedure(procedureName = "FineTourCategory")
     List<Tour> findTourCategory(@Param("category") String category);
     

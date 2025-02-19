@@ -1,5 +1,6 @@
 package com.pacific.pacificbe.dto.response;
 
+import com.pacific.pacificbe.utils.enums.UserRole;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -16,7 +17,7 @@ public class UserRegisterResponse {
     String firstName;
     String lastName;
     String email;
-    String role;
+    UserRole role;
     LocalDateTime createdAt;
     String accessToken;
 }

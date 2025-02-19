@@ -2,7 +2,9 @@ package com.pacific.pacificbe.controller;
 
 import com.pacific.pacificbe.dto.ApiResponse;
 import com.pacific.pacificbe.dto.request.LoginRequest;
+import com.pacific.pacificbe.dto.request.ResetUserPasswordRequest;
 import com.pacific.pacificbe.dto.request.UserRegisterRequest;
+import com.pacific.pacificbe.dto.request.VerifyOtpRequest;
 import com.pacific.pacificbe.dto.response.AuthenticationResponse;
 import com.pacific.pacificbe.dto.response.UserRegisterResponse;
 import com.pacific.pacificbe.dto.response.UserResponse;
@@ -14,7 +16,10 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/user")
@@ -42,10 +47,47 @@ public class UserController {
         return ResponseEntity.ok(new ApiResponse<>(200, "Thành công", userService.authenticateToken()));
     }
 
+    @PostMapping(UrlMapping.SEND_VERIFY_MAIL)
+    @Operation(summary = "API gửi mail xác thực")
+    ResponseEntity<?> sendVerifyMail(@RequestParam String email) {
+        return ResponseEntity.ok(userService.sendEmailVerify(email));
+    }
+
+    @PostMapping(UrlMapping.VERIFY_EMAIL)
+    @Operation(summary = "API xác thực email")
+    ResponseEntity<?> verifyEmail(@RequestBody VerifyOtpRequest request) {
+        return ResponseEntity.ok(userService.verifyEmail(request));
+    }
+
+    @PostMapping(UrlMapping.SEND_RESET_PASSWORD_MAIL)
+    @Operation(summary = "API gửi mail reset mật khẩu")
+    ResponseEntity<?> sendResetPasswordMail(@RequestParam String email) {
+        return ResponseEntity.ok(userService.sendEmailResetPassword(email));
+    }
+
+    @PostMapping(UrlMapping.VERIFY_RESET_PASSWORD)
+    @Operation(summary = "API xác thực reset mật khẩu")
+    ResponseEntity<?> verifyResetPassword(@RequestBody VerifyOtpRequest request) {
+        return ResponseEntity.ok(userService.verifyResetPassword(request));
+    }
+
+    @PostMapping(UrlMapping.RESET_PASSWORD)
+    @Operation(summary = "API reset mật khẩu")
+    ResponseEntity<?> resetPassword(@RequestBody ResetUserPasswordRequest request) {
+        return ResponseEntity.ok(userService.resetPassword(request));
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @GetMapping(UrlMapping.GET_ALL_USERS)
+    @Operation(summary = "API lấy danh sách tất cả người dùng")
+    ResponseEntity<ApiResponse<List<UserResponse>>> getAllUsers() {
+        return ResponseEntity.ok(new ApiResponse<>(200, "Thành công", userService.getAllUsers()));
+    }
+
     @GetMapping("test-mail")
     @Operation(summary = "API test gửi mail")
-    ResponseEntity<?> testMail() {
-        javaMail.sendEmail("kbao040@gmail.com", "Test", "Test");
+    ResponseEntity<?> testMail(@RequestParam String email, @RequestParam String subject, @RequestParam String content) {
+        javaMail.sendEmail(email, subject, content);
         return ResponseEntity.ok("OK");
     }
 }

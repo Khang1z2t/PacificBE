@@ -9,6 +9,8 @@ import lombok.experimental.FieldDefaults;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -25,5 +27,11 @@ public class UserMapper {
 
     public User toUser(UserRegisterRequest userRegisterRequest) {
         return modelMapper.map(userRegisterRequest, User.class);
+    }
+
+    public List<UserResponse> toUserResponseList(List<User> users) {
+        return users.stream()
+                .map(this::toUserResponse)
+                .toList();
     }
 }

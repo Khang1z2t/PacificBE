@@ -1,11 +1,14 @@
 package com.pacific.pacificbe.services;
 
 import com.pacific.pacificbe.dto.request.LoginRequest;
+import com.pacific.pacificbe.dto.request.ResetUserPasswordRequest;
 import com.pacific.pacificbe.dto.request.UserRegisterRequest;
-import com.pacific.pacificbe.dto.request.VerifyEmailRequest;
+import com.pacific.pacificbe.dto.request.VerifyOtpRequest;
 import com.pacific.pacificbe.dto.response.AuthenticationResponse;
 import com.pacific.pacificbe.dto.response.UserRegisterResponse;
 import com.pacific.pacificbe.dto.response.UserResponse;
+
+import java.util.List;
 
 public interface UserService {
     AuthenticationResponse loginUser(LoginRequest request);
@@ -14,5 +17,15 @@ public interface UserService {
 
     UserResponse authenticateToken();
 
-    Boolean verifyEmail(VerifyEmailRequest request);
+    List<UserResponse> getAllUsers();
+
+    String sendEmailVerify(String email);
+
+    String sendEmailResetPassword(String email);
+
+    boolean verifyEmail(VerifyOtpRequest request);
+
+    boolean verifyResetPassword(VerifyOtpRequest request);
+
+    boolean resetPassword(ResetUserPasswordRequest request);
 }

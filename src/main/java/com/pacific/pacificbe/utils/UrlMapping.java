@@ -8,6 +8,10 @@ public class UrlMapping {
     public static final String LOGOUT = "/logout";
     public static final String AUTHENTICATE_TOKEN = "/authenticate-token";
     public static final String RESET_PASSWORD = "/reset-password";
+    public static final String SEND_VERIFY_MAIL = "/send-verify-mail";
+    public static final String VERIFY_EMAIL = "/verify-email";
+    public static final String SEND_RESET_PASSWORD_MAIL = "/send-reset-password-mail";
+    public static final String VERIFY_RESET_PASSWORD = "/verify-reset-password";
 
     public static final String COUNT_ALL_USERS = "/count/users";
     public static final String COUNT_ALL_TOURS = "/count/tours";

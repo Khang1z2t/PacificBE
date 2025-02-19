@@ -2,6 +2,7 @@ package com.pacific.pacificbe.utils;
 
 import com.pacific.pacificbe.exception.AppException;
 import com.pacific.pacificbe.exception.ErrorCode;
+import com.pacific.pacificbe.model.User;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.AccessLevel;
@@ -33,6 +34,28 @@ public class JavaMail {
             throw new AppException(ErrorCode.CANT_SEND_MAIL);
             // Handle the exception appropriately
         }
+    }
+
+    public void sendMailVerify(User user, String otp) {
+        String subjectEmail = otp + " là mã xác nhận email của bạn";
+        String bodyEmail = "<h2>Xác nhận email</h2>"
+                + "<p>Xin chào " + user.getFirstName() + " " + user.getLastName() + ",</p>"
+                + "<p>Vui lòng sử dụng mã xác nhận bên dưới để hoàn tất việc xác nhận email:</p>"
+                + "<h3 style='color:blue;'>" + otp + "</h3>"
+                + "<p>Otp sẽ hết hạn trong vòng 30 phút.</p>"
+                + "<p>Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi.</p>";
+        sendEmail(user.getEmail(), subjectEmail, bodyEmail);
+    }
+
+    public void sendMailForgotPassword(User user, String otp) {
+        String subjectEmail = otp + " là mã xác nhận đổi mật khẩu của bạn";
+        String bodyEmail = "<h2>Xác nhận đổi mật khẩu</h2>"
+                + "<p>Xin chào " + user.getFirstName() + " " + user.getLastName() + ",</p>"
+                + "<p>Vui lòng sử dụng mã xác nhận bên dưới để hoàn tất việc đổi mật khẩu:</p>"
+                + "<h3 style='color:blue;'>" + otp + "</h3>"
+                + "<p>Otp sẽ hết hạn trong vòng 30 phút.</p>"
+                + "<p>Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi.</p>";
+        sendEmail(user.getEmail(), subjectEmail, bodyEmail);
     }
 
 

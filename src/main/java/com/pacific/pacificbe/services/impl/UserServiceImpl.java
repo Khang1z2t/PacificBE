@@ -2,8 +2,9 @@ package com.pacific.pacificbe.services.impl;
 
 
 import com.pacific.pacificbe.dto.request.LoginRequest;
+import com.pacific.pacificbe.dto.request.ResetUserPasswordRequest;
 import com.pacific.pacificbe.dto.request.UserRegisterRequest;
-import com.pacific.pacificbe.dto.request.VerifyEmailRequest;
+import com.pacific.pacificbe.dto.request.VerifyOtpRequest;
 import com.pacific.pacificbe.dto.response.AuthenticationResponse;
 import com.pacific.pacificbe.dto.response.UserRegisterResponse;
 import com.pacific.pacificbe.dto.response.UserResponse;
@@ -13,12 +14,16 @@ import com.pacific.pacificbe.mapper.UserMapper;
 import com.pacific.pacificbe.model.User;
 import com.pacific.pacificbe.repository.UserRepository;
 import com.pacific.pacificbe.services.JwtService;
+import com.pacific.pacificbe.services.OtpService;
 import com.pacific.pacificbe.services.UserService;
+import com.pacific.pacificbe.utils.AuthenUtils;
+import com.pacific.pacificbe.utils.JavaMail;
 import com.pacific.pacificbe.utils.enums.UserRole;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.helpers.Util;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -28,7 +33,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Service
 @Slf4j
@@ -40,6 +47,8 @@ public class UserServiceImpl implements UserService {
     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     AuthenticationManager authenticationManager;
     JwtService jwtService;
+    JavaMail javaMail;
+    OtpService otpService;
 
     @Override
     public AuthenticationResponse loginUser(LoginRequest request) {
@@ -52,7 +61,7 @@ public class UserServiceImpl implements UserService {
                             request.getPassword())
             );
         } catch (AuthenticationException e) {
-            throw new AppException(ErrorCode.USER_ALREADY_EXISTS);
+            throw new AppException(ErrorCode.INVALID_USERNAME_OR_PASSWORD);
         }
         User user = (User) authentication.getPrincipal();
 
@@ -66,6 +75,8 @@ public class UserServiceImpl implements UserService {
 
         return AuthenticationResponse.builder()
                 .accessToken(jwtToken)
+                .username(user.getUsername())
+                .role(user.getRole())
                 .build();
     }
 
@@ -82,7 +93,7 @@ public class UserServiceImpl implements UserService {
         User user = userMapper.toUser(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setActive(true);
-        user.setRole(UserRole.USER.toString());
+        user.setRole(UserRole.USER);
         user.setAvatarUrl("https://drive.google.com/file/d/1_RTHRBB6K8yU2nsiSJU5LHU2d9FPbfvX/view?usp=drive_link");
         user = userRepository.save(user);
 
@@ -111,8 +122,62 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Boolean verifyEmail(VerifyEmailRequest request) {
-
-        return null;
+    public List<UserResponse> getAllUsers() {
+        return userMapper.toUserResponseList(userRepository.findAll());
     }
+
+    @Override
+    public String sendEmailVerify(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        String otp = otpService.generateOtp(email);
+        javaMail.sendMailVerify(user, otp);
+        return "Gửi email thành công";
+    }
+
+    @Override
+    public String sendEmailResetPassword(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        String otp = otpService.generateOtp(email);
+        javaMail.sendMailForgotPassword(user, otp);
+        return "Gửi email thành công";
+    }
+
+
+    @Override
+    public boolean verifyEmail(VerifyOtpRequest request) {
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        if (otpService.verifyOtp(request.getEmail(), request.getOtp())) {
+            user.setEmailVerified(true);
+            userRepository.save(user);
+            return true;
+        }
+        return false;
+    }
+
+
+    @Override
+    public boolean verifyResetPassword(VerifyOtpRequest request) {
+        return otpService.verifyOtp(request.getEmail(), request.getOtp());
+    }
+
+    @Override
+    public boolean resetPassword(ResetUserPasswordRequest request) {
+        String userId = AuthenUtils.getCurrentUserId();
+        if (Objects.isNull(userId)) {
+            throw new AppException(ErrorCode.NEED_LOGIN);
+        }
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        if (request.getNewPassword().equals(request.getConfirmPassword())) {
+            user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+            userRepository.save(user);
+            return true;
+        }
+        return false;
+    }
+
+
 }

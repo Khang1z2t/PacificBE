@@ -1,5 +1,7 @@
 package com.pacific.pacificbe.model;
 
+import com.fasterxml.jackson.databind.util.EnumResolver;
+import com.pacific.pacificbe.utils.enums.UserRole;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -8,6 +10,7 @@ import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Nationalized;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.math.BigDecimal;
@@ -85,8 +88,15 @@ public class User extends BaseEntity implements UserDetails {
 
     @Size(max = 20)
     @Nationalized
+    @Enumerated(EnumType.STRING)
     @Column(name = "role", length = 20)
-    private String role;
+    private UserRole role;
+
+    @Column(name = "email_verified")
+    private boolean emailVerified;
+
+    @Column(name = "phone_verified")
+    private boolean phoneVerified;
 
     @Size(max = 255)
     @Column(name = "avatar_url")
@@ -121,7 +131,7 @@ public class User extends BaseEntity implements UserDetails {
     
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return List.of(new SimpleGrantedAuthority(role.getRole()));
     }
 
     @Override
