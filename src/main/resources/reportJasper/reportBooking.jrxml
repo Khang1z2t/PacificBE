@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.21.3.final using JasperReports Library version 6.21.3-4a3078d20785ebe464f18037d738d12fc98c13cf  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reportBooking" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="cdea2e57-909a-4092-b1c9-11544c6d8914">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="pacific tour"/>
+	<queryString language="SQL">
+		<![CDATA[select
+  month(created_at) as thang
+, sum(total_amount) as tongDoanhThu 
+from booking b
+group by b.created_at]]>
+	</queryString>
+	<field name="thang" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="thang"/>
+		<property name="com.jaspersoft.studio.field.label" value="thang"/>
+	</field>
+	<field name="tongDoanhThu" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="tongDoanhThu"/>
+		<property name="com.jaspersoft.studio.field.label" value="tongDoanhThu"/>
+	</field>
+	<group name="thang">
+		<groupExpression><![CDATA[$F{thang}]]></groupExpression>
+	</group>
+	<group name="tongDoanhThu">
+		<groupExpression><![CDATA[$F{tongDoanhThu}]]></groupExpression>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="61" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="100" height="30" uuid="1cb68eee-1bc3-4514-b0ca-9db502fbb5c1">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="84a83348-cde7-46ac-8530-81f25739eae8"/>
+				</reportElement>
+				<text><![CDATA[thang]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="0" width="100" height="30" uuid="c84cadd0-8c66-484a-bd13-5b4d53be0725">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="95753412-2636-424d-aa48-83b448a8b9cc"/>
+				</reportElement>
+				<text><![CDATA[tongDoanhThu]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="125" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="100" height="30" uuid="9ff0b81e-8c3c-4322-b173-7b7d7110a182">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="84a83348-cde7-46ac-8530-81f25739eae8"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{thang}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="0" width="100" height="30" uuid="1cae7118-7f09-4bc8-8c19-4166edb8b278">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="95753412-2636-424d-aa48-83b448a8b9cc"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{tongDoanhThu}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

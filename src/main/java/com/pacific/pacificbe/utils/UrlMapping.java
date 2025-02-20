@@ -54,5 +54,10 @@ public class UrlMapping {
     public static final String GET_ALL_USERS = "/all";
 
     /*============================ End User API ===================================*/
+    
+	/* =========================== Start Report API ===================================== */
+    public static final String EXPORT = API + "/export";
+    public static final String EXPORT_PDF = "/PDF";
+    /* =========================== End Report API ===================================== */
 
 }
