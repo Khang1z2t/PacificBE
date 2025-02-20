@@ -60,12 +60,6 @@ public class Booking extends BaseEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "tour_id", nullable = false)
-    private Tour tour;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.SET_NULL)
     @JoinColumn(name = "combo_id")

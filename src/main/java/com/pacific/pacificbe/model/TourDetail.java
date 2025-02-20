@@ -73,18 +73,6 @@ public class TourDetail extends BaseEntity {
     @JoinColumn(name = "transport_id", nullable = false)
     private Transport transport;
 
-    @Column(name = "active")
-    private Boolean active;
-
-    @Column(name = "created_at")
-    private Instant createdAt;
-
-    @Column(name = "delete_at")
-    private Instant deleteAt;
-
-    @Column(name = "updated_at")
-    private Instant updatedAt;
-
     @NotNull
     @Column(name = "quantity", nullable = false)
     private Integer quantity;

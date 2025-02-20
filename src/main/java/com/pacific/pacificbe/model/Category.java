@@ -1,17 +1,15 @@
 package com.pacific.pacificbe.model;
 
+import jakarta.persistence.*;
 import org.hibernate.annotations.Nationalized;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -39,5 +37,8 @@ public class Category {
     @Nationalized
     @Column(name = "status", length = 50)
     private String status;
+
+    @OneToMany(mappedBy = "category")
+    private Set<Tour> tours = new LinkedHashSet<>();
 
 }

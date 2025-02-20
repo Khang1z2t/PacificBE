@@ -24,18 +24,6 @@ public class Tour extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @Column(name = "active")
-    private Boolean active;
-
-    @Column(name = "created_at")
-    private Instant createdAt;
-
-    @Column(name = "delete_at")
-    private Instant deleteAt;
-
-    @Column(name = "updated_at")
-    private Instant updatedAt;
-
     @ColumnDefault("1")
     @Column(name = "available")
     private Boolean available;
@@ -66,9 +54,14 @@ public class Tour extends BaseEntity {
     @Column(name = "title", nullable = false)
     private String title;
 
+    @Nationalized
+    @Lob
+    @Column(name = "description")
+    private String description;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "catagory_id")
-    private Category catagory;
+    @JoinColumn(name = "category_id")
+    private Category category;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "guide_id")
@@ -89,5 +82,6 @@ public class Tour extends BaseEntity {
 
     @OneToMany(mappedBy = "tour")
     private Set<Wishlist> wishlists = new LinkedHashSet<>();
+
 
 }
