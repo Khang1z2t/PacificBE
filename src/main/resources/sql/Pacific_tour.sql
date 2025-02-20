@@ -364,4 +364,3 @@ create table wishlist
             references users
 )
     go
-
