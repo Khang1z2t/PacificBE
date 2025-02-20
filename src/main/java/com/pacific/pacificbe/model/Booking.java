@@ -79,6 +79,11 @@ public class Booking extends BaseEntity {
     @OneToMany(mappedBy = "booking")
     private Set<Review> reviews = new LinkedHashSet<>();
 
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "tour_detail_id", nullable = false)
+    private TourDetail tourDetail;
+
 
 //    @OneToMany(mappedBy = "booking")
 //    private Set<Voucher> vouchers = new LinkedHashSet<>();

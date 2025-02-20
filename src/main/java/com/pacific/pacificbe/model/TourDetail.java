@@ -1,25 +1,18 @@
 package com.pacific.pacificbe.model;
 
-import java.time.LocalDate;
-
-import org.hibernate.annotations.Nationalized;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Nationalized;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
+import java.time.Instant;
+import java.time.LocalDate;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -33,34 +26,12 @@ public class TourDetail extends BaseEntity {
     private String id;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "tour_id", nullable = false)
-    private Tour tour;
+    @Column(name = "duration", nullable = false)
+    private Integer duration;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "destinaton_id", nullable = false)
-    private Destination destination;
-
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "transport_id", nullable = false)
-    private Transport transport;
-
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "hotel_id", nullable = false)
-    private Hotel hotel;
-
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "combo_id", nullable = false)
-    private Combo combo;
+    @Column(name = "end_date", nullable = false)
+    private LocalDate endDate;
 
     @NotNull
     @Nationalized
@@ -73,25 +44,56 @@ public class TourDetail extends BaseEntity {
     private LocalDate startDate;
 
     @NotNull
-    @Column(name = "end_date", nullable = false)
-    private LocalDate endDate;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "combo_id", nullable = false)
+    private Combo combo;
 
     @NotNull
-    @Column(name = "duration", nullable = false)
-    private Integer duration;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "destinaton_id", nullable = false)
+    private Destination destinaton;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "hotel_id", nullable = false)
+    private Hotel hotel;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "tour_id", nullable = false)
+    private Tour tour;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "transport_id", nullable = false)
+    private Transport transport;
+
+    @Column(name = "active")
+    private Boolean active;
+
+    @Column(name = "created_at")
+    private Instant createdAt;
+
+    @Column(name = "delete_at")
+    private Instant deleteAt;
+
+    @Column(name = "updated_at")
+    private Instant updatedAt;
 
     @NotNull
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
 
+    @OneToMany(mappedBy = "tourDetail")
+    private Set<Booking> bookings = new LinkedHashSet<>();
 
-//    @OneToMany(mappedBy = "tourDetails")
-//    private Set<Combo> combos = new LinkedHashSet<>();
-//
-//    @OneToMany(mappedBy = "tourDetails")
-//    private Set<Image> images = new LinkedHashSet<>();
-//
-//    @OneToMany(mappedBy = "tourDetails")
-//    private Set<Review> reviews = new LinkedHashSet<>();
+    @Size(max = 50)
+    @Column(name = "status", length = 50)
+    private String status;
 
 }

@@ -4,7 +4,6 @@ import com.pacific.pacificbe.dto.response.TourResponse;
 import com.pacific.pacificbe.exception.AppException;
 import com.pacific.pacificbe.exception.ErrorCode;
 import com.pacific.pacificbe.mapper.TourMapper;
-import com.pacific.pacificbe.model.Tour;
 import com.pacific.pacificbe.repository.TourRepository;
 import com.pacific.pacificbe.services.TourService;
 import lombok.AccessLevel;

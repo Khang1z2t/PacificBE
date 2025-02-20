@@ -1,10 +1,8 @@
 package com.pacific.pacificbe.mapper;
 
-import com.pacific.pacificbe.dto.response.TourDetailResponse;
 import com.pacific.pacificbe.dto.response.TourResponse;
 import com.pacific.pacificbe.model.Image;
 import com.pacific.pacificbe.model.Tour;
-import com.pacific.pacificbe.model.TourDetail;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -12,7 +10,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
