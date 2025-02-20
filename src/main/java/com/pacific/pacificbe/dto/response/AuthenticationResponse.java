@@ -15,5 +15,5 @@ import lombok.experimental.FieldDefaults;
 public class AuthenticationResponse {
     String accessToken;
     String username;
-    UserRole role;
+    String role;
 }

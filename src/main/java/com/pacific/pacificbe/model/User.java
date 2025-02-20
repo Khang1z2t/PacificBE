@@ -88,9 +88,8 @@ public class User extends BaseEntity implements UserDetails {
 
     @Size(max = 20)
     @Nationalized
-    @Enumerated(EnumType.STRING)
     @Column(name = "role", length = 20)
-    private UserRole role;
+    private String role;
 
     @Column(name = "email_verified")
     private boolean emailVerified;
@@ -128,10 +127,10 @@ public class User extends BaseEntity implements UserDetails {
 
 //  @OneToMany(mappedBy = "user")
 //  private Set<Voucher> vouchers = new LinkedHashSet<>();
-    
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.getRole()));
+        return List.of(new SimpleGrantedAuthority(role));
     }
 
     @Override

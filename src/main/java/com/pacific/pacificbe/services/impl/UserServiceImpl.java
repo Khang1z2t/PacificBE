@@ -93,7 +93,7 @@ public class UserServiceImpl implements UserService {
         User user = userMapper.toUser(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setActive(true);
-        user.setRole(UserRole.USER);
+        user.setRole(UserRole.USER.toString());
         user.setAvatarUrl("https://drive.google.com/file/d/1_RTHRBB6K8yU2nsiSJU5LHU2d9FPbfvX/view?usp=drive_link");
         user = userRepository.save(user);
 

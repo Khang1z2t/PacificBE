@@ -17,7 +17,7 @@ public class UserRegisterResponse {
     String firstName;
     String lastName;
     String email;
-    UserRole role;
+    String role;
     LocalDateTime createdAt;
     String accessToken;
 }
