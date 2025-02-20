@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,6 +25,9 @@ public class TourMapper {
         tourResponse.setImages(tour.getImages().stream()
                 .map(Image::getImageUrl)
                 .collect(Collectors.toList()));
+        if (tour.getCategory() != null) {
+            tourResponse.setCategory(tour.getCategory().getTitle());
+        }
         return tourResponse;
     }
 

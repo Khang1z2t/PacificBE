@@ -65,15 +65,5 @@ public class TourServiceImpl implements TourService {
 	    List<Tour> tours = tourRepository.findTourDestination(destination);
 	    return tourMapper.toTourResponseList(tours);
 	}
-//
-//    @Override
-//    public List<TourResponse> searchTours(String destination, LocalDate departureDate, LocalDate returnDate,
-//                                            BigDecimal minPrice, BigDecimal maxPrice) {
-//        // Gọi đến phương thức searchTours của repository
-//        List<Tour> tours = tourRepository.searchTours(destination, departureDate, returnDate, minPrice, maxPrice);
-//        return tours.stream()
-//                .map(this::mapToResponse)
-//                .collect(Collectors.toList());
-//    }
 
 }

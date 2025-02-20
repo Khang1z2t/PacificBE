@@ -17,15 +17,17 @@ import java.util.List;
 public class TourResponse {
     String id;
     String title;
-    Boolean available;
+    String description;
     BigDecimal priceAdults;
     BigDecimal priceChildren;
     Double ratingAvg;
     String status;
     List<?> images;
 
+    String category;
+    GuideResponse guide;
+
     Boolean active;
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
-    LocalDateTime deletedAt;
 }

@@ -10,9 +10,6 @@ import java.util.Random;
 
 @Component
 public class AuthenUtils {
-    public String generateOtp() {
-        return String.valueOf(new Random().nextInt(900000) + 100000);
-    }
 
     public static String getCurrentUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

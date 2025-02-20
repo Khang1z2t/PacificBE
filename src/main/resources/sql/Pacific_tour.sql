@@ -6,7 +6,7 @@ create table category
     title  nvarchar(255) not null,
     type   nvarchar(50)
 )
-go
+    go
 
 create table combo
 (
@@ -14,7 +14,7 @@ create table combo
         primary key,
     price_combo numeric(10, 2)
 )
-go
+    go
 
 create table destination
 (
@@ -26,7 +26,7 @@ create table destination
     name         nvarchar(255) not null,
     region       nvarchar(255)
 )
-go
+    go
 
 create table guide
 (
@@ -39,7 +39,7 @@ create table guide
     last_name        nvarchar(50)  not null,
     phone            nvarchar(20)  not null
 )
-go
+    go
 
 create table hotel
 (
@@ -49,7 +49,18 @@ create table hotel
     price      numeric(10, 2),
     type_hotel nvarchar(50)
 )
-go
+    go
+
+create table otp
+(
+    id         varchar(255) not null
+        constraint OTP_pk
+            primary key,
+    email      varchar(255),
+    otp_code   varchar(10),
+    expires_at datetimeoffset(6)
+)
+    go
 
 create table payment
 (
@@ -65,7 +76,7 @@ create table payment
     total_amount   numeric(18, 2),
     transaction_id nvarchar(50)
 )
-go
+    go
 
 create table invoice
 (
@@ -81,7 +92,7 @@ create table invoice
         constraint FKbaxa82hce5x7dqj0sotnc1cxf
             references payment
 )
-go
+    go
 
 create unique index UK5vvlr4mmb6jbwiu4dyqwevd0d
     on invoice (payment_id)
@@ -103,7 +114,7 @@ create table promotion
     start_date     date          not null,
     status         nvarchar(50) default 'pending'
 )
-go
+    go
 
 create table tour
 (
@@ -121,7 +132,7 @@ create table tour
     rating_avg     float,
     status         nvarchar(50),
     title          nvarchar(255) not null,
-    catagory_id    varchar(255)
+    category_id    varchar(255)
         constraint FK77r62epm647fkrvbv9a7824dx
             references category,
     guide_id       varchar(255)
@@ -129,9 +140,10 @@ create table tour
             references guide,
     promotion_id   varchar(255)
         constraint FKebpp50j3f0ycjcjacu4qvavm6
-            references promotion
+            references promotion,
+    description    nvarchar(max)
 )
-go
+    go
 
 create table image
 (
@@ -148,7 +160,7 @@ create table image
             references tour
             on delete cascade
 )
-go
+    go
 
 create table transport
 (
@@ -162,7 +174,7 @@ create table transport
     price          numeric(10, 2) not null,
     type_transport nvarchar(50)   not null
 )
-go
+    go
 
 create table tour_details
 (
@@ -191,35 +203,43 @@ create table tour_details
     transport_id  varchar(255)  not null
         constraint FKdehvthno0rf0ulsi7k1rtagkc
             references transport
-            on delete cascade
+            on delete cascade,
+    active        bit,
+    created_at    datetime2(6),
+    delete_at     datetime2(6),
+    updated_at    datetime2(6),
+    quantity      int           not null,
+    status        varchar(50)
 )
-go
+    go
 
-create table [user]
+create table users
 (
-    id         varchar(255)  not null
+    id             varchar(255)  not null
         primary key,
-    active     bit,
-    created_at datetime2(6),
-    delete_at  datetime2(6),
-    updated_at datetime2(6),
-    address    nvarchar(255),
-    avatar_url varchar(255),
-    birthday   date,
-    deposit    numeric(18, 2) default 0,
-    email      nvarchar(100),
-    first_name nvarchar(50),
-    gender     nvarchar(50),
-    last_name  nvarchar(50),
-    password   nvarchar(255) not null,
-    phone      nvarchar(20),
-    role       nvarchar(20),
-    status     nvarchar(50)   default 'active',
-    username   nvarchar(50)  not null
+    active         bit,
+    created_at     datetime2(6),
+    delete_at      datetime2(6),
+    updated_at     datetime2(6),
+    address        nvarchar(255),
+    avatar_url     varchar(255),
+    birthday       date,
+    deposit        numeric(18, 2) default 0,
+    email          nvarchar(100),
+    first_name     nvarchar(50),
+    gender         nvarchar(50),
+    last_name      nvarchar(50),
+    password       nvarchar(255) not null,
+    phone          nvarchar(20),
+    role           nvarchar(20),
+    status         nvarchar(50)   default 'active',
+    username       nvarchar(50)  not null,
+    email_verified bit,
+    phone_verified bit
 )
-go
+    go
 
-create table blog
+create table blogs
 (
     id         varchar(255)  not null
         primary key,
@@ -231,11 +251,11 @@ create table blog
     status     nvarchar(50) default 'draft',
     title      nvarchar(255) not null,
     user_id    varchar(255)  not null
-        constraint FK6dthhdqikchaongkif1qfcbwf
-            references [user]
+        constraint FKpg4damav6db6a6fh5peylcni5
+            references users
             on delete cascade
 )
-go
+    go
 
 create table booking
 (
@@ -260,16 +280,15 @@ create table booking
         constraint FK70t92vvx289ayx2hq2v4hdcjl
             references payment
             on delete set null,
-    tour_id          varchar(255) not null
-        constraint FKlc7bhi14w8e558dt15eofelm4
-            references tour
-            on delete cascade,
+    tour_detail_id   varchar(255) not null
+        constraint booking_tour_details_id_fk
+            references tour_details,
     user_id          varchar(255) not null
-        constraint FK21cnrmtlo37b8bjon7m6d543w
-            references [user]
+        constraint FK7udbel7q86k041591kj6lfmvw
+            references users
             on delete cascade
 )
-go
+    go
 
 create table review
 (
@@ -289,10 +308,10 @@ create table review
         constraint FK2yxuruefnrj0xan64vi2gg7ag
             references tour,
     user_id    varchar(255) not null
-        constraint FKj8m0asijw8lfl4jxhcps8tf4y
-            references [user]
+        constraint FK6cpw2nlklblpvc7hyt7ko6v3e
+            references users
 )
-go
+    go
 
 create table support
 (
@@ -306,11 +325,11 @@ create table support
     status     nvarchar(50) default 'pending',
     subject    nvarchar(255) not null,
     user_id    varchar(255)  not null
-        constraint FK5bhbxo9qrthrgtf21oomj1jmf
-            references [user]
+        constraint FKscurbcmiqkf55xdnwqkg5teqt
+            references users
             on delete cascade
 )
-go
+    go
 
 create table voucher
 (
@@ -331,7 +350,7 @@ create table voucher
         constraint FK5jbuv5myb16k0erara8c4owfp
             references payment
 )
-go
+    go
 
 create table wishlist
 (
@@ -341,9 +360,8 @@ create table wishlist
         constraint FKeurw23pxwwlda633hh0dbtsrt
             references tour,
     user_id varchar(255)
-        constraint FK6e4b6ubvjarad3f5g8wqhec
-            references [user]
+        constraint FKtrd6335blsefl2gxpb8lr0gr7
+            references users
 )
-go
-
+    go
 
