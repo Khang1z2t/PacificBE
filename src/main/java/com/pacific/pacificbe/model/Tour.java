@@ -28,9 +28,6 @@ public class Tour extends BaseEntity {
     @Column(name = "available")
     private Boolean available;
 
-    @Column(name = "duration")
-    private Integer duration;
-
     @Column(name = "price_adults", precision = 10, scale = 2)
     private BigDecimal priceAdults;
 
@@ -83,5 +80,9 @@ public class Tour extends BaseEntity {
     @OneToMany(mappedBy = "tour")
     private Set<Wishlist> wishlists = new LinkedHashSet<>();
 
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "destination_id")
+    private Destination destination;
 
 }

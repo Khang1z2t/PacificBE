@@ -1,5 +1,6 @@
 package com.pacific.pacificbe.mapper;
 
+import com.pacific.pacificbe.dto.request.TourRequest;
 import com.pacific.pacificbe.dto.response.TourResponse;
 import com.pacific.pacificbe.model.Image;
 import com.pacific.pacificbe.model.Tour;
@@ -19,6 +20,14 @@ import java.util.stream.Collectors;
 public class TourMapper {
     ModelMapper modelMapper;
     TourDetailMapper tourDetailMapper;
+
+    public Tour toTour(TourRequest request) {
+        Tour tour = modelMapper.map(request, Tour.class);
+//        tour.setImages(request.getImages().stream()
+//                .map(imageUrl -> new Image(null, imageUrl))
+//                .collect(Collectors.toList()));
+        return tour;
+    }
 
     public TourResponse toTourResponse(Tour tour) {
         TourResponse tourResponse = modelMapper.map(tour, TourResponse.class);

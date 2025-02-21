@@ -20,11 +20,15 @@ public enum ErrorCode {
     INVALID_USERNAME_OR_PASSWORD(1013, "Invalid username or password", HttpStatus.BAD_REQUEST),
     INVALID_OTP(1014, "Invalid OTP", HttpStatus.BAD_REQUEST),
 
+
+    CATEGORY_NOT_FOUND(1040, "Category not found", HttpStatus.NOT_FOUND),
+    GUIDE_NOT_FOUND(1050, "Guide not found", HttpStatus.NOT_FOUND),
+    DESTINATION_NOT_FOUND(1060, "Destination not found", HttpStatus.NOT_FOUND),
     NEED_LOGIN(1098, "You need login first", HttpStatus.UNAUTHORIZED),
     CANT_SEND_MAIL(1099, "Can't send mail", HttpStatus.INTERNAL_SERVER_ERROR),
 
 
-//    Tour Error
+    //    Tour Error
     TOUR_NOT_FOUND(2001, "Tour not found", HttpStatus.NOT_FOUND),
     ;
 

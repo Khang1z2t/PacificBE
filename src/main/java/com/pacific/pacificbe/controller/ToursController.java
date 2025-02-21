@@ -3,6 +3,7 @@ package com.pacific.pacificbe.controller;
 import java.util.List;
 
 import com.pacific.pacificbe.dto.ApiResponse;
+import com.pacific.pacificbe.dto.request.TourRequest;
 import com.pacific.pacificbe.dto.response.TourResponse;
 import com.pacific.pacificbe.services.TourService;
 import com.pacific.pacificbe.utils.UrlMapping;
@@ -12,10 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(UrlMapping.TOURS)
@@ -41,13 +39,13 @@ public class ToursController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ApiResponse<>(200, "Complete", tourService.getTourById(id)));
     }
-    
+
     @GetMapping(UrlMapping.GET_TOUR_BY_CATEGORY)
     @Operation(summary = "Lấy tour theo category")
     public List<TourResponse> getTourCategory(@PathVariable("category") String category) {
         return tourService.getTourCategory(category);
     }
-    
+
     @GetMapping(UrlMapping.GET_TOUR_BY_RATING)
     @Operation(summary = "Lấy tour theo rating")
     public List<TourResponse> getToursByRating(@PathVariable("rating") Double rating) {
@@ -58,5 +56,11 @@ public class ToursController {
     @Operation(summary = "Lấy tour theo điểm đến")
     public List<TourResponse> getTourDestination(@PathVariable("destination") String destination) {
         return tourService.getTourDestination(destination);
+    }
+
+    @PostMapping(UrlMapping.ADD_TOUR)
+    @Operation(summary = "Thêm tour")
+    public ResponseEntity<ApiResponse<TourResponse>> createTour(@RequestBody TourRequest request) {
+        return ResponseEntity.ok(new ApiResponse<>(200, "Hoàn thành", tourService.createTour(request)));
     }
 }

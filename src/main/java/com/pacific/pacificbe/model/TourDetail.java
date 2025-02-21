@@ -52,12 +52,6 @@ public class TourDetail extends BaseEntity {
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "destinaton_id", nullable = false)
-    private Destination destinaton;
-
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "hotel_id", nullable = false)
     private Hotel hotel;
 

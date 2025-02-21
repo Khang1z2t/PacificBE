@@ -1,5 +1,6 @@
 package com.pacific.pacificbe.services;
 
+import com.pacific.pacificbe.dto.request.TourRequest;
 import com.pacific.pacificbe.dto.response.TourResponse;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -10,11 +11,7 @@ public interface TourService {
 
     TourResponse getTourById(String id);
     
-    List<TourResponse> searchTours(String destination, 
-                                   LocalDate departureDate, 
-                                   LocalDate returnDate, 
-                                   BigDecimal minPrice, 
-                                   BigDecimal maxPrice);
+    TourResponse createTour(TourRequest request);
     
     List<TourResponse> getTourCategory(String category);
     

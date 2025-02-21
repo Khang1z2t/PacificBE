@@ -33,7 +33,7 @@ public class ReportController {
             List<?> data = List.of(); // Thay bằng dữ liệu thực tế từ database
 
             // Thêm tham số nếu cần
-            Map<String, Object> parameters = new HashMap();
+            Map<String, Object> parameters = new HashMap<>();
             parameters.put("ReportTitle", "Báo cáo sản phẩm");
 
             byte[] pdfReport = reportservice.exportReport(reportName, data, parameters);

@@ -1,17 +1,15 @@
 package com.pacific.pacificbe.model;
 
+import jakarta.persistence.*;
 import org.hibernate.annotations.Nationalized;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -23,12 +21,6 @@ public class Destination {
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
-
-//    @NotNull
-//    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-//    @OnDelete(action = OnDeleteAction.CASCADE)
-//    @JoinColumn(name = "tour_id", nullable = false)
-//    private Tour tour;
 
     @Size(max = 255)
     @NotNull
@@ -58,5 +50,8 @@ public class Destination {
     @Nationalized
     @Column(name = "city", nullable = false)
     private String city;
+
+    @OneToMany(mappedBy = "destination")
+    private Set<Tour> tours = new LinkedHashSet<>();
 
 }
