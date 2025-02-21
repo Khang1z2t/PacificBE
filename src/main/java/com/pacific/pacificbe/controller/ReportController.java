@@ -1,5 +1,6 @@
 package com.pacific.pacificbe.controller;
 
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,26 +25,25 @@ import lombok.experimental.FieldDefaults;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ReportController {
-    ReportService reportservice;
+	ReportService reportservice;
 
-    @GetMapping(UrlMapping.EXPORT_PDF)
-    public ResponseEntity<byte[]> exportReport(@RequestParam String reportName) {
-        try {
-            // Lấy dữ liệu từ DB (giả sử có service lấy dữ liệu)
-            List<?> data = List.of(); // Thay bằng dữ liệu thực tế từ database
+	@GetMapping(UrlMapping.EXPORT_PDF)
+	public ResponseEntity<byte[]> exportReport(@RequestParam String reportName) {
+		try {
+			// Lấy dữ liệu từ DB (giả sử có service lấy dữ liệu)
+			List<?> data = List.of(); // Thay bằng dữ liệu thực tế từ database
 
-            // Thêm tham số nếu cần
-            Map<String, Object> parameters = new HashMap<>();
-            parameters.put("ReportTitle", "Báo cáo sản phẩm");
+			// Thêm tham số nếu cần
+			Map<String, Object> parameters = new HashMap();
+			parameters.put("ReportTitle", "Báo cáo sản phẩm");
 
-            byte[] pdfReport = reportservice.exportReport(reportName, data, parameters);
+			byte[] pdfReport = reportservice.exportReport(reportName, data, parameters);
 
-            return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + reportName + ".pdf")
-                    .contentType(MediaType.APPLICATION_PDF)
-                    .body(pdfReport);
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
-        }
-    }
+			return ResponseEntity.ok()
+					.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + reportName + ".pdf")
+					.contentType(MediaType.APPLICATION_PDF).body(pdfReport);
+		} catch (Exception e) {
+			return ResponseEntity.internalServerError().build();
+		}
+	}
 }
