@@ -6,7 +6,7 @@ create table category
     title  nvarchar(255) not null,
     type   nvarchar(50)
 )
-    go
+go
 
 create table combo
 (
@@ -14,7 +14,7 @@ create table combo
         primary key,
     price_combo numeric(10, 2)
 )
-    go
+go
 
 create table destination
 (
@@ -26,7 +26,7 @@ create table destination
     name         nvarchar(255) not null,
     region       nvarchar(255)
 )
-    go
+go
 
 create table guide
 (
@@ -39,7 +39,7 @@ create table guide
     last_name        nvarchar(50)  not null,
     phone            nvarchar(20)  not null
 )
-    go
+go
 
 create table hotel
 (
@@ -49,7 +49,7 @@ create table hotel
     price      numeric(10, 2),
     type_hotel nvarchar(50)
 )
-    go
+go
 
 create table otp
 (
@@ -60,7 +60,7 @@ create table otp
     otp_code   varchar(10),
     expires_at datetimeoffset(6)
 )
-    go
+go
 
 create table payment
 (
@@ -76,7 +76,7 @@ create table payment
     total_amount   numeric(18, 2),
     transaction_id nvarchar(50)
 )
-    go
+go
 
 create table invoice
 (
@@ -92,7 +92,7 @@ create table invoice
         constraint FKbaxa82hce5x7dqj0sotnc1cxf
             references payment
 )
-    go
+go
 
 create unique index UK5vvlr4mmb6jbwiu4dyqwevd0d
     on invoice (payment_id)
@@ -114,7 +114,7 @@ create table promotion
     start_date     date          not null,
     status         nvarchar(50) default 'pending'
 )
-    go
+go
 
 create table tour
 (
@@ -125,7 +125,6 @@ create table tour
     delete_at      datetime2(6),
     updated_at     datetime2(6),
     available      bit default 1,
-    duration       int,
     price_adults   numeric(10, 2),
     price_children numeric(10, 2),
     quantity_max   int,
@@ -141,9 +140,12 @@ create table tour
     promotion_id   varchar(255)
         constraint FKebpp50j3f0ycjcjacu4qvavm6
             references promotion,
-    description    nvarchar(max)
+    description    nvarchar(max),
+    destination_id varchar(255)
+        constraint tour_destination_id_fk
+            references destination
 )
-    go
+go
 
 create table image
 (
@@ -160,7 +162,7 @@ create table image
             references tour
             on delete cascade
 )
-    go
+go
 
 create table transport
 (
@@ -174,44 +176,40 @@ create table transport
     price          numeric(10, 2) not null,
     type_transport nvarchar(50)   not null
 )
-    go
+go
 
 create table tour_details
 (
-    id            varchar(255)  not null
+    id           varchar(255)  not null
         primary key,
-    duration      int           not null,
-    end_date      date          not null,
-    itinerary     nvarchar(max) not null,
-    start_date    date          not null,
-    combo_id      varchar(255)  not null
+    duration     int           not null,
+    end_date     date          not null,
+    itinerary    nvarchar(max) not null,
+    start_date   date          not null,
+    combo_id     varchar(255)  not null
         constraint FKjekgh9qlrlh9tnrbchetsa90r
             references combo
             on delete cascade,
-    destinaton_id varchar(255)  not null
-        constraint FK63ufq97rptrjg03mcq81f63pa
-            references destination
-            on delete cascade,
-    hotel_id      varchar(255)  not null
+    hotel_id     varchar(255)  not null
         constraint FKkfwi1rkf52lro3ly2accpvhh6
             references hotel
             on delete cascade,
-    tour_id       varchar(255)  not null
+    tour_id      varchar(255)  not null
         constraint FK27g89or55p5ovep89frmbyva2
             references tour
             on delete cascade,
-    transport_id  varchar(255)  not null
+    transport_id varchar(255)  not null
         constraint FKdehvthno0rf0ulsi7k1rtagkc
             references transport
             on delete cascade,
-    active        bit,
-    created_at    datetime2(6),
-    delete_at     datetime2(6),
-    updated_at    datetime2(6),
-    quantity      int           not null,
-    status        varchar(50)
+    active       bit,
+    created_at   datetime2(6),
+    delete_at    datetime2(6),
+    updated_at   datetime2(6),
+    quantity     int           not null,
+    status       varchar(50)
 )
-    go
+go
 
 create table users
 (
@@ -237,7 +235,7 @@ create table users
     email_verified bit,
     phone_verified bit
 )
-    go
+go
 
 create table blogs
 (
@@ -255,7 +253,7 @@ create table blogs
             references users
             on delete cascade
 )
-    go
+go
 
 create table booking
 (
@@ -288,7 +286,7 @@ create table booking
             references users
             on delete cascade
 )
-    go
+go
 
 create table review
 (
@@ -311,7 +309,7 @@ create table review
         constraint FK6cpw2nlklblpvc7hyt7ko6v3e
             references users
 )
-    go
+go
 
 create table support
 (
@@ -329,7 +327,7 @@ create table support
             references users
             on delete cascade
 )
-    go
+go
 
 create table voucher
 (
@@ -350,7 +348,7 @@ create table voucher
         constraint FK5jbuv5myb16k0erara8c4owfp
             references payment
 )
-    go
+go
 
 create table wishlist
 (
@@ -363,4 +361,5 @@ create table wishlist
         constraint FKtrd6335blsefl2gxpb8lr0gr7
             references users
 )
-    go
+go
+
