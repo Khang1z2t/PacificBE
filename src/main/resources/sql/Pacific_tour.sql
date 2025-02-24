@@ -783,44 +783,44 @@ INSERT INTO voucher (id, active, created_at, delete_at, updated_at, code_voucher
 
 INSERT INTO booking (id, active, created_at, delete_at, updated_at, adult_num, booking_status, children_num, payment_method, special_requests, total_amount, total_number, combo_id, payment_id, tour_detail_id, user_id) VALUES
 -- USER001 với 2 booking
-('BK001', 1, GETDATE(), NULL, GETDATE(), 2, 'Confirmed', 1, 'Credit Card', 'Near window seat', 500.00, 3, 'COMBO001', 'PM001', 'TD001', 'USER001'),
-('BK002', 1, GETDATE(), NULL, GETDATE(), 1, 'Pending', 0, 'PayPal', NULL, 250.00, 1, 'COMBO002', 'PM002', 'TD002', 'USER001'),
+('BK001', 1, '2024-02-10', NULL, GETDATE(), 2, 'Confirmed', 1, 'Credit Card', 'Near window seat', 500.00, 3, 'COMBO001', 'PM001', 'TD001', 'USER001'),
+('BK002', 1, '2024-06-15', NULL, GETDATE(), 1, 'Pending', 0, 'PayPal', NULL, 250.00, 1, 'COMBO002', 'PM002', 'TD002', 'USER001'),
 
 -- USER002 với 1 booking
-('BK003', 1, GETDATE(), NULL, GETDATE(), 3, 'Completed', 2, 'Bank Transfer', 'Vegetarian meals', 800.00, 5, 'COMBO003', 'PM003', 'TD003', 'USER002'),
+('BK003', 1, '2024-02-05', NULL, GETDATE(), 3, 'Completed', 2, 'Bank Transfer', 'Vegetarian meals', 800.00, 5, 'COMBO003', 'PM003', 'TD003', 'USER002'),
 
 -- USER003 với 3 booking
-('BK004', 1, GETDATE(), NULL, GETDATE(), 2, 'Confirmed', 1, 'Cash', NULL, 450.00, 3, 'COMBO001', 'PM004', 'TD004', 'USER003'),
-('BK005', 1, GETDATE(), NULL, GETDATE(), 4, 'Pending', 2, 'Credit Card', 'Extra luggage', 1200.00, 6, 'COMBO004', 'PM005', 'TD005', 'USER003'),
-('BK006', 1, GETDATE(), NULL, GETDATE(), 1, 'Confirmed', 0, 'Mobile Wallet', NULL, 300.00, 1, 'COMBO002', 'PM006', 'TD006', 'USER003'),
+('BK004', 1, '2024-09-20', NULL, GETDATE(), 2, 'Confirmed', 1, 'Cash', NULL, 450.00, 3, 'COMBO001', 'PM004', 'TD004', 'USER003'),
+('BK005', 1, '2024-02-18', NULL, GETDATE(), 4, 'Pending', 2, 'Credit Card', 'Extra luggage', 1200.00, 6, 'COMBO004', 'PM005', 'TD005', 'USER003'),
+('BK006', 1, '2024-11-12', NULL, GETDATE(), 1, 'Confirmed', 0, 'Mobile Wallet', NULL, 300.00, 1, 'COMBO002', 'PM006', 'TD006', 'USER003'),
 
 -- USER004 với 2 booking
-('BK007', 1, GETDATE(), NULL, GETDATE(), 2, 'Completed', 2, 'Bank Transfer', 'Late check-in', 650.00, 4, 'COMBO005', 'PM007', 'TD007', 'USER004'),
-('BK008', 1, GETDATE(), NULL, GETDATE(), 3, 'Confirmed', 1, 'Credit Card', NULL, 900.00, 4, 'COMBO006', 'PM008', 'TD008', 'USER004'),
+('BK007', 1, '2024-01-30', NULL, GETDATE(), 2, 'Completed', 2, 'Bank Transfer', 'Late check-in', 650.00, 4, 'COMBO005', 'PM007', 'TD007', 'USER004'),
+('BK008', 1, '2024-12-20', NULL, GETDATE(), 3, 'Confirmed', 1, 'Credit Card', NULL, 900.00, 4, 'COMBO006', 'PM008', 'TD008', 'USER004'),
 
 -- USER005 với 1 booking
-('BK009', 1, GETDATE(), NULL, GETDATE(), 1, 'Pending', 1, 'Cash', NULL, 350.00, 2, 'COMBO007', 'PM009', 'TD009', 'USER005'),
+('BK009', 1, '2024-07-05', NULL, GETDATE(), 1, 'Pending', 1, 'Cash', NULL, 350.00, 2, 'COMBO007', 'PM009', 'TD009', 'USER005'),
 
 -- USER006 với 3 booking
-('BK010', 1, GETDATE(), NULL, GETDATE(), 2, 'Confirmed', 1, 'PayPal', 'Honeymoon package', 700.00, 3, 'COMBO008', 'PM010', 'TD010', 'USER006'),
-('BK011', 1, GETDATE(), NULL, GETDATE(), 4, 'Completed', 2, 'Bank Transfer', NULL, 1400.00, 6, 'COMBO009', 'PM001', 'TD011', 'USER006'),
-('BK012', 1, GETDATE(), NULL, GETDATE(), 3, 'Pending', 1, 'Credit Card', 'Extra bed', 950.00, 4, 'COMBO010', 'PM002', 'TD012', 'USER006'),
+('BK010', 1, '2024-02-22', NULL, GETDATE(), 2, 'Confirmed', 1, 'PayPal', 'Honeymoon package', 700.00, 3, 'COMBO008', 'PM010', 'TD010', 'USER006'),
+('BK011', 1, '2024-09-25', NULL, GETDATE(), 4, 'Completed', 2, 'Bank Transfer', NULL, 1400.00, 6, 'COMBO009', 'PM001', 'TD011', 'USER006'),
+('BK012', 1, '2024-11-18', NULL, GETDATE(), 3, 'Pending', 1, 'Credit Card', 'Extra bed', 950.00, 4, 'COMBO010', 'PM002', 'TD012', 'USER006'),
 
 -- USER007 với 2 booking
-('BK013', 1, GETDATE(), NULL, GETDATE(), 1, 'Confirmed', 0, 'Mobile Wallet', NULL, 300.00, 1, 'COMBO001', 'PM003', 'TD013', 'USER007'),
-('BK014', 1, GETDATE(), NULL, GETDATE(), 2, 'Completed', 1, 'Credit Card', 'Vegan meals', 500.00, 3, 'COMBO002', 'PM004', 'TD014', 'USER007'),
+('BK013', 1, '2024-04-10', NULL, GETDATE(), 1, 'Confirmed', 0, 'Mobile Wallet', NULL, 300.00, 1, 'COMBO001', 'PM003', 'TD013', 'USER007'),
+('BK014', 1, '2024-02-08', NULL, GETDATE(), 2, 'Completed', 1, 'Credit Card', 'Vegan meals', 500.00, 3, 'COMBO002', 'PM004', 'TD014', 'USER007'),
 
 -- USER008 với 1 booking
-('BK015', 1, GETDATE(), NULL, GETDATE(), 3, 'Pending', 2, 'PayPal', NULL, 800.00, 5, 'COMBO003', 'PM005', 'TD015', 'USER008'),
+('BK015', 1, '2024-10-05', NULL, GETDATE(), 3, 'Pending', 2, 'PayPal', NULL, 800.00, 5, 'COMBO003', 'PM005', 'TD015', 'USER008'),
 
 -- USER009 với 3 booking
-('BK016', 1, GETDATE(), NULL, GETDATE(), 2, 'Confirmed', 1, 'Cash', 'Sea view', 600.00, 3, 'COMBO004', 'PM006', 'TD016', 'USER009'),
-('BK017', 1, GETDATE(), NULL, GETDATE(), 4, 'Completed', 2, 'Credit Card', NULL, 1200.00, 6, 'COMBO005', 'PM007', 'TD017', 'USER009'),
-('BK018', 1, GETDATE(), NULL, GETDATE(), 1, 'Confirmed', 0, 'Bank Transfer', NULL, 350.00, 1, 'COMBO006', 'PM008', 'TD018', 'USER009'),
+('BK016', 1, '2024-08-20', NULL, GETDATE(), 2, 'Confirmed', 1, 'Cash', 'Sea view', 600.00, 3, 'COMBO004', 'PM006', 'TD016', 'USER009'),
+('BK017', 1, '2024-02-12', NULL, GETDATE(), 4, 'Completed', 2, 'Credit Card', NULL, 1200.00, 6, 'COMBO005', 'PM007', 'TD017', 'USER009'),
+('BK018', 1, '2024-05-07', NULL, GETDATE(), 1, 'Confirmed', 0, 'Bank Transfer', NULL, 350.00, 1, 'COMBO006', 'PM008', 'TD018', 'USER009'),
 
 -- USER010 với 2 booking
-('BK019', 1, GETDATE(), NULL, GETDATE(), 3, 'Pending', 1, 'Credit Card', 'Extra night stay', 850.00, 4, 'COMBO007', 'PM009', 'TD019', 'USER010'),
-('BK020', 1, GETDATE(), NULL, GETDATE(), 2, 'Completed', 0, 'Mobile Wallet', NULL, 500.00, 2, 'COMBO008', 'PM010', 'TD020', 'USER010');
+('BK019', 1, '2024-07-25', NULL, GETDATE(), 3, 'Pending', 1, 'Credit Card', 'Extra night stay', 850.00, 4, 'COMBO007', 'PM009', 'TD019', 'USER010'),
+('BK020', 1, '2024-02-28', NULL, GETDATE(), 2, 'Completed', 0, 'Mobile Wallet', NULL, 500.00, 2, 'COMBO008', 'PM010', 'TD020', 'USER010');
 
 INSERT INTO review (id, active, created_at, delete_at, updated_at, comment, rating, booking_id, tour_id, user_id)
 VALUES
@@ -870,3 +870,17 @@ VALUES
 
 --insert into otp (id, email, expires_at, otp_code)
 --values ('1', 'user@example.com', DATEADD(HOUR, 1, GETDATE()), '123456');
+
+SELECT 
+    month(b.created_at) AS booking_month,
+    SUM(p.total_amount) AS total_revenue
+FROM booking b
+JOIN payment p ON b.payment_id = p.id
+GROUP BY month(b.created_at)
+ORDER BY booking_month;
+
+UPDATE booking 
+SET created_at = DATEADD(DAY, -ABS(CHECKSUM(NEWID()) % 1095), GETDATE()) 
+WHERE id BETWEEN 'BK001' AND 'BK020';
+
+delete from booking
