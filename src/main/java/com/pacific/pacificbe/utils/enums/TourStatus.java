@@ -1,8 +1,8 @@
 package com.pacific.pacificbe.utils.enums;
 
 public enum TourStatus {
-    DRAFT,
-    PUBLISHED,
-    UNAVAILABLE,
-    CANCELLED,
+    DRAFT, //Chưa sử dụng
+    PUBLISHED,// Đã đăng
+    UNAVAILABLE,// Không sử dụng
+    CANCELLED,//
 }

@@ -28,18 +28,6 @@ public class Tour extends BaseEntity {
     @Column(name = "available")
     private Boolean available;
 
-    @Column(name = "price_adults", precision = 10, scale = 2)
-    private BigDecimal priceAdults;
-
-    @Column(name = "price_children", precision = 10, scale = 2)
-    private BigDecimal priceChildren;
-
-    @Column(name = "quantity_max")
-    private Integer quantityMax;
-
-    @Column(name = "rating_avg")
-    private Double ratingAvg;
-
     @Size(max = 50)
     @Nationalized
     @Column(name = "status", length = 50)
@@ -75,7 +63,7 @@ public class Tour extends BaseEntity {
     private Set<Review> reviews = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "tour")
-    private Set<com.pacific.pacificbe.model.TourDetail> tourDetails = new LinkedHashSet<>();
+    private Set<TourDetail> tourDetails = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "tour")
     private Set<Wishlist> wishlists = new LinkedHashSet<>();

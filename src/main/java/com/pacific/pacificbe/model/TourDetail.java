@@ -9,6 +9,7 @@ import org.hibernate.annotations.Nationalized;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.LinkedHashSet;
@@ -26,36 +27,6 @@ public class TourDetail extends BaseEntity {
     private String id;
 
     @NotNull
-    @Column(name = "duration", nullable = false)
-    private Integer duration;
-
-    @NotNull
-    @Column(name = "end_date", nullable = false)
-    private LocalDate endDate;
-
-    @NotNull
-    @Nationalized
-    @Lob
-    @Column(name = "itinerary", nullable = false)
-    private String itinerary;
-
-    @NotNull
-    @Column(name = "start_date", nullable = false)
-    private LocalDate startDate;
-
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "combo_id", nullable = false)
-    private Combo combo;
-
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "hotel_id", nullable = false)
-    private Hotel hotel;
-
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "tour_id", nullable = false)
@@ -68,11 +39,44 @@ public class TourDetail extends BaseEntity {
     private Transport transport;
 
     @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "hotel_id", nullable = false)
+    private Hotel hotel;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "combo_id", nullable = false)
+    private Combo combo;
+
+    @OneToMany(mappedBy = "tourDetail")
+    private Set<Itinerary> itineraries = new LinkedHashSet<>();
+
+    @NotNull
+    @Column(name = "duration", nullable = false)
+    private Integer duration;
+
+    @NotNull
+    @Column(name = "start_date", nullable = false)
+    private LocalDate startDate;
+
+    @NotNull
+    @Column(name = "end_date", nullable = false)
+    private LocalDate endDate;
+
+    @NotNull
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
 
-    @OneToMany(mappedBy = "tourDetail")
-    private Set<Booking> bookings = new LinkedHashSet<>();
+    @Column(name = "price_adults", precision = 10, scale = 2)
+    private BigDecimal priceAdults;
+
+    @Column(name = "price_children", precision = 10, scale = 2)
+    private BigDecimal priceChildren;
+
+    @Column(name = "rating_avg")
+    private Double ratingAvg;
 
     @Size(max = 50)
     @Column(name = "status", length = 50)

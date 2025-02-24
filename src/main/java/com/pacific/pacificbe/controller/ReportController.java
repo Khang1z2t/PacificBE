@@ -27,6 +27,7 @@ import lombok.experimental.FieldDefaults;
 public class ReportController {
 	ReportService reportservice;
 
+//	xuất file báo cáo theo pdf
 	@GetMapping(UrlMapping.EXPORT_PDF)
 	public ResponseEntity<byte[]> exportReport(@RequestParam String reportName) {
 		try {

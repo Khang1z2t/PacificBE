@@ -52,8 +52,8 @@ public class TourServiceImpl implements TourService {
 		Tour tour = new Tour();
 		tour.setTitle(request.getTitle());
 		tour.setDescription(request.getDescription());
-		tour.setPriceAdults(request.getPriceAdults());
-		tour.setPriceChildren(request.getPriceChildren());
+//		tour.setPriceAdults(request.getPriceAdults());
+//		tour.setPriceChildren(request.getPriceChildren());
 		tour.setStatus(TourStatus.DRAFT.toString());
 		tour.setActive(true);
 		if (request.getCategoryId() != null) {

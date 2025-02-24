@@ -14,6 +14,7 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Nationalized;
 
 @Getter
 @Setter
@@ -34,6 +35,11 @@ public class Combo {
     
     @OneToMany(mappedBy = "combo")
     private Set<TourDetail> tourDetail = new LinkedHashSet<>();
+
+    @Size(max = 100)
+    @Nationalized
+    @Column(name = "combo_type", length = 100)
+    private String comboType;
 
 //  @NotNull
 //  @ManyToOne(fetch = FetchType.LAZY, optional = false)
