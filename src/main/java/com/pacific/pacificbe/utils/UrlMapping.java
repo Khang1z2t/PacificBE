@@ -45,6 +45,8 @@ public class UrlMapping {
     public static final String APPROVE_BOOKING = "/book/{id}/approve";
     public static final String CANCEL_BOOKING = "/book/{id}/cancel";
     public static final String DECLINE_BOOKINGS = "/book/{id}/decline";
+    public static final String CHECKOUT_BOOKING = "/checkout";
+    public static final String CHECKOUT_RETURN = "/vnpay-payment-return";
     /*============================ End Booking API ===================================*/
 
 
