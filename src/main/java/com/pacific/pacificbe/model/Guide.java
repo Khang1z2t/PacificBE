@@ -1,33 +1,60 @@
 package com.pacific.pacificbe.model;
 
 import jakarta.persistence.*;
-import lombok.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.Nationalized;
 
-@Entity
-@Table(name = "guide")
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Entity
+@Table(name = "guide")
 public class Guide {
-
     @Id
+    @Size(max = 255)
+    @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @Column(nullable = false)
+    @Size(max = 255)
+    @NotNull
+    @Nationalized
+    @Column(name = "address", nullable = false)
     private String address;
 
-    @Column(nullable = false)
+    @Size(max = 100)
+    @NotNull
+    @Nationalized
+    @Column(name = "email", nullable = false, length = 100)
     private String email;
 
-    private Integer experience_years;
+    @Column(name = "experience_years")
+    private Integer experienceYears;
 
-    @Column(nullable = false)
-    private String first_name;
+    @Size(max = 50)
+    @NotNull
+    @Nationalized
+    @Column(name = "first_name", nullable = false, length = 50)
+    private String firstName;
 
-    @Column(nullable = false)
-    private String last_name;
+    @Size(max = 50)
+    @NotNull
+    @Nationalized
+    @Column(name = "last_name", nullable = false, length = 50)
+    private String lastName;
 
-    @Column(nullable = false)
+    @Size(max = 20)
+    @NotNull
+    @Nationalized
+    @Column(name = "phone", nullable = false, length = 20)
     private String phone;
+
+    @OneToMany(mappedBy = "guide")
+    private Set<Tour> tours = new LinkedHashSet<>();
+
 }

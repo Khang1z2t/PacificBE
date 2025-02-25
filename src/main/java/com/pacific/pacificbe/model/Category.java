@@ -1,27 +1,43 @@
 package com.pacific.pacificbe.model;
 
 import jakarta.persistence.*;
-import lombok.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.Nationalized;
+
+import java.util.LinkedHashSet;
 import java.util.Set;
 
-@Entity
-@Table(name = "category")
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Entity
+@Table(name = "category")
 public class Category {
-
     @Id
+    @Size(max = 255)
+    @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
+    @Size(max = 50)
+    @Nationalized
+    @Column(name = "status", length = 50)
     private String status;
 
-    @Column(nullable = false)
+    @Size(max = 255)
+    @NotNull
+    @Nationalized
+    @Column(name = "title", nullable = false)
     private String title;
 
+    @Size(max = 50)
+    @Nationalized
+    @Column(name = "type", length = 50)
     private String type;
 
-    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
-    private Set<Tour> tours;
+    @OneToMany(mappedBy = "category")
+    private Set<Tour> tours = new LinkedHashSet<>();
+
 }
