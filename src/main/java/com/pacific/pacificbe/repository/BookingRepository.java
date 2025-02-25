@@ -50,14 +50,12 @@ public interface BookingRepository extends JpaRepository<Booking, String>{
         LEFT JOIN booking b ON td.id = b.tour_detail_id
         LEFT JOIN tour t ON t.id = td.tour_id
         WHERE (:tourId IS NULL OR td.tour_id = :tourId)
-          AND (b.created_at IS NULL
-          OR :createdAtStart IS NULL OR :createdAtEnd IS NULL
-          OR (b.created_at BETWEEN :createdAtStart AND :createdAtEnd))
+            AND (:startDate IS NULL OR :endDate IS NULL
+                OR CAST(b.created_at AS DATE) BETWEEN :startDate AND :endDate)
         """, nativeQuery = true)
-    List<BookingRevenueReportDTO> findTourBookingsRevenue(
+    List<BookingRevenueReportDTO> getTourBookingsRevenue(
                 @Param("tourId") String tourId,
                 @Param("startDate") LocalDate startDate,
                 @Param("endDate") LocalDate endDate
         );
-
 }

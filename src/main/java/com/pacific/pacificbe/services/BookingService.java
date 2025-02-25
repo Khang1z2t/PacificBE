@@ -10,5 +10,5 @@ import java.util.List;
 public interface BookingService {
     List<MonthlyRevenue> getMonthlyRevenueReport();
     List<YearlyRevenue> getYearlyRevenueReport();
-    List<BookingRevenueReportDTO> getTourBookings(String tourId, LocalDate startDate, LocalDate endDate);
+    List<BookingRevenueReportDTO> getTourBookingsRevenueReport(String tourId, LocalDate startDate, LocalDate endDate);
 }
