@@ -872,15 +872,31 @@ VALUES
 --values ('1', 'user@example.com', DATEADD(HOUR, 1, GETDATE()), '123456');
 
 SELECT 
-    month(b.created_at) AS booking_month,
+    year(b.created_at) AS booking_year,
     SUM(p.total_amount) AS total_revenue
 FROM booking b
 JOIN payment p ON b.payment_id = p.id
-GROUP BY month(b.created_at)
-ORDER BY booking_month;
+GROUP BY year(b.created_at)
+ORDER BY booking_year;
 
-UPDATE booking 
-SET created_at = DATEADD(DAY, -ABS(CHECKSUM(NEWID()) % 1095), GETDATE()) 
-WHERE id BETWEEN 'BK001' AND 'BK020';
+--UPDATE booking 
+--SET created_at = DATEADD(DAY, -ABS(CHECKSUM(NEWID()) % 1095), GETDATE()) 
+--WHERE id BETWEEN 'BK001' AND 'BK020';
 
-delete from booking
+--delete from booking
+
+select
+	td.id,
+	t.id,
+	t.title,
+	b.total_amount,
+	b.total_number,
+	FORMAT(b.created_at, 'yyyy-MM-dd') as created_at,
+	b.user_id
+from tour_details td
+left join booking b on td.id = b.tour_detail_id
+left join tour t on t.id = td.tour_id
+where (td.tour_id = '' OR '' = '')
+	OR (b.created_at IS NULL
+	OR '' = ''
+	OR (b.created_at BETWEEN '' AND ''))
