@@ -1,4 +1,4 @@
-package com.pacific.pacificbe.dto.response;
+package com.pacific.pacificbe.dto.response.report;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 
-public class MonthlyRevenue {
-    private Integer bookingMonth;
+public class Revenue {
+    private Integer bookingDate;
     private BigDecimal totalRevenue;
 }

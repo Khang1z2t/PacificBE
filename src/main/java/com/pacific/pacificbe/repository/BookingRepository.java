@@ -1,8 +1,8 @@
 package com.pacific.pacificbe.repository;
 
-import com.pacific.pacificbe.dto.response.BookingRevenueReportDTO;
-import com.pacific.pacificbe.dto.response.MonthlyRevenue;
-import com.pacific.pacificbe.dto.response.YearlyRevenue;
+import com.pacific.pacificbe.dto.response.report.BookingRevenueReportDTO;
+import com.pacific.pacificbe.dto.response.report.Revenue;
+import com.pacific.pacificbe.dto.response.report.TourAndBookReport;
 import com.pacific.pacificbe.model.Booking;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -22,7 +22,7 @@ public interface BookingRepository extends JpaRepository<Booking, String>{
         GROUP BY MONTH(b.created_at)
         ORDER BY bookingMonth
         """, nativeQuery = true)
-    List<MonthlyRevenue> getMonthlyRevenue();
+    List<Revenue> getMonthlyRevenue();
 
 //    Doanh thu theo năm
         @Query(value = """
@@ -34,7 +34,7 @@ public interface BookingRepository extends JpaRepository<Booking, String>{
         GROUP BY year(b.created_at)
         ORDER BY booking_year
         """, nativeQuery = true)
-        List<YearlyRevenue> getYearlyRevenue();
+        List<Revenue> getYearlyRevenue();
 
 //      Doanh thu tour theo thời gian ...
         @Query(value = """
@@ -58,4 +58,28 @@ public interface BookingRepository extends JpaRepository<Booking, String>{
                 @Param("startDate") LocalDate startDate,
                 @Param("endDate") LocalDate endDate
         );
+
+    //      Doanh thu theo từng tour và từng khách hàng
+    @Query(value = """
+                SELECT
+                    b.id,
+                    t.id as tour_id,
+                    td.id as tour_detail_id,
+                    us.username,
+                    b.booking_status,
+                    b.total_amount,
+                    b.total_number,
+                    b.payment_method,
+                    FORMAT(b.created_at, 'yyyy-MM-dd') as created_at
+                FROM booking b
+                JOIN users us ON us.id = b.user_id
+                JOIN tour_details td ON td.id = b.tour_detail_id
+                JOIN tour t ON t.id = td.tour_id
+                WHERE (:tourId IS NULL OR t.id = :tourId)
+                  AND (:username IS NULL OR LOWER(us.username) LIKE LOWER(CONCAT('%', :username, '%')))
+            """, nativeQuery = true)
+    List<TourAndBookReport> getTourAndBooking(
+            @Param("tourId") String tourId,
+            @Param("username") String username
+    );
 }

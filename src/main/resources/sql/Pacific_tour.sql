@@ -885,18 +885,39 @@ ORDER BY booking_year;
 
 --delete from booking
 
-select
-	td.id,
-	t.id,
-	t.title,
-	b.total_amount,
-	b.total_number,
-	FORMAT(b.created_at, 'yyyy-MM-dd') as created_at,
-	b.user_id
-from tour_details td
-left join booking b on td.id = b.tour_detail_id
-left join tour t on t.id = td.tour_id
-where (td.tour_id = '' OR '' = '')
-	OR (b.created_at IS NULL
-	OR '' = ''
-	OR (b.created_at BETWEEN '' AND ''))
+--select
+--	td.id,
+--	t.id,
+--	t.title,
+--	b.total_amount,
+--	b.total_number,
+--	FORMAT(b.created_at, 'yyyy-MM-dd') as created_at,
+--	b.user_id
+--from tour_details td
+--left join booking b on td.id = b.tour_detail_id
+--left join tour t on t.id = td.tour_id
+--where (td.tour_id = '' OR '' = '')
+--	OR (b.created_at IS NULL
+--	OR '' = ''
+--	OR (b.created_at BETWEEN '' AND ''))
+
+--select 
+--b.id,
+--t.id,
+--td.id,
+--us.username,
+--b.booking_status,
+--b.total_amount,
+--b.total_number,
+--b.payment_method,
+--FORMAT(b.created_at, 'yyyy-MM-dd') as created_at
+--from booking b
+--join users us on us.id = b.user_id
+--join tour_details td on td.id = b.tour_detail_id
+--join tour t on t.id = td.tour_id
+--where (t.id = '' OR '' IS NULL OR '' = '')
+--	or (LOWER(us.username) LIKE LOWER('') OR '' IS NULL OR '' = '');
+
+select * 
+from users us
+join review rv on rv.u = us.

@@ -1,4 +1,4 @@
-package com.pacific.pacificbe.dto.response;
+package com.pacific.pacificbe.dto.response.report;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,12 +11,14 @@ import java.math.BigDecimal;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class BookingRevenueReportDTO {
-    private String tourDetailId;
+public class TourAndBookReport {
+    private String bookingId;
     private String tourId;
-    private String tourTitle;
+    private String tourDetailId;
+    private String userName;
+    private String bookingStatus;
     private BigDecimal totalAmount;
     private Integer totalNumber;
+    private String paymentMethod;
     private String createdAt;
-    private String  userId;
 }

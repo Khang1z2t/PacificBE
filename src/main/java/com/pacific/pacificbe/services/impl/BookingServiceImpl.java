@@ -1,8 +1,8 @@
 package com.pacific.pacificbe.services.impl;
 
-import com.pacific.pacificbe.dto.response.BookingRevenueReportDTO;
-import com.pacific.pacificbe.dto.response.MonthlyRevenue;
-import com.pacific.pacificbe.dto.response.YearlyRevenue;
+import com.pacific.pacificbe.dto.response.report.BookingRevenueReportDTO;
+import com.pacific.pacificbe.dto.response.report.Revenue;
+import com.pacific.pacificbe.dto.response.report.TourAndBookReport;
 import com.pacific.pacificbe.repository.BookingRepository;
 import com.pacific.pacificbe.services.BookingService;
 import lombok.AccessLevel;
@@ -21,12 +21,12 @@ public class BookingServiceImpl implements BookingService {
     private final BookingRepository bookingRepository;
 
     @Override
-    public List<MonthlyRevenue> getMonthlyRevenueReport() {
+    public List<Revenue> getMonthlyRevenueReport() {
         return bookingRepository.getMonthlyRevenue();
     }
 
     @Override
-    public List<YearlyRevenue> getYearlyRevenueReport() {
+    public List<Revenue> getYearlyRevenueReport() {
         return bookingRepository.getYearlyRevenue();
     }
 
@@ -35,6 +35,11 @@ public class BookingServiceImpl implements BookingService {
 //        Date start = parseDate(startDate);
 //        Date end = parseDate(endDate);
         return bookingRepository.getTourBookingsRevenue(tourId, startDate, endDate);
+    }
+
+    @Override
+    public List<TourAndBookReport> getTourAndBookingsReport(String tourId, String userName) {
+        return bookingRepository.getTourAndBooking(tourId, userName);
     }
 
 //    private Date parseDate(LocalDate localDate) {

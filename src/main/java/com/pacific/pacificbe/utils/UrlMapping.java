@@ -48,6 +48,7 @@ public class UrlMapping {
     public static final String REVENUE_BOOKING = "/book/revenue";
     public static final String REVENUE_BOOKING_MONTH = "/book/revenue/month";
     public static final String REVENUE_BOOKING_YEAR = "/book/revenue/year";
+    public static final String BOOK_AND_TOUR = "/book&tour/";
     public static final String CHECKOUT_BOOKING = "/checkout";
     public static final String CHECKOUT_RETURN = "/vnpay-payment-return";
     /*============================ End Booking API ===================================*/
