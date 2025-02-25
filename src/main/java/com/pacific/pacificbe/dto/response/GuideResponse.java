@@ -1,17 +1,16 @@
 package com.pacific.pacificbe.dto.response;
 
 import lombok.*;
-import lombok.experimental.FieldDefaults;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class GuideResponse {
-    String firstName;
-    String lastName;
-    String email;
-    String phone;
-    Double experienceYear;
+    private String id;
+    private String address;
+    private String email;
+    private Integer experience_years;
+    private String first_name;
+    private String last_name;
+    private String phone;
 }

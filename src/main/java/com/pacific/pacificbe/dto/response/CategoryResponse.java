@@ -1,13 +1,16 @@
 package com.pacific.pacificbe.dto.response;
 
 import lombok.*;
-import lombok.experimental.FieldDefaults;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class CategoryResponse {
-    String title;
+    private String id;
+    private String status;
+    private String title;
+    private String type;
+    // Danh sách các tour ID thuộc Category
+    private List<String> tourIds;
 }
