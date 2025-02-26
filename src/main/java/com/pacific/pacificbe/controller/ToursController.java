@@ -5,15 +5,19 @@ import java.util.List;
 import com.pacific.pacificbe.dto.ApiResponse;
 import com.pacific.pacificbe.dto.request.TourRequest;
 import com.pacific.pacificbe.dto.response.TourResponse;
+import com.pacific.pacificbe.services.GoogleDriveService;
 import com.pacific.pacificbe.services.TourService;
 import com.pacific.pacificbe.utils.UrlMapping;
+import com.pacific.pacificbe.utils.enums.FolderType;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping(UrlMapping.TOURS)
@@ -22,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 public class ToursController {
 
     TourService tourService;
+    GoogleDriveService googleDriveService;
 
     @GetMapping(UrlMapping.GET_ALL_TOURS)
     @Operation(summary = "Lấy danh sách tour")
@@ -62,5 +67,11 @@ public class ToursController {
     @Operation(summary = "Thêm tour")
     public ResponseEntity<ApiResponse<TourResponse>> createTour(@RequestBody TourRequest request) {
         return ResponseEntity.ok(new ApiResponse<>(200, "Hoàn thành", tourService.createTour(request)));
+    }
+
+    @PostMapping(value = "/test-img", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<String> testImg(@RequestPart("file") MultipartFile file) {
+//        https://drive.google.com/file/d/1GTrRDjzn82Kei0vsBQ7FGLN14iRlt5-m/view?usp=drivesdk
+        return ResponseEntity.ok(googleDriveService.uploadImageToDrive(file, FolderType.TOUR));
     }
 }
