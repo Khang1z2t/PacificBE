@@ -82,4 +82,17 @@ public class TourDetail extends BaseEntity {
     @Column(name = "status", length = 50)
     private String status;
 
+    @OneToMany(mappedBy = "tourDetail")
+    private Set<Booking> bookings = new LinkedHashSet<>();
+
+    @Nationalized
+    @Lob
+    @Column(name = "descriptions")
+    private String descriptions;
+
+    @Size(max = 255)
+    @Nationalized
+    @Column(name = "title")
+    private String title;
+
 }

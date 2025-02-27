@@ -3,7 +3,7 @@ package com.pacific.pacificbe.controller;
 import java.util.List;
 
 import com.pacific.pacificbe.dto.ApiResponse;
-import com.pacific.pacificbe.dto.request.TourRequest;
+import com.pacific.pacificbe.dto.request.CreateTourRequest;
 import com.pacific.pacificbe.dto.response.TourResponse;
 import com.pacific.pacificbe.services.GoogleDriveService;
 import com.pacific.pacificbe.services.TourService;
@@ -65,7 +65,7 @@ public class ToursController {
 
     @PostMapping(UrlMapping.ADD_TOUR)
     @Operation(summary = "Thêm tour")
-    public ResponseEntity<ApiResponse<TourResponse>> createTour(@RequestBody TourRequest request) {
+    public ResponseEntity<ApiResponse<TourResponse>> createTour(@RequestBody CreateTourRequest request) {
         return ResponseEntity.ok(new ApiResponse<>(200, "Hoàn thành", tourService.createTour(request)));
     }
 

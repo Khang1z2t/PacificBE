@@ -73,4 +73,8 @@ public class Tour extends BaseEntity {
     @JoinColumn(name = "destination_id")
     private Destination destination;
 
+    @Size(max = 255)
+    @Column(name = "thumbnail_url")
+    private String thumbnailUrl;
+
 }

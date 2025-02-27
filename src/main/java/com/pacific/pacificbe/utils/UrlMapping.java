@@ -33,6 +33,18 @@ public class UrlMapping {
 
     /*============================ End Tour API ===================================*/
 
+    /*============================ Start Tour Detail API ===================================*/
+    public static final String TOUR_DETAILS = API + "/tour-details";
+    public static final String GET_TOUR_DETAIL_BY_ID = "/{id}";
+    public static final String GET_TOUR_DETAIL_BY_TOUR = "/tour/{tourId}";
+    public static final String GET_TOUR_DETAIL_BY_CATEGORY = "/category/{category}";
+    public static final String GET_ALL_TOUR_DETAILS = "/all";
+    public static final String ADD_TOUR_DETAIL = "/add";
+    public static final String UPDATE_TOUR_DETAIL = "/update";
+    public static final String DELETE_TOUR_DETAIL = "/delete/{id}";
+    /*============================ End Tour Detail API ===================================*/
+
+
     /*============================ Start Booking API ===================================*/
     public static final String BOOKINGS = API + "/bookings";
     public static final String GET_ALL_BOOKINGS = "/all";

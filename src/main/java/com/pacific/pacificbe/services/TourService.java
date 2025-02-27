@@ -1,9 +1,8 @@
 package com.pacific.pacificbe.services;
 
-import com.pacific.pacificbe.dto.request.TourRequest;
+import com.pacific.pacificbe.dto.request.CreateTourRequest;
 import com.pacific.pacificbe.dto.response.TourResponse;
-import java.math.BigDecimal;
-import java.time.LocalDate;
+
 import java.util.List;
 
 public interface TourService {
@@ -11,7 +10,7 @@ public interface TourService {
 
     TourResponse getTourById(String id);
     
-    TourResponse createTour(TourRequest request);
+    TourResponse createTour(CreateTourRequest request);
     
     List<TourResponse> getTourCategory(String category);
     

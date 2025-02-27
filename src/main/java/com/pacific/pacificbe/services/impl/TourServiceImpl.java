@@ -1,6 +1,6 @@
 package com.pacific.pacificbe.services.impl;
 
-import com.pacific.pacificbe.dto.request.TourRequest;
+import com.pacific.pacificbe.dto.request.CreateTourRequest;
 import com.pacific.pacificbe.dto.response.TourResponse;
 import com.pacific.pacificbe.exception.AppException;
 import com.pacific.pacificbe.exception.ErrorCode;
@@ -21,8 +21,6 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -48,7 +46,7 @@ public class TourServiceImpl implements TourService {
     }
 
 	@Override
-	public TourResponse createTour(TourRequest request) {
+	public TourResponse createTour(CreateTourRequest request) {
 		Tour tour = new Tour();
 		tour.setTitle(request.getTitle());
 		tour.setDescription(request.getDescription());

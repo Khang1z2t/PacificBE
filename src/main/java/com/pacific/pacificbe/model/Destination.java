@@ -23,13 +23,11 @@ public class Destination {
     private String id;
 
     @Size(max = 255)
-    @NotNull
     @Nationalized
     @Column(name = "name", nullable = false)
     private String name;
 
     @Size(max = 500)
-    @NotNull
     @Nationalized
     @Column(name = "full_address", nullable = false, length = 500)
     private String fullAddress;
@@ -40,13 +38,11 @@ public class Destination {
     private String region;
 
     @Size(max = 255)
-    @NotNull
     @Nationalized
     @Column(name = "country", nullable = false)
     private String country;
 
     @Size(max = 255)
-    @NotNull
     @Nationalized
     @Column(name = "city", nullable = false)
     private String city;
