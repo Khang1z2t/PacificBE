@@ -36,7 +36,7 @@ public class TourMapper {
     public TourResponse toTourResponse(Tour tour) {
         TourResponse tourResponse = modelMapper.map(tour, TourResponse.class);
         tourResponse.setImages(tour.getImages().stream()
-                .map(image -> idUtil.getIdImage(image.getId()))
+                .map(image -> idUtil.getIdImage(image.getImageUrl()))
                 .collect(Collectors.toList()));
         if (tour.getCategory() != null) {
             tourResponse.setCategory(tour.getCategory().getTitle());
@@ -47,7 +47,7 @@ public class TourMapper {
     public TourInDetailResponse toTourInDetailResponse(Tour tour) {
         TourInDetailResponse tourResponse = modelMapper.map(tour, TourInDetailResponse.class);
         tourResponse.setImages(tour.getImages().stream()
-                .map(image -> idUtil.getIdImage(image.getId()))
+                .map(image -> idUtil.getIdImage(image.getImageUrl()))
                 .collect(Collectors.toList()));
         if (tour.getCategory() != null) {
             tourResponse.setCategory(tour.getCategory().getTitle());
