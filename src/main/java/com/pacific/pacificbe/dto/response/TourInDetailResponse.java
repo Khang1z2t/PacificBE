@@ -3,10 +3,6 @@ package com.pacific.pacificbe.dto.response;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.math.BigDecimal;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -14,7 +10,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class TourResponse {
+public class TourInDetailResponse {
     String id;
     String title;
     String description;
@@ -24,8 +20,4 @@ public class TourResponse {
 
     String category;
     GuideResponse guide;
-
-    Boolean active;
-    LocalDateTime createdAt;
-    LocalDateTime updatedAt;
 }

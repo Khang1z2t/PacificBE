@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class TourRequest {
+public class CreateTourRequest {
     @Schema(description = "Tên tour", example = "Tour Hồ Chí Minh 3 ngày 2 đêm")
     String title;
     @Schema(description = "Điểm xuất phát - diểm kết thúc, Mô tả", example = "Hồ Chí Minh đến Vũng Tàu, ....")
