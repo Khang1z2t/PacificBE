@@ -165,11 +165,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean resetPassword(ResetUserPasswordRequest request) {
-        String userId = AuthenUtils.getCurrentUserId();
-        if (Objects.isNull(userId)) {
-            throw new AppException(ErrorCode.NEED_LOGIN);
-        }
-        User user = userRepository.findById(userId)
+        User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         if (request.getNewPassword().equals(request.getConfirmPassword())) {
             user.setPassword(passwordEncoder.encode(request.getNewPassword()));
