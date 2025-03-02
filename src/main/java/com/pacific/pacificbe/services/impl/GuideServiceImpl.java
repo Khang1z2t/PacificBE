@@ -2,35 +2,36 @@ package com.pacific.pacificbe.services.impl;
 
 import com.pacific.pacificbe.dto.request.GuideRequest;
 import com.pacific.pacificbe.dto.response.GuideResponse;
+import com.pacific.pacificbe.exception.AppException;
+import com.pacific.pacificbe.exception.ErrorCode;
 import com.pacific.pacificbe.mapper.GuideMapper;
 import com.pacific.pacificbe.model.Guide;
 import com.pacific.pacificbe.repository.GuideRepository;
 import com.pacific.pacificbe.services.GuideService;
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class GuideServiceImpl implements GuideService {
 
     private final GuideRepository guideRepository;
     private final GuideMapper guideMapper;
 
-    @Autowired
-    public GuideServiceImpl(GuideRepository guideRepository, GuideMapper guideMapper) {
-        this.guideRepository = guideRepository;
-        this.guideMapper = guideMapper;
-    }
-
     @Override
     public GuideResponse createGuide(GuideRequest request) {
         Guide guide = guideMapper.toEntity(request);
-        guide.setId(UUID.randomUUID().toString());
+
+        // Lưu vào DB
         guide = guideRepository.save(guide);
+
+        // Convert Entity -> DTO
         return guideMapper.toResponse(guide);
     }
 
@@ -50,15 +51,27 @@ public class GuideServiceImpl implements GuideService {
 
     @Override
     public GuideResponse updateGuide(String id, GuideRequest request) {
+        // Tìm guide cũ
         Guide guide = guideRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Guide not found"));
         guide.setAddress(request.getAddress());
         guide.setEmail(request.getEmail());
         guide.setExperienceYears(request.getExperienceYears());
-        guide.setFirstName(request.getFirst_name());
-        guide.setLastName(request.getLast_name());
+        guide.setFirstName(request.getFirstName());
+        guide.setLastName(request.getLastName());
         guide.setPhone(request.getPhone());
+
+        // Lưu
         guide = guideRepository.save(guide);
+
         return guideMapper.toResponse(guide);
     }
+
+    // Nếu cần xóa:
+    // @Override
+    // public void deleteGuide(String id) {
+    //     Guide guide = guideRepository.findById(id)
+    //             .orElseThrow(() -> new AppException(ErrorCode.GUIDE_NOT_FOUND));
+    //     guideRepository.delete(guide);
+    // }
 }

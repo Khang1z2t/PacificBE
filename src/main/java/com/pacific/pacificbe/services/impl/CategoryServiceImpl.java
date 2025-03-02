@@ -2,6 +2,8 @@ package com.pacific.pacificbe.services.impl;
 
 import com.pacific.pacificbe.dto.request.CategoryRequest;
 import com.pacific.pacificbe.dto.response.CategoryResponse;
+import com.pacific.pacificbe.exception.AppException;
+import com.pacific.pacificbe.exception.ErrorCode;
 import com.pacific.pacificbe.mapper.CategoryMapper;
 import com.pacific.pacificbe.model.Category;
 import com.pacific.pacificbe.repository.CategoryRepository;
@@ -31,10 +33,12 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryResponse createCategory(CategoryRequest request) {
         Category category = categoryMapper.toEntity(request);
-        category.setId(UUID.randomUUID().toString());
+        // Không cần set id thủ công nếu sử dụng @GeneratedValue(strategy = GenerationType.UUID)
+        // category.setId(UUID.randomUUID().toString());
         category = categoryRepository.save(category);
         return categoryMapper.toResponse(category);
     }
+
 
     @Override
     public CategoryResponse getCategoryById(String id) {
@@ -90,9 +94,15 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public void deleteCategory(String id) {
         Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Category not found"));
+                .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
+        if (!category.getTours().isEmpty()) {
+            throw new AppException(ErrorCode.CATEGORY_IN_USE);
+        }
         categoryRepository.delete(category);
     }
+
+
+
 
 
 }

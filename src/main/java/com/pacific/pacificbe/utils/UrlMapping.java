@@ -1,6 +1,7 @@
 package com.pacific.pacificbe.utils;
 
 public class UrlMapping {
+
     public static final String API = "/api";
     public static final String AUTH = API + "/auth";
     public static final String LOGIN = "/login";
@@ -77,5 +78,35 @@ public class UrlMapping {
     public static final String EXPORT = API + "/export";
     public static final String EXPORT_PDF = "/PDF";
     /* =========================== End Report API ===================================== */
+
+
+    /* =========================== Start Category API ===================================== */
+    public static final String CATEGORY = API + "/categories";
+    public static final String GET_ALL_CATEGORY = "/all";
+    public static final String CREATE_CATEGORY = "/create";
+    public static final String GET_CATEGORY_BY_ID = "/{id}";
+    public static final String UPDATE_CATEGORY = "/update/{id}";
+    public static final String DELETE_CATEGORY = "/delete/{id}";
+    public static final String SEARCH_CATEGORY = "/search";
+    /* =========================== End Category API ===================================== */
+
+    /* =========================== Start Admin_review API ===================================== */
+    public static final String ADMIN_REVIEW = API + "/admin/review";
+    public static final String GET_ALL_ADMIN_REVIEW = "/getall";
+    public static final String CREATE_ADMIN_REVIEW = "/create";
+    public static final String GET_ADMIN_REVIEW_BY_ID = "/get/{id}";
+    public static final String UPDATE_ADMIN_REVIEW = "/update/{id}";
+    public static final String DELETE_ADMIN_REVIEW = "/delete/{id}";
+
+    /* =========================== End Admin_review API ===================================== */
+
+    /* =========================== Start Guide API ===================================== */
+    public static final String GUIDE = API + "/guide";
+    public static final String GET_ALL_GUIDE = "/all";
+    public static final String CREATE_GUIDE = "/create";
+    public static final String GET_GUIDE_BY_ID = "/{id}";
+    public static final String UPDATE_GUIDE = "/update/{id}";
+    public static final String DELETE_GUIDE = "/delete/{id}";
+    /* =========================== End Guide API ===================================== */
 
 }

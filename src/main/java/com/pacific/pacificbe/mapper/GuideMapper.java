@@ -3,9 +3,15 @@ package com.pacific.pacificbe.mapper;
 import com.pacific.pacificbe.dto.request.GuideRequest;
 import com.pacific.pacificbe.dto.response.GuideResponse;
 import com.pacific.pacificbe.model.Guide;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class GuideMapper {
 
     public Guide toEntity(GuideRequest request) {
@@ -13,8 +19,8 @@ public class GuideMapper {
         guide.setAddress(request.getAddress());
         guide.setEmail(request.getEmail());
         guide.setExperienceYears(request.getExperienceYears());
-        guide.setFirstName(request.getFirst_name());
-        guide.setLastName(request.getLast_name());
+        guide.setFirstName(request.getFirstName());
+        guide.setLastName(request.getLastName());
         guide.setPhone(request.getPhone());
         return guide;
     }
