@@ -35,7 +35,7 @@ public class Tour extends BaseEntity {
 
     @Size(max = 255)
     @NotNull
-    @Nationalized
+    @Nationalized   
     @Column(name = "title", nullable = false)
     private String title;
 

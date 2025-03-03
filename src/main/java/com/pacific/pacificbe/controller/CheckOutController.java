@@ -24,7 +24,7 @@ public class CheckOutController {
     @Autowired
     private VNPAYService vnPayService;
 
-    @RequestMapping(UrlMapping.CHECKOUT_BOOKING)
+    @GetMapping(UrlMapping.CHECKOUT_BOOKING)
     @Operation(summary = "Thanh toán tour")
     public String checkoutTour(@RequestParam("amount") int orderTotal,
                                @RequestParam("orderInfo") String orderInfo,
@@ -63,8 +63,11 @@ public class CheckOutController {
 //        return "/";
 //    }
     public ResponseEntity<?> handleVnpayReturn(@RequestParam Map<String, String> params, HttpServletResponse response) {
-        String frontendURL = "http://localhost:3000/checkout/success"; // Địa chỉ FE hiển thị kết quả thanh toán
+        String sucessUrl = "http://localhost:3000/checkout/success"; // Địa chỉ FE hiển thị kết quả thanh toán
+        String failUrl = "http://localhost:3000/checkout/fail"; // Địa chỉ FE hiển thị kết quả thanh toán
 
+        String respCode = params.get("vnp_ResponseCode");
+        String frontendURL = "00".equals(respCode) ? sucessUrl : failUrl;
         // Tạo URL redirect kèm theo query params
         String redirectUrl = frontendURL + "?" + params.entrySet()
                 .stream()

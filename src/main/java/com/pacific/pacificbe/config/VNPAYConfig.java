@@ -1,5 +1,6 @@
 package com.pacific.pacificbe.config;
 
+import com.pacific.pacificbe.utils.UrlMapping;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -9,17 +10,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class VNPAYConfig {
-    @Value("${vnp.payUrl}")
-    public static String vnp_PayUrl;
-    @Value("${vnp.returnUrl}")
-    public static String vnp_Returnurl;
-    @Value("${vnp.tmnCode}")
-    public static String vnp_TmnCode; // kiểm tra email sau
-    @Value("${vnp.hashSecret}")
-    public static String vnp_HashSecret; // khi đăng ký Test
-    @Value("${vnp.apiUrl}")
-    public static String vnp_apiUrl;
-
+    public static String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
+    public static String vnp_Returnurl = "/api/bookings/vnpay-payment-return";
+    public static String vnp_TmnCode = "9M2RZNUZ"; // kiểm tra email sau
+    public static String vnp_HashSecret = "RSRG6YL3LMR54087SLIB3YT428QYRLMO"; // khi đăng ký Test
+    public static String vnp_apiUrl = "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction";
 
     public static String hashAllFields(Map fields) {
         List fieldNames = new ArrayList(fields.keySet());
