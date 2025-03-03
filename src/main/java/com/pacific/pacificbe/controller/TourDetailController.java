@@ -30,13 +30,13 @@ public class TourDetailController {
         return ResponseEntity.ok(new ApiResponse<>(200, "Lấy danh sách chi tiết tour thành công", tourDetailService.getAll()));
     }
 
-    @PostMapping(UrlMapping.GET_TOUR_DETAIL_BY_ID)
+    @GetMapping(UrlMapping.GET_TOUR_DETAIL_BY_ID)
     @Operation(summary = "Lấy chi tiết tour theo id")
     public ResponseEntity<ApiResponse<TourDetailResponse>> getTourDetailById(@PathVariable String id) {
         return ResponseEntity.ok(new ApiResponse<>(200, "Lấy chi tiết tour thành công", tourDetailService.getTourDetailById(id)));
     }
 
-    @PostMapping(UrlMapping.GET_TOUR_DETAIL_BY_TOUR)
+    @GetMapping(UrlMapping.GET_TOUR_DETAIL_BY_TOUR)
     @Operation(summary = "Lấy chi tiết tour theo tour")
     public ResponseEntity<ApiResponse<List<TourDetailResponse>>> getTourDetailByTour(@PathVariable String tourId) {
         return ResponseEntity.ok(new ApiResponse<>(200, "Lấy chi tiết tour thành công", tourDetailService.getTourDetailByTourId(tourId)));
