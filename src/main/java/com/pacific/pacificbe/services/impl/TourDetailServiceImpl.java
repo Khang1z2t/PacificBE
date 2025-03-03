@@ -1,7 +1,10 @@
 package com.pacific.pacificbe.services.impl;
 
+import com.pacific.pacificbe.dto.request.CreateItineraryRequest;
 import com.pacific.pacificbe.dto.request.CreateTourDetailRequest;
 import com.pacific.pacificbe.dto.response.TourDetailResponse;
+import com.pacific.pacificbe.exception.AppException;
+import com.pacific.pacificbe.exception.ErrorCode;
 import com.pacific.pacificbe.mapper.TourDetailMapper;
 import com.pacific.pacificbe.mapper.TourMapper;
 import com.pacific.pacificbe.model.*;
@@ -26,13 +29,14 @@ public class TourDetailServiceImpl implements TourDetailService {
     private final TourDetailRepository tourDetailRepository;
     private final TourDetailMapper tourDetailMapper;
     private final TourMapper tourMapper;
+    private final ItineraryRepository itineraryRepository;
 
     @Override
     public TourDetailResponse addTourDetail(CreateTourDetailRequest request) {
         Tour tour = tourRepository.findById(request.getTourId()).orElse(null);
-        Combo combo = comboRepository.findById(request.getComboId()).orElse(null);
-        Hotel hotel = hotelRepository.findById(request.getHotelId()).orElse(null);
-        Transport transport = transportRepository.findById(request.getTransportId()).orElse(null);
+//        Combo combo = comboRepository.findById(request.getComboId()).orElse(null);
+//        Hotel hotel = hotelRepository.findById(request.getHotelId()).orElse(null);
+//        Transport transport = transportRepository.findById(request.getTransportId()).orElse(null);
 
         TourDetail tourDetail = new TourDetail();
         tourDetail.setTitle(request.getTitle());
@@ -44,16 +48,40 @@ public class TourDetailServiceImpl implements TourDetailService {
         tourDetail.setEndDate(request.getEndDate());
         tourDetail.setQuantity(request.getQuantity());
         tourDetail.setTour(tour);
-        tourDetail.setCombo(combo);
-        tourDetail.setHotel(hotel);
-        tourDetail.setTransport(transport);
+        tourDetail = tourDetailRepository.save(tourDetail);
+//        tourDetail.setCombo(combo);
+//        tourDetail.setHotel(hotel);
+//        tourDetail.setTransport(transport);
 
-        return null;
+        for (CreateItineraryRequest itineraryRequest : request.getItineraries()) {
+            Itinerary itinerary = new Itinerary();
+            itinerary.setDayNumber(itinerary.getDayNumber());
+            itinerary.setTitle(itineraryRequest.getTitle());
+            itinerary.setDayDetail(itineraryRequest.getDayDetail());
+            itinerary.setTourDetail(tourDetail);
+            tourDetail.getItineraries().add(itinerary);
+            itineraryRepository.save(itinerary);
+        }
+        tourDetailRepository.save(tourDetail);
+        return tourMapper.toTourDetailResponse(tourDetail);
     }
 
     @Override
     public List<TourDetailResponse> getAll() {
         List<TourDetail> tourDetail = tourDetailRepository.findAll();
+        return tourMapper.toTourDetailResponseList(tourDetail);
+    }
+
+    @Override
+    public TourDetailResponse getTourDetailById(String id) {
+        TourDetail tourDetail = tourDetailRepository.findById(id).orElseThrow(
+                () -> new AppException(ErrorCode.TOUR_DETAIL_NOT_FOUND));
+        return tourMapper.toTourDetailResponse(tourDetail);
+    }
+
+    @Override
+    public List<TourDetailResponse> getTourDetailByTourId(String tourId) {
+        List<TourDetail> tourDetail = tourDetailRepository.findByTourId(tourId);
         return tourMapper.toTourDetailResponseList(tourDetail);
     }
 }

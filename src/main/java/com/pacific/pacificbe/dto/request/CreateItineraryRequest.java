@@ -13,5 +13,4 @@ public class CreateItineraryRequest {
     String title;
     String dayDetail;
     String notes;
-    String tourId;
 }

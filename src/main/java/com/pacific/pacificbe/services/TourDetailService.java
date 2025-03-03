@@ -8,4 +8,8 @@ import java.util.List;
 public interface TourDetailService {
     TourDetailResponse addTourDetail(CreateTourDetailRequest request);
     List<TourDetailResponse> getAll();
+
+    TourDetailResponse getTourDetailById(String id);
+
+    List<TourDetailResponse> getTourDetailByTourId(String tourId);
 }

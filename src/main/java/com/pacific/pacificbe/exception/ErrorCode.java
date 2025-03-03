@@ -21,6 +21,8 @@ public enum ErrorCode {
     INVALID_USERNAME_OR_PASSWORD(1013, "Invalid username or password", HttpStatus.BAD_REQUEST),
     INVALID_OTP(1014, "Invalid OTP", HttpStatus.BAD_REQUEST),
 
+    TOUR_DETAIL_NOT_FOUND(1030, "Tour detail not found", HttpStatus.NOT_FOUND),
+
     CATEGORY_NOT_FOUND(1040, "Category not found", HttpStatus.NOT_FOUND),
     GUIDE_NOT_FOUND(1050, "Guide not found", HttpStatus.NOT_FOUND),
     DESTINATION_NOT_FOUND(1060, "Destination not found", HttpStatus.NOT_FOUND),
