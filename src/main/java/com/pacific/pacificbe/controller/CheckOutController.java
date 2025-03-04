@@ -5,6 +5,7 @@ import com.pacific.pacificbe.utils.UrlMapping;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,10 +20,9 @@ import java.util.stream.Collectors;
 
 @RequestMapping(UrlMapping.BOOKINGS)
 @RestController
+@RequiredArgsConstructor
 public class CheckOutController {
-
-    @Autowired
-    private VNPAYService vnPayService;
+    private final VNPAYService vnPayService;
 
     @GetMapping(UrlMapping.CHECKOUT_BOOKING)
     @Operation(summary = "Thanh toán tour")
@@ -33,8 +33,7 @@ public class CheckOutController {
             return "/";
         }
         String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
-        String vnpayUrl = vnPayService.createOrder(request, orderTotal, orderInfo, baseUrl);
-        return vnpayUrl;
+        return vnPayService.createOrder(request, orderTotal, orderInfo, baseUrl);
     }
 
     @GetMapping(UrlMapping.CHECKOUT_RETURN)

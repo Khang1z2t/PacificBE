@@ -2,6 +2,7 @@ package com.pacific.pacificbe.services;
 
 import com.pacific.pacificbe.config.VNPAYConfig;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
@@ -11,22 +12,24 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class VNPAYService {
+    private final VNPAYConfig vnpayConfig;
 
-    public String createOrder(HttpServletRequest request, int amount, String orderInfor, String urlReturn){
+    public String createOrder(HttpServletRequest request, int amount, String orderInfor, String urlReturn) {
         //Các bạn có thể tham khảo tài liệu hướng dẫn và điều chỉnh các tham số
         String vnp_Version = "2.1.0";
         String vnp_Command = "pay";
-        String vnp_TxnRef = VNPAYConfig.getRandomNumber(8);
-        String vnp_IpAddr = VNPAYConfig.getIpAddress(request);
-        String vnp_TmnCode = VNPAYConfig.vnp_TmnCode;
+        String vnp_TxnRef = vnpayConfig.getRandomNumber(8);
+        String vnp_IpAddr = vnpayConfig.getIpAddress(request);
+        String vnp_TmnCode = vnpayConfig.vnp_TmnCode;
         String orderType = "order-type";
 
         Map<String, String> vnp_Params = new HashMap<>();
         vnp_Params.put("vnp_Version", vnp_Version);
         vnp_Params.put("vnp_Command", vnp_Command);
         vnp_Params.put("vnp_TmnCode", vnp_TmnCode);
-        vnp_Params.put("vnp_Amount", String.valueOf(amount*100));
+        vnp_Params.put("vnp_Amount", String.valueOf(amount * 100));
         vnp_Params.put("vnp_CurrCode", "VND");
 
         vnp_Params.put("vnp_TxnRef", vnp_TxnRef);
@@ -36,7 +39,7 @@ public class VNPAYService {
         String locate = "vn";
         vnp_Params.put("vnp_Locale", locate);
 
-        urlReturn += VNPAYConfig.vnp_Returnurl;
+        urlReturn += vnpayConfig.vnp_Returnurl;
         vnp_Params.put("vnp_ReturnUrl", urlReturn);
         vnp_Params.put("vnp_IpAddr", vnp_IpAddr);
 
@@ -77,16 +80,16 @@ public class VNPAYService {
             }
         }
         String queryUrl = query.toString();
-        String salt = VNPAYConfig.vnp_HashSecret;
-        String vnp_SecureHash = VNPAYConfig.hmacSHA512(salt, hashData.toString());
+        String salt = vnpayConfig.vnp_HashSecret;
+        String vnp_SecureHash = vnpayConfig.hmacSHA512(salt, hashData.toString());
         queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
-        String paymentUrl = VNPAYConfig.vnp_PayUrl + "?" + queryUrl;
+        String paymentUrl = vnpayConfig.vnp_PayUrl + "?" + queryUrl;
         return paymentUrl;
     }
 
-    public int orderReturn(HttpServletRequest request){
+    public int orderReturn(HttpServletRequest request) {
         Map fields = new HashMap();
-        for (Enumeration params = request.getParameterNames(); params.hasMoreElements();) {
+        for (Enumeration params = request.getParameterNames(); params.hasMoreElements(); ) {
             String fieldName = null;
             String fieldValue = null;
             try {
@@ -107,7 +110,7 @@ public class VNPAYService {
         if (fields.containsKey("vnp_SecureHash")) {
             fields.remove("vnp_SecureHash");
         }
-        String signValue = VNPAYConfig.hashAllFields(fields);
+        String signValue = vnpayConfig.hashAllFields(fields);
         if (signValue.equals(vnp_SecureHash)) {
             if ("00".equals(request.getParameter("vnp_TransactionStatus"))) {
                 return 1;

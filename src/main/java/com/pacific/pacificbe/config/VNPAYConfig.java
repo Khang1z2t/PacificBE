@@ -1,22 +1,28 @@
 package com.pacific.pacificbe.config;
 
-import com.pacific.pacificbe.utils.UrlMapping;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
+@Component
 public class VNPAYConfig {
-    public static String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-    public static String vnp_Returnurl = "/api/bookings/vnpay-payment-return";
-    public static String vnp_TmnCode = "9M2RZNUZ"; // kiểm tra email sau
-    public static String vnp_HashSecret = "RSRG6YL3LMR54087SLIB3YT428QYRLMO"; // khi đăng ký Test
-    public static String vnp_apiUrl = "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction";
+    @Value("${vnp.payUrl}")
+    public String vnp_PayUrl;
+    @Value("${vnp.returnUrl}")
+    public String vnp_Returnurl;
+    @Value("${vnp.tmnCode}")
+    public String vnp_TmnCode; // kiểm tra email sau
+    @Value("${vnp.hashSecret}")
+    public String vnp_HashSecret; // khi đăng ký Test
+    @Value("${vnp.apiUrl}")
+    public String vnp_apiUrl;
 
-    public static String hashAllFields(Map fields) {
+    public String hashAllFields(Map fields) {
         List fieldNames = new ArrayList(fields.keySet());
         Collections.sort(fieldNames);
         StringBuilder sb = new StringBuilder();
@@ -33,10 +39,10 @@ public class VNPAYConfig {
                 sb.append("&");
             }
         }
-        return hmacSHA512(vnp_HashSecret,sb.toString());
+        return hmacSHA512(vnp_HashSecret, sb.toString());
     }
 
-    public static String hmacSHA512(final String key, final String data) {
+    public String hmacSHA512(final String key, final String data) {
         try {
 
             if (key == null || data == null) {
@@ -59,20 +65,20 @@ public class VNPAYConfig {
         }
     }
 
-    public static String getIpAddress(HttpServletRequest request) {
-        String ipAdress;
+    public String getIpAddress(HttpServletRequest request) {
+        String ipAddress;
         try {
-            ipAdress = request.getHeader("X-FORWARDED-FOR");
-            if (ipAdress == null) {
-                ipAdress = request.getLocalAddr();
+            ipAddress = request.getHeader("X-FORWARDED-FOR");
+            if (ipAddress == null) {
+                ipAddress = request.getLocalAddr();
             }
         } catch (Exception e) {
-            ipAdress = "Invalid IP:" + e.getMessage();
+            ipAddress = "Invalid IP:" + e.getMessage();
         }
-        return ipAdress;
+        return ipAddress;
     }
 
-    public static String getRandomNumber(int len) {
+    public String getRandomNumber(int len) {
         Random rnd = new Random();
         String chars = "0123456789";
         StringBuilder sb = new StringBuilder(len);

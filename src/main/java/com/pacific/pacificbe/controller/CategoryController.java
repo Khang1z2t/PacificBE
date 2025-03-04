@@ -6,22 +6,20 @@ import com.pacific.pacificbe.services.CategoryService;
 import com.pacific.pacificbe.utils.UrlMapping;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+
 import java.util.List;
+
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(UrlMapping.CATEGORY)
+@RequiredArgsConstructor
 @Tag(name = "Category Controller", description = "Quản lý danh mục (Category) của các tour du lịch")
 public class CategoryController {
-
     private final CategoryService categoryService;
-
-    @Autowired
-    public CategoryController(CategoryService categoryService) {
-        this.categoryService = categoryService;
-    }
 
     @Operation(summary = "Tạo mới danh mục", description = "Tạo mới một danh mục và trả về thông tin của danh mục vừa tạo.")
     @PostMapping(UrlMapping.CREATE_CATEGORY)

@@ -7,22 +7,20 @@ import com.pacific.pacificbe.services.AdminReviewService;
 import com.pacific.pacificbe.utils.UrlMapping;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+
 import java.util.List;
+
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(UrlMapping.ADMIN_REVIEW)
+@RequiredArgsConstructor
 @Tag(name = "Admin Review Controller", description = "Các thao tác CRUD cho đánh giá của admin")
 public class AdminReviewController {
-
     private final AdminReviewService adminReviewService;
-
-    @Autowired
-    public AdminReviewController(AdminReviewService adminReviewService) {
-        this.adminReviewService = adminReviewService;
-    }
 
     @Operation(
             summary = "Tạo mới đánh giá của admin",
