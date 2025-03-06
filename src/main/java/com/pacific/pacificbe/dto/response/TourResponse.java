@@ -22,6 +22,10 @@ public class TourResponse {
     String thumbnail;
     List<?> images;
 
+    Integer avgDuration;
+    BigDecimal maxPrice;
+    BigDecimal minPrice;
+
     String category;
     GuideResponse guide;
 

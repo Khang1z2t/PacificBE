@@ -14,6 +14,7 @@ import lombok.experimental.FieldDefaults;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,6 +41,21 @@ public class TourMapper {
                 .collect(Collectors.toList()));
         if (tour.getCategory() != null) {
             tourResponse.setCategory(tour.getCategory().getTitle());
+        }
+
+        List<TourDetail> activeTourDetails = tour.getTourDetails().stream()
+                .filter(TourDetail::isActive)
+                .toList();
+
+        if (!activeTourDetails.isEmpty()) {
+            tourResponse.setMinPrice(activeTourDetails.stream()
+                    .map(TourDetail::getPriceAdults)
+                    .min(BigDecimal::compareTo)
+                    .orElse(BigDecimal.ZERO));
+            tourResponse.setMaxPrice(activeTourDetails.stream()
+                    .map(TourDetail::getPriceAdults)
+                    .max(BigDecimal::compareTo)
+                    .orElse(BigDecimal.ZERO));
         }
         return tourResponse;
     }
