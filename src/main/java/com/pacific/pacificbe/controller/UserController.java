@@ -34,6 +34,12 @@ public class UserController {
     ResponseEntity<ApiResponse<AuthenticationResponse>> login(@RequestBody LoginRequest request) {
         return ResponseEntity.ok(new ApiResponse<>(200, "Thành công", userService.loginUser(request)));
     }
+    //new
+    @GetMapping(UrlMapping.OAUTH2)
+    @Operation(summary = "API đăng nhập bằng google/facebook")
+    public ResponseEntity<String> oauth2Login(@PathVariable String registrationId) {
+        return ResponseEntity.ok("Đăng nhập thành công với " + registrationId);
+    }
 
     @PostMapping(UrlMapping.REGISTER)
     @Operation(summary = "API đăng kí tài khoản mới")

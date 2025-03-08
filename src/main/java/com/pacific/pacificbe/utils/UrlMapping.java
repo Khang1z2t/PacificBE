@@ -5,6 +5,7 @@ public class UrlMapping {
     public static final String API = "/api";
     public static final String AUTH = API + "/auth";
     public static final String LOGIN = "/login";
+    public static final String OAUTH2 = LOGIN + "/oauth2/code/{registrationId}"; // new
     public static final String REGISTER = "/register";
     public static final String LOGOUT = "/logout";
     public static final String AUTHENTICATE_TOKEN = "/authenticate-token";
