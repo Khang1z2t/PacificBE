@@ -22,27 +22,19 @@ public class Booking extends BaseEntity {
     @Id
     @Size(max = 255)
     @Column(name = "id", nullable = false)
-    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
     @Column(name = "adult_num")
-    private Integer adult_nums;
-
-    @Column(name = "children_num")
-    private Integer childrennums;
-
-//    @ColumnDefault("[adult_num]+[children_num]")
-    @Column(name = "total_number")
-    private Integer totalNumber;
-
-    @Column(name = "total_amount", precision = 10, scale = 2)
-    private BigDecimal totalAmount;
+    private Integer adultNum;
 
     @Size(max = 50)
     @Nationalized
     @ColumnDefault("'pending'")
     @Column(name = "booking_status", length = 50)
     private String bookingStatus;
+
+    @Column(name = "children_num")
+    private Integer childrenNum;
 
     @Size(max = 50)
     @Nationalized
@@ -54,37 +46,36 @@ public class Booking extends BaseEntity {
     @Column(name = "special_requests")
     private String specialRequests;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @Column(name = "total_amount", precision = 10, scale = 2)
+    private BigDecimal totalAmount;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @OnDelete(action = OnDeleteAction.SET_NULL)
-    @JoinColumn(name = "combo_id")
-    private Combo combo;
+    @Column(name = "total_number")
+    private Integer totalNumber;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.SET_NULL)
     @JoinColumn(name = "payment_id")
-    private Payment payment;
-
-    @OneToMany(mappedBy = "booking")
-    private Set<Review> reviews = new LinkedHashSet<>();
+    private com.pacific.pacificbe.model.Payment payment;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "tour_detail_id", nullable = false)
-    private TourDetail tourDetail;
+    private com.pacific.pacificbe.model.TourDetail tourDetail;
 
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "user_id", nullable = false)
+    private com.pacific.pacificbe.model.User user;
 
-//    @OneToMany(mappedBy = "booking")
-//    private Set<Voucher> vouchers = new LinkedHashSet<>();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "voucher_id")
+    private com.pacific.pacificbe.model.Voucher voucher;
 
-//    @OneToMany(mappedBy = "booking")
-//    private Set<Invoice> invoices = new LinkedHashSet<>();
-    
-//  @OneToMany(mappedBy = "booking")
-//  private Set<Promotion> promotions = new LinkedHashSet<>();
+    @OneToMany(mappedBy = "booking")
+    private Set<com.pacific.pacificbe.model.Invoice> invoices = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "booking")
+    private Set<com.pacific.pacificbe.model.Review> reviews = new LinkedHashSet<>();
+
 }

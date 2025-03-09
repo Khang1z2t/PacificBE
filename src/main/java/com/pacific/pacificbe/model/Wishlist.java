@@ -13,15 +13,14 @@ public class Wishlist {
     @Id
     @Size(max = 255)
     @Column(name = "id", nullable = false)
-    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tour_id")
     private Tour tour;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
 }

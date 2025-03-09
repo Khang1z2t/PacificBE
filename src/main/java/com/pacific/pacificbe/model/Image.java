@@ -13,18 +13,16 @@ import org.hibernate.annotations.OnDeleteAction;
 @Setter
 @Entity
 @Table(name = "image")
-public class Image extends BaseEntity{
+public class Image extends BaseEntity {
     @Id
     @Size(max = 255)
     @Column(name = "id", nullable = false)
-    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
-    
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "tour_id", nullable = false)
-    private Tour tour;
+
+    @Size(max = 255)
+    @Nationalized
+    @Column(name = "description")
+    private String description;
 
     @Size(max = 500)
     @NotNull
@@ -32,15 +30,10 @@ public class Image extends BaseEntity{
     @Column(name = "image_url", nullable = false, length = 500)
     private String imageUrl;
 
-    @Size(max = 255)
-    @Nationalized
-    @Column(name = "description")
-    private String description;
-    
-//  @NotNull
-//  @ManyToOne(fetch = FetchType.LAZY, optional = false)
-//  @OnDelete(action = OnDeleteAction.CASCADE)
-//  @JoinColumn(name = "tour_details_id", nullable = false)
-//  private TourDetail tourDetails;
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "tour_id", nullable = false)
+    private com.pacific.pacificbe.model.Tour tour;
 
 }

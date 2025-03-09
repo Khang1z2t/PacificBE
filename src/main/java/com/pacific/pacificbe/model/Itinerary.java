@@ -13,20 +13,11 @@ import org.hibernate.annotations.OnDeleteAction;
 @Setter
 @Entity
 @Table(name = "itinerary")
-public class Itinerary extends BaseEntity{
-
+public class Itinerary extends BaseEntity {
     @Id
     @Size(max = 255)
     @Column(name = "id", nullable = false)
-    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
-
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "tour_detail_id", nullable = false)
-    private TourDetail tourDetail;
-
 
     @Nationalized
     @Lob
@@ -45,5 +36,11 @@ public class Itinerary extends BaseEntity{
     @Nationalized
     @Column(name = "title")
     private String title;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "tour_detail_id", nullable = false)
+    private com.pacific.pacificbe.model.TourDetail tourDetail;
 
 }

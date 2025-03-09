@@ -18,20 +18,7 @@ public class Blog extends BaseEntity {
     @Id
     @Size(max = 255)
     @Column(name = "id", nullable = false)
-    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
-
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
-    @Size(max = 255)
-    @NotNull
-    @Nationalized
-    @Column(name = "title", nullable = false)
-    private String title;
 
     @NotNull
     @Nationalized
@@ -44,5 +31,17 @@ public class Blog extends BaseEntity {
     @ColumnDefault("'draft'")
     @Column(name = "status", length = 50)
     private String status;
+
+    @Size(max = 255)
+    @NotNull
+    @Nationalized
+    @Column(name = "title", nullable = false)
+    private String title;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "user_id", nullable = false)
+    private com.pacific.pacificbe.model.User user;
 
 }

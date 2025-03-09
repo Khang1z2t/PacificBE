@@ -8,8 +8,6 @@ import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Nationalized;
 
-import java.math.BigDecimal;
-import java.time.Instant;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -21,12 +19,16 @@ public class Tour extends BaseEntity {
     @Id
     @Size(max = 255)
     @Column(name = "id", nullable = false)
-    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
     @ColumnDefault("1")
     @Column(name = "available")
     private Boolean available;
+
+    @Nationalized
+    @Lob
+    @Column(name = "description")
+    private String description;
 
     @Size(max = 50)
     @Nationalized
@@ -34,27 +36,26 @@ public class Tour extends BaseEntity {
     private String status;
 
     @Size(max = 255)
+    @Column(name = "thumbnail_url")
+    private String thumbnailUrl;
+
+    @Size(max = 255)
     @NotNull
-    @Nationalized   
+    @Nationalized
     @Column(name = "title", nullable = false)
     private String title;
-
-    @Nationalized
-    @Lob
-    @Column(name = "description")
-    private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "guide_id")
-    private Guide guide;
+    @JoinColumn(name = "destination_id")
+    private Destination destination;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "promotion_id")
-    private Promotion promotion;
+    @JoinColumn(name = "guide_id")
+    private Guide guide;
 
     @OneToMany(mappedBy = "tour")
     private Set<Image> images = new LinkedHashSet<>();
@@ -63,18 +64,9 @@ public class Tour extends BaseEntity {
     private Set<Review> reviews = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "tour")
-    private Set<TourDetail> tourDetails = new LinkedHashSet<>();
+    private Set<com.pacific.pacificbe.model.TourDetail> tourDetails = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "tour")
-    private Set<Wishlist> wishlists = new LinkedHashSet<>();
-
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "destination_id")
-    private Destination destination;
-
-    @Size(max = 255)
-    @Column(name = "thumbnail_url")
-    private String thumbnailUrl;
+    private Set<com.pacific.pacificbe.model.Wishlist> wishlists = new LinkedHashSet<>();
 
 }

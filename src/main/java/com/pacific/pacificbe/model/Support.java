@@ -18,14 +18,7 @@ public class Support extends BaseEntity {
     @Id
     @Size(max = 255)
     @Column(name = "id", nullable = false)
-    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
-
-    @Size(max = 255)
-    @NotNull
-    @Nationalized
-    @Column(name = "subject", nullable = false)
-    private String subject;
 
     @NotNull
     @Nationalized
@@ -39,9 +32,16 @@ public class Support extends BaseEntity {
     @Column(name = "status", length = 50)
     private String status;
 
+    @Size(max = 255)
+    @NotNull
+    @Nationalized
+    @Column(name = "subject", nullable = false)
+    private String subject;
+
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    private com.pacific.pacificbe.model.User user;
+
 }

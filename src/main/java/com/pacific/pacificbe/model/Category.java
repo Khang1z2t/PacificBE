@@ -18,7 +18,6 @@ public class Category {
     @Id
     @Size(max = 255)
     @Column(name = "id", nullable = false)
-    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
     @Size(max = 50)
@@ -38,6 +37,6 @@ public class Category {
     private String type;
 
     @OneToMany(mappedBy = "category")
-    private Set<Tour> tours = new LinkedHashSet<>();
+    private Set<com.pacific.pacificbe.model.Tour> tours = new LinkedHashSet<>();
 
 }

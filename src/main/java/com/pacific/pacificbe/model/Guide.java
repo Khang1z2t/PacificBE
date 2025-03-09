@@ -18,7 +18,6 @@ public class Guide {
     @Id
     @Size(max = 255)
     @Column(name = "id", nullable = false)
-    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
     @Size(max = 255)
@@ -55,6 +54,6 @@ public class Guide {
     private String phone;
 
     @OneToMany(mappedBy = "guide")
-    private Set<Tour> tours = new LinkedHashSet<>();
+    private Set<com.pacific.pacificbe.model.Tour> tours = new LinkedHashSet<>();
 
 }
