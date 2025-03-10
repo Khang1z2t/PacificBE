@@ -23,7 +23,6 @@ import java.util.List;
 public class TourDetailServiceImpl implements TourDetailService {
 
     private final TourRepository tourRepository;
-    private final ComboRepository comboRepository;
     private final HotelRepository hotelRepository;
     private final TransportRepository transportRepository;
     private final TourDetailRepository tourDetailRepository;

@@ -19,6 +19,7 @@ public class Payment extends BaseEntity {
     @Id
     @Size(max = 255)
     @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
     @Size(max = 500)
