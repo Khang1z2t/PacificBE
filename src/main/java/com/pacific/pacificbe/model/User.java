@@ -3,8 +3,8 @@ package com.pacific.pacificbe.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Nationalized;
 import org.springframework.security.core.GrantedAuthority;
@@ -21,6 +21,9 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
+@SuperBuilder
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "users")
 public class User extends BaseEntity implements UserDetails {
     @Id
@@ -94,7 +97,6 @@ public class User extends BaseEntity implements UserDetails {
     private String status;
 
     @Size(max = 50)
-    @NotNull
     @Nationalized
     @Column(name = "username", nullable = false, length = 50)
     private String username;
@@ -136,6 +138,6 @@ public class User extends BaseEntity implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return UserDetails.super.isEnabled();
+        return isActive();
     }
 }

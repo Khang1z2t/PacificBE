@@ -8,6 +8,8 @@ import com.pacific.pacificbe.dto.request.VerifyOtpRequest;
 import com.pacific.pacificbe.dto.response.AuthenticationResponse;
 import com.pacific.pacificbe.dto.response.UserRegisterResponse;
 import com.pacific.pacificbe.dto.response.UserResponse;
+import com.pacific.pacificbe.model.User;
+import com.pacific.pacificbe.repository.UserRepository;
 import com.pacific.pacificbe.services.UserService;
 import com.pacific.pacificbe.utils.JavaMail;
 import com.pacific.pacificbe.utils.UrlMapping;
@@ -22,66 +24,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping(UrlMapping.USERS)
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserController {
     UserService userService;
     private final JavaMail javaMail;
+    private final UserRepository userRepository;
 
-    @PostMapping(UrlMapping.LOGIN)
-    @Operation(summary = "API đăng nhập")
-    ResponseEntity<ApiResponse<AuthenticationResponse>> login(@RequestBody LoginRequest request) {
-        return ResponseEntity.ok(new ApiResponse<>(200, "Thành công", userService.loginUser(request)));
-    }
-    //new
-    @GetMapping(UrlMapping.OAUTH2)
-    @Operation(summary = "API đăng nhập bằng google/facebook")
-    public ResponseEntity<String> oauth2Login(@PathVariable String registrationId) {
-        return ResponseEntity.ok("Đăng nhập thành công với " + registrationId);
-    }
-
-    @PostMapping(UrlMapping.REGISTER)
-    @Operation(summary = "API đăng kí tài khoản mới")
-    ResponseEntity<ApiResponse<UserRegisterResponse>> register(@RequestBody UserRegisterRequest request) {
-        return ResponseEntity.ok(new ApiResponse<>(200, "Thành công", userService.registerUser(request)));
-    }
-
-    @GetMapping(UrlMapping.AUTHENTICATE_TOKEN)
-    @Operation(summary = "API xác thực token")
-    ResponseEntity<ApiResponse<UserResponse>> authenticateToken() {
-        return ResponseEntity.ok(new ApiResponse<>(200, "Thành công", userService.authenticateToken()));
-    }
-
-    @PostMapping(UrlMapping.SEND_VERIFY_MAIL)
-    @Operation(summary = "API gửi mail xác thực")
-    ResponseEntity<?> sendVerifyMail(@RequestParam String email) {
-        return ResponseEntity.ok(userService.sendEmailVerify(email));
-    }
-
-    @PostMapping(UrlMapping.VERIFY_EMAIL)
-    @Operation(summary = "API xác thực email")
-    ResponseEntity<?> verifyEmail(@RequestBody VerifyOtpRequest request) {
-        return ResponseEntity.ok(userService.verifyEmail(request));
-    }
-
-    @PostMapping(UrlMapping.SEND_RESET_PASSWORD_MAIL)
-    @Operation(summary = "API gửi mail reset mật khẩu")
-    ResponseEntity<?> sendResetPasswordMail(@RequestParam String email) {
-        return ResponseEntity.ok(userService.sendEmailResetPassword(email));
-    }
-
-    @PostMapping(UrlMapping.VERIFY_RESET_PASSWORD)
-    @Operation(summary = "API xác thực reset mật khẩu")
-    ResponseEntity<?> verifyResetPassword(@RequestBody VerifyOtpRequest request) {
-        return ResponseEntity.ok(userService.verifyResetPassword(request));
-    }
-
-    @PostMapping(UrlMapping.RESET_PASSWORD)
-    @Operation(summary = "API reset mật khẩu")
-    ResponseEntity<?> resetPassword(@RequestBody ResetUserPasswordRequest request) {
-        return ResponseEntity.ok(userService.resetPassword(request));
-    }
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping(UrlMapping.GET_ALL_USERS)
@@ -94,6 +44,13 @@ public class UserController {
     @Operation(summary = "API test gửi mail")
     ResponseEntity<?> testMail(@RequestParam String email, @RequestParam String subject, @RequestParam String content) {
         javaMail.sendEmail(email, subject, content);
+        return ResponseEntity.ok("OK");
+    }
+
+    @PostMapping("/test-user")
+    @Operation(summary = "API test tạo user")
+    ResponseEntity<?> testaddUser() {
+        userRepository.save(User.builder().password("12345678").build());
         return ResponseEntity.ok("OK");
     }
 }

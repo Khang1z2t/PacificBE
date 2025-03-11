@@ -3,10 +3,6 @@ package com.pacific.pacificbe.utils;
 public class UrlMapping {
 
     public static final String API = "/api";
-    public static final String AUTH = API + "/auth";
-    public static final String LOGIN = "/login";
-    public static final String OAUTH2 = LOGIN + "/oauth2/code/{registrationId}"; // new
-    public static final String REGISTER = "/register";
     public static final String LOGOUT = "/logout";
     public static final String AUTHENTICATE_TOKEN = "/authenticate-token";
     public static final String RESET_PASSWORD = "/reset-password";
@@ -19,6 +15,16 @@ public class UrlMapping {
     public static final String COUNT_ALL_TOURS = "/count/tours";
     public static final String COUNT_ALL_GUIDES = "/count/guides";
     public static final String COUNT_ALL_BOOKINGS = "/count/bookings";
+
+    /*============================ Start auth API ===================================*/
+    public static final String AUTH = API + "/auth";
+    public static final String LOGIN = "/login";
+    public static final String REGISTER = "/register";
+    public static final String OAUTH2_GOOGLE = "/oauth2/google";
+    public static final String OAUTH2_GOOGLE_CALLBACK = "/oauth2/google/callback";
+    public static final String OAUTH2_FACEBOOK = "/oauth2/facebook";
+    public static final String OAUTH2_FACEBOOK_CALLBACK = "/oauth2/facebook/callback";
+    /*============================ End auth API ===================================*/
 
     /*============================ Start Tour API ===================================*/
     public static final String TOURS = API + "/tours";
@@ -53,7 +59,7 @@ public class UrlMapping {
     public static final String GET_BOOKING_BY_ID = "/book/{id}";
     public static final String GET_BOOKING_BY_NO = "/book/no/{bookingNo}";
     public static final String GET_BOOKING_BY_USER = "/book/user/{userId}";
-    public static final String BOOK_TOUR =  "/book-tour";
+    public static final String BOOK_TOUR = "/book-tour";
     public static final String UPDATE_BOOKING = "/book/{id}/update";
     public static final String DELETE_BOOKING = "/book/{id}/delete";
     public static final String APPROVE_BOOKING = "/book/{id}/approve";
@@ -69,13 +75,13 @@ public class UrlMapping {
 
 
     /*============================ Start User API ===================================*/
-    public static final String USERS = API + "/users";
+    public static final String USERS = API + "/user";
     public static final String GET_USER_BY_ID = "/{id}";
     public static final String GET_ALL_USERS = "/all";
 
     /*============================ End User API ===================================*/
-    
-	/* =========================== Start Report API ===================================== */
+
+    /* =========================== Start Report API ===================================== */
     public static final String EXPORT = API + "/export";
     public static final String EXPORT_PDF = "/PDF";
     /* =========================== End Report API ===================================== */
@@ -109,5 +115,12 @@ public class UrlMapping {
     public static final String UPDATE_GUIDE = "/update/{id}";
     public static final String DELETE_GUIDE = "/delete/{id}";
     /* =========================== End Guide API ===================================== */
+
+
+    /* =========================== Start Other URL ===================================== */
+    public static final String FE_URL = "http://localhost:3000";
+    public static final String GOOGLE_REDIRECT = FE_URL + "/google/redirect";
+    /* =========================== End Other URL ===================================== */
+
 
 }

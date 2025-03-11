@@ -2,14 +2,30 @@ package com.pacific.pacificbe.utils;
 
 import org.springframework.stereotype.Component;
 
+import java.security.SecureRandom;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Component
 public class IdUtil {
+    private final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+";
+    private final int PASSWORD_LENGTH = 12;
+
     public String generateId() {
         return java.util.UUID.randomUUID().toString();
+    }
+
+    public String generateRandomPassword() {
+        SecureRandom random = new SecureRandom();
+        StringBuilder password = new StringBuilder();
+
+        for (int i = 0; i < PASSWORD_LENGTH; i++) {
+            int index = random.nextInt(CHARACTERS.length());
+            password.append(CHARACTERS.charAt(index));
+        }
+
+        return password.toString();
     }
 
     public String getIdImage(String url) {
@@ -19,6 +35,12 @@ public class IdUtil {
             return matcher.group(1);
         }
         return url;
+    }
+
+    public String getIdAvatar(String url) {
+        Pattern pattern = Pattern.compile(".*/a/([^=]+)");
+        Matcher matcher = pattern.matcher(url);
+        return matcher.find() ? matcher.group(1) : url;
     }
 
     public String createNewID(String chars) {

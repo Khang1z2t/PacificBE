@@ -1,0 +1,22 @@
+package com.pacific.pacificbe.dto.response.oauth2;
+
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+public class GoogleUserResponse {
+    String sub;
+    String name;
+    String email;
+    String givenName;
+    String familyName;
+    String picture;
+    boolean verifiedEmail;
+}
