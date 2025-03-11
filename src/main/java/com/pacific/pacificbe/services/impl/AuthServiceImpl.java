@@ -22,6 +22,7 @@ import com.pacific.pacificbe.utils.IdUtil;
 import com.pacific.pacificbe.utils.JavaMail;
 import com.pacific.pacificbe.utils.UrlMapping;
 import com.pacific.pacificbe.utils.enums.UserRole;
+import com.pacific.pacificbe.utils.enums.UserStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -204,13 +205,15 @@ public class AuthServiceImpl implements AuthService {
         var userInfo = googleUserClient.getUserInfo("Bearer " + response.getAccessToken());
         var user = userRepository.findByEmail(userInfo.getEmail()).orElseGet(
                 () -> userRepository.save(User.builder()
-                        .username(userInfo.getEmail().split("@")[0])
                         .email(userInfo.getEmail())
+                        .username(userInfo.getEmail().split("@")[0])
                         .firstName(userInfo.getGivenName())
                         .lastName(userInfo.getFamilyName())
                         .avatarUrl(idUtil.getIdAvatar(userInfo.getPicture()))
+                        .status(UserStatus.REQUIRE_USERNAME_PASSWORD_CHANGE.toString())
                         .password(passwordEncoder.encode(idUtil.generateRandomPassword()))
                         .role(UserRole.USER.toString())
+                        .emailVerified(true)
                         .active(true)
                         .build()));
 
