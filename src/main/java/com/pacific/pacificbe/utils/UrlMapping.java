@@ -110,4 +110,10 @@ public class UrlMapping {
     public static final String DELETE_GUIDE = "/delete/{id}";
     /* =========================== End Guide API ===================================== */
 
+    /* =========================== Start Admin User API ===================================== */
+    public static final String ADD_USER = "/create";
+    public static final String UPDATE_USER = "/update/{id}";
+    public static final String UPDATE_STATUS_USER = "/updateStatus/{id}";
+    /* =========================== End Admin User API ===================================== */
+
 }

@@ -2,6 +2,7 @@ package com.pacific.pacificbe.dto.response;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import com.pacific.pacificbe.model.User;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -32,4 +33,7 @@ public class UserResponse {
     Boolean active;
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
+
+    public UserResponse(User user) {
+    }
 }

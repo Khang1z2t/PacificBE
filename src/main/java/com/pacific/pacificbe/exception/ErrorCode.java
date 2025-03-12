@@ -37,7 +37,10 @@ public enum ErrorCode {
     TOUR_NOT_FOUND(2001, "Tour not found", HttpStatus.NOT_FOUND),
 
     // Thêm hằng số CATEGORY_IN_USE
-    CATEGORY_IN_USE(1041, "Category is in use by one or more tours", HttpStatus.BAD_REQUEST);
+    CATEGORY_IN_USE(1041, "Category is in use by one or more tours", HttpStatus.BAD_REQUEST),
+
+    // Admin User Errors
+    INVALID_STATUS(1021, "Invalid status, must be ACTIVE or INACTIVE", HttpStatus.BAD_REQUEST);
 
     //  ^---------------------
     //  Lưu ý ở đây phải kết thúc enum bằng dấu ; chứ không phải dấu ,

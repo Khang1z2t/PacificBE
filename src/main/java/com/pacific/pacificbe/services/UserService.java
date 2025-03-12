@@ -1,10 +1,9 @@
 package com.pacific.pacificbe.services;
 
-import com.pacific.pacificbe.dto.request.LoginRequest;
-import com.pacific.pacificbe.dto.request.ResetUserPasswordRequest;
-import com.pacific.pacificbe.dto.request.UserRegisterRequest;
-import com.pacific.pacificbe.dto.request.VerifyOtpRequest;
+import com.google.firebase.auth.multitenancy.Tenant;
+import com.pacific.pacificbe.dto.request.*;
 import com.pacific.pacificbe.dto.response.AuthenticationResponse;
+import com.pacific.pacificbe.dto.response.TourResponse;
 import com.pacific.pacificbe.dto.response.UserRegisterResponse;
 import com.pacific.pacificbe.dto.response.UserResponse;
 
@@ -28,4 +27,11 @@ public interface UserService {
     boolean verifyResetPassword(VerifyOtpRequest request);
 
     boolean resetPassword(ResetUserPasswordRequest request);
+
+    UserResponse getUserById(String id);
+
+    UserResponse updateUser(String id, UpdateUserRequest request);
+
+    UserResponse updateStatus(String id, UpdateStatusUserRequest request);
+
 }
