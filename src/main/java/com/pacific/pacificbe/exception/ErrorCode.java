@@ -42,6 +42,7 @@ public enum ErrorCode {
     // Admin User Errors
     INVALID_STATUS(1021, "Invalid status, must be ACTIVE or INACTIVE", HttpStatus.BAD_REQUEST);
 
+
     //  ^---------------------
     //  Lưu ý ở đây phải kết thúc enum bằng dấu ; chứ không phải dấu ,
 

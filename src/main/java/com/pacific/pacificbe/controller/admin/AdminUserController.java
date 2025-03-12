@@ -51,5 +51,4 @@ public class AdminUserController {
             @RequestBody UpdateStatusUserRequest request) {
         return ResponseEntity.ok(new ApiResponse<>(200, "Cập nhật trạng thái thành công", userService.updateStatus(id, request)));
     }
-
 }

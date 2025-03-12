@@ -33,5 +33,4 @@ public interface UserService {
     UserResponse updateUser(String id, UpdateUserRequest request);
 
     UserResponse updateStatus(String id, UpdateStatusUserRequest request);
-
 }

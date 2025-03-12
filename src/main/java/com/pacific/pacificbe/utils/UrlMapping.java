@@ -98,7 +98,6 @@ public class UrlMapping {
     public static final String GET_ADMIN_REVIEW_BY_ID = "/get/{id}";
     public static final String UPDATE_ADMIN_REVIEW = "/update/{id}";
     public static final String DELETE_ADMIN_REVIEW = "/delete/{id}";
-
     /* =========================== End Admin_review API ===================================== */
 
     /* =========================== Start Guide API ===================================== */

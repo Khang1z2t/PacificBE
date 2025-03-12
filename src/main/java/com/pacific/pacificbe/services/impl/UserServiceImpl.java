@@ -44,8 +44,48 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     @Override
+    public AuthenticationResponse loginUser(LoginRequest request) {
+        return null;
+    }
+
+    @Override
+    public UserRegisterResponse registerUser(UserRegisterRequest request) {
+        return null;
+    }
+
+    @Override
+    public UserResponse authenticateToken() {
+        return null;
+    }
+
+    @Override
     public List<UserResponse> getAllUsers() {
         return userMapper.toUserResponseList(userRepository.findAll());
+    }
+
+    @Override
+    public String sendEmailVerify(String email) {
+        return "";
+    }
+
+    @Override
+    public String sendEmailResetPassword(String email) {
+        return "";
+    }
+
+    @Override
+    public boolean verifyEmail(VerifyOtpRequest request) {
+        return false;
+    }
+
+    @Override
+    public boolean verifyResetPassword(VerifyOtpRequest request) {
+        return false;
+    }
+
+    @Override
+    public boolean resetPassword(ResetUserPasswordRequest request) {
+        return false;
     }
 
 
@@ -86,7 +126,7 @@ public class UserServiceImpl implements UserService {
         if (request.getStatus() != null) {
             user.setStatus(request.getStatus());
         } else {
-            // Nếu không có status, tự động chuyển đổi giữa ACTIVE và INACTIVE
+        // Nếu không có status, tự động chuyển đổi giữa ACTIVE và INACTIVE
             user.setStatus("ACTIVE".equalsIgnoreCase(user.getStatus()) ? "INACTIVE" : "ACTIVE");
         }
 
