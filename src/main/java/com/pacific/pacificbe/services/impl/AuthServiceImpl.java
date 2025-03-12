@@ -193,7 +193,11 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public RedirectView loginGoogleCallback(String code) {
+    public RedirectView loginGoogleCallback(String code, String error) {
+        if (error != null) {
+            String url = UrlMapping.GOOGLE_REDIRECT + "?error=" + error;
+            return new RedirectView(url);
+        }
         var response = googleClient.exchangeToken(GoogleTokenRequest.builder()
                 .clientId(googleClientId)
                 .clientSecret(googleClientSecret)

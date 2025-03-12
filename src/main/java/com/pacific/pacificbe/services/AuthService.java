@@ -32,6 +32,6 @@ public interface AuthService {
 
     String getGoogleUrl();
 
-    RedirectView loginGoogleCallback(String code);
+    RedirectView loginGoogleCallback(String code, String error);
 
 }

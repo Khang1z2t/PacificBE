@@ -46,8 +46,8 @@ public class AuthController {
 
     @GetMapping(UrlMapping.OAUTH2_GOOGLE_CALLBACK)
     @Operation(summary = "API callback đăng nhập bằng google")
-    RedirectView loginGoogleCallback(@RequestParam String code) {
-        return authService.loginGoogleCallback(code);
+    RedirectView loginGoogleCallback(@RequestParam(required = false) String code, @RequestParam(required = false) String error) {
+        return authService.loginGoogleCallback(code, error);
     }
 
 
