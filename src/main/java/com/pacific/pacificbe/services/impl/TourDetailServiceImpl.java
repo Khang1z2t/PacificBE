@@ -40,7 +40,6 @@ public class TourDetailServiceImpl implements TourDetailService {
         TourDetail tourDetail = new TourDetail();
         tourDetail.setTitle(request.getTitle());
         tourDetail.setDescriptions(request.getDescriptions());
-        tourDetail.setDuration(request.getDuration());
         tourDetail.setPriceAdults(request.getPriceAdults());
         tourDetail.setPriceChildren(request.getPriceChildren());
         tourDetail.setStartDate(request.getStartDate());

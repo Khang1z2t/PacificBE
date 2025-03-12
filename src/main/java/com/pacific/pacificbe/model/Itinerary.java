@@ -42,6 +42,6 @@ public class Itinerary extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "tour_detail_id", nullable = false)
-    private com.pacific.pacificbe.model.TourDetail tourDetail;
+    private TourDetail tourDetail;
 
 }

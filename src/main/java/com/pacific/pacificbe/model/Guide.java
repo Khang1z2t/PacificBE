@@ -55,6 +55,6 @@ public class Guide {
     private String phone;
 
     @OneToMany(mappedBy = "guide")
-    private Set<com.pacific.pacificbe.model.Tour> tours = new LinkedHashSet<>();
+    private Set<Tour> tours = new LinkedHashSet<>();
 
 }

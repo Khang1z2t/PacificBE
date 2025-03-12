@@ -35,6 +35,6 @@ public class Hotel {
     private String typeHotel;
 
     @OneToMany(mappedBy = "hotel")
-    private Set<com.pacific.pacificbe.model.TourDetail> tourDetails = new LinkedHashSet<>();
+    private Set<TourDetail> tourDetails = new LinkedHashSet<>();
 
 }

@@ -31,10 +31,6 @@ public class TourDetail extends BaseEntity {
     private String descriptions;
 
     @NotNull
-    @Column(name = "duration", nullable = false)
-    private Integer duration;
-
-    @NotNull
     @Column(name = "end_date", nullable = false)
     private LocalDate endDate;
 
@@ -80,7 +76,7 @@ public class TourDetail extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "transport_id", nullable = false)
-    private com.pacific.pacificbe.model.Transport transport;
+    private Transport transport;
 
     @OneToMany(mappedBy = "tourDetail")
     private Set<Booking> bookings = new LinkedHashSet<>();

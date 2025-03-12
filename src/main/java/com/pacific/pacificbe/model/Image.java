@@ -35,6 +35,6 @@ public class Image extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "tour_id", nullable = false)
-    private com.pacific.pacificbe.model.Tour tour;
+    private Tour tour;
 
 }
