@@ -39,11 +39,11 @@ public class Review extends BaseEntity {
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "tour_id", nullable = false)
-    private com.pacific.pacificbe.model.Tour tour;
+    private Tour tour;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
-    private com.pacific.pacificbe.model.User user;
+    private User user;
 
 }

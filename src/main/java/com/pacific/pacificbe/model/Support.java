@@ -43,6 +43,6 @@ public class Support extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "user_id", nullable = false)
-    private com.pacific.pacificbe.model.User user;
+    private User user;
 
 }

@@ -114,7 +114,7 @@ public class User extends BaseEntity implements UserDetails {
     private Set<Support> supports = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "user")
-    private Set<com.pacific.pacificbe.model.Wishlist> wishlists = new LinkedHashSet<>();
+    private Set<Wishlist> wishlists = new LinkedHashSet<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

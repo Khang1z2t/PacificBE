@@ -26,6 +26,10 @@ public class Tour extends BaseEntity {
     @Column(name = "available")
     private Boolean available;
 
+    @NotNull
+    @Column(name = "duration", nullable = false)
+    private Integer duration;
+
     @Nationalized
     @Lob
     @Column(name = "description")
@@ -65,9 +69,8 @@ public class Tour extends BaseEntity {
     private Set<Review> reviews = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "tour")
-    private Set<com.pacific.pacificbe.model.TourDetail> tourDetails = new LinkedHashSet<>();
+    private Set<TourDetail> tourDetails = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "tour")
-    private Set<com.pacific.pacificbe.model.Wishlist> wishlists = new LinkedHashSet<>();
-
+    private Set<Wishlist> wishlists = new LinkedHashSet<>();
 }

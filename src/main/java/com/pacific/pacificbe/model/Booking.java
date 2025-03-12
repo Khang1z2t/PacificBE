@@ -56,27 +56,27 @@ public class Booking extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.SET_NULL)
     @JoinColumn(name = "payment_id")
-    private com.pacific.pacificbe.model.Payment payment;
+    private Payment payment;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "tour_detail_id", nullable = false)
-    private com.pacific.pacificbe.model.TourDetail tourDetail;
+    private TourDetail tourDetail;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "user_id", nullable = false)
-    private com.pacific.pacificbe.model.User user;
+    private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "voucher_id")
-    private com.pacific.pacificbe.model.Voucher voucher;
+    private Voucher voucher;
 
     @OneToMany(mappedBy = "booking")
-    private Set<com.pacific.pacificbe.model.Invoice> invoices = new LinkedHashSet<>();
+    private Set<Invoice> invoices = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "booking")
-    private Set<com.pacific.pacificbe.model.Review> reviews = new LinkedHashSet<>();
+    private Set<Review> reviews = new LinkedHashSet<>();
 
 }
