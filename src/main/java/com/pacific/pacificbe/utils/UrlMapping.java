@@ -27,7 +27,6 @@ public class UrlMapping {
     /*============================ End auth API ===================================*/
 
 
-
     /*============================ Start Tour API ===================================*/
     public static final String TOURS = API + "/tours";
     public static final String GET_TOUR_BY_ID = "/{id}";
@@ -35,6 +34,8 @@ public class UrlMapping {
     public static final String GET_TOUR_BY_CATEGORY = "category/{category}";
     public static final String GET_TOUR_BY_RATING = "rating/{rating}";
     public static final String GET_TOUR_BY_DESTINATION = "destination/{destination}";
+    public static final String ADD_TOUR_THUMBNAIL = "/add-thumbnail/{id}";
+    public static final String ADD_TOUR_IMAGES = "/add-images/{id}";
     public static final String GET_ALL_TOURS = "/all";
     public static final String ADD_TOUR = "/add";
     public static final String UPDATE_TOUR = "/update";
@@ -61,7 +62,7 @@ public class UrlMapping {
     public static final String GET_BOOKING_BY_ID = "/book/{id}";
     public static final String GET_BOOKING_BY_NO = "/book/no/{bookingNo}";
     public static final String GET_BOOKING_BY_USER = "/book/user/{userId}";
-    public static final String BOOK_TOUR =  "/book-tour";
+    public static final String BOOK_TOUR = "/book-tour";
     public static final String UPDATE_BOOKING = "/book/{id}/update";
     public static final String DELETE_BOOKING = "/book/{id}/delete";
     public static final String APPROVE_BOOKING = "/book/{id}/approve";
@@ -82,8 +83,8 @@ public class UrlMapping {
     public static final String GET_ALL_USERS = "/all";
 
     /*============================ End User API ===================================*/
-    
-	/* =========================== Start Report API ===================================== */
+
+    /* =========================== Start Report API ===================================== */
     public static final String EXPORT = API + "/export";
     public static final String EXPORT_PDF = "/PDF";
     /* =========================== End Report API ===================================== */

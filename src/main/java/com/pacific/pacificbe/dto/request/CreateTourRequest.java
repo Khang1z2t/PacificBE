@@ -16,6 +16,8 @@ public class CreateTourRequest {
     String title;
     @Schema(description = "Điểm xuất phát - diểm kết thúc, Mô tả", example = "Hồ Chí Minh đến Vũng Tàu, ....")
     String description;
+    @Schema(description = "Độ dài tour", example = "3")
+    Integer duration;
     @Schema(description = "Giá tour cho người lớn", example = "1000000")
     BigDecimal priceAdults;
     @Schema(description = "Giá tour cho trẻ em", example = "500000")

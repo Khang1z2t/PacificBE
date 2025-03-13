@@ -18,11 +18,11 @@ public class TourResponse {
     String id;
     String title;
     String description;
+    Integer duration;
     String status;
     String thumbnail;
     List<?> images;
 
-    Integer avgDuration;
     BigDecimal maxPrice;
     BigDecimal minPrice;
 

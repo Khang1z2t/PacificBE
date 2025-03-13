@@ -42,6 +42,9 @@ public class TourMapper {
         if (tour.getCategory() != null) {
             tourResponse.setCategory(tour.getCategory().getTitle());
         }
+        if (tour.getThumbnailUrl() != null) {
+            tourResponse.setThumbnail(idUtil.getIdImage(tour.getThumbnailUrl()));
+        }
 
         List<TourDetail> activeTourDetails = tour.getTourDetails().stream()
                 .filter(TourDetail::isActive)

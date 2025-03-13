@@ -19,7 +19,6 @@ public interface AuthService {
 
     UserResponse authenticateToken();
 
-
     String sendEmailVerify(String email);
 
     String sendEmailResetPassword(String email);
