@@ -2,12 +2,16 @@ package com.pacific.pacificbe.mapper;
 
 import com.pacific.pacificbe.dto.request.GuideRequest;
 import com.pacific.pacificbe.dto.response.GuideResponse;
+import com.pacific.pacificbe.dto.response.UserResponse;
 import com.pacific.pacificbe.model.Guide;
+import com.pacific.pacificbe.model.User;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -15,25 +19,23 @@ import org.springframework.stereotype.Component;
 public class GuideMapper {
 
     public Guide toEntity(GuideRequest request) {
-        Guide guide = new Guide();
-        guide.setAddress(request.getAddress());
-        guide.setEmail(request.getEmail());
-        guide.setExperienceYears(request.getExperienceYears());
-        guide.setFirstName(request.getFirstName());
-        guide.setLastName(request.getLastName());
-        guide.setPhone(request.getPhone());
-        return guide;
+        return modelMapper.map(request, Guide.class);
     }
 
+    final ModelMapper modelMapper;
+
     public GuideResponse toResponse(Guide guide) {
-        GuideResponse response = new GuideResponse();
-        response.setId(guide.getId());
-        response.setAddress(guide.getAddress());
-        response.setEmail(guide.getEmail());
-        response.setExperienceYears(guide.getExperienceYears());
-        response.setFirstName(guide.getFirstName());
-        response.setLastName(guide.getLastName());
-        response.setPhone(guide.getPhone());
-        return response;
+        return modelMapper.map(guide, GuideResponse.class);
+    }
+
+    public GuideResponse toGuideResponse(Guide guide) {
+        return modelMapper.map(guide, GuideResponse.class);
+    }
+
+    public List<GuideResponse> toGuideResponseList(List<Guide> guides) {
+        return guides.stream()
+                .map(this::toGuideResponse)
+                .toList();
     }
 }
+

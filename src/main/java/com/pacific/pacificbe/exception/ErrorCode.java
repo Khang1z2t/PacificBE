@@ -40,7 +40,13 @@ public enum ErrorCode {
     CATEGORY_IN_USE(1041, "Category is in use by one or more tours", HttpStatus.BAD_REQUEST),
 
     // Admin User Errors
-    INVALID_STATUS(1021, "Invalid status, must be ACTIVE or INACTIVE", HttpStatus.BAD_REQUEST);
+    INVALID_STATUS(1021, "Invalid status, must be ACTIVE or INACTIVE", HttpStatus.BAD_REQUEST),
+
+    // Blog Errors
+    TITLE_NOT_FOUND(1022, "Title not found",HttpStatus.NOT_FOUND),
+    BLOG_NOT_FOUND(1023, "Blog not found",HttpStatus.NOT_FOUND),
+    FILE_NOT_FOUND(1024, "File image not found",HttpStatus.NOT_FOUND),
+    FILE_UPLOAD_FAILED(1025, "Upload image failed",HttpStatus.NOT_FOUND);
 
 
     //  ^---------------------

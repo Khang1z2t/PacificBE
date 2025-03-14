@@ -1,11 +1,15 @@
 package com.pacific.pacificbe.services.impl;
 
 import com.pacific.pacificbe.dto.request.GuideRequest;
+import com.pacific.pacificbe.dto.request.UpdateStatusGuideRequest;
+import com.pacific.pacificbe.dto.request.UpdateStatusUserRequest;
 import com.pacific.pacificbe.dto.response.GuideResponse;
+import com.pacific.pacificbe.dto.response.UserResponse;
 import com.pacific.pacificbe.exception.AppException;
 import com.pacific.pacificbe.exception.ErrorCode;
 import com.pacific.pacificbe.mapper.GuideMapper;
 import com.pacific.pacificbe.model.Guide;
+import com.pacific.pacificbe.model.User;
 import com.pacific.pacificbe.repository.GuideRepository;
 import com.pacific.pacificbe.services.GuideService;
 import lombok.RequiredArgsConstructor;
@@ -60,7 +64,7 @@ public class GuideServiceImpl implements GuideService {
         guide.setFirstName(request.getFirstName());
         guide.setLastName(request.getLastName());
         guide.setPhone(request.getPhone());
-
+        guide.setStatus(request.getStatus());
         // Lưu
         guide = guideRepository.save(guide);
 
@@ -74,4 +78,20 @@ public class GuideServiceImpl implements GuideService {
     //             .orElseThrow(() -> new AppException(ErrorCode.GUIDE_NOT_FOUND));
     //     guideRepository.delete(guide);
     // }
+
+    @Override
+    public GuideResponse updateStatus(String id, UpdateStatusGuideRequest request) {
+        Guide guide = guideRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.GUIDE_NOT_FOUND));
+
+        // Nếu request có status mới, cập nhật theo request
+        if (request.getStatus() != null) {
+            guide.setStatus(request.getStatus());
+        } else {
+            // Nếu không có status, tự động chuyển đổi giữa ACTIVE và INACTIVE
+            guide.setStatus("ACTIVE".equalsIgnoreCase(guide.getStatus()) ? "INACTIVE" : "ACTIVE");
+        }
+
+        return guideMapper.toGuideResponse(guideRepository.save(guide));
+    }
 }

@@ -114,14 +114,28 @@ public class UrlMapping {
     public static final String CREATE_GUIDE = "/create";
     public static final String GET_GUIDE_BY_ID = "/{id}";
     public static final String UPDATE_GUIDE = "/update/{id}";
-    public static final String DELETE_GUIDE = "/delete/{id}";
+ //   public static final String DELETE_GUIDE = "/delete/{id}";
     /* =========================== End Guide API ===================================== */
 
     /* =========================== Start Admin User API ===================================== */
-    public static final String ADD_USER = "/create";
     public static final String UPDATE_USER = "/update/{id}";
     public static final String UPDATE_STATUS_USER = "/updateStatus/{id}";
     /* =========================== End Admin User API ===================================== */
+
+    /* =========================== Start Admin Guide API ===================================== */
+    public static final String ADMIN_GUIDE = API + "/admin/guide";
+    public static final String UPDATE_STATUS_GUIDE = "/updateStatus/{id}";
+    /* =========================== End Admin Guide API ===================================== */
+
+    /* =========================== Start Admin Blog API ===================================== */
+    public static final String ADMIN_BLOG = API + "/admin/blog";
+    public static final String GET_ALL_BLOGS = "/all";
+    public static final String GET_BLOG_BY_TITLE = "/title";;
+    public static final String CREATE_BLOG = "/create";
+    public static final String UPDATE_BLOG = "/update/{id}";
+    public static final String UPDATE_STATUS_BLOG = "/updateStatus/{id}";
+    public static final String DELETE_BLOG = "/delete/{id}";
+    /* =========================== End Admin Blog API ===================================== */
 
     /* =========================== Start Other URL ===================================== */
     public static final String FE_URL = "http://localhost:3000";
