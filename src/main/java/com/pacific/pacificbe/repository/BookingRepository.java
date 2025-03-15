@@ -15,26 +15,32 @@ public interface BookingRepository extends JpaRepository<Booking, String>{
 //  doanh thu theo tháng
     @Query(value = """
         SELECT
-            MONTH(b.created_at) AS bookingMonth,
-            SUM(p.total_amount) AS totalRevenue
-        FROM booking b
-        JOIN payment p ON b.payment_id = p.id
-        GROUP BY MONTH(b.created_at)
+        MONTH(b.created_at) AS bookingMonth,
+        SUM(b.total_amount) AS totalRevenue
+            FROM booking b
+        WHERE YEAR(b.created_at) = :years
+        AND (:bookingStatus IS NULL OR LOWER(b.booking_status) LIKE LOWER(CONCAT('%', :bookingStatus, '%')))
+        GROUP BY MONTH(b.created_at), YEAR(b.created_at), b.booking_status
         ORDER BY bookingMonth
         """, nativeQuery = true)
-    List<Revenue> getMonthlyRevenue();
+    List<Revenue> getMonthlyRevenue(
+            @Param("years") String years,
+            @Param("bookingStatus") String bookingStatus
+    );
 
 //    Doanh thu theo năm
         @Query(value = """
         SELECT
             year(b.created_at) AS booking_year,
-            SUM(p.total_amount) AS total_revenue
+            SUM(b.total_amount) AS total_revenue
         FROM booking b
-        JOIN payment p ON b.payment_id = p.id
+        WHERE (:bookingStatus IS NULL OR LOWER(b.booking_status) LIKE LOWER(CONCAT('%', :bookingStatus, '%')))
         GROUP BY year(b.created_at)
         ORDER BY booking_year
         """, nativeQuery = true)
-        List<Revenue> getYearlyRevenue();
+        List<Revenue> getYearlyRevenue(
+                @Param("bookingStatus") String bookingStatus
+        );
 
 //      Doanh thu tour theo thời gian ...
         @Query(value = """

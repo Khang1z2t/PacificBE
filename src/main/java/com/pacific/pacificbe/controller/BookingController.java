@@ -25,15 +25,20 @@ public class BookingController {
 
     @GetMapping(UrlMapping.REVENUE_BOOKING_MONTH)
     @Operation(summary = "xuất báo cáo hằng tháng")
-    public ResponseEntity<List<Revenue>> getMonthlyRevenue() {
-        List<Revenue> monthlyRevenue = bookingService.getMonthlyRevenueReport();
+    public ResponseEntity<List<Revenue>> getMonthlyRevenue(
+            @RequestParam(required = true) String years,
+            @RequestParam(required = false) String bookingStatus
+    ) {
+        List<Revenue> monthlyRevenue = bookingService.getMonthlyRevenueReport(years, bookingStatus);
         return ResponseEntity.ok(monthlyRevenue);
     }
 
     @GetMapping(UrlMapping.REVENUE_BOOKING_YEAR)
     @Operation(summary = "xuất báo cáo hằng năm")
-    public ResponseEntity<List<Revenue>> getYearlyRevenue() {
-        List<Revenue> yearlyRevenue = bookingService.getYearlyRevenueReport();
+    public ResponseEntity<List<Revenue>> getYearlyRevenue(
+            @RequestParam(required = false) String bookingStatus
+    ) {
+        List<Revenue> yearlyRevenue = bookingService.getYearlyRevenueReport(bookingStatus);
         return ResponseEntity.ok(yearlyRevenue);
     }
 
