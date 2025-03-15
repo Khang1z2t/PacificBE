@@ -18,7 +18,6 @@ public class TourDetailResponse {
     String description;
     BigDecimal priceAdults;
     BigDecimal priceChildren;
-    Integer duration;
     String startDate;
     String endDate;
     Integer quantity;
@@ -27,7 +26,6 @@ public class TourDetailResponse {
     String comboId;
     String hotelId;
     String transportId;
-    TourInDetailResponse tour;
 
     Boolean active;
     LocalDateTime createdAt;

@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.pacific.pacificbe.dto.ApiResponse;
 import com.pacific.pacificbe.dto.request.CreateTourRequest;
+import com.pacific.pacificbe.dto.response.TourByIdResponse;
 import com.pacific.pacificbe.dto.response.TourResponse;
 import com.pacific.pacificbe.services.GoogleDriveService;
 import com.pacific.pacificbe.services.TourService;
@@ -40,7 +41,7 @@ public class ToursController {
 
     @GetMapping(UrlMapping.GET_TOUR_BY_ID)
     @Operation(summary = "Lấy tour theo id")
-    public ResponseEntity<ApiResponse<TourResponse>> getTourById(@PathVariable String id) {
+    public ResponseEntity<ApiResponse<TourByIdResponse>> getTourById(@PathVariable String id) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ApiResponse<>(200, "Complete", tourService.getTourById(id)));
     }
