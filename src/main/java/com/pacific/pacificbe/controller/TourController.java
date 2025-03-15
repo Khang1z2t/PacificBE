@@ -1,9 +1,11 @@
 package com.pacific.pacificbe.controller;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.pacific.pacificbe.dto.ApiResponse;
 import com.pacific.pacificbe.dto.request.CreateTourRequest;
+import com.pacific.pacificbe.dto.request.TourFilterRequest;
 import com.pacific.pacificbe.dto.response.TourByIdResponse;
 import com.pacific.pacificbe.dto.response.TourResponse;
 import com.pacific.pacificbe.services.GoogleDriveService;
@@ -24,17 +26,22 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping(UrlMapping.TOURS)
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class ToursController {
+public class TourController {
 
     TourService tourService;
     GoogleDriveService googleDriveService;
 
     @GetMapping(UrlMapping.GET_ALL_TOURS)
     @Operation(summary = "Lấy danh sách tour")
-    public ResponseEntity<ApiResponse<List<TourResponse>>> getAllTours() {
+    public ResponseEntity<ApiResponse<List<TourResponse>>> getAllTours(
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) BigDecimal minPrice,
+            @RequestParam(required = false) BigDecimal maxPrice,
+            @RequestParam(required = false) String categoryId
+            ) {
         return ResponseEntity.ok(
                 ApiResponse.<List<TourResponse>>builder()
-                        .data(tourService.getAllTours())
+                        .data(tourService.getAllTours(title, minPrice, maxPrice, categoryId))
                         .build()
         );
     }

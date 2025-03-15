@@ -1,6 +1,7 @@
 package com.pacific.pacificbe.services.impl;
 
 import com.pacific.pacificbe.dto.request.CreateTourRequest;
+import com.pacific.pacificbe.dto.request.TourFilterRequest;
 import com.pacific.pacificbe.dto.response.TourByIdResponse;
 import com.pacific.pacificbe.dto.response.TourResponse;
 import com.pacific.pacificbe.exception.AppException;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -34,8 +36,9 @@ public class TourServiceImpl implements TourService {
     private final ImageRepository imageRepository;
 
     @Override
-    public List<TourResponse> getAllTours() {
-        return tourMapper.toTourResponseList(tourRepository.findAll());
+    public List<TourResponse> getAllTours(String title, BigDecimal minPrice, BigDecimal maxPrice, String categoryId) {
+        List<Tour> tours = tourRepository.findAllWithFilters(title, minPrice, maxPrice, categoryId);
+        return tourMapper.toTourResponseList(tours);
     }
 
     @Override
