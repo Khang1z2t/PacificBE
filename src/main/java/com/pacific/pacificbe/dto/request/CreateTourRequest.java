@@ -18,10 +18,6 @@ public class CreateTourRequest {
     String description;
     @Schema(description = "Độ dài tour", example = "3")
     Integer duration;
-    @Schema(description = "Giá tour cho người lớn", example = "1000000")
-    BigDecimal priceAdults;
-    @Schema(description = "Giá tour cho trẻ em", example = "500000")
-    BigDecimal priceChildren;
     @Schema(description = "Id của category", example = "8ab68a08-4d28-43f7-9b37-61bfdc02cd48")
     String categoryId;
     @Schema(description = "Id của guide")
