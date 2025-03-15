@@ -1,0 +1,4471 @@
+{
+	"info": {
+		"_postman_id": "493727d2-bd13-48de-9004-d7232cec3c44",
+		"name": "Pacific API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "31405288"
+	},
+	"item": [
+		{
+			"name": "api",
+			"item": [
+				{
+					"name": "guide",
+					"item": [
+						{
+							"name": "Cập nhật Guide",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"address\": \"<string>\",\n  \"email\": \"<string>\",\n  \"experienceYears\": \"<integer>\",\n  \"firstName\": \"<string>\",\n  \"lastName\": \"<string>\",\n  \"phone\": \"<string>\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/guide/update/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"guide",
+										"update",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "<string>",
+											"description": "(Required) "
+										}
+									]
+								},
+								"description": "Cập nhật thông tin của guide dựa trên ID"
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "PUT",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer <token>",
+												"description": "Added as a part of security scheme: bearer"
+											},
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"address\": \"<string>\",\n  \"email\": \"<string>\",\n  \"experienceYears\": \"<integer>\",\n  \"firstName\": \"<string>\",\n  \"lastName\": \"<string>\",\n  \"phone\": \"<string>\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/guide/update/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"guide",
+												"update",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "<string>",
+													"description": "(Required) "
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "*/*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"code\": \"<integer>\",\n  \"message\": \"<string>\",\n  \"data\": {\n    \"id\": \"<string>\",\n    \"address\": \"<string>\",\n    \"email\": \"<string>\",\n    \"experienceYears\": \"<integer>\",\n    \"firstName\": \"<string>\",\n    \"lastName\": \"<string>\",\n    \"phone\": \"<string>\"\n  }\n}"
+								}
+							]
+						},
+						{
+							"name": "Tạo mới Guide",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"address\": \"<string>\",\n  \"email\": \"<string>\",\n  \"experienceYears\": \"<integer>\",\n  \"firstName\": \"<string>\",\n  \"lastName\": \"<string>\",\n  \"phone\": \"<string>\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/guide/create",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"guide",
+										"create"
+									]
+								},
+								"description": "Tạo mới một guide và trả về thông tin guide vừa tạo"
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer <token>",
+												"description": "Added as a part of security scheme: bearer"
+											},
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"address\": \"<string>\",\n  \"email\": \"<string>\",\n  \"experienceYears\": \"<integer>\",\n  \"firstName\": \"<string>\",\n  \"lastName\": \"<string>\",\n  \"phone\": \"<string>\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/guide/create",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"guide",
+												"create"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "*/*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"code\": \"<integer>\",\n  \"message\": \"<string>\",\n  \"data\": {\n    \"id\": \"<string>\",\n    \"address\": \"<string>\",\n    \"email\": \"<string>\",\n    \"experienceYears\": \"<integer>\",\n    \"firstName\": \"<string>\",\n    \"lastName\": \"<string>\",\n    \"phone\": \"<string>\"\n  }\n}"
+								}
+							]
+						},
+						{
+							"name": "Lấy Guide theo ID",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/guide/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"guide",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "<string>",
+											"description": "(Required) "
+										}
+									]
+								},
+								"description": "Trả về thông tin chi tiết của guide dựa trên ID"
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer <token>",
+												"description": "Added as a part of security scheme: bearer"
+											},
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/guide/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"guide",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "<string>",
+													"description": "(Required) "
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "*/*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"code\": \"<integer>\",\n  \"message\": \"<string>\",\n  \"data\": {\n    \"id\": \"<string>\",\n    \"address\": \"<string>\",\n    \"email\": \"<string>\",\n    \"experienceYears\": \"<integer>\",\n    \"firstName\": \"<string>\",\n    \"lastName\": \"<string>\",\n    \"phone\": \"<string>\"\n  }\n}"
+								}
+							]
+						},
+						{
+							"name": "Lấy danh sách Guide",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/guide/all",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"guide",
+										"all"
+									]
+								},
+								"description": "Trả về danh sách tất cả các guide"
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer <token>",
+												"description": "Added as a part of security scheme: bearer"
+											},
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/guide/all",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"guide",
+												"all"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "*/*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"code\": \"<integer>\",\n  \"message\": \"<string>\",\n  \"data\": [\n    {\n      \"id\": \"<string>\",\n      \"address\": \"<string>\",\n      \"email\": \"<string>\",\n      \"experienceYears\": \"<integer>\",\n      \"firstName\": \"<string>\",\n      \"lastName\": \"<string>\",\n      \"phone\": \"<string>\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"address\": \"<string>\",\n      \"email\": \"<string>\",\n      \"experienceYears\": \"<integer>\",\n      \"firstName\": \"<string>\",\n      \"lastName\": \"<string>\",\n      \"phone\": \"<string>\"\n    }\n  ]\n}"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "categories",
+					"item": [
+						{
+							"name": "Cập nhật danh mục",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"status\": \"<string>\",\n  \"title\": \"<string>\",\n  \"type\": \"<string>\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/categories/update/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"categories",
+										"update",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "<string>",
+											"description": "(Required) "
+										}
+									]
+								},
+								"description": "Cập nhật thông tin của danh mục dựa trên ID"
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "PUT",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer <token>",
+												"description": "Added as a part of security scheme: bearer"
+											},
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"status\": \"<string>\",\n  \"title\": \"<string>\",\n  \"type\": \"<string>\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/categories/update/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"categories",
+												"update",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "<string>",
+													"description": "(Required) "
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "*/*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"id\": \"<string>\",\n  \"status\": \"<string>\",\n  \"title\": \"<string>\",\n  \"type\": \"<string>\",\n  \"tourIds\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}"
+								}
+							]
+						},
+						{
+							"name": "Tạo mới danh mục",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"status\": \"<string>\",\n  \"title\": \"<string>\",\n  \"type\": \"<string>\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/categories/create",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"categories",
+										"create"
+									]
+								},
+								"description": "Tạo mới một danh mục và trả về thông tin của danh mục vừa tạo."
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer <token>",
+												"description": "Added as a part of security scheme: bearer"
+											},
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"status\": \"<string>\",\n  \"title\": \"<string>\",\n  \"type\": \"<string>\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/categories/create",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"categories",
+												"create"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "*/*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"id\": \"<string>\",\n  \"status\": \"<string>\",\n  \"title\": \"<string>\",\n  \"type\": \"<string>\",\n  \"tourIds\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}"
+								}
+							]
+						},
+						{
+							"name": "Lấy danh mục theo ID",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/categories/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"categories",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "<string>",
+											"description": "(Required) "
+										}
+									]
+								},
+								"description": "Trả về thông tin của danh mục dựa trên ID"
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer <token>",
+												"description": "Added as a part of security scheme: bearer"
+											},
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/categories/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"categories",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "<string>",
+													"description": "(Required) "
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "*/*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"id\": \"<string>\",\n  \"status\": \"<string>\",\n  \"title\": \"<string>\",\n  \"type\": \"<string>\",\n  \"tourIds\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}"
+								}
+							]
+						},
+						{
+							"name": "Tìm kiếm danh mục",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/categories/search?title=<string>&status=<string>",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"categories",
+										"search"
+									],
+									"query": [
+										{
+											"key": "title",
+											"value": "<string>"
+										},
+										{
+											"key": "status",
+											"value": "<string>"
+										}
+									]
+								},
+								"description": "Tìm kiếm danh mục dựa trên tiêu đề (title) hoặc trạng thái (status)"
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer <token>",
+												"description": "Added as a part of security scheme: bearer"
+											},
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/categories/search?title=<string>&status=<string>",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"categories",
+												"search"
+											],
+											"query": [
+												{
+													"key": "title",
+													"value": "<string>"
+												},
+												{
+													"key": "status",
+													"value": "<string>"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "*/*"
+										}
+									],
+									"cookie": [],
+									"body": "[\n  {\n    \"id\": \"<string>\",\n    \"status\": \"<string>\",\n    \"title\": \"<string>\",\n    \"type\": \"<string>\",\n    \"tourIds\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  },\n  {\n    \"id\": \"<string>\",\n    \"status\": \"<string>\",\n    \"title\": \"<string>\",\n    \"type\": \"<string>\",\n    \"tourIds\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  }\n]"
+								}
+							]
+						},
+						{
+							"name": "Lấy danh sách danh mục",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/categories/all",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"categories",
+										"all"
+									]
+								},
+								"description": "Trả về danh sách tất cả các danh mục"
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer <token>",
+												"description": "Added as a part of security scheme: bearer"
+											},
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/categories/all",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"categories",
+												"all"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "*/*"
+										}
+									],
+									"cookie": [],
+									"body": "[\n  {\n    \"id\": \"<string>\",\n    \"status\": \"<string>\",\n    \"title\": \"<string>\",\n    \"type\": \"<string>\",\n    \"tourIds\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  },\n  {\n    \"id\": \"<string>\",\n    \"status\": \"<string>\",\n    \"title\": \"<string>\",\n    \"type\": \"<string>\",\n    \"tourIds\": [\n      \"<string>\",\n      \"<string>\"\n    ]\n  }\n]"
+								}
+							]
+						},
+						{
+							"name": "Xóa danh mục",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/categories/delete/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"categories",
+										"delete",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "<string>",
+											"description": "(Required) "
+										}
+									]
+								},
+								"description": "Xóa danh mục dựa trên ID"
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer <token>",
+												"description": "Added as a part of security scheme: bearer"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/categories/delete/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"categories",
+												"delete",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "<string>",
+													"description": "(Required) "
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "admin",
+					"item": [
+						{
+							"name": "user",
+							"item": [
+								{
+									"name": "Cập nhật thông tin người dùng",
+									"request": {
+										"method": "PUT",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"username\": \"<string>\",\n  \"firstname\": \"<string>\",\n  \"lastname\": \"<string>\",\n  \"email\": \"<string>\",\n  \"phone\": \"<string>\",\n  \"address\": \"<string>\",\n  \"gender\": \"<string>\",\n  \"birthday\": \"<date>\",\n  \"status\": \"<string>\",\n  \"avatar\": \"<string>\",\n  \"role\": \"<string>\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/admin/user/update/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"admin",
+												"user",
+												"update",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "<string>",
+													"description": "(Required) "
+												}
+											]
+										}
+									},
+									"response": [
+										{
+											"name": "OK",
+											"originalRequest": {
+												"method": "PUT",
+												"header": [
+													{
+														"key": "Authorization",
+														"value": "Bearer <token>",
+														"description": "Added as a part of security scheme: bearer"
+													},
+													{
+														"key": "Accept",
+														"value": "*/*"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n  \"username\": \"<string>\",\n  \"firstname\": \"<string>\",\n  \"lastname\": \"<string>\",\n  \"email\": \"<string>\",\n  \"phone\": \"<string>\",\n  \"address\": \"<string>\",\n  \"gender\": \"<string>\",\n  \"birthday\": \"<date>\",\n  \"status\": \"<string>\",\n  \"avatar\": \"<string>\",\n  \"role\": \"<string>\"\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{baseUrl}}/api/admin/user/update/:id",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"admin",
+														"user",
+														"update",
+														":id"
+													],
+													"variable": [
+														{
+															"key": "id",
+															"value": "<string>",
+															"description": "(Required) "
+														}
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "*/*"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"code\": \"<integer>\",\n  \"message\": \"<string>\",\n  \"data\": {\n    \"id\": \"<string>\",\n    \"username\": \"<string>\",\n    \"firstName\": \"<string>\",\n    \"lastName\": \"<string>\",\n    \"email\": \"<string>\",\n    \"phone\": \"<string>\",\n    \"address\": \"<string>\",\n    \"gender\": \"<string>\",\n    \"birthday\": \"<date>\",\n    \"deposit\": \"<number>\",\n    \"status\": \"<string>\",\n    \"avatarUrl\": \"<string>\",\n    \"role\": \"<string>\",\n    \"active\": \"<boolean>\",\n    \"createdAt\": \"<dateTime>\",\n    \"updatedAt\": \"<dateTime>\"\n  }\n}"
+										}
+									]
+								},
+								{
+									"name": "Cập nhật trạng thái người dùng",
+									"request": {
+										"method": "PATCH",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"status\": \"<string>\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/admin/user/updateStatus/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"admin",
+												"user",
+												"updateStatus",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "<string>",
+													"description": "(Required) "
+												}
+											]
+										}
+									},
+									"response": [
+										{
+											"name": "OK",
+											"originalRequest": {
+												"method": "PATCH",
+												"header": [
+													{
+														"key": "Authorization",
+														"value": "Bearer <token>",
+														"description": "Added as a part of security scheme: bearer"
+													},
+													{
+														"key": "Accept",
+														"value": "*/*"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n  \"status\": \"<string>\"\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{baseUrl}}/api/admin/user/updateStatus/:id",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"admin",
+														"user",
+														"updateStatus",
+														":id"
+													],
+													"variable": [
+														{
+															"key": "id",
+															"value": "<string>",
+															"description": "(Required) "
+														}
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "*/*"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"code\": \"<integer>\",\n  \"message\": \"<string>\",\n  \"data\": {\n    \"id\": \"<string>\",\n    \"username\": \"<string>\",\n    \"firstName\": \"<string>\",\n    \"lastName\": \"<string>\",\n    \"email\": \"<string>\",\n    \"phone\": \"<string>\",\n    \"address\": \"<string>\",\n    \"gender\": \"<string>\",\n    \"birthday\": \"<date>\",\n    \"deposit\": \"<number>\",\n    \"status\": \"<string>\",\n    \"avatarUrl\": \"<string>\",\n    \"role\": \"<string>\",\n    \"active\": \"<boolean>\",\n    \"createdAt\": \"<dateTime>\",\n    \"updatedAt\": \"<dateTime>\"\n  }\n}"
+										}
+									]
+								},
+								{
+									"name": "Lấy thông tin người dùng theo ID",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/admin/user/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"admin",
+												"user",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "<string>",
+													"description": "(Required) "
+												}
+											]
+										}
+									},
+									"response": [
+										{
+											"name": "OK",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Authorization",
+														"value": "Bearer <token>",
+														"description": "Added as a part of security scheme: bearer"
+													},
+													{
+														"key": "Accept",
+														"value": "*/*"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/api/admin/user/:id",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"admin",
+														"user",
+														":id"
+													],
+													"variable": [
+														{
+															"key": "id",
+															"value": "<string>",
+															"description": "(Required) "
+														}
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "*/*"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"code\": \"<integer>\",\n  \"message\": \"<string>\",\n  \"data\": {\n    \"id\": \"<string>\",\n    \"username\": \"<string>\",\n    \"firstName\": \"<string>\",\n    \"lastName\": \"<string>\",\n    \"email\": \"<string>\",\n    \"phone\": \"<string>\",\n    \"address\": \"<string>\",\n    \"gender\": \"<string>\",\n    \"birthday\": \"<date>\",\n    \"deposit\": \"<number>\",\n    \"status\": \"<string>\",\n    \"avatarUrl\": \"<string>\",\n    \"role\": \"<string>\",\n    \"active\": \"<boolean>\",\n    \"createdAt\": \"<dateTime>\",\n    \"updatedAt\": \"<dateTime>\"\n  }\n}"
+										}
+									]
+								},
+								{
+									"name": "Lấy danh sách tất cả người dùng",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/admin/user/all",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"admin",
+												"user",
+												"all"
+											]
+										}
+									},
+									"response": [
+										{
+											"name": "OK",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Authorization",
+														"value": "Bearer <token>",
+														"description": "Added as a part of security scheme: bearer"
+													},
+													{
+														"key": "Accept",
+														"value": "*/*"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/api/admin/user/all",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"admin",
+														"user",
+														"all"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "*/*"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"code\": \"<integer>\",\n  \"message\": \"<string>\",\n  \"data\": [\n    {\n      \"id\": \"<string>\",\n      \"username\": \"<string>\",\n      \"firstName\": \"<string>\",\n      \"lastName\": \"<string>\",\n      \"email\": \"<string>\",\n      \"phone\": \"<string>\",\n      \"address\": \"<string>\",\n      \"gender\": \"<string>\",\n      \"birthday\": \"<date>\",\n      \"deposit\": \"<number>\",\n      \"status\": \"<string>\",\n      \"avatarUrl\": \"<string>\",\n      \"role\": \"<string>\",\n      \"active\": \"<boolean>\",\n      \"createdAt\": \"<dateTime>\",\n      \"updatedAt\": \"<dateTime>\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"username\": \"<string>\",\n      \"firstName\": \"<string>\",\n      \"lastName\": \"<string>\",\n      \"email\": \"<string>\",\n      \"phone\": \"<string>\",\n      \"address\": \"<string>\",\n      \"gender\": \"<string>\",\n      \"birthday\": \"<date>\",\n      \"deposit\": \"<number>\",\n      \"status\": \"<string>\",\n      \"avatarUrl\": \"<string>\",\n      \"role\": \"<string>\",\n      \"active\": \"<boolean>\",\n      \"createdAt\": \"<dateTime>\",\n      \"updatedAt\": \"<dateTime>\"\n    }\n  ]\n}"
+										}
+									]
+								}
+							]
+						},
+						{
+							"name": "review",
+							"item": [
+								{
+									"name": "Cập nhật đánh giá của admin",
+									"request": {
+										"method": "PUT",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"rating\": \"<number>\",\n  \"comment\": \"<string>\",\n  \"userId\": \"<string>\",\n  \"bookingId\": \"<string>\",\n  \"tourId\": \"<string>\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/admin/review/update/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"admin",
+												"review",
+												"update",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "<string>",
+													"description": "(Required) "
+												}
+											]
+										},
+										"description": "Cập nhật thông tin đánh giá dựa trên ID"
+									},
+									"response": [
+										{
+											"name": "OK",
+											"originalRequest": {
+												"method": "PUT",
+												"header": [
+													{
+														"key": "Authorization",
+														"value": "Bearer <token>",
+														"description": "Added as a part of security scheme: bearer"
+													},
+													{
+														"key": "Accept",
+														"value": "*/*"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n  \"rating\": \"<number>\",\n  \"comment\": \"<string>\",\n  \"userId\": \"<string>\",\n  \"bookingId\": \"<string>\",\n  \"tourId\": \"<string>\"\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{baseUrl}}/api/admin/review/update/:id",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"admin",
+														"review",
+														"update",
+														":id"
+													],
+													"variable": [
+														{
+															"key": "id",
+															"value": "<string>",
+															"description": "(Required) "
+														}
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "*/*"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"code\": \"<integer>\",\n  \"message\": \"<string>\",\n  \"data\": {\n    \"id\": \"<string>\",\n    \"rating\": \"<number>\",\n    \"comment\": \"<string>\",\n    \"userId\": \"<string>\",\n    \"bookingId\": \"<string>\",\n    \"tourId\": \"<string>\"\n  }\n}"
+										}
+									]
+								},
+								{
+									"name": "Tạo mới đánh giá của admin",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"rating\": \"<number>\",\n  \"comment\": \"<string>\",\n  \"userId\": \"<string>\",\n  \"bookingId\": \"<string>\",\n  \"tourId\": \"<string>\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/admin/review/create",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"admin",
+												"review",
+												"create"
+											]
+										},
+										"description": "Tạo mới một đánh giá của admin và trả về thông tin đánh giá vừa tạo"
+									},
+									"response": [
+										{
+											"name": "OK",
+											"originalRequest": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Authorization",
+														"value": "Bearer <token>",
+														"description": "Added as a part of security scheme: bearer"
+													},
+													{
+														"key": "Accept",
+														"value": "*/*"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n  \"rating\": \"<number>\",\n  \"comment\": \"<string>\",\n  \"userId\": \"<string>\",\n  \"bookingId\": \"<string>\",\n  \"tourId\": \"<string>\"\n}",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{baseUrl}}/api/admin/review/create",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"admin",
+														"review",
+														"create"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "*/*"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"code\": \"<integer>\",\n  \"message\": \"<string>\",\n  \"data\": {\n    \"id\": \"<string>\",\n    \"rating\": \"<number>\",\n    \"comment\": \"<string>\",\n    \"userId\": \"<string>\",\n    \"bookingId\": \"<string>\",\n    \"tourId\": \"<string>\"\n  }\n}"
+										}
+									]
+								},
+								{
+									"name": "Lấy danh sách đánh giá của admin",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/admin/review/getall",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"admin",
+												"review",
+												"getall"
+											]
+										},
+										"description": "Trả về danh sách tất cả các đánh giá của admin"
+									},
+									"response": [
+										{
+											"name": "OK",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Authorization",
+														"value": "Bearer <token>",
+														"description": "Added as a part of security scheme: bearer"
+													},
+													{
+														"key": "Accept",
+														"value": "*/*"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/api/admin/review/getall",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"admin",
+														"review",
+														"getall"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "*/*"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"code\": \"<integer>\",\n  \"message\": \"<string>\",\n  \"data\": [\n    {\n      \"id\": \"<string>\",\n      \"rating\": \"<number>\",\n      \"comment\": \"<string>\",\n      \"userId\": \"<string>\",\n      \"bookingId\": \"<string>\",\n      \"tourId\": \"<string>\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"rating\": \"<number>\",\n      \"comment\": \"<string>\",\n      \"userId\": \"<string>\",\n      \"bookingId\": \"<string>\",\n      \"tourId\": \"<string>\"\n    }\n  ]\n}"
+										}
+									]
+								},
+								{
+									"name": "Lấy đánh giá của admin theo ID",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/admin/review/get/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"admin",
+												"review",
+												"get",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "<string>",
+													"description": "(Required) "
+												}
+											]
+										},
+										"description": "Trả về thông tin chi tiết của đánh giá dựa trên ID"
+									},
+									"response": [
+										{
+											"name": "OK",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Authorization",
+														"value": "Bearer <token>",
+														"description": "Added as a part of security scheme: bearer"
+													},
+													{
+														"key": "Accept",
+														"value": "*/*"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/api/admin/review/get/:id",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"admin",
+														"review",
+														"get",
+														":id"
+													],
+													"variable": [
+														{
+															"key": "id",
+															"value": "<string>",
+															"description": "(Required) "
+														}
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "*/*"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"code\": \"<integer>\",\n  \"message\": \"<string>\",\n  \"data\": {\n    \"id\": \"<string>\",\n    \"rating\": \"<number>\",\n    \"comment\": \"<string>\",\n    \"userId\": \"<string>\",\n    \"bookingId\": \"<string>\",\n    \"tourId\": \"<string>\"\n  }\n}"
+										}
+									]
+								},
+								{
+									"name": "Xóa đánh giá của admin",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/api/admin/review/delete/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"admin",
+												"review",
+												"delete",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "<string>",
+													"description": "(Required) "
+												}
+											]
+										},
+										"description": "Xóa đánh giá dựa trên ID"
+									},
+									"response": [
+										{
+											"name": "OK",
+											"originalRequest": {
+												"method": "DELETE",
+												"header": [
+													{
+														"key": "Authorization",
+														"value": "Bearer <token>",
+														"description": "Added as a part of security scheme: bearer"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/api/admin/review/delete/:id",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"admin",
+														"review",
+														"delete",
+														":id"
+													],
+													"variable": [
+														{
+															"key": "id",
+															"value": "<string>",
+															"description": "(Required) "
+														}
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "text",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "text/plain"
+												}
+											],
+											"cookie": [],
+											"body": ""
+										}
+									]
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "users",
+					"item": [
+						{
+							"name": "API test tạo user",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/users/test-user",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"users",
+										"test-user"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer <token>",
+												"description": "Added as a part of security scheme: bearer"
+											},
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/users/test-user",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"users",
+												"test-user"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "*/*"
+										}
+									],
+									"cookie": [],
+									"body": "{}"
+								}
+							]
+						},
+						{
+							"name": "API test gửi mail",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/users/test-mail?email=<string>&subject=<string>&content=<string>",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"users",
+										"test-mail"
+									],
+									"query": [
+										{
+											"key": "email",
+											"value": "<string>",
+											"description": "(Required) "
+										},
+										{
+											"key": "subject",
+											"value": "<string>",
+											"description": "(Required) "
+										},
+										{
+											"key": "content",
+											"value": "<string>",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer <token>",
+												"description": "Added as a part of security scheme: bearer"
+											},
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/users/test-mail?email=<string>&subject=<string>&content=<string>",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"users",
+												"test-mail"
+											],
+											"query": [
+												{
+													"key": "email",
+													"value": "<string>"
+												},
+												{
+													"key": "subject",
+													"value": "<string>"
+												},
+												{
+													"key": "content",
+													"value": "<string>"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "*/*"
+										}
+									],
+									"cookie": [],
+									"body": "{}"
+								}
+							]
+						},
+						{
+							"name": "API lấy danh sách tất cả người dùng",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/users/all",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"users",
+										"all"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer <token>",
+												"description": "Added as a part of security scheme: bearer"
+											},
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/users/all",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"users",
+												"all"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "*/*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"code\": \"<integer>\",\n  \"message\": \"<string>\",\n  \"data\": [\n    {\n      \"id\": \"<string>\",\n      \"username\": \"<string>\",\n      \"firstName\": \"<string>\",\n      \"lastName\": \"<string>\",\n      \"email\": \"<string>\",\n      \"phone\": \"<string>\",\n      \"address\": \"<string>\",\n      \"gender\": \"<string>\",\n      \"birthday\": \"<date>\",\n      \"deposit\": \"<number>\",\n      \"status\": \"<string>\",\n      \"avatarUrl\": \"<string>\",\n      \"role\": \"<string>\",\n      \"active\": \"<boolean>\",\n      \"createdAt\": \"<dateTime>\",\n      \"updatedAt\": \"<dateTime>\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"username\": \"<string>\",\n      \"firstName\": \"<string>\",\n      \"lastName\": \"<string>\",\n      \"email\": \"<string>\",\n      \"phone\": \"<string>\",\n      \"address\": \"<string>\",\n      \"gender\": \"<string>\",\n      \"birthday\": \"<date>\",\n      \"deposit\": \"<number>\",\n      \"status\": \"<string>\",\n      \"avatarUrl\": \"<string>\",\n      \"role\": \"<string>\",\n      \"active\": \"<boolean>\",\n      \"createdAt\": \"<dateTime>\",\n      \"updatedAt\": \"<dateTime>\"\n    }\n  ]\n}"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "tours",
+					"item": [
+						{
+							"name": "test Img",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "multipart/form-data"
+									},
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "file",
+											"description": "(Required) ",
+											"type": "file",
+											"src": []
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/tours/test-img",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"tours",
+										"test-img"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer <token>",
+												"description": "Added as a part of security scheme: bearer"
+											},
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "file",
+													"value": "<binary>",
+													"description": "(Required) ",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/tours/test-img",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"tours",
+												"test-img"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "*/*"
+										}
+									],
+									"cookie": [],
+									"body": "<string>"
+								}
+							]
+						},
+						{
+							"name": "Thêm tour (test thêm ảnh ở postman) ở FE lưu ý tour request là model attribute nên xài qs lib",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "multipart/form-data"
+									},
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "request",
+											"value": "{\"title\":\"<string>\",\"description\":\"<string>\",\"duration\":\"<integer>\",\"categoryId\":\"<string>\",\"guideId\":\"<string>\",\"destinationId\":\"<string>\"}",
+											"type": "text"
+										},
+										{
+											"key": "thumbnail",
+											"type": "file",
+											"src": []
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/tours/add",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"tours",
+										"add"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer <token>",
+												"description": "Added as a part of security scheme: bearer"
+											},
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "request",
+													"value": "{\"title\":\"<string>\",\"description\":\"<string>\",\"duration\":\"<integer>\",\"categoryId\":\"<string>\",\"guideId\":\"<string>\",\"destinationId\":\"<string>\"}",
+													"type": "text"
+												},
+												{
+													"key": "thumbnail",
+													"value": "<binary>",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/tours/add",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"tours",
+												"add"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "*/*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"code\": \"<integer>\",\n  \"message\": \"<string>\",\n  \"data\": {\n    \"id\": \"<string>\",\n    \"title\": \"<string>\",\n    \"description\": \"<string>\",\n    \"duration\": \"<integer>\",\n    \"status\": \"<string>\",\n    \"thumbnail\": \"<string>\",\n    \"ratingAvg\": \"<double>\",\n    \"maxPrice\": \"<number>\",\n    \"minPrice\": \"<number>\",\n    \"category\": \"<string>\",\n    \"guide\": {\n      \"id\": \"<string>\",\n      \"address\": \"<string>\",\n      \"email\": \"<string>\",\n      \"experienceYears\": \"<integer>\",\n      \"firstName\": \"<string>\",\n      \"lastName\": \"<string>\",\n      \"phone\": \"<string>\"\n    },\n    \"active\": \"<boolean>\",\n    \"createdAt\": \"<dateTime>\",\n    \"updatedAt\": \"<dateTime>\"\n  }\n}"
+								}
+							]
+						},
+						{
+							"name": "Thêm ảnh cho tour",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "multipart/form-data"
+									},
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "thumbnail",
+											"description": "(Required) ",
+											"type": "file",
+											"src": []
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/tours/add-thumbnail/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"tours",
+										"add-thumbnail",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "<string>",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer <token>",
+												"description": "Added as a part of security scheme: bearer"
+											},
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "thumbnail",
+													"value": "<binary>",
+													"description": "(Required) ",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/tours/add-thumbnail/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"tours",
+												"add-thumbnail",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "<string>",
+													"description": "(Required) "
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "*/*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"code\": \"<integer>\",\n  \"message\": \"<string>\",\n  \"data\": {\n    \"id\": \"<string>\",\n    \"title\": \"<string>\",\n    \"description\": \"<string>\",\n    \"duration\": \"<integer>\",\n    \"status\": \"<string>\",\n    \"thumbnail\": \"<string>\",\n    \"ratingAvg\": \"<double>\",\n    \"maxPrice\": \"<number>\",\n    \"minPrice\": \"<number>\",\n    \"category\": \"<string>\",\n    \"guide\": {\n      \"id\": \"<string>\",\n      \"address\": \"<string>\",\n      \"email\": \"<string>\",\n      \"experienceYears\": \"<integer>\",\n      \"firstName\": \"<string>\",\n      \"lastName\": \"<string>\",\n      \"phone\": \"<string>\"\n    },\n    \"active\": \"<boolean>\",\n    \"createdAt\": \"<dateTime>\",\n    \"updatedAt\": \"<dateTime>\"\n  }\n}"
+								}
+							]
+						},
+						{
+							"name": "Thêm nhiều ảnh phụ cho tour",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/tours/add-images/:id?images=<binary>&images=<binary>",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"tours",
+										"add-images",
+										":id"
+									],
+									"query": [
+										{
+											"key": "images",
+											"value": "<binary>",
+											"description": "(Required) "
+										},
+										{
+											"key": "images",
+											"value": "<binary>",
+											"description": "(Required) "
+										}
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "<string>",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer <token>",
+												"description": "Added as a part of security scheme: bearer"
+											},
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/tours/add-images/:id?images=<binary>&images=<binary>",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"tours",
+												"add-images",
+												":id"
+											],
+											"query": [
+												{
+													"key": "images",
+													"value": "<binary>"
+												},
+												{
+													"key": "images",
+													"value": "<binary>"
+												}
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "<string>",
+													"description": "(Required) "
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "*/*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"code\": \"<integer>\",\n  \"message\": \"<string>\",\n  \"data\": {\n    \"id\": \"<string>\",\n    \"title\": \"<string>\",\n    \"description\": \"<string>\",\n    \"duration\": \"<integer>\",\n    \"status\": \"<string>\",\n    \"thumbnail\": \"<string>\",\n    \"ratingAvg\": \"<double>\",\n    \"maxPrice\": \"<number>\",\n    \"minPrice\": \"<number>\",\n    \"category\": \"<string>\",\n    \"guide\": {\n      \"id\": \"<string>\",\n      \"address\": \"<string>\",\n      \"email\": \"<string>\",\n      \"experienceYears\": \"<integer>\",\n      \"firstName\": \"<string>\",\n      \"lastName\": \"<string>\",\n      \"phone\": \"<string>\"\n    },\n    \"active\": \"<boolean>\",\n    \"createdAt\": \"<dateTime>\",\n    \"updatedAt\": \"<dateTime>\"\n  }\n}"
+								}
+							]
+						},
+						{
+							"name": "Lấy tour theo id",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/tours/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"tours",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "<string>",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer <token>",
+												"description": "Added as a part of security scheme: bearer"
+											},
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/tours/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"tours",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "<string>",
+													"description": "(Required) "
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "*/*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"code\": \"<integer>\",\n  \"message\": \"<string>\",\n  \"data\": {\n    \"id\": \"<string>\",\n    \"title\": \"<string>\",\n    \"description\": \"<string>\",\n    \"duration\": \"<integer>\",\n    \"status\": \"<string>\",\n    \"thumbnail\": \"<string>\",\n    \"ratingAvg\": \"<double>\",\n    \"maxPrice\": \"<number>\",\n    \"minPrice\": \"<number>\",\n    \"category\": \"<string>\",\n    \"guide\": {\n      \"id\": \"<string>\",\n      \"address\": \"<string>\",\n      \"email\": \"<string>\",\n      \"experienceYears\": \"<integer>\",\n      \"firstName\": \"<string>\",\n      \"lastName\": \"<string>\",\n      \"phone\": \"<string>\"\n    },\n    \"active\": \"<boolean>\",\n    \"createdAt\": \"<dateTime>\",\n    \"updatedAt\": \"<dateTime>\"\n  }\n}"
+								}
+							]
+						},
+						{
+							"name": "Lấy tour theo rating",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/tours/rating/:rating",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"tours",
+										"rating",
+										":rating"
+									],
+									"variable": [
+										{
+											"key": "rating",
+											"value": "<double>",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer <token>",
+												"description": "Added as a part of security scheme: bearer"
+											},
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/tours/rating/:rating",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"tours",
+												"rating",
+												":rating"
+											],
+											"variable": [
+												{
+													"key": "rating",
+													"value": "<double>",
+													"description": "(Required) "
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "*/*"
+										}
+									],
+									"cookie": [],
+									"body": "[\n  {\n    \"id\": \"<string>\",\n    \"title\": \"<string>\",\n    \"description\": \"<string>\",\n    \"duration\": \"<integer>\",\n    \"status\": \"<string>\",\n    \"thumbnail\": \"<string>\",\n    \"ratingAvg\": \"<double>\",\n    \"maxPrice\": \"<number>\",\n    \"minPrice\": \"<number>\",\n    \"category\": \"<string>\",\n    \"guide\": {\n      \"id\": \"<string>\",\n      \"address\": \"<string>\",\n      \"email\": \"<string>\",\n      \"experienceYears\": \"<integer>\",\n      \"firstName\": \"<string>\",\n      \"lastName\": \"<string>\",\n      \"phone\": \"<string>\"\n    },\n    \"active\": \"<boolean>\",\n    \"createdAt\": \"<dateTime>\",\n    \"updatedAt\": \"<dateTime>\"\n  },\n  {\n    \"id\": \"<string>\",\n    \"title\": \"<string>\",\n    \"description\": \"<string>\",\n    \"duration\": \"<integer>\",\n    \"status\": \"<string>\",\n    \"thumbnail\": \"<string>\",\n    \"ratingAvg\": \"<double>\",\n    \"maxPrice\": \"<number>\",\n    \"minPrice\": \"<number>\",\n    \"category\": \"<string>\",\n    \"guide\": {\n      \"id\": \"<string>\",\n      \"address\": \"<string>\",\n      \"email\": \"<string>\",\n      \"experienceYears\": \"<integer>\",\n      \"firstName\": \"<string>\",\n      \"lastName\": \"<string>\",\n      \"phone\": \"<string>\"\n    },\n    \"active\": \"<boolean>\",\n    \"createdAt\": \"<dateTime>\",\n    \"updatedAt\": \"<dateTime>\"\n  }\n]"
+								}
+							]
+						},
+						{
+							"name": "Lấy tour theo điểm đến",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/tours/destination/:destination",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"tours",
+										"destination",
+										":destination"
+									],
+									"variable": [
+										{
+											"key": "destination",
+											"value": "<string>",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer <token>",
+												"description": "Added as a part of security scheme: bearer"
+											},
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/tours/destination/:destination",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"tours",
+												"destination",
+												":destination"
+											],
+											"variable": [
+												{
+													"key": "destination",
+													"value": "<string>",
+													"description": "(Required) "
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "*/*"
+										}
+									],
+									"cookie": [],
+									"body": "[\n  {\n    \"id\": \"<string>\",\n    \"title\": \"<string>\",\n    \"description\": \"<string>\",\n    \"duration\": \"<integer>\",\n    \"status\": \"<string>\",\n    \"thumbnail\": \"<string>\",\n    \"ratingAvg\": \"<double>\",\n    \"maxPrice\": \"<number>\",\n    \"minPrice\": \"<number>\",\n    \"category\": \"<string>\",\n    \"guide\": {\n      \"id\": \"<string>\",\n      \"address\": \"<string>\",\n      \"email\": \"<string>\",\n      \"experienceYears\": \"<integer>\",\n      \"firstName\": \"<string>\",\n      \"lastName\": \"<string>\",\n      \"phone\": \"<string>\"\n    },\n    \"active\": \"<boolean>\",\n    \"createdAt\": \"<dateTime>\",\n    \"updatedAt\": \"<dateTime>\"\n  },\n  {\n    \"id\": \"<string>\",\n    \"title\": \"<string>\",\n    \"description\": \"<string>\",\n    \"duration\": \"<integer>\",\n    \"status\": \"<string>\",\n    \"thumbnail\": \"<string>\",\n    \"ratingAvg\": \"<double>\",\n    \"maxPrice\": \"<number>\",\n    \"minPrice\": \"<number>\",\n    \"category\": \"<string>\",\n    \"guide\": {\n      \"id\": \"<string>\",\n      \"address\": \"<string>\",\n      \"email\": \"<string>\",\n      \"experienceYears\": \"<integer>\",\n      \"firstName\": \"<string>\",\n      \"lastName\": \"<string>\",\n      \"phone\": \"<string>\"\n    },\n    \"active\": \"<boolean>\",\n    \"createdAt\": \"<dateTime>\",\n    \"updatedAt\": \"<dateTime>\"\n  }\n]"
+								}
+							]
+						},
+						{
+							"name": "Lấy tour theo category",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/tours/category/:category",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"tours",
+										"category",
+										":category"
+									],
+									"variable": [
+										{
+											"key": "category",
+											"value": "<string>",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer <token>",
+												"description": "Added as a part of security scheme: bearer"
+											},
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/tours/category/:category",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"tours",
+												"category",
+												":category"
+											],
+											"variable": [
+												{
+													"key": "category",
+													"value": "<string>",
+													"description": "(Required) "
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "*/*"
+										}
+									],
+									"cookie": [],
+									"body": "[\n  {\n    \"id\": \"<string>\",\n    \"title\": \"<string>\",\n    \"description\": \"<string>\",\n    \"duration\": \"<integer>\",\n    \"status\": \"<string>\",\n    \"thumbnail\": \"<string>\",\n    \"ratingAvg\": \"<double>\",\n    \"maxPrice\": \"<number>\",\n    \"minPrice\": \"<number>\",\n    \"category\": \"<string>\",\n    \"guide\": {\n      \"id\": \"<string>\",\n      \"address\": \"<string>\",\n      \"email\": \"<string>\",\n      \"experienceYears\": \"<integer>\",\n      \"firstName\": \"<string>\",\n      \"lastName\": \"<string>\",\n      \"phone\": \"<string>\"\n    },\n    \"active\": \"<boolean>\",\n    \"createdAt\": \"<dateTime>\",\n    \"updatedAt\": \"<dateTime>\"\n  },\n  {\n    \"id\": \"<string>\",\n    \"title\": \"<string>\",\n    \"description\": \"<string>\",\n    \"duration\": \"<integer>\",\n    \"status\": \"<string>\",\n    \"thumbnail\": \"<string>\",\n    \"ratingAvg\": \"<double>\",\n    \"maxPrice\": \"<number>\",\n    \"minPrice\": \"<number>\",\n    \"category\": \"<string>\",\n    \"guide\": {\n      \"id\": \"<string>\",\n      \"address\": \"<string>\",\n      \"email\": \"<string>\",\n      \"experienceYears\": \"<integer>\",\n      \"firstName\": \"<string>\",\n      \"lastName\": \"<string>\",\n      \"phone\": \"<string>\"\n    },\n    \"active\": \"<boolean>\",\n    \"createdAt\": \"<dateTime>\",\n    \"updatedAt\": \"<dateTime>\"\n  }\n]"
+								}
+							]
+						},
+						{
+							"name": "Lấy danh sách tour",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/tours/all",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"tours",
+										"all"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer <token>",
+												"description": "Added as a part of security scheme: bearer"
+											},
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/tours/all",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"tours",
+												"all"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "*/*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"code\": \"<integer>\",\n  \"message\": \"<string>\",\n  \"data\": [\n    {\n      \"id\": \"<string>\",\n      \"title\": \"<string>\",\n      \"description\": \"<string>\",\n      \"duration\": \"<integer>\",\n      \"status\": \"<string>\",\n      \"thumbnail\": \"<string>\",\n      \"ratingAvg\": \"<double>\",\n      \"maxPrice\": \"<number>\",\n      \"minPrice\": \"<number>\",\n      \"category\": \"<string>\",\n      \"guide\": {\n        \"id\": \"<string>\",\n        \"address\": \"<string>\",\n        \"email\": \"<string>\",\n        \"experienceYears\": \"<integer>\",\n        \"firstName\": \"<string>\",\n        \"lastName\": \"<string>\",\n        \"phone\": \"<string>\"\n      },\n      \"active\": \"<boolean>\",\n      \"createdAt\": \"<dateTime>\",\n      \"updatedAt\": \"<dateTime>\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"title\": \"<string>\",\n      \"description\": \"<string>\",\n      \"duration\": \"<integer>\",\n      \"status\": \"<string>\",\n      \"thumbnail\": \"<string>\",\n      \"ratingAvg\": \"<double>\",\n      \"maxPrice\": \"<number>\",\n      \"minPrice\": \"<number>\",\n      \"category\": \"<string>\",\n      \"guide\": {\n        \"id\": \"<string>\",\n        \"address\": \"<string>\",\n        \"email\": \"<string>\",\n        \"experienceYears\": \"<integer>\",\n        \"firstName\": \"<string>\",\n        \"lastName\": \"<string>\",\n        \"phone\": \"<string>\"\n      },\n      \"active\": \"<boolean>\",\n      \"createdAt\": \"<dateTime>\",\n      \"updatedAt\": \"<dateTime>\"\n    }\n  ]\n}"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "tour-details",
+					"item": [
+						{
+							"name": "Thêm mới chi tiết tour",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"title\": \"<string>\",\n  \"descriptions\": \"<string>\",\n  \"duration\": \"<integer>\",\n  \"startDate\": \"<date>\",\n  \"endDate\": \"<date>\",\n  \"priceAdults\": \"<number>\",\n  \"priceChildren\": \"<number>\",\n  \"quantity\": \"<integer>\",\n  \"tourId\": \"<string>\",\n  \"comboId\": \"<string>\",\n  \"hotelId\": \"<string>\",\n  \"transportId\": \"<string>\",\n  \"itineraries\": [\n    {\n      \"dayNumber\": \"<string>\",\n      \"title\": \"<string>\",\n      \"dayDetail\": \"<string>\",\n      \"notes\": \"<string>\"\n    },\n    {\n      \"dayNumber\": \"<string>\",\n      \"title\": \"<string>\",\n      \"dayDetail\": \"<string>\",\n      \"notes\": \"<string>\"\n    }\n  ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/tour-details/add",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"tour-details",
+										"add"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer <token>",
+												"description": "Added as a part of security scheme: bearer"
+											},
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"title\": \"<string>\",\n  \"descriptions\": \"<string>\",\n  \"duration\": \"<integer>\",\n  \"startDate\": \"<date>\",\n  \"endDate\": \"<date>\",\n  \"priceAdults\": \"<number>\",\n  \"priceChildren\": \"<number>\",\n  \"quantity\": \"<integer>\",\n  \"tourId\": \"<string>\",\n  \"comboId\": \"<string>\",\n  \"hotelId\": \"<string>\",\n  \"transportId\": \"<string>\",\n  \"itineraries\": [\n    {\n      \"dayNumber\": \"<string>\",\n      \"title\": \"<string>\",\n      \"dayDetail\": \"<string>\",\n      \"notes\": \"<string>\"\n    },\n    {\n      \"dayNumber\": \"<string>\",\n      \"title\": \"<string>\",\n      \"dayDetail\": \"<string>\",\n      \"notes\": \"<string>\"\n    }\n  ]\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/tour-details/add",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"tour-details",
+												"add"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "*/*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"code\": \"<integer>\",\n  \"message\": \"<string>\",\n  \"data\": {\n    \"id\": \"<string>\",\n    \"title\": \"<string>\",\n    \"description\": \"<string>\",\n    \"priceAdults\": \"<number>\",\n    \"priceChildren\": \"<number>\",\n    \"duration\": \"<integer>\",\n    \"startDate\": \"<string>\",\n    \"endDate\": \"<string>\",\n    \"quantity\": \"<integer>\",\n    \"itineraries\": [\n      {\n        \"id\": \"<string>\",\n        \"dayNumber\": \"<string>\",\n        \"title\": \"<string>\",\n        \"dayDetail\": \"<string>\",\n        \"notes\": \"<string>\"\n      },\n      {\n        \"id\": \"<string>\",\n        \"dayNumber\": \"<string>\",\n        \"title\": \"<string>\",\n        \"dayDetail\": \"<string>\",\n        \"notes\": \"<string>\"\n      }\n    ],\n    \"comboId\": \"<string>\",\n    \"hotelId\": \"<string>\",\n    \"transportId\": \"<string>\",\n    \"tour\": {\n      \"id\": \"<string>\",\n      \"title\": \"<string>\",\n      \"description\": \"<string>\",\n      \"status\": \"<string>\",\n      \"thumbnail\": \"<string>\",\n      \"category\": \"<string>\",\n      \"guide\": {\n        \"id\": \"<string>\",\n        \"address\": \"<string>\",\n        \"email\": \"<string>\",\n        \"experienceYears\": \"<integer>\",\n        \"firstName\": \"<string>\",\n        \"lastName\": \"<string>\",\n        \"phone\": \"<string>\"\n      }\n    },\n    \"active\": \"<boolean>\",\n    \"createdAt\": \"<dateTime>\",\n    \"updatedAt\": \"<dateTime>\"\n  }\n}"
+								}
+							]
+						},
+						{
+							"name": "Lấy chi tiết tour theo id",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/tour-details/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"tour-details",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "<string>",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer <token>",
+												"description": "Added as a part of security scheme: bearer"
+											},
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/tour-details/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"tour-details",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "<string>",
+													"description": "(Required) "
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "*/*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"code\": \"<integer>\",\n  \"message\": \"<string>\",\n  \"data\": {\n    \"id\": \"<string>\",\n    \"title\": \"<string>\",\n    \"description\": \"<string>\",\n    \"priceAdults\": \"<number>\",\n    \"priceChildren\": \"<number>\",\n    \"duration\": \"<integer>\",\n    \"startDate\": \"<string>\",\n    \"endDate\": \"<string>\",\n    \"quantity\": \"<integer>\",\n    \"itineraries\": [\n      {\n        \"id\": \"<string>\",\n        \"dayNumber\": \"<string>\",\n        \"title\": \"<string>\",\n        \"dayDetail\": \"<string>\",\n        \"notes\": \"<string>\"\n      },\n      {\n        \"id\": \"<string>\",\n        \"dayNumber\": \"<string>\",\n        \"title\": \"<string>\",\n        \"dayDetail\": \"<string>\",\n        \"notes\": \"<string>\"\n      }\n    ],\n    \"comboId\": \"<string>\",\n    \"hotelId\": \"<string>\",\n    \"transportId\": \"<string>\",\n    \"tour\": {\n      \"id\": \"<string>\",\n      \"title\": \"<string>\",\n      \"description\": \"<string>\",\n      \"status\": \"<string>\",\n      \"thumbnail\": \"<string>\",\n      \"category\": \"<string>\",\n      \"guide\": {\n        \"id\": \"<string>\",\n        \"address\": \"<string>\",\n        \"email\": \"<string>\",\n        \"experienceYears\": \"<integer>\",\n        \"firstName\": \"<string>\",\n        \"lastName\": \"<string>\",\n        \"phone\": \"<string>\"\n      }\n    },\n    \"active\": \"<boolean>\",\n    \"createdAt\": \"<dateTime>\",\n    \"updatedAt\": \"<dateTime>\"\n  }\n}"
+								}
+							]
+						},
+						{
+							"name": "Lấy chi tiết tour theo tour",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/tour-details/tour/:tourId",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"tour-details",
+										"tour",
+										":tourId"
+									],
+									"variable": [
+										{
+											"key": "tourId",
+											"value": "<string>",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer <token>",
+												"description": "Added as a part of security scheme: bearer"
+											},
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/tour-details/tour/:tourId",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"tour-details",
+												"tour",
+												":tourId"
+											],
+											"variable": [
+												{
+													"key": "tourId",
+													"value": "<string>",
+													"description": "(Required) "
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "*/*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"code\": \"<integer>\",\n  \"message\": \"<string>\",\n  \"data\": [\n    {\n      \"id\": \"<string>\",\n      \"title\": \"<string>\",\n      \"description\": \"<string>\",\n      \"priceAdults\": \"<number>\",\n      \"priceChildren\": \"<number>\",\n      \"duration\": \"<integer>\",\n      \"startDate\": \"<string>\",\n      \"endDate\": \"<string>\",\n      \"quantity\": \"<integer>\",\n      \"itineraries\": [\n        {\n          \"id\": \"<string>\",\n          \"dayNumber\": \"<string>\",\n          \"title\": \"<string>\",\n          \"dayDetail\": \"<string>\",\n          \"notes\": \"<string>\"\n        },\n        {\n          \"id\": \"<string>\",\n          \"dayNumber\": \"<string>\",\n          \"title\": \"<string>\",\n          \"dayDetail\": \"<string>\",\n          \"notes\": \"<string>\"\n        }\n      ],\n      \"comboId\": \"<string>\",\n      \"hotelId\": \"<string>\",\n      \"transportId\": \"<string>\",\n      \"tour\": {\n        \"id\": \"<string>\",\n        \"title\": \"<string>\",\n        \"description\": \"<string>\",\n        \"status\": \"<string>\",\n        \"thumbnail\": \"<string>\",\n        \"category\": \"<string>\",\n        \"guide\": {\n          \"id\": \"<string>\",\n          \"address\": \"<string>\",\n          \"email\": \"<string>\",\n          \"experienceYears\": \"<integer>\",\n          \"firstName\": \"<string>\",\n          \"lastName\": \"<string>\",\n          \"phone\": \"<string>\"\n        }\n      },\n      \"active\": \"<boolean>\",\n      \"createdAt\": \"<dateTime>\",\n      \"updatedAt\": \"<dateTime>\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"title\": \"<string>\",\n      \"description\": \"<string>\",\n      \"priceAdults\": \"<number>\",\n      \"priceChildren\": \"<number>\",\n      \"duration\": \"<integer>\",\n      \"startDate\": \"<string>\",\n      \"endDate\": \"<string>\",\n      \"quantity\": \"<integer>\",\n      \"itineraries\": [\n        {\n          \"id\": \"<string>\",\n          \"dayNumber\": \"<string>\",\n          \"title\": \"<string>\",\n          \"dayDetail\": \"<string>\",\n          \"notes\": \"<string>\"\n        },\n        {\n          \"id\": \"<string>\",\n          \"dayNumber\": \"<string>\",\n          \"title\": \"<string>\",\n          \"dayDetail\": \"<string>\",\n          \"notes\": \"<string>\"\n        }\n      ],\n      \"comboId\": \"<string>\",\n      \"hotelId\": \"<string>\",\n      \"transportId\": \"<string>\",\n      \"tour\": {\n        \"id\": \"<string>\",\n        \"title\": \"<string>\",\n        \"description\": \"<string>\",\n        \"status\": \"<string>\",\n        \"thumbnail\": \"<string>\",\n        \"category\": \"<string>\",\n        \"guide\": {\n          \"id\": \"<string>\",\n          \"address\": \"<string>\",\n          \"email\": \"<string>\",\n          \"experienceYears\": \"<integer>\",\n          \"firstName\": \"<string>\",\n          \"lastName\": \"<string>\",\n          \"phone\": \"<string>\"\n        }\n      },\n      \"active\": \"<boolean>\",\n      \"createdAt\": \"<dateTime>\",\n      \"updatedAt\": \"<dateTime>\"\n    }\n  ]\n}"
+								}
+							]
+						},
+						{
+							"name": "Lấy danh sách chi tiết tour",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/tour-details/all",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"tour-details",
+										"all"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer <token>",
+												"description": "Added as a part of security scheme: bearer"
+											},
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/tour-details/all",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"tour-details",
+												"all"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "*/*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"code\": \"<integer>\",\n  \"message\": \"<string>\",\n  \"data\": [\n    {\n      \"id\": \"<string>\",\n      \"title\": \"<string>\",\n      \"description\": \"<string>\",\n      \"priceAdults\": \"<number>\",\n      \"priceChildren\": \"<number>\",\n      \"duration\": \"<integer>\",\n      \"startDate\": \"<string>\",\n      \"endDate\": \"<string>\",\n      \"quantity\": \"<integer>\",\n      \"itineraries\": [\n        {\n          \"id\": \"<string>\",\n          \"dayNumber\": \"<string>\",\n          \"title\": \"<string>\",\n          \"dayDetail\": \"<string>\",\n          \"notes\": \"<string>\"\n        },\n        {\n          \"id\": \"<string>\",\n          \"dayNumber\": \"<string>\",\n          \"title\": \"<string>\",\n          \"dayDetail\": \"<string>\",\n          \"notes\": \"<string>\"\n        }\n      ],\n      \"comboId\": \"<string>\",\n      \"hotelId\": \"<string>\",\n      \"transportId\": \"<string>\",\n      \"tour\": {\n        \"id\": \"<string>\",\n        \"title\": \"<string>\",\n        \"description\": \"<string>\",\n        \"status\": \"<string>\",\n        \"thumbnail\": \"<string>\",\n        \"category\": \"<string>\",\n        \"guide\": {\n          \"id\": \"<string>\",\n          \"address\": \"<string>\",\n          \"email\": \"<string>\",\n          \"experienceYears\": \"<integer>\",\n          \"firstName\": \"<string>\",\n          \"lastName\": \"<string>\",\n          \"phone\": \"<string>\"\n        }\n      },\n      \"active\": \"<boolean>\",\n      \"createdAt\": \"<dateTime>\",\n      \"updatedAt\": \"<dateTime>\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"title\": \"<string>\",\n      \"description\": \"<string>\",\n      \"priceAdults\": \"<number>\",\n      \"priceChildren\": \"<number>\",\n      \"duration\": \"<integer>\",\n      \"startDate\": \"<string>\",\n      \"endDate\": \"<string>\",\n      \"quantity\": \"<integer>\",\n      \"itineraries\": [\n        {\n          \"id\": \"<string>\",\n          \"dayNumber\": \"<string>\",\n          \"title\": \"<string>\",\n          \"dayDetail\": \"<string>\",\n          \"notes\": \"<string>\"\n        },\n        {\n          \"id\": \"<string>\",\n          \"dayNumber\": \"<string>\",\n          \"title\": \"<string>\",\n          \"dayDetail\": \"<string>\",\n          \"notes\": \"<string>\"\n        }\n      ],\n      \"comboId\": \"<string>\",\n      \"hotelId\": \"<string>\",\n      \"transportId\": \"<string>\",\n      \"tour\": {\n        \"id\": \"<string>\",\n        \"title\": \"<string>\",\n        \"description\": \"<string>\",\n        \"status\": \"<string>\",\n        \"thumbnail\": \"<string>\",\n        \"category\": \"<string>\",\n        \"guide\": {\n          \"id\": \"<string>\",\n          \"address\": \"<string>\",\n          \"email\": \"<string>\",\n          \"experienceYears\": \"<integer>\",\n          \"firstName\": \"<string>\",\n          \"lastName\": \"<string>\",\n          \"phone\": \"<string>\"\n        }\n      },\n      \"active\": \"<boolean>\",\n      \"createdAt\": \"<dateTime>\",\n      \"updatedAt\": \"<dateTime>\"\n    }\n  ]\n}"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "auth",
+					"item": [
+						{
+							"name": "oauth2/google",
+							"item": [
+								{
+									"name": "API đăng nhập bằng google",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/auth/oauth2/google",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"auth",
+												"oauth2",
+												"google"
+											]
+										}
+									},
+									"response": [
+										{
+											"name": "OK",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Authorization",
+														"value": "Bearer <token>",
+														"description": "Added as a part of security scheme: bearer"
+													},
+													{
+														"key": "Accept",
+														"value": "*/*"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/api/auth/oauth2/google",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"auth",
+														"oauth2",
+														"google"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "*/*"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"code\": \"<integer>\",\n  \"message\": \"<string>\",\n  \"data\": \"<string>\"\n}"
+										}
+									]
+								},
+								{
+									"name": "API callback đăng nhập bằng google",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/auth/oauth2/google/callback?code=<string>&error=<string>",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"auth",
+												"oauth2",
+												"google",
+												"callback"
+											],
+											"query": [
+												{
+													"key": "code",
+													"value": "<string>"
+												},
+												{
+													"key": "error",
+													"value": "<string>"
+												}
+											]
+										}
+									},
+									"response": [
+										{
+											"name": "OK",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Authorization",
+														"value": "Bearer <token>",
+														"description": "Added as a part of security scheme: bearer"
+													},
+													{
+														"key": "Accept",
+														"value": "*/*"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/api/auth/oauth2/google/callback?code=<string>&error=<string>",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"auth",
+														"oauth2",
+														"google",
+														"callback"
+													],
+													"query": [
+														{
+															"key": "code",
+															"value": "<string>"
+														},
+														{
+															"key": "error",
+															"value": "<string>"
+														}
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "*/*"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"applicationContext\": {\n    \"parent\": {\n      \"value\": \"<Circular reference to #/components/schemas/ApplicationContext detected>\"\n    },\n    \"id\": \"<string>\",\n    \"displayName\": \"<string>\",\n    \"autowireCapableBeanFactory\": \"<object>\",\n    \"applicationName\": \"<string>\",\n    \"startupDate\": \"<long>\",\n    \"environment\": {\n      \"activeProfiles\": [\n        \"<string>\",\n        \"<string>\"\n      ],\n      \"defaultProfiles\": [\n        \"<string>\",\n        \"<string>\"\n      ]\n    },\n    \"beanDefinitionCount\": \"<integer>\",\n    \"beanDefinitionNames\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"parentBeanFactory\": \"<object>\",\n    \"classLoader\": {\n      \"name\": \"<string>\",\n      \"registeredAsParallelCapable\": \"<boolean>\",\n      \"parent\": {\n        \"name\": \"<string>\",\n        \"registeredAsParallelCapable\": \"<boolean>\",\n        \"unnamedModule\": {\n          \"name\": \"<string>\",\n          \"classLoader\": {\n            \"name\": \"<string>\",\n            \"registeredAsParallelCapable\": \"<boolean>\",\n            \"definedPackages\": [\n              {\n                \"name\": \"<string>\",\n                \"annotations\": [\n                  {\n                    \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                  },\n                  {\n                    \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                  }\n                ],\n                \"declaredAnnotations\": [\n                  {\n                    \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                  },\n                  {\n                    \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                  }\n                ],\n                \"sealed\": \"<boolean>\",\n                \"specificationTitle\": \"<string>\",\n                \"specificationVersion\": \"<string>\",\n                \"specificationVendor\": \"<string>\",\n                \"implementationTitle\": \"<string>\",\n                \"implementationVersion\": \"<string>\",\n                \"implementationVendor\": \"<string>\"\n              },\n              {\n                \"name\": \"<string>\",\n                \"annotations\": [\n                  {\n                    \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                  },\n                  {\n                    \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                  }\n                ],\n                \"declaredAnnotations\": [\n                  {\n                    \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                  },\n                  {\n                    \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n                  }\n                ],\n                \"sealed\": \"<boolean>\",\n                \"specificationTitle\": \"<string>\",\n                \"specificationVersion\": \"<string>\",\n                \"specificationVendor\": \"<string>\",\n                \"implementationTitle\": \"<string>\",\n                \"implementationVersion\": \"<string>\",\n                \"implementationVendor\": \"<string>\"\n              }\n            ]\n          },\n          \"descriptor\": {\n            \"open\": \"<boolean>\",\n            \"automatic\": \"<boolean>\"\n          },\n          \"named\": \"<boolean>\",\n          \"annotations\": [\n            \"<object>\",\n            \"<object>\"\n          ],\n          \"declaredAnnotations\": [\n            \"<object>\",\n            \"<object>\"\n          ],\n          \"packages\": [\n            \"<string>\",\n            \"<string>\"\n          ],\n          \"nativeAccessEnabled\": \"<boolean>\",\n          \"layer\": \"<object>\"\n        },\n        \"definedPackages\": [\n          {\n            \"name\": \"<string>\",\n            \"annotations\": [\n              \"<object>\",\n              \"<object>\"\n            ],\n            \"declaredAnnotations\": [\n              \"<object>\",\n              \"<object>\"\n            ],\n            \"sealed\": \"<boolean>\",\n            \"specificationTitle\": \"<string>\",\n            \"specificationVersion\": \"<string>\",\n            \"specificationVendor\": \"<string>\",\n            \"implementationTitle\": \"<string>\",\n            \"implementationVersion\": \"<string>\",\n            \"implementationVendor\": \"<string>\"\n          },\n          {\n            \"name\": \"<string>\",\n            \"annotations\": [\n              \"<object>\",\n              \"<object>\"\n            ],\n            \"declaredAnnotations\": [\n              \"<object>\",\n              \"<object>\"\n            ],\n            \"sealed\": \"<boolean>\",\n            \"specificationTitle\": \"<string>\",\n            \"specificationVersion\": \"<string>\",\n            \"specificationVendor\": \"<string>\",\n            \"implementationTitle\": \"<string>\",\n            \"implementationVersion\": \"<string>\",\n            \"implementationVendor\": \"<string>\"\n          }\n        ]\n      },\n      \"unnamedModule\": {\n        \"name\": \"<string>\",\n        \"classLoader\": {\n          \"name\": \"<string>\",\n          \"registeredAsParallelCapable\": \"<boolean>\",\n          \"definedPackages\": [\n            {\n              \"name\": \"<string>\",\n              \"annotations\": [\n                \"<object>\",\n                \"<object>\"\n              ],\n              \"declaredAnnotations\": [\n                \"<object>\",\n                \"<object>\"\n              ],\n              \"sealed\": \"<boolean>\",\n              \"specificationTitle\": \"<string>\",\n              \"specificationVersion\": \"<string>\",\n              \"specificationVendor\": \"<string>\",\n              \"implementationTitle\": \"<string>\",\n              \"implementationVersion\": \"<string>\",\n              \"implementationVendor\": \"<string>\"\n            },\n            {\n              \"name\": \"<string>\",\n              \"annotations\": [\n                \"<object>\",\n                \"<object>\"\n              ],\n              \"declaredAnnotations\": [\n                \"<object>\",\n                \"<object>\"\n              ],\n              \"sealed\": \"<boolean>\",\n              \"specificationTitle\": \"<string>\",\n              \"specificationVersion\": \"<string>\",\n              \"specificationVendor\": \"<string>\",\n              \"implementationTitle\": \"<string>\",\n              \"implementationVersion\": \"<string>\",\n              \"implementationVendor\": \"<string>\"\n            }\n          ]\n        },\n        \"descriptor\": {\n          \"open\": \"<boolean>\",\n          \"automatic\": \"<boolean>\"\n        },\n        \"named\": \"<boolean>\",\n        \"annotations\": [\n          \"<object>\",\n          \"<object>\"\n        ],\n        \"declaredAnnotations\": [\n          \"<object>\",\n          \"<object>\"\n        ],\n        \"packages\": [\n          \"<string>\",\n          \"<string>\"\n        ],\n        \"nativeAccessEnabled\": \"<boolean>\",\n        \"layer\": \"<object>\"\n      },\n      \"definedPackages\": [\n        {\n          \"name\": \"<string>\",\n          \"annotations\": [\n            \"<object>\",\n            \"<object>\"\n          ],\n          \"declaredAnnotations\": [\n            \"<object>\",\n            \"<object>\"\n          ],\n          \"sealed\": \"<boolean>\",\n          \"specificationTitle\": \"<string>\",\n          \"specificationVersion\": \"<string>\",\n          \"specificationVendor\": \"<string>\",\n          \"implementationTitle\": \"<string>\",\n          \"implementationVersion\": \"<string>\",\n          \"implementationVendor\": \"<string>\"\n        },\n        {\n          \"name\": \"<string>\",\n          \"annotations\": [\n            \"<object>\",\n            \"<object>\"\n          ],\n          \"declaredAnnotations\": [\n            \"<object>\",\n            \"<object>\"\n          ],\n          \"sealed\": \"<boolean>\",\n          \"specificationTitle\": \"<string>\",\n          \"specificationVersion\": \"<string>\",\n          \"specificationVendor\": \"<string>\",\n          \"implementationTitle\": \"<string>\",\n          \"implementationVersion\": \"<string>\",\n          \"implementationVendor\": \"<string>\"\n        }\n      ]\n    }\n  },\n  \"contentType\": \"<string>\",\n  \"requestContextAttribute\": \"<string>\",\n  \"staticAttributes\": {\n    \"Lorem_a\": {},\n    \"tempor_65\": {}\n  },\n  \"exposePathVariables\": \"<boolean>\",\n  \"beanName\": \"<string>\",\n  \"url\": \"<string>\",\n  \"hosts\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"redirectView\": \"<boolean>\",\n  \"propagateQueryProperties\": \"<boolean>\",\n  \"attributesMap\": {\n    \"consequat7_\": {},\n    \"laborum701\": {}\n  }\n}"
+										}
+									]
+								}
+							]
+						},
+						{
+							"name": "API xác thực reset mật khẩu",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"<string>\",\n  \"otp\": \"<string>\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/auth/verify-reset-password",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"auth",
+										"verify-reset-password"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer <token>",
+												"description": "Added as a part of security scheme: bearer"
+											},
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"email\": \"<string>\",\n  \"otp\": \"<string>\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/auth/verify-reset-password",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"auth",
+												"verify-reset-password"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "*/*"
+										}
+									],
+									"cookie": [],
+									"body": "{}"
+								}
+							]
+						},
+						{
+							"name": "API xác thực email",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"<string>\",\n  \"otp\": \"<string>\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/auth/verify-email",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"auth",
+										"verify-email"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer <token>",
+												"description": "Added as a part of security scheme: bearer"
+											},
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"email\": \"<string>\",\n  \"otp\": \"<string>\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/auth/verify-email",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"auth",
+												"verify-email"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "*/*"
+										}
+									],
+									"cookie": [],
+									"body": "{}"
+								}
+							]
+						},
+						{
+							"name": "API gửi mail xác thực",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/auth/send-verify-mail?email=<string>",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"auth",
+										"send-verify-mail"
+									],
+									"query": [
+										{
+											"key": "email",
+											"value": "<string>",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer <token>",
+												"description": "Added as a part of security scheme: bearer"
+											},
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/auth/send-verify-mail?email=<string>",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"auth",
+												"send-verify-mail"
+											],
+											"query": [
+												{
+													"key": "email",
+													"value": "<string>"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "*/*"
+										}
+									],
+									"cookie": [],
+									"body": "{}"
+								}
+							]
+						},
+						{
+							"name": "API gửi mail reset mật khẩu",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/auth/send-reset-password-mail?email=<string>",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"auth",
+										"send-reset-password-mail"
+									],
+									"query": [
+										{
+											"key": "email",
+											"value": "<string>",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer <token>",
+												"description": "Added as a part of security scheme: bearer"
+											},
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/auth/send-reset-password-mail?email=<string>",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"auth",
+												"send-reset-password-mail"
+											],
+											"query": [
+												{
+													"key": "email",
+													"value": "<string>"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "*/*"
+										}
+									],
+									"cookie": [],
+									"body": "{}"
+								}
+							]
+						},
+						{
+							"name": "API reset mật khẩu",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"<string>\",\n  \"newPassword\": \"<string>\",\n  \"confirmPassword\": \"<string>\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/auth/reset-password",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"auth",
+										"reset-password"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer <token>",
+												"description": "Added as a part of security scheme: bearer"
+											},
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"email\": \"<string>\",\n  \"newPassword\": \"<string>\",\n  \"confirmPassword\": \"<string>\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/auth/reset-password",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"auth",
+												"reset-password"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "*/*"
+										}
+									],
+									"cookie": [],
+									"body": "{}"
+								}
+							]
+						},
+						{
+							"name": "API đăng kí tài khoản mới",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"username\": \"<string>\",\n  \"password\": \"<string>\",\n  \"firstName\": \"<string>\",\n  \"lastName\": \"<string>\",\n  \"email\": \"<string>\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/auth/register",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"auth",
+										"register"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer <token>",
+												"description": "Added as a part of security scheme: bearer"
+											},
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"username\": \"<string>\",\n  \"password\": \"<string>\",\n  \"firstName\": \"<string>\",\n  \"lastName\": \"<string>\",\n  \"email\": \"<string>\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/auth/register",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"auth",
+												"register"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "*/*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"code\": \"<integer>\",\n  \"message\": \"<string>\",\n  \"data\": {\n    \"id\": \"<string>\",\n    \"username\": \"<string>\",\n    \"firstName\": \"<string>\",\n    \"lastName\": \"<string>\",\n    \"email\": \"<string>\",\n    \"role\": \"<string>\",\n    \"createdAt\": \"<dateTime>\",\n    \"accessToken\": \"<string>\"\n  }\n}"
+								}
+							]
+						},
+						{
+							"name": "API đăng nhập",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"password\": \"<string>\",\n  \"username\": \"<string>\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/auth/login",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer <token>",
+												"description": "Added as a part of security scheme: bearer"
+											},
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"password\": \"<string>\",\n  \"username\": \"<string>\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/auth/login",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"auth",
+												"login"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "*/*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"code\": \"<integer>\",\n  \"message\": \"<string>\",\n  \"data\": {\n    \"access_token\": \"<string>\",\n    \"username\": \"<string>\",\n    \"role\": \"<string>\"\n  }\n}"
+								}
+							]
+						},
+						{
+							"name": "API xác thực token",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/auth/authenticate-token",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"auth",
+										"authenticate-token"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer <token>",
+												"description": "Added as a part of security scheme: bearer"
+											},
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/auth/authenticate-token",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"auth",
+												"authenticate-token"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "*/*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"code\": \"<integer>\",\n  \"message\": \"<string>\",\n  \"data\": {\n    \"id\": \"<string>\",\n    \"username\": \"<string>\",\n    \"firstName\": \"<string>\",\n    \"lastName\": \"<string>\",\n    \"email\": \"<string>\",\n    \"phone\": \"<string>\",\n    \"address\": \"<string>\",\n    \"gender\": \"<string>\",\n    \"birthday\": \"<date>\",\n    \"deposit\": \"<number>\",\n    \"status\": \"<string>\",\n    \"avatarUrl\": \"<string>\",\n    \"role\": \"<string>\",\n    \"active\": \"<boolean>\",\n    \"createdAt\": \"<dateTime>\",\n    \"updatedAt\": \"<dateTime>\"\n  }\n}"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "bookings",
+					"item": [
+						{
+							"name": "book/revenue",
+							"item": [
+								{
+									"name": "xuất báo cáo doanh thu tour theo thời gian",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/bookings/book/revenue?tourId=<string>&startDate=<date>&endDate=<date>",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"bookings",
+												"book",
+												"revenue"
+											],
+											"query": [
+												{
+													"key": "tourId",
+													"value": "<string>"
+												},
+												{
+													"key": "startDate",
+													"value": "<date>"
+												},
+												{
+													"key": "endDate",
+													"value": "<date>"
+												}
+											]
+										}
+									},
+									"response": [
+										{
+											"name": "OK",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Authorization",
+														"value": "Bearer <token>",
+														"description": "Added as a part of security scheme: bearer"
+													},
+													{
+														"key": "Accept",
+														"value": "*/*"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/api/bookings/book/revenue?tourId=<string>&startDate=<date>&endDate=<date>",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"bookings",
+														"book",
+														"revenue"
+													],
+													"query": [
+														{
+															"key": "tourId",
+															"value": "<string>"
+														},
+														{
+															"key": "startDate",
+															"value": "<date>"
+														},
+														{
+															"key": "endDate",
+															"value": "<date>"
+														}
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "*/*"
+												}
+											],
+											"cookie": [],
+											"body": "[\n  {\n    \"tourDetailId\": \"<string>\",\n    \"tourId\": \"<string>\",\n    \"tourTitle\": \"<string>\",\n    \"totalAmount\": \"<number>\",\n    \"totalNumber\": \"<integer>\",\n    \"createdAt\": \"<string>\",\n    \"userId\": \"<string>\"\n  },\n  {\n    \"tourDetailId\": \"<string>\",\n    \"tourId\": \"<string>\",\n    \"tourTitle\": \"<string>\",\n    \"totalAmount\": \"<number>\",\n    \"totalNumber\": \"<integer>\",\n    \"createdAt\": \"<string>\",\n    \"userId\": \"<string>\"\n  }\n]"
+										}
+									]
+								},
+								{
+									"name": "xuất báo cáo hằng năm",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/bookings/book/revenue/year",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"bookings",
+												"book",
+												"revenue",
+												"year"
+											]
+										}
+									},
+									"response": [
+										{
+											"name": "OK",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Authorization",
+														"value": "Bearer <token>",
+														"description": "Added as a part of security scheme: bearer"
+													},
+													{
+														"key": "Accept",
+														"value": "*/*"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/api/bookings/book/revenue/year",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"bookings",
+														"book",
+														"revenue",
+														"year"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "*/*"
+												}
+											],
+											"cookie": [],
+											"body": "[\n  {\n    \"bookingDate\": \"<integer>\",\n    \"totalRevenue\": \"<number>\"\n  },\n  {\n    \"bookingDate\": \"<integer>\",\n    \"totalRevenue\": \"<number>\"\n  }\n]"
+										}
+									]
+								},
+								{
+									"name": "xuất báo cáo hằng tháng",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/bookings/book/revenue/month",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"bookings",
+												"book",
+												"revenue",
+												"month"
+											]
+										}
+									},
+									"response": [
+										{
+											"name": "OK",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Authorization",
+														"value": "Bearer <token>",
+														"description": "Added as a part of security scheme: bearer"
+													},
+													{
+														"key": "Accept",
+														"value": "*/*"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/api/bookings/book/revenue/month",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"bookings",
+														"book",
+														"revenue",
+														"month"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "*/*"
+												}
+											],
+											"cookie": [],
+											"body": "[\n  {\n    \"bookingDate\": \"<integer>\",\n    \"totalRevenue\": \"<number>\"\n  },\n  {\n    \"bookingDate\": \"<integer>\",\n    \"totalRevenue\": \"<number>\"\n  }\n]"
+										}
+									]
+								}
+							]
+						},
+						{
+							"name": "handle Vnpay Return",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/bookings/vnpay-payment-return?irure_71=<string>&consequat_171=<string>",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"bookings",
+										"vnpay-payment-return"
+									],
+									"query": [
+										{
+											"key": "irure_71",
+											"value": "<string>",
+											"description": "(Required) "
+										},
+										{
+											"key": "consequat_171",
+											"value": "<string>",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer <token>",
+												"description": "Added as a part of security scheme: bearer"
+											},
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/bookings/vnpay-payment-return?irure_71=<string>&consequat_171=<string>",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"bookings",
+												"vnpay-payment-return"
+											],
+											"query": [
+												{
+													"key": "irure_71",
+													"value": "<string>"
+												},
+												{
+													"key": "consequat_171",
+													"value": "<string>"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "*/*"
+										}
+									],
+									"cookie": [],
+									"body": "{}"
+								}
+							]
+						},
+						{
+							"name": "Thanh toán tour",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/bookings/checkout?amount=<integer>&orderInfo=<string>",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"bookings",
+										"checkout"
+									],
+									"query": [
+										{
+											"key": "amount",
+											"value": "<integer>",
+											"description": "(Required) "
+										},
+										{
+											"key": "orderInfo",
+											"value": "<string>",
+											"description": "(Required) "
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer <token>",
+												"description": "Added as a part of security scheme: bearer"
+											},
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/bookings/checkout?amount=<integer>&orderInfo=<string>",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"bookings",
+												"checkout"
+											],
+											"query": [
+												{
+													"key": "amount",
+													"value": "<integer>"
+												},
+												{
+													"key": "orderInfo",
+													"value": "<string>"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "*/*"
+										}
+									],
+									"cookie": [],
+									"body": "<string>"
+								}
+							]
+						},
+						{
+							"name": "xuất báo cáo tour và booking theo tên người dùng và tour",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/bookings/book&tour/?tourId=<string>&userName=<string>",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"bookings",
+										"book&tour",
+										""
+									],
+									"query": [
+										{
+											"key": "tourId",
+											"value": "<string>"
+										},
+										{
+											"key": "userName",
+											"value": "<string>"
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer <token>",
+												"description": "Added as a part of security scheme: bearer"
+											},
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/bookings/book&tour/?tourId=<string>&userName=<string>",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"bookings",
+												"book&tour",
+												""
+											],
+											"query": [
+												{
+													"key": "tourId",
+													"value": "<string>"
+												},
+												{
+													"key": "userName",
+													"value": "<string>"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "*/*"
+										}
+									],
+									"cookie": [],
+									"body": "[\n  {\n    \"bookingId\": \"<string>\",\n    \"tourId\": \"<string>\",\n    \"tourDetailId\": \"<string>\",\n    \"userName\": \"<string>\",\n    \"bookingStatus\": \"<string>\",\n    \"totalAmount\": \"<number>\",\n    \"totalNumber\": \"<integer>\",\n    \"paymentMethod\": \"<string>\",\n    \"createdAt\": \"<string>\"\n  },\n  {\n    \"bookingId\": \"<string>\",\n    \"tourId\": \"<string>\",\n    \"tourDetailId\": \"<string>\",\n    \"userName\": \"<string>\",\n    \"bookingStatus\": \"<string>\",\n    \"totalAmount\": \"<number>\",\n    \"totalNumber\": \"<integer>\",\n    \"paymentMethod\": \"<string>\",\n    \"createdAt\": \"<string>\"\n  }\n]"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Tìm kiếm tour theo bộ lọc: nơi đến, ngày đi, ngày về, giá tiền",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/search-tours?destination=<string>&departureDate=<date>&returnDate=<date>&minPrice=<number>&maxPrice=<number>",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"search-tours"
+							],
+							"query": [
+								{
+									"key": "destination",
+									"value": "<string>"
+								},
+								{
+									"key": "departureDate",
+									"value": "<date>"
+								},
+								{
+									"key": "returnDate",
+									"value": "<date>"
+								},
+								{
+									"key": "minPrice",
+									"value": "<number>"
+								},
+								{
+									"key": "maxPrice",
+									"value": "<number>"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "OK",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer <token>",
+										"description": "Added as a part of security scheme: bearer"
+									},
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/search-tours?destination=<string>&departureDate=<date>&returnDate=<date>&minPrice=<number>&maxPrice=<number>",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"search-tours"
+									],
+									"query": [
+										{
+											"key": "destination",
+											"value": "<string>"
+										},
+										{
+											"key": "departureDate",
+											"value": "<date>"
+										},
+										{
+											"key": "returnDate",
+											"value": "<date>"
+										},
+										{
+											"key": "minPrice",
+											"value": "<number>"
+										},
+										{
+											"key": "maxPrice",
+											"value": "<number>"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"code\": \"<integer>\",\n  \"message\": \"<string>\",\n  \"data\": [\n    {\n      \"id\": \"<string>\",\n      \"title\": \"<string>\",\n      \"description\": \"<string>\",\n      \"duration\": \"<integer>\",\n      \"status\": \"<string>\",\n      \"thumbnail\": \"<string>\",\n      \"ratingAvg\": \"<double>\",\n      \"maxPrice\": \"<number>\",\n      \"minPrice\": \"<number>\",\n      \"category\": \"<string>\",\n      \"guide\": {\n        \"id\": \"<string>\",\n        \"address\": \"<string>\",\n        \"email\": \"<string>\",\n        \"experienceYears\": \"<integer>\",\n        \"firstName\": \"<string>\",\n        \"lastName\": \"<string>\",\n        \"phone\": \"<string>\"\n      },\n      \"active\": \"<boolean>\",\n      \"createdAt\": \"<dateTime>\",\n      \"updatedAt\": \"<dateTime>\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"title\": \"<string>\",\n      \"description\": \"<string>\",\n      \"duration\": \"<integer>\",\n      \"status\": \"<string>\",\n      \"thumbnail\": \"<string>\",\n      \"ratingAvg\": \"<double>\",\n      \"maxPrice\": \"<number>\",\n      \"minPrice\": \"<number>\",\n      \"category\": \"<string>\",\n      \"guide\": {\n        \"id\": \"<string>\",\n        \"address\": \"<string>\",\n        \"email\": \"<string>\",\n        \"experienceYears\": \"<integer>\",\n        \"firstName\": \"<string>\",\n        \"lastName\": \"<string>\",\n        \"phone\": \"<string>\"\n      },\n      \"active\": \"<boolean>\",\n      \"createdAt\": \"<dateTime>\",\n      \"updatedAt\": \"<dateTime>\"\n    }\n  ]\n}"
+						}
+					]
+				},
+				{
+					"name": "export Report",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/export/PDF?reportName=<string>",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"export",
+								"PDF"
+							],
+							"query": [
+								{
+									"key": "reportName",
+									"value": "<string>",
+									"description": "(Required) "
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "OK",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer <token>",
+										"description": "Added as a part of security scheme: bearer"
+									},
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/export/PDF?reportName=<string>",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"export",
+										"PDF"
+									],
+									"query": [
+										{
+											"key": "reportName",
+											"value": "<string>"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": "<byte>"
+						}
+					]
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{bearerToken}}",
+				"type": "string"
+			}
+		]
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080",
+			"type": "string"
+		}
+	]
+}
