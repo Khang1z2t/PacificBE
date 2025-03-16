@@ -21,13 +21,13 @@ public class BookingServiceImpl implements BookingService {
     private final BookingRepository bookingRepository;
 
     @Override
-    public List<Revenue> getMonthlyRevenueReport() {
-        return bookingRepository.getMonthlyRevenue();
+    public List<Revenue> getMonthlyRevenueReport(String years, String bookingStatus) {
+        return bookingRepository.getMonthlyRevenue(years, bookingStatus);
     }
 
     @Override
-    public List<Revenue> getYearlyRevenueReport() {
-        return bookingRepository.getYearlyRevenue();
+    public List<Revenue> getYearlyRevenueReport(String bookingStatus) {
+        return bookingRepository.getYearlyRevenue(bookingStatus);
     }
 
     @Override

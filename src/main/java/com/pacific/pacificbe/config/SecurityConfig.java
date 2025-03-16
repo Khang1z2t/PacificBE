@@ -41,6 +41,7 @@ public class SecurityConfig {
             "/oauth2/**", // new
             // -- Api v1
             "/api/**",
+            "/api/tours/test-img",
     };
 
     @Bean

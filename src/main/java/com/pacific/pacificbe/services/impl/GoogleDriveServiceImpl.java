@@ -8,6 +8,7 @@ import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.drive.model.File;
 import com.google.auth.http.HttpCredentialsAdapter;
 import com.google.auth.oauth2.GoogleCredentials;
+import com.pacific.pacificbe.config.DriveFolderConfig;
 import com.pacific.pacificbe.exception.AppException;
 import com.pacific.pacificbe.exception.ErrorCode;
 import com.pacific.pacificbe.services.GoogleDriveService;
@@ -26,11 +27,8 @@ import java.util.Collections;
 public class GoogleDriveServiceImpl implements GoogleDriveService {
     @Value("${google.drive.applicationName}")
     private String applicationName;
-    @Value("${google.drive.folder.avatar}")
-    private String avatarFolderId;
-    @Value("${google.drive.folder.tour}")
-    private String tourFolderId;
     private final GoogleAuth googleAuth;
+    private final DriveFolderConfig driveFolderConfig;
 
 
     private Drive getDriveService() throws IOException {
@@ -69,11 +67,7 @@ public class GoogleDriveServiceImpl implements GoogleDriveService {
 
     @Override
     public String uploadImageToDrive(MultipartFile file, FolderType type) {
-        return uploadImageToDrive(file, switch (type) {
-            case AVATAR -> avatarFolderId;
-            case TOUR -> tourFolderId;
-        });
+        return uploadImageToDrive(file, driveFolderConfig.getFolder(type));
     }
-
 
 }

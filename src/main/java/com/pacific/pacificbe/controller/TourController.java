@@ -1,9 +1,12 @@
 package com.pacific.pacificbe.controller;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.pacific.pacificbe.dto.ApiResponse;
 import com.pacific.pacificbe.dto.request.CreateTourRequest;
+import com.pacific.pacificbe.dto.request.TourFilterRequest;
+import com.pacific.pacificbe.dto.response.TourByIdResponse;
 import com.pacific.pacificbe.dto.response.TourResponse;
 import com.pacific.pacificbe.services.GoogleDriveService;
 import com.pacific.pacificbe.services.TourService;
@@ -23,24 +26,29 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping(UrlMapping.TOURS)
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class ToursController {
+public class TourController {
 
     TourService tourService;
     GoogleDriveService googleDriveService;
 
     @GetMapping(UrlMapping.GET_ALL_TOURS)
     @Operation(summary = "Lấy danh sách tour")
-    public ResponseEntity<ApiResponse<List<TourResponse>>> getAllTours() {
+    public ResponseEntity<ApiResponse<List<TourResponse>>> getAllTours(
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) BigDecimal minPrice,
+            @RequestParam(required = false) BigDecimal maxPrice,
+            @RequestParam(required = false) String categoryId
+            ) {
         return ResponseEntity.ok(
                 ApiResponse.<List<TourResponse>>builder()
-                        .data(tourService.getAllTours())
+                        .data(tourService.getAllTours(title, minPrice, maxPrice, categoryId))
                         .build()
         );
     }
 
     @GetMapping(UrlMapping.GET_TOUR_BY_ID)
     @Operation(summary = "Lấy tour theo id")
-    public ResponseEntity<ApiResponse<TourResponse>> getTourById(@PathVariable String id) {
+    public ResponseEntity<ApiResponse<TourByIdResponse>> getTourById(@PathVariable String id) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ApiResponse<>(200, "Complete", tourService.getTourById(id)));
     }
@@ -63,14 +71,30 @@ public class ToursController {
         return tourService.getTourDestination(destination);
     }
 
-    @PostMapping(UrlMapping.ADD_TOUR)
-    @Operation(summary = "Thêm tour")
-    public ResponseEntity<ApiResponse<TourResponse>> createTour(@RequestBody CreateTourRequest request) {
-        return ResponseEntity.ok(new ApiResponse<>(200, "Hoàn thành", tourService.createTour(request)));
+    @PostMapping(value = UrlMapping.ADD_TOUR, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(summary = "Thêm tour (test thêm ảnh ở postman) ở FE lưu ý tour request là model attribute nên xài qs lib")
+    public ResponseEntity<ApiResponse<TourResponse>> createTour(@ModelAttribute CreateTourRequest request,
+                                                                @RequestParam(required = false) MultipartFile thumbnail,
+                                                                @RequestParam(required = false) MultipartFile[] images) {
+        return ResponseEntity.ok(new ApiResponse<>(200, "Hoàn thành", tourService.createTour(request, thumbnail, images)));
+    }
+
+    @PostMapping(value = UrlMapping.ADD_TOUR_THUMBNAIL, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(summary = "Thêm ảnh chính cho tour")
+    public ResponseEntity<ApiResponse<TourResponse>> addTourThumbnail(@PathVariable String id,
+                                                                      @RequestParam("thumbnail") MultipartFile thumbnail) {
+        return ResponseEntity.ok(new ApiResponse<>(200, "Hoàn thành", tourService.addTourThumbnail(id, thumbnail)));
+    }
+
+    @PostMapping(value = UrlMapping.ADD_TOUR_IMAGES, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(summary = "Thêm nhiều ảnh phụ cho tour")
+    public ResponseEntity<ApiResponse<TourResponse>> addTourImages(@PathVariable String id,
+                                                                   @RequestParam("images") MultipartFile[] images) {
+        return ResponseEntity.ok(new ApiResponse<>(200, "Hoàn thành", tourService.addTourImages(id, images)));
     }
 
     @PostMapping(value = "/test-img", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> testImg(@RequestPart("file") MultipartFile file) {
+    public ResponseEntity<String> testImg(@RequestParam("file") MultipartFile file) {
 //        https://drive.google.com/file/d/1GTrRDjzn82Kei0vsBQ7FGLN14iRlt5-m/view?usp=drivesdk
         return ResponseEntity.ok(googleDriveService.uploadImageToDrive(file, FolderType.TOUR));
     }

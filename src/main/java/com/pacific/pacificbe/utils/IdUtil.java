@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 
 import java.security.SecureRandom;
 import java.util.Random;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -13,7 +14,7 @@ public class IdUtil {
     private final int PASSWORD_LENGTH = 12;
 
     public String generateId() {
-        return java.util.UUID.randomUUID().toString();
+        return UUID.randomUUID().toString();
     }
 
     public String generateRandomPassword() {
