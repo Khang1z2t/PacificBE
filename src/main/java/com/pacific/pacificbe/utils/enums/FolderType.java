@@ -1,6 +1,9 @@
 package com.pacific.pacificbe.utils.enums;
 
 public enum FolderType {
+    ROOT,
     AVATAR,
-    TOUR
+    TOUR,
+    TOUR_DETAIL,
+    RESOURCES,
 }

@@ -74,12 +74,13 @@ public class TourController {
     @PostMapping(value = UrlMapping.ADD_TOUR, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "Thêm tour (test thêm ảnh ở postman) ở FE lưu ý tour request là model attribute nên xài qs lib")
     public ResponseEntity<ApiResponse<TourResponse>> createTour(@ModelAttribute CreateTourRequest request,
-                                                                @RequestParam(required = false) MultipartFile thumbnail) {
-        return ResponseEntity.ok(new ApiResponse<>(200, "Hoàn thành", tourService.createTour(request, thumbnail)));
+                                                                @RequestParam(required = false) MultipartFile thumbnail,
+                                                                @RequestParam(required = false) MultipartFile[] images) {
+        return ResponseEntity.ok(new ApiResponse<>(200, "Hoàn thành", tourService.createTour(request, thumbnail, images)));
     }
 
     @PostMapping(value = UrlMapping.ADD_TOUR_THUMBNAIL, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @Operation(summary = "Thêm ảnh cho tour")
+    @Operation(summary = "Thêm ảnh chính cho tour")
     public ResponseEntity<ApiResponse<TourResponse>> addTourThumbnail(@PathVariable String id,
                                                                       @RequestParam("thumbnail") MultipartFile thumbnail) {
         return ResponseEntity.ok(new ApiResponse<>(200, "Hoàn thành", tourService.addTourThumbnail(id, thumbnail)));

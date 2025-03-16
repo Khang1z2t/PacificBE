@@ -11,18 +11,23 @@ import com.pacific.pacificbe.model.*;
 import com.pacific.pacificbe.repository.*;
 import com.pacific.pacificbe.services.GoogleDriveService;
 import com.pacific.pacificbe.services.TourService;
+import com.pacific.pacificbe.utils.IdUtil;
 import com.pacific.pacificbe.utils.enums.FolderType;
 import com.pacific.pacificbe.utils.enums.TourStatus;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -34,6 +39,7 @@ public class TourServiceImpl implements TourService {
     private final DestinationRepository destinationRepository;
     private final GoogleDriveService googleDriveService;
     private final ImageRepository imageRepository;
+    private final IdUtil idUtil;
 
     @Override
     public List<TourResponse> getAllTours(String title, BigDecimal minPrice, BigDecimal maxPrice, String categoryId) {
@@ -49,19 +55,13 @@ public class TourServiceImpl implements TourService {
     }
 
     @Override
-    public TourResponse createTour(CreateTourRequest request, MultipartFile thumbnail) {
+    public TourResponse createTour(CreateTourRequest request, MultipartFile thumbnail, MultipartFile[] images) {
         Tour tour = new Tour();
         tour.setTitle(request.getTitle());
         tour.setDescription(request.getDescription());
         tour.setDuration(request.getDuration());
         tour.setStatus(TourStatus.DRAFT.toString());
         tour.setActive(true);
-
-        if (thumbnail != null) {
-            String thumbnailUrl = googleDriveService.uploadImageToDrive(thumbnail, FolderType.TOUR);
-            tour.setThumbnailUrl(thumbnailUrl);
-        }
-
         if (request.getCategoryId() != null) {
             Category category = categoryRepository.findById(request.getCategoryId())
                     .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
@@ -79,7 +79,14 @@ public class TourServiceImpl implements TourService {
                     .orElseThrow(() -> new AppException(ErrorCode.DESTINATION_NOT_FOUND));
             tour.setDestination(destination);
         }
+        if (thumbnail != null) {
+            String thumbnailUrl = googleDriveService.uploadImageToDrive(thumbnail, FolderType.TOUR);
+            tour.setThumbnailUrl(thumbnailUrl);
+        }
         tour = tourRepository.save(tour);
+        if (images != null) {
+            addImagesToTour(images, tour);
+        }
         return tourMapper.toTourResponse(tour);
     }
 
@@ -120,14 +127,22 @@ public class TourServiceImpl implements TourService {
     public TourResponse addTourImages(String id, MultipartFile[] images) {
         Tour tour = tourRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.TOUR_NOT_FOUND));
+        addImagesToTour(images, tour);
+        return tourMapper.toTourResponse(tour);
+    }
+
+    private void addImagesToTour(MultipartFile[] images, Tour tour) {
+        Set<Image> imageSet = new HashSet<>();
         for (MultipartFile image : images) {
-            String imageUrl = googleDriveService.uploadImageToDrive(image, FolderType.TOUR);
+            String imageUrl = googleDriveService.uploadImageToDrive(image, FolderType.TOUR_DETAIL);
+            String generatedId = idUtil.getIdImage(imageUrl);
             Image newImage = new Image();
+            newImage.setId(generatedId != null ? generatedId : idUtil.generateId());
             newImage.setImageUrl(imageUrl);
             newImage.setTour(tour);
-            imageRepository.save(newImage);
+            imageSet.add(imageRepository.save(newImage));
         }
-        return tourMapper.toTourResponse(tour);
+        tour.setImages(imageSet);
     }
 
 }
