@@ -55,5 +55,4 @@ public class AdminGuideController {
             @RequestBody UpdateStatusGuideRequest request) {
         return ResponseEntity.ok(new ApiResponse<>(200, "Cập nhật trạng thái thành công", guideService.updateStatus(id, request)));
     }
-
 }

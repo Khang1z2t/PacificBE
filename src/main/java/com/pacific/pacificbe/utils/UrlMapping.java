@@ -148,4 +148,5 @@ public class UrlMapping {
     public static final String GOOGLE_REDIRECT = FE_URL + "/google/redirect";
     /* =========================== End Other URL ===================================== */
 
+
 }

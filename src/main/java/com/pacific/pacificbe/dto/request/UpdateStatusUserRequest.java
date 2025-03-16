@@ -7,4 +7,5 @@ import lombok.Setter;
 @Setter
 public class UpdateStatusUserRequest {
     private String status;
+
 }

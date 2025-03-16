@@ -21,4 +21,5 @@ public class UpdateUserRequest {
     private BigDecimal deposit;
     private String avatar;
     private String role;
+
 }
