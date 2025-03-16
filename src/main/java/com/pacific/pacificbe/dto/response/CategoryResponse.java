@@ -8,9 +8,5 @@ import java.util.List;
 @AllArgsConstructor
 public class CategoryResponse {
     private String id;
-    private String status;
     private String title;
-    private String type;
-    // Danh sách các tour ID thuộc Category
-    private List<String> tourIds;
 }
