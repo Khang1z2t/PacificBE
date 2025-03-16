@@ -3,6 +3,7 @@ package com.pacific.pacificbe.dto.request;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Getter
@@ -17,6 +18,7 @@ public class UpdateUserRequest {
     private String gender;
     private LocalDate birthday;
     private String status;
+    private BigDecimal deposit;
     private String avatar;
     private String role;
 }

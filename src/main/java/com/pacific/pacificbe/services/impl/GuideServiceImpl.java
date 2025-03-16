@@ -2,22 +2,17 @@ package com.pacific.pacificbe.services.impl;
 
 import com.pacific.pacificbe.dto.request.GuideRequest;
 import com.pacific.pacificbe.dto.request.UpdateStatusGuideRequest;
-import com.pacific.pacificbe.dto.request.UpdateStatusUserRequest;
 import com.pacific.pacificbe.dto.response.GuideResponse;
-import com.pacific.pacificbe.dto.response.UserResponse;
 import com.pacific.pacificbe.exception.AppException;
 import com.pacific.pacificbe.exception.ErrorCode;
 import com.pacific.pacificbe.mapper.GuideMapper;
 import com.pacific.pacificbe.model.Guide;
-import com.pacific.pacificbe.model.User;
 import com.pacific.pacificbe.repository.GuideRepository;
 import com.pacific.pacificbe.services.GuideService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -94,4 +89,5 @@ public class GuideServiceImpl implements GuideService {
 
         return guideMapper.toGuideResponse(guideRepository.save(guide));
     }
+
 }

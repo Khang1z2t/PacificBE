@@ -4,7 +4,6 @@ import com.pacific.pacificbe.dto.ApiResponse;
 import com.pacific.pacificbe.dto.request.*;
 import com.pacific.pacificbe.dto.response.GuideResponse;
 import com.pacific.pacificbe.services.GuideService;
-import com.pacific.pacificbe.services.UserService;
 import com.pacific.pacificbe.utils.UrlMapping;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AccessLevel;
@@ -20,11 +19,9 @@ import java.util.List;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AdminGuideController {
-    UserService userService;
     private final GuideService guideService;
 
-
-    @GetMapping(UrlMapping.GET_ALL_GUIDE)
+    @GetMapping(UrlMapping.GET_ALL_GUIDES)
     @Operation(summary = "Lấy danh sách tất cả hướng dẫn viên")
     ResponseEntity<ApiResponse<List<GuideResponse>>> getAllGuides() {
         return ResponseEntity.ok(
@@ -58,4 +55,5 @@ public class AdminGuideController {
             @RequestBody UpdateStatusGuideRequest request) {
         return ResponseEntity.ok(new ApiResponse<>(200, "Cập nhật trạng thái thành công", guideService.updateStatus(id, request)));
     }
+
 }

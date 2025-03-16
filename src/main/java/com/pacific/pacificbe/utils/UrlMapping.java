@@ -110,11 +110,11 @@ public class UrlMapping {
 
     /* =========================== Start Guide API ===================================== */
     public static final String GUIDE = API + "/guide";
-    public static final String GET_ALL_GUIDE = "/all";
-    public static final String CREATE_GUIDE = "/create";
-    public static final String GET_GUIDE_BY_ID = "/{id}";
-    public static final String UPDATE_GUIDE = "/update/{id}";
- //   public static final String DELETE_GUIDE = "/delete/{id}";
+//    public static final String GET_ALL_GUIDES = "/all";
+//    public static final String CREATE_GUIDE = "/create";
+//    public static final String GET_GUIDE_BY_ID = "/{id}";
+//    public static final String UPDATE_GUIDE = "/update/{id}";
+    public static final String DELETE_GUIDE = "/delete/{id}";
     /* =========================== End Guide API ===================================== */
 
     /* =========================== Start Admin User API ===================================== */
@@ -124,7 +124,12 @@ public class UrlMapping {
 
     /* =========================== Start Admin Guide API ===================================== */
     public static final String ADMIN_GUIDE = API + "/admin/guide";
+    public static final String GET_ALL_GUIDES = "/all";
+    public static final String CREATE_GUIDE = "/create";
+    public static final String GET_GUIDE_BY_ID = "/{id}";
+    public static final String UPDATE_GUIDE = "/update/{id}";
     public static final String UPDATE_STATUS_GUIDE = "/updateStatus/{id}";
+    public static final String GUIDE_TOUR = "/guideTour/{id}";
     /* =========================== End Admin Guide API ===================================== */
 
     /* =========================== Start Admin Blog API ===================================== */
@@ -134,6 +139,7 @@ public class UrlMapping {
     public static final String CREATE_BLOG = "/create";
     public static final String UPDATE_BLOG = "/update/{id}";
     public static final String UPDATE_STATUS_BLOG = "/updateStatus/{id}";
+    public static final String UPLOAD_IMAGE = "/upload-images";
     public static final String DELETE_BLOG = "/delete/{id}";
     /* =========================== End Admin Blog API ===================================== */
 

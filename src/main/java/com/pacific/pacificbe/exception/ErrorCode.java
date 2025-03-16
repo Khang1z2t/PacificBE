@@ -46,8 +46,7 @@ public enum ErrorCode {
     TITLE_NOT_FOUND(1022, "Title not found",HttpStatus.NOT_FOUND),
     BLOG_NOT_FOUND(1023, "Blog not found",HttpStatus.NOT_FOUND),
     FILE_NOT_FOUND(1024, "File image not found",HttpStatus.NOT_FOUND),
-    FILE_UPLOAD_FAILED(1025, "Upload image failed",HttpStatus.NOT_FOUND);
-
+    FILE_UPLOAD_FAILED(1025, "Upload image failed", HttpStatus.BAD_REQUEST);
 
     //  ^---------------------
     //  Lưu ý ở đây phải kết thúc enum bằng dấu ; chứ không phải dấu ,
