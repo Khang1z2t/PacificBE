@@ -24,7 +24,7 @@ import java.io.IOException;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class JwtFilter extends OncePerRequestFilter {
     JwtService jwtService;
-    UserDetailsService userDetailsService;
+    CustomUserDetailsService userDetailsService;
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,

@@ -23,7 +23,6 @@ import org.springframework.web.servlet.view.RedirectView;
 @RequiredArgsConstructor
 @Tag(name = "Auth  Controller", description = "Các api kiểm tra người dùng")
 public class AuthController {
-    private final UserService userService;
     private final AuthService authService;
 
     @PostMapping(UrlMapping.LOGIN)

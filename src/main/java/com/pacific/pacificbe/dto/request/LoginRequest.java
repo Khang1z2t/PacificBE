@@ -12,8 +12,8 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class LoginRequest {
     @Schema(description = "Tên đăng nhập", example = "khang")
-    @JsonProperty(value = "username", required = true)
-    String username;
+    @JsonProperty(value = "identifier", required = true)
+    String identifier;
     @Schema(description = "Mật khẩu của tài khoản", example = "12345678")
     @JsonProperty(value = "password", required = true)
     String password;

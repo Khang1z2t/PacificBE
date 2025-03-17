@@ -70,27 +70,28 @@ public class AuthServiceImpl implements AuthService {
         try {
             authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
-                            request.getUsername(),
+                            request.getIdentifier(),
                             request.getPassword())
             );
+
+            User user = (User) authentication.getPrincipal();
+
+            if (!user.isActive()) throw new AppException(ErrorCode.USER_NOT_ACTIVE);
+
+            Map<String, Object> extraClaims = new HashMap<>();
+            extraClaims.put("uid", user.getId());
+            extraClaims.put("role", user.getRole());
+
+            var jwtToken = jwtService.generateToken(extraClaims, user);
+
+            return AuthenticationResponse.builder()
+                    .accessToken(jwtToken)
+                    .username(user.getUsername())
+                    .role(user.getRole())
+                    .build();
         } catch (AuthenticationException e) {
             throw new AppException(ErrorCode.INVALID_USERNAME_OR_PASSWORD);
         }
-        User user = (User) authentication.getPrincipal();
-
-        if (!user.isActive()) throw new AppException(ErrorCode.USER_NOT_ACTIVE);
-
-        Map<String, Object> extraClaims = new HashMap<>();
-        extraClaims.put("uid", user.getId());
-        extraClaims.put("role", user.getRole());
-
-        var jwtToken = jwtService.generateToken(extraClaims, user);
-
-        return AuthenticationResponse.builder()
-                .accessToken(jwtToken)
-                .username(user.getUsername())
-                .role(user.getRole())
-                .build();
     }
 
     @Override
@@ -131,6 +132,17 @@ public class AuthServiceImpl implements AuthService {
     public UserResponse authenticateToken() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
+        if (!user.isActive()) throw new AppException(ErrorCode.USER_NOT_ACTIVE);
+        if (user.getUsername().equals(user.getEmail().split("@")[0])) {
+            if (!user.getStatus().equals(UserStatus.REQUIRE_USERNAME_PASSWORD_CHANGE.toString())) {
+                user.setStatus(UserStatus.REQUIRE_USERNAME_CHANGE.toString());
+            }
+        } else if (user.getStatus().equals(UserStatus.REQUIRE_USERNAME_PASSWORD_CHANGE.toString())) {
+            user.setStatus(UserStatus.REQUIRE_PASSWORD_CHANGE.toString());
+        } else {
+            user.setStatus(UserStatus.ACTIVE.toString());
+        }
+        userRepository.save(user);
         return userMapper.toUserResponse(user);
     }
 
@@ -177,6 +189,7 @@ public class AuthServiceImpl implements AuthService {
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         if (request.getNewPassword().equals(request.getConfirmPassword())) {
             user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+            user.setStatus(UserStatus.ACTIVE.toString());
             userRepository.save(user);
             return true;
         }

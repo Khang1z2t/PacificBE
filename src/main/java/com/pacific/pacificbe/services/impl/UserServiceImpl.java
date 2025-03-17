@@ -1,7 +1,6 @@
 package com.pacific.pacificbe.services.impl;
 
 
-
 import com.pacific.pacificbe.dto.request.*;
 import com.pacific.pacificbe.dto.response.UserResponse;
 import com.pacific.pacificbe.exception.AppException;
@@ -10,14 +9,18 @@ import com.pacific.pacificbe.mapper.UserMapper;
 import com.pacific.pacificbe.model.User;
 import com.pacific.pacificbe.repository.UserRepository;
 import com.pacific.pacificbe.services.UserService;
+import com.pacific.pacificbe.utils.enums.UserRole;
+import com.pacific.pacificbe.utils.enums.UserStatus;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.EnumUtils;
 import org.springframework.stereotype.Service;
 
 
 import java.util.List;
+import java.util.Locale;
 
 @Service
 @Slf4j
@@ -60,9 +63,18 @@ public class UserServiceImpl implements UserService {
         if (request.getAddress() != null) user.setAddress(request.getAddress());
         if (request.getGender() != null) user.setGender(request.getGender());
         if (request.getBirthday() != null) user.setBirthday(request.getBirthday());
-        if (request.getStatus() != null) user.setStatus(request.getStatus());
         if (request.getAvatar() != null) user.setAvatarUrl(request.getAvatar());
-        if (request.getRole() != null) user.setRole(request.getRole());
+
+        if (EnumUtils.isValidEnum(UserStatus.class, request.getStatus().toUpperCase())) {
+            user.setStatus(request.getStatus().toUpperCase());
+        } else {
+            throw new AppException(ErrorCode.USER_STATUS_INVALID);
+        }
+        if (EnumUtils.isValidEnum(UserRole.class, request.getRole().toUpperCase())) {
+            user.setRole(request.getRole().toUpperCase());
+        } else {
+            throw new AppException(ErrorCode.USER_ROLE_INVALID);
+        }
 
         return userMapper.toUserResponse(userRepository.save(user));
     }
@@ -76,8 +88,9 @@ public class UserServiceImpl implements UserService {
         if (request.getStatus() != null) {
             user.setStatus(request.getStatus());
         } else {
-        // Nếu không có status, tự động chuyển đổi giữa ACTIVE và INACTIVE
-            user.setStatus("ACTIVE".equalsIgnoreCase(user.getStatus()) ? "INACTIVE" : "ACTIVE");
+            // Nếu không có status, tự động chuyển đổi giữa ACTIVE và INACTIVE
+            user.setStatus(UserStatus.ACTIVE.toString().equalsIgnoreCase(
+                    user.getStatus()) ? UserStatus.INACTIVE.toString() : UserStatus.ACTIVE.toString());
         }
 
         return userMapper.toUserResponse(userRepository.save(user));

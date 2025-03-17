@@ -27,6 +27,8 @@ public class UserResponse {
     LocalDate birthday;
     BigDecimal deposit;
     String status;
+    Boolean emailVerified;
+    Boolean phoneVerified;
     String avatarUrl;
     String role;
 
@@ -34,6 +36,4 @@ public class UserResponse {
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
 
-    public UserResponse(User user) {
-    }
 }
