@@ -9,7 +9,6 @@ import com.pacific.pacificbe.dto.response.AuthenticationResponse;
 import com.pacific.pacificbe.dto.response.UserRegisterResponse;
 import com.pacific.pacificbe.dto.response.UserResponse;
 import com.pacific.pacificbe.services.AuthService;
-import com.pacific.pacificbe.services.UserService;
 import com.pacific.pacificbe.utils.UrlMapping;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

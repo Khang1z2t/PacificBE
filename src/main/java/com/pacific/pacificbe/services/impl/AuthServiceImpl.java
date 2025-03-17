@@ -36,9 +36,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 @Service
 @Slf4j
