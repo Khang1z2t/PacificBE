@@ -1,7 +1,10 @@
 package com.pacific.pacificbe.dto.response;
 
+import jakarta.persistence.MappedSuperclass;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -9,9 +12,15 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ItineraryResponse {
-    String id;
-    String dayNumber;
-    String title;
+    String itineraryId;
     String dayDetail;
+    String dayNumber;
     String notes;
+    String title;
+    String tourDetailId;
+
+    Boolean active;
+    LocalDateTime createdAt;
+    LocalDateTime deleteAt;
+    LocalDateTime updatedAt;
 }

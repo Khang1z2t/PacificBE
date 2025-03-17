@@ -1,6 +1,11 @@
 package com.pacific.pacificbe.exception;
 
+import com.pacific.pacificbe.utils.enums.TourDetailStatus;
+import com.pacific.pacificbe.utils.enums.TourStatus;
+import com.pacific.pacificbe.utils.enums.UserRole;
+import com.pacific.pacificbe.utils.enums.UserStatus;
 import lombok.Getter;
+import org.apache.commons.lang3.EnumUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 
@@ -21,7 +26,16 @@ public enum ErrorCode {
     INVALID_USERNAME_OR_PASSWORD(1013, "Invalid username or password", HttpStatus.BAD_REQUEST),
     INVALID_OTP(1014, "Invalid OTP", HttpStatus.BAD_REQUEST),
 
+    USER_ROLE_INVALID(1015, "Invalid role, must be " + getEnumValues(UserRole.class), HttpStatus.BAD_REQUEST),
+    USER_STATUS_INVALID(1016, "Invalid status, must be " + getEnumValues(UserStatus.class), HttpStatus.BAD_REQUEST),
+
+    // Tour Error
+    TOUR_NOT_FOUND(1020, "Tour not found", HttpStatus.NOT_FOUND),
+    TOUR_STATUS_INVALID(1021, "Invalid status, must be " + getEnumValues(TourStatus.class), HttpStatus.BAD_REQUEST),
+
+
     TOUR_DETAIL_NOT_FOUND(1030, "Tour detail not found", HttpStatus.NOT_FOUND),
+    TOUR_DETAIL_STATUS_INVALID(1031, "Invalid status, must be " + getEnumValues(TourDetailStatus.class), HttpStatus.BAD_REQUEST),
 
     CATEGORY_NOT_FOUND(1040, "Category not found", HttpStatus.NOT_FOUND),
     GUIDE_NOT_FOUND(1050, "Guide not found", HttpStatus.NOT_FOUND),
@@ -29,12 +43,9 @@ public enum ErrorCode {
     COMBO_NOT_FOUND(1070, "Combo not found", HttpStatus.NOT_FOUND),
     HOTEL_NOT_FOUND(1071, "Hotel not found", HttpStatus.NOT_FOUND),
     TRANSPORT_NOT_FOUND(1072, "Transport not found", HttpStatus.NOT_FOUND),
-    TOUR_DETAILS_NOT_FOUND(1073, "Tour details not found", HttpStatus.NOT_FOUND),
     NEED_LOGIN(1098, "You need login first", HttpStatus.UNAUTHORIZED),
     CANT_SEND_MAIL(1099, "Can't send mail", HttpStatus.INTERNAL_SERVER_ERROR),
 
-    // Tour Error
-    TOUR_NOT_FOUND(2001, "Tour not found", HttpStatus.NOT_FOUND),
 
     // Thêm hằng số CATEGORY_IN_USE
     CATEGORY_IN_USE(1041, "Category is in use by one or more tours", HttpStatus.BAD_REQUEST),
@@ -61,4 +72,8 @@ public enum ErrorCode {
     private final int code;
     private final HttpStatusCode statusCode;
     private final String message;
+
+    private static <E extends Enum<E>> String getEnumValues(Class<E> enumClass) {
+        return String.join(" or ", EnumUtils.getEnumMap(enumClass).keySet());
+    }
 }

@@ -53,6 +53,8 @@ public class UrlMapping {
     public static final String ADD_TOUR_DETAIL = "/add";
     public static final String UPDATE_TOUR_DETAIL = "/update";
     public static final String DELETE_TOUR_DETAIL = "/delete/{id}";
+    public static final String GET_TOUR_DETAIL_MONTH = "/month/{tourId}";
+    public static final String GET_TOUR_DETAIL_DAY = "/day/{tourId}/{months}";
     /*============================ End Tour Detail API ===================================*/
 
 
@@ -117,6 +119,11 @@ public class UrlMapping {
 //    public static final String UPDATE_GUIDE = "/update/{id}";
     public static final String DELETE_GUIDE = "/delete/{id}";
     /* =========================== End Guide API ===================================== */
+
+    /* =========================== Start Itinerary API ===================================== */
+    public static final String ITINERARY = API + "/itinerary";
+    public static final String ITINERARY_TOUR_AND_DATE = "/{tourId}/{createdDay}";
+    /* =========================== End Itinerary API ===================================== */
 
     /* =========================== Start Admin User API ===================================== */
     public static final String UPDATE_USER = "/update/{id}";
