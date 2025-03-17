@@ -3,6 +3,7 @@ package com.pacific.pacificbe.controller;
 import com.pacific.pacificbe.dto.ApiResponse;
 import com.pacific.pacificbe.dto.request.CreateTourDetailRequest;
 import com.pacific.pacificbe.dto.response.TourDetailResponse;
+import com.pacific.pacificbe.dto.response.showTour.DetailTourResponse;
 import com.pacific.pacificbe.services.TourDetailService;
 import com.pacific.pacificbe.utils.UrlMapping;
 import io.swagger.v3.oas.annotations.Operation;
@@ -40,5 +41,20 @@ public class TourDetailController {
     @Operation(summary = "Lấy chi tiết tour theo tour")
     public ResponseEntity<ApiResponse<List<TourDetailResponse>>> getTourDetailByTour(@PathVariable String tourId) {
         return ResponseEntity.ok(new ApiResponse<>(200, "Lấy chi tiết tour thành công", tourDetailService.getTourDetailByTourId(tourId)));
+    }
+
+    @GetMapping(UrlMapping.GET_TOUR_DETAIL_MONTH)
+    @Operation(summary = "Lấy chi tiết tour theo ngày")
+    public ResponseEntity<ApiResponse<List<DetailTourResponse>>> getTourDetailMonth(@PathVariable String tourId) {
+        return ResponseEntity.ok(new ApiResponse<>(200, "Lấy chi tiết tour theo tháng thành công", tourDetailService.getTourDetailMonth(tourId)));
+    }
+
+    @GetMapping(UrlMapping.GET_TOUR_DETAIL_DAY)
+    @Operation(summary = "Lấy chi tiết tour theo ngày")
+    public ResponseEntity<ApiResponse<List<DetailTourResponse>>> getTourDetailDay(
+            @PathVariable String tourId,
+            @PathVariable String months
+    ) {
+        return ResponseEntity.ok(new ApiResponse<>(200, "Lấy chi tiết tour theo ngày thành công", tourDetailService.getTourDetailDay(tourId,months)));
     }
 }

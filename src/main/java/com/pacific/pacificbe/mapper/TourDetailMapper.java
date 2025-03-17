@@ -15,8 +15,6 @@ import org.springframework.stereotype.Component;
 public class TourDetailMapper {
     ModelMapper modelMapper;
 
-
-
     public TourDetail toTourDetail(CreateTourDetailRequest createTourDetailRequest) {
         return modelMapper.map(createTourDetailRequest, TourDetail.class);
     }

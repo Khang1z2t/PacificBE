@@ -3,6 +3,7 @@ package com.pacific.pacificbe.services.impl;
 import com.pacific.pacificbe.dto.request.CreateItineraryRequest;
 import com.pacific.pacificbe.dto.request.CreateTourDetailRequest;
 import com.pacific.pacificbe.dto.response.TourDetailResponse;
+import com.pacific.pacificbe.dto.response.showTour.DetailTourResponse;
 import com.pacific.pacificbe.exception.AppException;
 import com.pacific.pacificbe.exception.ErrorCode;
 import com.pacific.pacificbe.mapper.TourDetailMapper;
@@ -81,5 +82,15 @@ public class TourDetailServiceImpl implements TourDetailService {
     public List<TourDetailResponse> getTourDetailByTourId(String tourId) {
         List<TourDetail> tourDetail = tourDetailRepository.findByTourId(tourId);
         return tourMapper.toTourDetailResponseList(tourDetail);
+    }
+
+    @Override
+    public List<DetailTourResponse> getTourDetailMonth(String tourId) {
+        return tourDetailRepository.getTourDetailMonth(tourId);
+    }
+
+    @Override
+    public List<DetailTourResponse> getTourDetailDay(String tourId, String months) {
+        return tourDetailRepository.getTourDetailDay(tourId,months);
     }
 }

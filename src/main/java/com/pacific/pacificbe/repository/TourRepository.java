@@ -1,5 +1,6 @@
 package com.pacific.pacificbe.repository;
 
+import com.pacific.pacificbe.dto.response.showTour.ItineraryTourDetailResponse;
 import com.pacific.pacificbe.model.Tour;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
