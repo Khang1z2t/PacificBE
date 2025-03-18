@@ -4,6 +4,7 @@ import com.pacific.pacificbe.utils.enums.TourDetailStatus;
 import com.pacific.pacificbe.utils.enums.TourStatus;
 import com.pacific.pacificbe.utils.enums.UserRole;
 import com.pacific.pacificbe.utils.enums.UserStatus;
+import com.pacific.pacificbe.utils.enums.ReviewStatus;
 import lombok.Getter;
 import org.apache.commons.lang3.EnumUtils;
 import org.springframework.http.HttpStatus;
@@ -57,7 +58,11 @@ public enum ErrorCode {
     TITLE_NOT_FOUND(1022, "Title not found",HttpStatus.NOT_FOUND),
     BLOG_NOT_FOUND(1023, "Blog not found",HttpStatus.NOT_FOUND),
     FILE_NOT_FOUND(1024, "File image not found",HttpStatus.NOT_FOUND),
-    FILE_UPLOAD_FAILED(1025, "Upload image failed", HttpStatus.BAD_REQUEST);
+    FILE_UPLOAD_FAILED(1025, "Upload image failed", HttpStatus.BAD_REQUEST),
+
+    // Review Errors
+    RATING_NOT_FOUND(1026, "Rating not found",HttpStatus.NOT_FOUND),
+    INVALID_RATING_STATUS(1027, "Invalid status, must be ACTIVE or INACTIVE",HttpStatus.NOT_FOUND);
 
 
     //  ^---------------------

@@ -137,7 +137,6 @@ public class UrlMapping {
     public static final String GET_GUIDE_BY_ID = "/{id}";
     public static final String UPDATE_GUIDE = "/update/{id}";
     public static final String UPDATE_STATUS_GUIDE = "/updateStatus/{id}";
-    public static final String GUIDE_TOUR = "/guideTour/{id}";
     /* =========================== End Admin Guide API ===================================== */
 
     /* =========================== Start Admin Blog API ===================================== */
@@ -150,6 +149,17 @@ public class UrlMapping {
     public static final String UPLOAD_IMAGE = "/upload-images";
     public static final String DELETE_BLOG = "/delete/{id}";
     /* =========================== End Admin Blog API ===================================== */
+
+    /* =========================== Start Admin Rating API ===================================== */
+    public static final String ADMIN_RATING = API + "/admin/rating";
+    public static final String CREATE_RATING = "/create";
+    public static final String GET_ALL_RATINGS = "/all";
+    public static final String GET_RATING_BY_ID = "/{id}";
+    public static final String GET_RATING_BY_TOUR = "/allReviews";
+    public static final String UPDATE_STATUS_RATING = "/updateStatus/{id}";
+    public static final String DELETE_RATING = "/delete/{id}";
+    /* =========================== End Admin Rating API ===================================== */
+
 
     /* =========================== Start Other URL ===================================== */
     public static final String FE_URL = "http://localhost:3000";

@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Nationalized;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -29,6 +30,12 @@ public class Review extends BaseEntity {
 
     @Column(name = "rating", precision = 2, scale = 1)
     private BigDecimal rating;
+
+    @Size(max = 50)
+    @Nationalized
+    @ColumnDefault("'active'")
+    @Column(name = "status", length = 50)
+    private String status;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
