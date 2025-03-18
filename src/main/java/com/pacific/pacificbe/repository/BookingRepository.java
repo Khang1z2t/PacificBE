@@ -15,13 +15,13 @@ public interface BookingRepository extends JpaRepository<Booking, String>{
 //  doanh thu theo tháng
     @Query(value = """
         SELECT
-        MONTH(b.created_at) AS bookingMonth,
-        SUM(b.total_amount) AS totalRevenue
-            FROM booking b
+            MONTH(b.created_at) AS bookingMonth,
+            SUM(b.total_amount) AS totalRevenue
+        FROM booking b
         WHERE YEAR(b.created_at) = :years
-        AND (:bookingStatus IS NULL OR LOWER(b.booking_status) LIKE LOWER(CONCAT('%', :bookingStatus, '%')))
-        GROUP BY MONTH(b.created_at), YEAR(b.created_at), b.booking_status
-        ORDER BY bookingMonth
+            AND (:bookingStatus IS NULL OR LOWER(b.booking_status) LIKE LOWER(CONCAT('%', :bookingStatus, '%')))
+            GROUP BY MONTH(b.created_at), YEAR(b.created_at)
+            ORDER BY bookingMonth
         """, nativeQuery = true)
     List<Revenue> getMonthlyRevenue(
             @Param("years") String years,
@@ -35,8 +35,8 @@ public interface BookingRepository extends JpaRepository<Booking, String>{
             SUM(b.total_amount) AS total_revenue
         FROM booking b
         WHERE (:bookingStatus IS NULL OR LOWER(b.booking_status) LIKE LOWER(CONCAT('%', :bookingStatus, '%')))
-        GROUP BY year(b.created_at)
-        ORDER BY booking_year
+            GROUP BY year(b.created_at)
+            ORDER BY booking_year
         """, nativeQuery = true)
         List<Revenue> getYearlyRevenue(
                 @Param("bookingStatus") String bookingStatus
@@ -53,9 +53,9 @@ public interface BookingRepository extends JpaRepository<Booking, String>{
             FORMAT(b.created_at, 'yyyy-MM-dd') AS createdAt,
             b.user_id AS userId
         FROM tour_details td
-        LEFT JOIN booking b ON td.id = b.tour_detail_id
-        LEFT JOIN tour t ON t.id = td.tour_id
-        WHERE (:tourId IS NULL OR td.tour_id = :tourId)
+            LEFT JOIN booking b ON td.id = b.tour_detail_id
+            LEFT JOIN tour t ON t.id = td.tour_id
+            WHERE (:tourId IS NULL OR td.tour_id = :tourId)
             AND (:startDate IS NULL OR :endDate IS NULL
                 OR CAST(b.created_at AS DATE) BETWEEN :startDate AND :endDate)
         """, nativeQuery = true)
@@ -67,20 +67,20 @@ public interface BookingRepository extends JpaRepository<Booking, String>{
 
     //      Doanh thu theo từng tour và từng khách hàng
     @Query(value = """
-                SELECT
-                    b.id,
-                    t.id as tour_id,
-                    td.id as tour_detail_id,
-                    us.username,
-                    b.booking_status,
-                    b.total_amount,
-                    b.total_number,
-                    b.payment_method,
-                    FORMAT(b.created_at, 'yyyy-MM-dd') as created_at
-                FROM booking b
-                JOIN users us ON us.id = b.user_id
-                JOIN tour_details td ON td.id = b.tour_detail_id
-                JOIN tour t ON t.id = td.tour_id
+        SELECT
+            b.id,
+            t.id as tour_id,
+            td.id as tour_detail_id,
+            us.username,
+            b.booking_status,
+            b.total_amount,
+            b.total_number,
+            b.payment_method,
+            FORMAT(b.created_at, 'yyyy-MM-dd') as created_at
+        FROM booking b
+            JOIN users us ON us.id = b.user_id
+            JOIN tour_details td ON td.id = b.tour_detail_id
+            JOIN tour t ON t.id = td.tour_id
                 WHERE (:tourId IS NULL OR t.id = :tourId)
                   AND (:username IS NULL OR LOWER(us.username) LIKE LOWER(CONCAT('%', :username, '%')))
             """, nativeQuery = true)
