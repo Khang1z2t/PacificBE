@@ -8,4 +8,5 @@ public enum TourStatus {
     PUBLISHED,// Đã đăng
     UNAVAILABLE,// Không sử dụng
     CANCELLED,//
+    DELETED
 }

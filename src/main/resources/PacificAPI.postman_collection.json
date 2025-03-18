@@ -1955,6 +1955,9 @@
 						{
 							"name": "Thêm tour (test thêm ảnh ở postman) ở FE lưu ý tour request là model attribute nên xài qs lib",
 							"request": {
+								"auth": {
+									"type": "noauth"
+								},
 								"method": "POST",
 								"header": [
 									{
@@ -1970,14 +1973,46 @@
 									"mode": "formdata",
 									"formdata": [
 										{
-											"key": "request",
-											"value": "{\"title\":\"<string>\",\"description\":\"<string>\",\"duration\":\"<integer>\",\"categoryId\":\"<string>\",\"guideId\":\"<string>\",\"destinationId\":\"<string>\"}",
+											"key": "title",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "description",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "duration",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "categoryId",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "guideId",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "destinationId",
+											"value": "",
 											"type": "text"
 										},
 										{
 											"key": "thumbnail",
 											"type": "file",
-											"src": []
+											"src": [],
+											"disabled": true
+										},
+										{
+											"key": "images",
+											"type": "file",
+											"src": [],
+											"disabled": true
 										}
 									]
 								},
@@ -2051,8 +2086,11 @@
 							]
 						},
 						{
-							"name": "Thêm ảnh cho tour",
+							"name": "Thêm ảnh chính cho tour",
 							"request": {
+								"auth": {
+									"type": "noauth"
+								},
 								"method": "POST",
 								"header": [
 									{
@@ -2166,8 +2204,18 @@
 										"value": "*/*"
 									}
 								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "images",
+											"type": "file",
+											"src": []
+										}
+									]
+								},
 								"url": {
-									"raw": "{{baseUrl}}/api/tours/add-images/:id?images=<binary>&images=<binary>",
+									"raw": "{{baseUrl}}/api/tours/add-images/:id",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -2181,18 +2229,20 @@
 										{
 											"key": "images",
 											"value": "<binary>",
-											"description": "(Required) "
+											"description": "(Required) ",
+											"disabled": true
 										},
 										{
 											"key": "images",
 											"value": "<binary>",
-											"description": "(Required) "
+											"description": "(Required) ",
+											"disabled": true
 										}
 									],
 									"variable": [
 										{
 											"key": "id",
-											"value": "<string>",
+											"value": "5f67baaf-c83b-4f1a-8c0e-3ffdfa4a1b15",
 											"description": "(Required) "
 										}
 									]
@@ -2754,7 +2804,7 @@
 									"variable": [
 										{
 											"key": "id",
-											"value": "<string>",
+											"value": "5f67baaf-c83b-4f1a-8c0e-3ffdfa4a1b15",
 											"description": "(Required) "
 										}
 									]
@@ -3631,7 +3681,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"password\": \"<string>\",\n  \"username\": \"<string>\"\n}",
+									"raw": "{\n  \"password\": \"khang\",\n  \"username\": \"12345678\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"

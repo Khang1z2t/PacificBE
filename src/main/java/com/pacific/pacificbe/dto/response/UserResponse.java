@@ -33,5 +33,6 @@ public class UserResponse {
     Boolean active;
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
+    LocalDateTime deleteAt;
 
 }

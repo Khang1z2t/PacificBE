@@ -26,6 +26,25 @@ public class UrlMapping {
     public static final String OAUTH2_FACEBOOK_CALLBACK = "/oauth2/facebook/callback";
     /*============================ End auth API ===================================*/
 
+    /*============================ Start Transport API ===================================*/
+    public static final String TRANSPORTS = API + "/transports";
+    public static final String GET_ALL_TRANSPORTS = "/all";
+    public static final String GET_TRANSPORT_BY_ID = "/{id}";
+    public static final String ADD_TRANSPORT = "/add";
+    public static final String UPDATE_TRANSPORT = "/update";
+    public static final String DELETE_TRANSPORT = "/delete/{id}";
+
+    /*============================ End Transport API ===================================*/
+
+    /*============================ Start Hotel API ===================================*/
+    public static final String HOTELS = API + "/hotels";
+    public static final String GET_ALL_HOTELS = "/all";
+    public static final String GET_HOTEL_BY_ID = "/{id}";
+    public static final String ADD_HOTEL = "/add";
+    public static final String UPDATE_HOTEL = "/update";
+    public static final String DELETE_HOTEL = "/delete/{id}";
+
+    /*============================ End Hotel API ===================================*/
 
     /*============================ Start Tour API ===================================*/
     public static final String TOURS = API + "/tours";
@@ -38,8 +57,9 @@ public class UrlMapping {
     public static final String ADD_TOUR_IMAGES = "/add-images/{id}";
     public static final String GET_ALL_TOURS = "/all";
     public static final String ADD_TOUR = "/add";
-    public static final String UPDATE_TOUR = "/update";
+    public static final String UPDATE_TOUR = "/update/{id}";
     public static final String DELETE_TOUR = "/delete/{id}";
+    public static final String DELETE_FORCE_TOUR = "/delete/{id}/force";
     public static final String SEARCH_TOURS = "/search";
 
     /*============================ End Tour API ===================================*/
@@ -122,6 +142,7 @@ public class UrlMapping {
 
     /* =========================== Start Itinerary API ===================================== */
     public static final String ITINERARY = API + "/itinerary";
+    public static final String ITINERARY_ALL = "/all";
     public static final String ITINERARY_TOUR_AND_DATE = "/{tourId}/{createdDay}";
     /* =========================== End Itinerary API ===================================== */
 

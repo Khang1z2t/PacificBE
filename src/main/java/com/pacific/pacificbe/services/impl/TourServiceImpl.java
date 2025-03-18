@@ -2,6 +2,7 @@ package com.pacific.pacificbe.services.impl;
 
 import com.pacific.pacificbe.dto.request.CreateTourRequest;
 import com.pacific.pacificbe.dto.request.TourFilterRequest;
+import com.pacific.pacificbe.dto.request.UpdateTourRequest;
 import com.pacific.pacificbe.dto.response.TourByIdResponse;
 import com.pacific.pacificbe.dto.response.TourResponse;
 import com.pacific.pacificbe.exception.AppException;
@@ -23,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -129,6 +131,30 @@ public class TourServiceImpl implements TourService {
                 .orElseThrow(() -> new AppException(ErrorCode.TOUR_NOT_FOUND));
         addImagesToTour(images, tour);
         return tourMapper.toTourResponse(tour);
+    }
+
+    @Override
+    public TourResponse updateTour(String id, UpdateTourRequest request, MultipartFile thumbnail, MultipartFile[] images) {
+        return null;
+    }
+
+    @Override
+    public Boolean deleteTour(String id) {
+        Tour tour = tourRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.TOUR_NOT_FOUND));
+        tour.setActive(false);
+        tour.setDeleteAt(LocalDateTime.now());
+        tour.setStatus(TourStatus.DELETED.toString());
+        tourRepository.save(tour);
+        return true;
+    }
+
+    @Override
+    public Boolean deleteTourForce(String id) {
+        Tour tour = tourRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.TOUR_NOT_FOUND));
+        tourRepository.delete(tour);
+        return true;
     }
 
     private void addImagesToTour(MultipartFile[] images, Tour tour) {

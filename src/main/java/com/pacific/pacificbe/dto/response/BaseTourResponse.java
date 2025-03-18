@@ -33,4 +33,5 @@ public class BaseTourResponse {
     Boolean active;
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
+    LocalDateTime deleteAt;
 }
