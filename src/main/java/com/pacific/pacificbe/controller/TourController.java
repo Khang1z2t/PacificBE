@@ -19,6 +19,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -38,7 +39,7 @@ public class TourController {
             @RequestParam(required = false) BigDecimal minPrice,
             @RequestParam(required = false) BigDecimal maxPrice,
             @RequestParam(required = false) String categoryId
-            ) {
+    ) {
         return ResponseEntity.ok(
                 ApiResponse.<List<TourResponse>>builder()
                         .data(tourService.getAllTours(title, minPrice, maxPrice, categoryId))
@@ -91,6 +92,19 @@ public class TourController {
     public ResponseEntity<ApiResponse<TourResponse>> addTourImages(@PathVariable String id,
                                                                    @RequestParam("images") MultipartFile[] images) {
         return ResponseEntity.ok(new ApiResponse<>(200, "Hoàn thành", tourService.addTourImages(id, images)));
+    }
+
+    @DeleteMapping(UrlMapping.DELETE_TOUR)
+    @Operation(summary = "Xóa tour theo id (Xóa bình thường là set active = false)")
+    public ResponseEntity<Boolean> deleteTour(@PathVariable String id) {
+        return ResponseEntity.ok(tourService.deleteTour(id));
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @DeleteMapping(UrlMapping.DELETE_FORCE_TOUR)
+    @Operation(summary = "Xóa tour theo id (Xóa force là xóa tour đó bao gồm cả tour detail thuộc tour đó )")
+    public ResponseEntity<Boolean> deleteTourForce(@PathVariable String id) {
+        return ResponseEntity.ok(tourService.deleteTourForce(id));
     }
 
     @PostMapping(value = "/test-img", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

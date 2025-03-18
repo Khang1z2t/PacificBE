@@ -68,7 +68,7 @@ public class Tour extends BaseEntity {
     @OneToMany(mappedBy = "tour")
     private Set<Review> reviews = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "tour")
+    @OneToMany(mappedBy = "tour", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<TourDetail> tourDetails = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "tour")

@@ -21,6 +21,6 @@ public class ItineraryResponse {
 
     Boolean active;
     LocalDateTime createdAt;
-    LocalDateTime deleteAt;
     LocalDateTime updatedAt;
+    LocalDateTime deleteAt;
 }
