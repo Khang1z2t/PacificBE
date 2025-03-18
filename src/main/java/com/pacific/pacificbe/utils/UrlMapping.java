@@ -57,8 +57,9 @@ public class UrlMapping {
     public static final String ADD_TOUR_IMAGES = "/add-images/{id}";
     public static final String GET_ALL_TOURS = "/all";
     public static final String ADD_TOUR = "/add";
-    public static final String UPDATE_TOUR = "/update";
+    public static final String UPDATE_TOUR = "/update/{id}";
     public static final String DELETE_TOUR = "/delete/{id}";
+    public static final String DELETE_FORCE_TOUR = "/delete/{id}/force";
     public static final String SEARCH_TOURS = "/search";
 
     /*============================ End Tour API ===================================*/

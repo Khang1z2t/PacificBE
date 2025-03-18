@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Component
@@ -27,11 +28,7 @@ public class TourMapper {
     IdUtil idUtil;
 
     public Tour toTour(CreateTourRequest request) {
-        Tour tour = modelMapper.map(request, Tour.class);
-//        tour.setImages(request.getImages().stream()
-//                .map(imageUrl -> new Image(null, imageUrl))
-//                .collect(Collectors.toList()));
-        return tour;
+        return modelMapper.map(request, Tour.class);
     }
 
     public TourResponse toTourResponse(Tour tour) {
@@ -78,10 +75,16 @@ public class TourMapper {
             tourResponse.setDestination(tour.getDestination().getCountry());
         }
 
-        tourResponse.setRatingAvg(tour.getTourDetails().stream()
-                .mapToDouble(TourDetail::getRatingAvg)
-                .average()
-                .orElse(0.0));
+        if (tour.getTourDetails() != null) {
+            tourResponse.setRatingAvg(tour.getTourDetails().stream()
+                    .map(TourDetail::getRatingAvg)
+                    .filter(Objects::nonNull)
+                    .mapToDouble(Double::doubleValue)
+                    .average()
+                    .orElse(0.0));
+        } else {
+            tourResponse.setRatingAvg(0.0);
+        }
 
         List<TourDetail> activeTourDetails = tour.getTourDetails().stream()
                 .filter(TourDetail::isActive)

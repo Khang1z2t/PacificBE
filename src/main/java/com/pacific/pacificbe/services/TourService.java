@@ -2,6 +2,7 @@ package com.pacific.pacificbe.services;
 
 import com.pacific.pacificbe.dto.request.CreateTourRequest;
 import com.pacific.pacificbe.dto.request.TourFilterRequest;
+import com.pacific.pacificbe.dto.request.UpdateTourRequest;
 import com.pacific.pacificbe.dto.response.TourByIdResponse;
 import com.pacific.pacificbe.dto.response.TourResponse;
 import com.pacific.pacificbe.dto.response.showTour.ItineraryTourDetailResponse;
@@ -26,4 +27,10 @@ public interface TourService {
     TourResponse addTourThumbnail(String id, MultipartFile thumbnail);
 
     TourResponse addTourImages(String id, MultipartFile[] images);
+
+    TourResponse updateTour(String id, UpdateTourRequest request, MultipartFile thumbnail, MultipartFile[] images);
+
+    Boolean deleteTour(String id);
+
+    Boolean deleteTourForce(String id);
 }

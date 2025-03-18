@@ -24,6 +24,8 @@ public interface TourDetailRepository extends JpaRepository<TourDetail, String> 
         td.tour_id
     FROM tour_details td
     WHERE td.tour_id = :tourId OR LOWER(td.tour_id) LIKE LOWER(CONCAT('%', :tourId, '%'))
+    AND td.status = 'ACTIVE'
+    GROUP BY td.tour_id, FORMAT(td.created_at, 'yyyy-MM'),td.status
     """, nativeQuery = true)
     List<DetailTourResponse> getTourDetailMonth(
             String tourId
@@ -32,11 +34,12 @@ public interface TourDetailRepository extends JpaRepository<TourDetail, String> 
     //Tìm ngày tour theo id tour
     @Query(value = """
     SELECT
-    FORMAT(td.created_at, 'dd') AS createdDay,
-    td.id
+        FORMAT(td.created_at, 'dd') AS createdDay,
+        td.id
     FROM tour_details td
     WHERE td.tour_id = :tourId
     AND MONTH(td.created_at) = :months
+    AND td.status = 'ACTIVE'
     """, nativeQuery = true)
     List<DetailTourResponse> getTourDetailDay(
             String tourId,
