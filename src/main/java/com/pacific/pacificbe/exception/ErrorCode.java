@@ -62,7 +62,12 @@ public enum ErrorCode {
 
     // Review Errors
     RATING_NOT_FOUND(1026, "Rating not found",HttpStatus.NOT_FOUND),
-    INVALID_RATING_STATUS(1027, "Invalid status, must be ACTIVE or INACTIVE",HttpStatus.NOT_FOUND);
+    INVALID_RATING_STATUS(1027, "Invalid status, must be ACTIVE or INACTIVE",HttpStatus.NOT_FOUND),
+
+    // Voucher Errors
+    VOUCHER_NOT_FOUND(1028, "Voucher not found",HttpStatus.NOT_FOUND),
+    INVALID_VOUCHER_STATUS(1029, "Invalid status, must be ACTIVE or INACTIVE",HttpStatus.NOT_FOUND),
+    INVALID_DATE_RANGE(1030, "Invalid date range",HttpStatus.NOT_FOUND);
 
 
     //  ^---------------------

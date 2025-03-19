@@ -181,6 +181,17 @@ public class UrlMapping {
     public static final String DELETE_RATING = "/delete/{id}";
     /* =========================== End Admin Rating API ===================================== */
 
+    /* =========================== Start Admin Voucher API ===================================== */
+    public static final String ADMIN_VOUCHER = API + "/admin/voucher";
+    public static final String CREATE_VOUCHER = "/create";
+    public static final String GET_ALL_VOUCHERS = "/all";
+    public static final String GET_VOUCHER_BY_ID = "/{id}";
+    public static final String GET_VOUCHER_BY_CODE = "/codeVoucher";
+    public static final String UPDATE_VOUCHER = "/update/{id}";
+    public static final String UPDATE_STATUS_VOUCHER = "/updateStatus/{id}";
+    public static final String DELETE_VOUCHER = "/delete/{id}";
+    /* =========================== End Admin Voucher API ===================================== */
+
 
     /* =========================== Start Other URL ===================================== */
     public static final String FE_URL = "http://localhost:3000";
