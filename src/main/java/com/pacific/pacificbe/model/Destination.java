@@ -6,6 +6,8 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Nationalized;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -51,6 +53,7 @@ public class Destination {
     private String region;
 
     @OneToMany(mappedBy = "destination")
+    @JsonIgnore
     private Set<Tour> tours = new LinkedHashSet<>();
 
 }

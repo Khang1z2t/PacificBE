@@ -5,19 +5,18 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class GuideRequest {
-    private String address;
-    private String email;
-    private Integer experienceYears;
-    private String firstName;
-    private String lastName;
-    private String phone;
+public class ReviewRequest {
+    private String comment;
+    private BigDecimal rating;
+    private String userId;
+    private String tourId;
 
     @Builder.Default
     private String status = "active";

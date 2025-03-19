@@ -157,4 +157,13 @@ public class UrlMapping {
     public static final String GOOGLE_REDIRECT = FE_URL + "/google/redirect";
     /* =========================== End Other URL ===================================== */
 
+    /* =========================== Start Destination API ===================================== */
+    public static final String DESTINATION = API + "/destinations";
+    public static final String GET_ALL_DESTINATIONS = "/all";
+    public static final String CREATE_DESTINATION = "/create";
+    public static final String GET_DESTINATION_BY_ID = "/{id}";
+    public static final String UPDATE_DESTINATION = "/update/{id}";
+    public static final String DELETE_DESTINATION = "/delete/{id}";
+    /* =========================== End Destination API ===================================== */
+
 }

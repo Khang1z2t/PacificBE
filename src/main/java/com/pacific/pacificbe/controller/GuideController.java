@@ -48,7 +48,7 @@ public class GuideController {
             summary = "Lấy danh sách Guide",
             description = "Trả về danh sách tất cả các guide"
     )
-    @GetMapping(UrlMapping.GET_ALL_GUIDE)
+    @GetMapping(UrlMapping.GET_ALL_GUIDES)
     public ResponseEntity<ApiResponse<List<GuideResponse>>> getAllGuides() {
         List<GuideResponse> response = guideService.getAllGuides();
         return ResponseEntity.ok(ApiResponse.<List<GuideResponse>>builder().data(response).build());
