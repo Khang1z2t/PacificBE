@@ -133,10 +133,10 @@ public class UrlMapping {
 
     /* =========================== Start Guide API ===================================== */
     public static final String GUIDE = API + "/guide";
-//    public static final String GET_ALL_GUIDES = "/all";
-//    public static final String CREATE_GUIDE = "/create";
-//    public static final String GET_GUIDE_BY_ID = "/{id}";
-//    public static final String UPDATE_GUIDE = "/update/{id}";
+    public static final String GET_ALL_GUIDE = "/all";
+    public static final String CREATE_GUIDE = "/create";
+    public static final String GET_GUIDE_BY_ID = "/{id}";
+    public static final String UPDATE_GUIDE = "/update/{id}";
     public static final String DELETE_GUIDE = "/delete/{id}";
     /* =========================== End Guide API ===================================== */
 
@@ -147,56 +147,23 @@ public class UrlMapping {
     /* =========================== End Itinerary API ===================================== */
 
     /* =========================== Start Admin User API ===================================== */
+    public static final String ADD_USER = "/create";
     public static final String UPDATE_USER = "/update/{id}";
     public static final String UPDATE_STATUS_USER = "/updateStatus/{id}";
     /* =========================== End Admin User API ===================================== */
-
-    /* =========================== Start Admin Guide API ===================================== */
-    public static final String ADMIN_GUIDE = API + "/admin/guide";
-    public static final String GET_ALL_GUIDES = "/all";
-    public static final String CREATE_GUIDE = "/create";
-    public static final String GET_GUIDE_BY_ID = "/{id}";
-    public static final String UPDATE_GUIDE = "/update/{id}";
-    public static final String UPDATE_STATUS_GUIDE = "/updateStatus/{id}";
-    /* =========================== End Admin Guide API ===================================== */
-
-    /* =========================== Start Admin Blog API ===================================== */
-    public static final String ADMIN_BLOG = API + "/admin/blog";
-    public static final String GET_ALL_BLOGS = "/all";
-    public static final String GET_BLOG_BY_TITLE = "/title";;
-    public static final String CREATE_BLOG = "/create";
-    public static final String UPDATE_BLOG = "/update/{id}";
-    public static final String UPDATE_STATUS_BLOG = "/updateStatus/{id}";
-    public static final String UPLOAD_IMAGE = "/upload-images";
-    public static final String DELETE_BLOG = "/delete/{id}";
-    /* =========================== End Admin Blog API ===================================== */
-
-    /* =========================== Start Admin Rating API ===================================== */
-    public static final String ADMIN_RATING = API + "/admin/rating";
-    public static final String CREATE_RATING = "/create";
-    public static final String GET_ALL_RATINGS = "/all";
-    public static final String GET_RATING_BY_ID = "/{id}";
-    public static final String GET_RATING_BY_TOUR = "/allReviews";
-    public static final String UPDATE_STATUS_RATING = "/updateStatus/{id}";
-    public static final String DELETE_RATING = "/delete/{id}";
-    /* =========================== End Admin Rating API ===================================== */
-
-    /* =========================== Start Admin Voucher API ===================================== */
-    public static final String ADMIN_VOUCHER = API + "/admin/voucher";
-    public static final String CREATE_VOUCHER = "/create";
-    public static final String GET_ALL_VOUCHERS = "/all";
-    public static final String GET_VOUCHER_BY_ID = "/{id}";
-    public static final String GET_VOUCHER_BY_CODE = "/codeVoucher";
-    public static final String UPDATE_VOUCHER = "/update/{id}";
-    public static final String UPDATE_STATUS_VOUCHER = "/updateStatus/{id}";
-    public static final String DELETE_VOUCHER = "/delete/{id}";
-    /* =========================== End Admin Voucher API ===================================== */
-
 
     /* =========================== Start Other URL ===================================== */
     public static final String FE_URL = "http://localhost:3000";
     public static final String GOOGLE_REDIRECT = FE_URL + "/google/redirect";
     /* =========================== End Other URL ===================================== */
 
+    /* =========================== Start Destination API ===================================== */
+    public static final String DESTINATION = API + "/destinations";
+    public static final String GET_ALL_DESTINATIONS = "/all";
+    public static final String CREATE_DESTINATION = "/create";
+    public static final String GET_DESTINATION_BY_ID = "/{id}";
+    public static final String UPDATE_DESTINATION = "/update/{id}";
+    public static final String DELETE_DESTINATION = "/delete/{id}";
+    /* =========================== End Destination API ===================================== */
 
 }
