@@ -47,12 +47,10 @@ public class BlogServiceImpl implements BlogService {
             List<Image> images = request.getImageUrls().stream().map(url -> {
                 Image image = new Image();
                 image.setImageUrl(url);
-                image.setBlog(savedBlog); // Dùng biến final
                 return image;
             }).collect(Collectors.toList());
 
             imageRepository.saveAll(images);
-            savedBlog.setImages(images);
         }
 
         return blogMapper.toBlogResponse(savedBlog);
@@ -85,8 +83,6 @@ public class BlogServiceImpl implements BlogService {
         blog.setStatus(BlogStatus.valueOf(request.getStatus()));
 
         // Xóa ảnh cũ trong DB
-        imageRepository.deleteAll(blog.getImages());
-        blog.getImages().clear();
 
         final Blog savedBlog = blog;
 
@@ -95,12 +91,10 @@ public class BlogServiceImpl implements BlogService {
             List<Image> images = request.getImageUrls().stream().map(url -> {
                 Image image = new Image();
                 image.setImageUrl(url);
-                image.setBlog(savedBlog); // Sử dụng biến final
                 return image;
             }).collect(Collectors.toList());
 
             imageRepository.saveAll(images);
-            savedBlog.setImages(images);
         }
 
         // Lưu thay đổi vào DB
@@ -125,7 +119,6 @@ public class BlogServiceImpl implements BlogService {
                 .orElseThrow(() -> new AppException(ErrorCode.BLOG_NOT_FOUND));
 
         // Xóa ảnh trước
-        imageRepository.deleteAll(blog.getImages());
 
         blogRepository.delete(blog);
     }

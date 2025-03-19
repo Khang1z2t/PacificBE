@@ -31,9 +31,6 @@ public class Blog extends BaseEntity {
     @Column(name = "title", nullable = false)
     private String title;
 
-    @OneToMany(mappedBy = "blog", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Image> images = new ArrayList<>();
-
     @NotNull
     @Nationalized
     @Lob

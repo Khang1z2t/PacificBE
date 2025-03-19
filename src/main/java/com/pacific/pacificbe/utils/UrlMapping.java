@@ -165,10 +165,12 @@ public class UrlMapping {
     public static final String UPDATE_DESTINATION = "/update/{id}";
     public static final String DELETE_DESTINATION = "/delete/{id}";
     /* =========================== End Destination API ===================================== */
+
+
     /* =========================== Start Admin Guide API ===================================== */
     public static final String ADMIN_GUIDE = API + "/admin/guide";
     public static final String GET_ALL_GUIDES = "/all";
-    //    public static final String CREATE_GUIDE = "/create";
+//    public static final String CREATE_GUIDE = "/create";
 //    public static final String GET_GUIDE_BY_ID = "/{id}";
 //    public static final String UPDATE_GUIDE = "/update/{id}";
     public static final String UPDATE_STATUS_GUIDE = "/updateStatus/{id}";
