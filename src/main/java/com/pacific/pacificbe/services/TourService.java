@@ -30,7 +30,7 @@ public interface TourService {
 
     TourResponse updateTour(String id, UpdateTourRequest request, MultipartFile thumbnail, MultipartFile[] images);
 
-    Boolean deleteTour(String id);
+    Boolean deleteTour(String id,boolean active);
 
     Boolean deleteTourForce(String id);
 }

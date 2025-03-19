@@ -139,12 +139,16 @@ public class TourServiceImpl implements TourService {
     }
 
     @Override
-    public Boolean deleteTour(String id) {
+    public Boolean deleteTour(String id, boolean active) {
         Tour tour = tourRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.TOUR_NOT_FOUND));
-        tour.setActive(false);
+        tour.setActive(active);
         tour.setDeleteAt(LocalDateTime.now());
-        tour.setStatus(TourStatus.DELETED.toString());
+        if (active) {
+            tour.setStatus(TourStatus.PUBLISHED.toString());
+        } else {
+            tour.setStatus(TourStatus.UNAVAILABLE.toString());
+        }
         tourRepository.save(tour);
         return true;
     }
