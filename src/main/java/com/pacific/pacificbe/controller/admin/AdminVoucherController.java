@@ -48,7 +48,6 @@ public class AdminVoucherController {
                 .orElseThrow(() -> new AppException(ErrorCode.VOUCHER_NOT_FOUND));
     }
 
-
     @PostMapping(UrlMapping.CREATE_VOUCHER)
     @Operation(summary = "Thêm voucher")
     public ResponseEntity<ApiResponse<VoucherResponse>> createVoucher(@RequestBody VoucherRequest request) {
@@ -58,6 +57,7 @@ public class AdminVoucherController {
     @PutMapping(UrlMapping.UPDATE_VOUCHER)
     @Operation(summary = "Cập nhật voucher")
     public ResponseEntity<ApiResponse<VoucherResponse>> updateVoucher(@PathVariable String id, @RequestBody VoucherRequest request) {
+        System.out.println("Updating voucher with ID: " + id);
         return ResponseEntity.ok(new ApiResponse<>(200, "Cập nhật thành công", voucherService.updateVoucher(id, request)));
     }
 
