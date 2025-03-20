@@ -1,6 +1,7 @@
 package com.pacific.pacificbe.repository;
 
 import com.pacific.pacificbe.dto.response.showTour.ItineraryTourDetailResponse;
+import com.pacific.pacificbe.dto.response.showTour.TourBookingCount;
 import com.pacific.pacificbe.model.Tour;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -26,6 +27,21 @@ public interface TourRepository extends JpaRepository<Tour, String> {
                                   @Param("categoryId") String categoryId);
 
     List<Tour> findToursByActiveIsTrue();
+
+    @Query(value = """
+            select
+            	COUNT(t.id) as bookingCount,
+            	td.id as detailID,
+            	t.id as tourID
+            from tour t
+            	join tour_details td on t.id = td.tour_id
+            	join booking b on td.id = b.tour_detail_id
+            	join users us on us.id = b.user_id
+            where :tourId IS NULL OR t.id = :tourId
+            	group by t.id, td.id
+            	order by t.id asc
+            """, nativeQuery = true)
+    List<TourBookingCount> findTourBookingCounts(@Param("tourId") String tourId);
 
     @Procedure(procedureName = "FineTourCategory")
     List<Tour> findTourCategory(@Param("category") String category);

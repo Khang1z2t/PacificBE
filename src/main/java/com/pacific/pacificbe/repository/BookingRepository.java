@@ -44,23 +44,28 @@ public interface BookingRepository extends JpaRepository<Booking, String>{
 
 //      Doanh thu tour theo thời gian ...
         @Query(value = """
-        SELECT
-            td.id AS tourDetailId,
-            t.id AS tourId,
-            t.title AS tourTitle,
-            b.total_amount AS totalAmount,
-            b.total_number AS totalNumber,
-            FORMAT(b.created_at, 'yyyy-MM-dd') AS createdAt,
-            b.user_id AS userId
-        FROM tour_details td
-            LEFT JOIN booking b ON td.id = b.tour_detail_id
-            LEFT JOIN tour t ON t.id = td.tour_id
-            WHERE (:tourId IS NULL OR td.tour_id = :tourId)
-            AND (:startDate IS NULL OR :endDate IS NULL
-                OR CAST(b.created_at AS DATE) BETWEEN :startDate AND :endDate)
+            SELECT
+                t.id AS tour_id,
+                td.id AS tour_detail_id,
+                SUM(b.total_amount) AS tourRevenue,
+                FORMAT(b.created_at, 'dd/MM/yyyy') AS booking_date,
+                b.booking_status
+            FROM tour t
+                JOIN tour_details td ON t.id = td.tour_id
+                JOIN booking b ON td.id = b.tour_detail_id
+            WHERE
+                (:tourId IS NULL OR t.id = :tourId)
+                AND (:bookingStatus IS NULL OR b.booking_status = :bookingStatus)
+                AND (:startDate IS NULL OR :endDate IS NULL
+                OR b.created_at BETWEEN :startDate AND :endDate)
+            GROUP BY
+                td.id, t.id, FORMAT(b.created_at, 'dd/MM/yyyy'), b.booking_status
+            ORDER BY
+                booking_date ASC
         """, nativeQuery = true)
     List<BookingRevenueReportDTO> getTourBookingsRevenue(
                 @Param("tourId") String tourId,
+                @Param("bookingStatus") String bookingStatus,
                 @Param("startDate") LocalDate startDate,
                 @Param("endDate") LocalDate endDate
         );
@@ -82,8 +87,8 @@ public interface BookingRepository extends JpaRepository<Booking, String>{
             JOIN tour_details td ON td.id = b.tour_detail_id
             JOIN tour t ON t.id = td.tour_id
                 WHERE (:tourId IS NULL OR t.id = :tourId)
-                  AND (:username IS NULL OR LOWER(us.username) LIKE LOWER(CONCAT('%', :username, '%')))
-            """, nativeQuery = true)
+                AND (:username IS NULL OR LOWER(us.username) LIKE LOWER(CONCAT('%', :username, '%')))
+        """, nativeQuery = true)
     List<TourAndBookReport> getTourAndBooking(
             @Param("tourId") String tourId,
             @Param("username") String username

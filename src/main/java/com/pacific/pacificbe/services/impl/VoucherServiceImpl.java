@@ -1,14 +1,11 @@
 package com.pacific.pacificbe.services.impl;
 
-import com.pacific.pacificbe.dto.request.GuideRequest;
 import com.pacific.pacificbe.dto.request.UpdateStatusVoucherRequest;
 import com.pacific.pacificbe.dto.request.VoucherRequest;
-import com.pacific.pacificbe.dto.response.GuideResponse;
 import com.pacific.pacificbe.dto.response.VoucherResponse;
 import com.pacific.pacificbe.exception.AppException;
 import com.pacific.pacificbe.exception.ErrorCode;
 import com.pacific.pacificbe.mapper.VoucherMapper;
-import com.pacific.pacificbe.model.Guide;
 import com.pacific.pacificbe.model.Voucher;
 import com.pacific.pacificbe.repository.VoucherRepository;
 import com.pacific.pacificbe.services.VoucherService;
@@ -66,35 +63,26 @@ public class VoucherServiceImpl implements VoucherService {
             throw new IllegalArgumentException("Tên và mã voucher không được để trống!");
         }
 
-        // Tạo Voucher mới
         Voucher voucher = new Voucher();
         voucher.setNameVoucher(request.getNameVoucher());
         voucher.setCodeVoucher(request.getCodeVoucher());
-
-        // Xử lý discount (Dùng BigDecimal)
         BigDecimal discount = request.getDiscount() != null ? request.getDiscount() : BigDecimal.ZERO;
         voucher.setDiscount(discount);
-
-        // Xử lý quantity
         int quantity = request.getQuantity() != null ? request.getQuantity() : 0;
         voucher.setQuantity(quantity);
-
-        // Xử lý status
         voucher.setStatus(request.getStatus() != null ? request.getStatus() : "pending");
 
         // Chuyển đổi LocalDate từ request
         LocalDate startDate = request.getStartDate() != null ? request.getStartDate() : LocalDate.now();
         LocalDate endDate = request.getEndDate() != null ? request.getEndDate() : LocalDate.now();
-
         voucher.setStartDate(startDate);
         voucher.setEndDate(endDate);
 
-        // Lưu vào database
+        // Lưu vào DB
         Voucher savedVoucher = voucherRepository.saveAndFlush(voucher);
         if (savedVoucher == null || savedVoucher.getId() == null) {
             throw new IllegalStateException("Không thể tạo voucher, dữ liệu bị null!");
         }
-
         log.info("Tạo voucher với id: {}", savedVoucher.getId());
 
         // Trả về VoucherResponse
@@ -120,9 +108,7 @@ public class VoucherServiceImpl implements VoucherService {
     public VoucherResponse updateStatus(String id, UpdateStatusVoucherRequest request) {
         Voucher voucher = voucherRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.VOUCHER_NOT_FOUND));
-
         String newStatus = request.getStatus();
-
         if (newStatus != null && !newStatus.trim().isEmpty()) {
             try {
                 voucher.setStatus(VoucherStatus.valueOf(newStatus.toUpperCase()).name());
@@ -134,46 +120,46 @@ public class VoucherServiceImpl implements VoucherService {
             VoucherStatus currentStatus = VoucherStatus.valueOf(voucher.getStatus().toUpperCase());
             voucher.setStatus(currentStatus == VoucherStatus.ACTIVE ? VoucherStatus.INACTIVE.name() : VoucherStatus.ACTIVE.name());
         }
-
         // Cập nhật DB
         voucherRepository.save(voucher);
         log.info("Updated voucher [{}] to status: {}", id, voucher.getStatus());
-
         return voucherMapper.toResponse(voucher);
     }
 
     @Override
     public VoucherResponse updateVoucher(String id, VoucherRequest request) {
-        // Tìm voucher cũ
+        if (id == null || id.trim().isEmpty()) {
+            log.warn("ID voucher không hợp lệ: null hoặc rỗng!");
+            throw new AppException(ErrorCode.INVALID_ID);
+        }
+        log.info("Kiểm tra voucher với ID: {}", id);
         Voucher voucher = voucherRepository.findById(id)
-                .orElseThrow(() -> new AppException(ErrorCode.VOUCHER_NOT_FOUND));
+                .orElseThrow(() -> {
+                    log.error("Không tìm thấy voucher với ID: {}", id);
+                    return new AppException(ErrorCode.VOUCHER_NOT_FOUND);
+                });
+        log.info("Tìm thấy voucher: {}", voucher);
 
+        // Cập nhật voucher
         voucher.setNameVoucher(request.getNameVoucher());
         voucher.setCodeVoucher(request.getCodeVoucher());
         voucher.setDiscount(request.getDiscount());
         voucher.setQuantity(request.getQuantity());
         voucher.setStatus(request.getStatus());
 
-        // Validate startDate và endDate
+        // Kiểm tra ngày hợp lệ
         if (request.getStartDate() != null && request.getEndDate() != null) {
             if (request.getEndDate().isBefore(request.getStartDate())) {
-                throw new AppException(ErrorCode.INVALID_DATE_RANGE);
-            }
-            if (request.getStartDate().isBefore(LocalDate.now())) {
+                log.warn("Ngày kết thúc không thể nhỏ hơn ngày bắt đầu!");
                 throw new AppException(ErrorCode.INVALID_DATE_RANGE);
             }
             voucher.setStartDate(request.getStartDate());
             voucher.setEndDate(request.getEndDate());
-        } else {
-            // Giữ nguyên giá trị cũ nếu không có dữ liệu mới
-            Optional.ofNullable(request.getStartDate()).ifPresent(voucher::setStartDate);
-            Optional.ofNullable(request.getEndDate()).ifPresent(voucher::setEndDate);
         }
 
-        // Lưu vào DB
+        // Lưu voucher sau khi cập nhật
         Voucher updatedVoucher = voucherRepository.save(voucher);
-
-        // Trả về response
+        log.info("Cập nhật thành công voucher với ID: {}", id);
         return voucherMapper.toResponse(updatedVoucher);
     }
 }

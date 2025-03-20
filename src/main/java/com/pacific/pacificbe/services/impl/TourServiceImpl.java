@@ -5,6 +5,7 @@ import com.pacific.pacificbe.dto.request.TourFilterRequest;
 import com.pacific.pacificbe.dto.request.UpdateTourRequest;
 import com.pacific.pacificbe.dto.response.TourByIdResponse;
 import com.pacific.pacificbe.dto.response.TourResponse;
+import com.pacific.pacificbe.dto.response.showTour.TourBookingCount;
 import com.pacific.pacificbe.exception.AppException;
 import com.pacific.pacificbe.exception.ErrorCode;
 import com.pacific.pacificbe.mapper.TourMapper;
@@ -175,4 +176,8 @@ public class TourServiceImpl implements TourService {
         tour.setImages(imageSet);
     }
 
+    @Override
+    public List<TourBookingCount> getTourBookingCounts(String tourId) {
+        return tourRepository.findTourBookingCounts(tourId);
+    }
 }

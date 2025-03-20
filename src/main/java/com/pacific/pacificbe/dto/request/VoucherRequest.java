@@ -1,5 +1,7 @@
 package com.pacific.pacificbe.dto.request;
 
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.FutureOrPresent;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,9 +26,10 @@ public class VoucherRequest {
     @Builder.Default
     private Boolean active = true;
 
-    @Builder.Default
-    private LocalDate startDate = LocalDate.now();
 
-    @Builder.Default
-    private LocalDate endDate = LocalDate.now();
+    @FutureOrPresent(message = "Ngày bắt đầu phải từ hôm nay trở đi")
+    private LocalDate startDate;
+
+    @Future(message = "Ngày kết thúc phải sau ngày bắt đầu")
+    private LocalDate endDate;
 }

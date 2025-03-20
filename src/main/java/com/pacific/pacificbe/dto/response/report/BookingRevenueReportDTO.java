@@ -12,11 +12,9 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BookingRevenueReportDTO {
-    private String tourDetailId;
     private String tourId;
-    private String tourTitle;
-    private BigDecimal totalAmount;
-    private Integer totalNumber;
-    private String createdAt;
-    private String  userId;
+    private String tourDetailId;
+    private BigDecimal tourRevenue;
+    private String bookingDate;
+    private String bookingStatus;
 }
