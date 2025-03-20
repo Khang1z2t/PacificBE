@@ -1,7 +1,9 @@
 package com.pacific.pacificbe.services.impl;
 
+import com.pacific.pacificbe.dto.response.WishlistResponse;
 import com.pacific.pacificbe.exception.AppException;
 import com.pacific.pacificbe.exception.ErrorCode;
+import com.pacific.pacificbe.mapper.WishlistMapper;
 import com.pacific.pacificbe.model.Tour;
 import com.pacific.pacificbe.model.User;
 import com.pacific.pacificbe.model.Wishlist;
@@ -23,28 +25,47 @@ public class WishlistServiceImpl implements WishlistService {
     private final WishlistRepository wishlistRepository;
     private final UserRepository userRepository;
     private final TourRepository tourRepository;
+    private final WishlistMapper wishlistMapper;
 
     @Override
-    public List<Wishlist> addWishlist(String id) {
+    public WishlistResponse addWishlist(String id) {
         String userId = AuthenUtils.getCurrentUserId();
+        if (userId == null) {
+            throw new AppException(ErrorCode.NEED_LOGIN);
+        }
         Wishlist wishlist = new Wishlist();
-        Tour tour = tourRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.TOUR_NOT_FOUND));
-        assert userId != null;
-        var user = userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
-
+        Tour tour = tourRepository.findById(id).orElseThrow(
+                () -> new AppException(ErrorCode.TOUR_NOT_FOUND));
+        var user = userRepository.findById(userId).orElseThrow(
+                () -> new AppException(ErrorCode.USER_NOT_FOUND));
         wishlist.setTour(tour);
         wishlist.setUser(user);
         wishlistRepository.save(wishlist);
-        return wishlistRepository.findAll();
+        return wishlistMapper.toWishlistResponse(wishlist);
     }
 
     @Override
-    public List<Wishlist> getAllWishlist() {
-        return wishlistRepository.findAll();
+    public List<WishlistResponse> getAllWishlistByUser() {
+        String userId = AuthenUtils.getCurrentUserId();
+        if (userId == null) {
+            throw new AppException(ErrorCode.NEED_LOGIN);
+        }
+        var user = userRepository.findById(userId).orElseThrow(
+                () -> new AppException(ErrorCode.USER_NOT_FOUND));
+        List<Wishlist> wishlists = wishlistRepository.findAllByUser(user);
+        return wishlistMapper.toWishlistResponseList(wishlists);
     }
 
+
     @Override
-    public void deleteWishlist(String id) {
-        wishlistRepository.deleteById(id);
+    public Boolean deleteWishlist(String id) {
+        String userId = AuthenUtils.getCurrentUserId();
+        if (userId == null) {
+            throw new AppException(ErrorCode.NEED_LOGIN);
+        }
+        var user = userRepository.findById(userId).orElseThrow(
+                () -> new AppException(ErrorCode.USER_NOT_FOUND));
+        wishlistRepository.deleteByIdAndUser(id, user);
+        return true;
     }
 }

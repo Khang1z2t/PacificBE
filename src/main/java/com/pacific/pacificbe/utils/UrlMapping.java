@@ -102,7 +102,7 @@ public class UrlMapping {
 
     /*============================ Start Wishlist API ===================================*/
     public static final String WISHLIST = API + "/wishlist";
-    public static final String ADD_WISHLIST = "/add";
+    public static final String ADD_WISHLIST = "/add/{id}";
     public static final String GET_ALL_WISHLIST = "/all";
     public static final String DELETE_WISHLIST = "/delete/{id}";
     /*============================ End Wishlist API ===================================*/

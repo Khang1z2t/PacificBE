@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(UrlMapping.ITINERARY)
 @RequiredArgsConstructor
+@RequestMapping(UrlMapping.ITINERARY)
 public class ItineraryController {
     private final ItineraryService itineraryService;
 
