@@ -46,9 +46,10 @@ public class BookingController {
     @Operation(summary = "xuất báo cáo doanh thu tour theo thời gian")
     public ResponseEntity<List<BookingRevenueReportDTO>> getTourBookingsRevenue(
             @RequestParam(required = false) String tourId,
+            @RequestParam(required = false) String bookingStatus,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
-        List<BookingRevenueReportDTO> revenue = bookingService.getTourBookingsRevenueReport(tourId, startDate, endDate);
+        List<BookingRevenueReportDTO> revenue = bookingService.getTourBookingsRevenueReport(tourId, bookingStatus, startDate, endDate);
         return ResponseEntity.ok(revenue);
     }
 

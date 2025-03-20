@@ -25,6 +25,9 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "users")
+//@NamedQueries({
+//        @NamedQuery(name = "User.findByEmail", query = "select u from User u where u.email = :email")
+//})
 public class User extends BaseEntity implements UserDetails {
     @Id
     @Size(max = 255)

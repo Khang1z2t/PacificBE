@@ -15,6 +15,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -32,6 +33,7 @@ public class TourDetailServiceImpl implements TourDetailService {
     private final ItineraryRepository itineraryRepository;
 
     @Override
+    @Transactional
     public TourDetailResponse addTourDetail(CreateTourDetailRequest request) {
         Tour tour = tourRepository.findById(request.getTourId()).orElse(null);
 //        Combo combo = comboRepository.findById(request.getComboId()).orElse(null);
@@ -39,18 +41,20 @@ public class TourDetailServiceImpl implements TourDetailService {
 //        Transport transport = transportRepository.findById(request.getTransportId()).orElse(null);
 
         TourDetail tourDetail = new TourDetail();
-        tourDetail.setTitle(request.getTitle());
-        tourDetail.setDescriptions(request.getDescriptions());
         tourDetail.setPriceAdults(request.getPriceAdults());
         tourDetail.setPriceChildren(request.getPriceChildren());
         tourDetail.setStartDate(request.getStartDate());
         tourDetail.setEndDate(request.getEndDate());
         tourDetail.setQuantity(request.getQuantity());
         tourDetail.setTour(tour);
+        Hotel hotel = hotelRepository.findById(request.getHotelId())
+                .orElseThrow(() -> new AppException(ErrorCode.HOTEL_NOT_FOUND));
+        tourDetail.setHotel(hotel);
+        Transport transport = transportRepository.findById(request.getTransportId())
+                .orElseThrow(() -> new AppException(ErrorCode.TRANSPORT_NOT_FOUND));
+        tourDetail.setTransport(transport);
+        tourDetail.setActive(true);
         tourDetail = tourDetailRepository.save(tourDetail);
-//        tourDetail.setCombo(combo);
-//        tourDetail.setHotel(hotel);
-//        tourDetail.setTransport(transport);
 
         for (CreateItineraryRequest itineraryRequest : request.getItineraries()) {
             Itinerary itinerary = new Itinerary();
@@ -91,6 +95,6 @@ public class TourDetailServiceImpl implements TourDetailService {
 
     @Override
     public List<DetailTourResponse> getTourDetailDay(String tourId, String months) {
-        return tourDetailRepository.getTourDetailDay(tourId,months);
+        return tourDetailRepository.getTourDetailDay(tourId, months);
     }
 }

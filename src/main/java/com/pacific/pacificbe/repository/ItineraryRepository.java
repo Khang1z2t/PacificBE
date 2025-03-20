@@ -11,6 +11,9 @@ import java.util.List;
 
 @Repository
 public interface ItineraryRepository extends JpaRepository<Itinerary, String> {
+
+    List<Itinerary> getAll();
+
     @Query(value = """
         SELECT
             t.id AS tourId,

@@ -47,4 +47,20 @@ public class ReportController {
 			return ResponseEntity.internalServerError().build();
 		}
 	}
+
+	@GetMapping("/booking")
+	public ResponseEntity<byte[]> exportBookingReport(
+			@RequestParam String year,
+			@RequestParam(required = false) String bookStatus) {
+		try {
+			byte[] report = reportservice.exportBookingReport(year, bookStatus);
+
+			return ResponseEntity.ok()
+					.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=Booking_Report.pdf")
+					.contentType(MediaType.APPLICATION_PDF)
+					.body(report);
+		} catch (Exception e) {
+			return ResponseEntity.internalServerError().body(("Error: " + e.getMessage()).getBytes());
+		}
+	}
 }

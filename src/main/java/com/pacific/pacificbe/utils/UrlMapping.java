@@ -26,6 +26,25 @@ public class UrlMapping {
     public static final String OAUTH2_FACEBOOK_CALLBACK = "/oauth2/facebook/callback";
     /*============================ End auth API ===================================*/
 
+    /*============================ Start Transport API ===================================*/
+    public static final String TRANSPORTS = API + "/transports";
+    public static final String GET_ALL_TRANSPORTS = "/all";
+    public static final String GET_TRANSPORT_BY_ID = "/{id}";
+    public static final String ADD_TRANSPORT = "/add";
+    public static final String UPDATE_TRANSPORT = "/update";
+    public static final String DELETE_TRANSPORT = "/delete/{id}";
+
+    /*============================ End Transport API ===================================*/
+
+    /*============================ Start Hotel API ===================================*/
+    public static final String HOTELS = API + "/hotels";
+    public static final String GET_ALL_HOTELS = "/all";
+    public static final String GET_HOTEL_BY_ID = "/{id}";
+    public static final String ADD_HOTEL = "/add";
+    public static final String UPDATE_HOTEL = "/update";
+    public static final String DELETE_HOTEL = "/delete/{id}";
+
+    /*============================ End Hotel API ===================================*/
 
     /*============================ Start Tour API ===================================*/
     public static final String TOURS = API + "/tours";
@@ -38,8 +57,9 @@ public class UrlMapping {
     public static final String ADD_TOUR_IMAGES = "/add-images/{id}";
     public static final String GET_ALL_TOURS = "/all";
     public static final String ADD_TOUR = "/add";
-    public static final String UPDATE_TOUR = "/update";
+    public static final String UPDATE_TOUR = "/update/{id}";
     public static final String DELETE_TOUR = "/delete/{id}";
+    public static final String DELETE_FORCE_TOUR = "/delete/{id}/force";
     public static final String SEARCH_TOURS = "/search";
 
     /*============================ End Tour API ===================================*/
@@ -55,6 +75,7 @@ public class UrlMapping {
     public static final String DELETE_TOUR_DETAIL = "/delete/{id}";
     public static final String GET_TOUR_DETAIL_MONTH = "/month/{tourId}";
     public static final String GET_TOUR_DETAIL_DAY = "/day/{tourId}/{months}";
+    public static final String GET_TOUR_BOOKING_COUNT = "/bookingCount/{tourId}";
     /*============================ End Tour Detail API ===================================*/
 
 
@@ -102,26 +123,18 @@ public class UrlMapping {
     public static final String SEARCH_CATEGORY = "/search";
     /* =========================== End Category API ===================================== */
 
-    /* =========================== Start Admin_review API ===================================== */
-    public static final String ADMIN_REVIEW = API + "/admin/review";
-    public static final String GET_ALL_ADMIN_REVIEW = "/getall";
-    public static final String CREATE_ADMIN_REVIEW = "/create";
-    public static final String GET_ADMIN_REVIEW_BY_ID = "/get/{id}";
-    public static final String UPDATE_ADMIN_REVIEW = "/update/{id}";
-    public static final String DELETE_ADMIN_REVIEW = "/delete/{id}";
-    /* =========================== End Admin_review API ===================================== */
-
     /* =========================== Start Guide API ===================================== */
     public static final String GUIDE = API + "/guide";
     public static final String GET_ALL_GUIDE = "/all";
-    public static final String CREATE_GUIDE = "/create";
-    public static final String GET_GUIDE_BY_ID = "/{id}";
-    public static final String UPDATE_GUIDE = "/update/{id}";
+//    public static final String CREATE_GUIDE = "/create";
+//    public static final String GET_GUIDE_BY_ID = "/{id}";
+//    public static final String UPDATE_GUIDE = "/update/{id}";
     public static final String DELETE_GUIDE = "/delete/{id}";
     /* =========================== End Guide API ===================================== */
 
     /* =========================== Start Itinerary API ===================================== */
     public static final String ITINERARY = API + "/itinerary";
+    public static final String ITINERARY_ALL = "/all";
     public static final String ITINERARY_TOUR_AND_DATE = "/{tourId}/{createdDay}";
     /* =========================== End Itinerary API ===================================== */
 
@@ -131,9 +144,95 @@ public class UrlMapping {
     public static final String UPDATE_STATUS_USER = "/updateStatus/{id}";
     /* =========================== End Admin User API ===================================== */
 
+    /* =========================== Start Admin_review API ===================================== */
+    public static final String ADMIN_REVIEW = API + "/admin/review";
+    public static final String GET_ALL_ADMIN_REVIEW = "/getall";
+    public static final String CREATE_ADMIN_REVIEW = "/create";
+    public static final String GET_ADMIN_REVIEW_BY_ID = "/get/{id}";
+    public static final String UPDATE_ADMIN_REVIEW = "/update/{id}";
+    public static final String DELETE_ADMIN_REVIEW = "/delete/{id}";
+    public static final String GET_ALL_REVIEWS = "/all";
+    public static final String CREATE_REVIEW = "/create";
+    public static final String GET_REVIEW_BY_ID = "/get/{id}";
+    public static final String GET_REVIEW_BY_TOUR = "/get/allReviews";
+    public static final String UPDATE_REVIEW = "/update/{id}";
+    public static final String UPDATE_STATUS_REVIEW = "/updateStatus/{id}";
+    public static final String DELETE_REVIEW = "/delete/{id}";
+    /* =========================== End Admin_review API ===================================== */
+
+    /* =========================== Start Admin Guide API ===================================== */
+    public static final String ADMIN_GUIDE = API + "/admin/guide";
+    public static final String GET_ALL_GUIDES = "/all";
+    public static final String CREATE_GUIDE = "/create";
+    public static final String GET_GUIDE_BY_ID = "/{id}";
+    public static final String UPDATE_GUIDE = "/update/{id}";
+    public static final String UPDATE_STATUS_GUIDE = "/updateStatus/{id}";
+    /* =========================== End Admin Guide API ===================================== */
+
+    /* =========================== Start Admin Voucher API ===================================== */
+    public static final String ADMIN_VOUCHER = API + "/admin/voucher";
+    public static final String CREATE_VOUCHER = "/create";
+    public static final String GET_ALL_VOUCHERS = "/all";
+    public static final String GET_VOUCHER_BY_ID = "/{id}";
+    public static final String GET_VOUCHER_BY_CODE = "/codeVoucher";
+    public static final String UPDATE_VOUCHER = "/update/{id}";
+    public static final String UPDATE_STATUS_VOUCHER = "/updateStatus/{id}";
+    public static final String DELETE_VOUCHER = "/delete/{id}";
+    /* =========================== End Admin Voucher API ===================================== */
+
     /* =========================== Start Other URL ===================================== */
     public static final String FE_URL = "http://localhost:3000";
     public static final String GOOGLE_REDIRECT = FE_URL + "/google/redirect";
     /* =========================== End Other URL ===================================== */
 
+    /* =========================== Start Destination API ===================================== */
+    public static final String DESTINATION = API + "/destinations";
+    public static final String GET_ALL_DESTINATIONS = "/all";
+    public static final String CREATE_DESTINATION = "/create";
+    public static final String GET_DESTINATION_BY_ID = "/{id}";
+    public static final String UPDATE_DESTINATION = "/update/{id}";
+    public static final String DELETE_DESTINATION = "/delete/{id}";
+    /* =========================== End Destination API ===================================== */
+
+
+    /* =========================== Start Admin Guide API ===================================== */
+//    public static final String ADMIN_GUIDE = API + "/admin/guide";
+//    public static final String GET_ALL_GUIDES = "/all";
+////    public static final String CREATE_GUIDE = "/create";
+////    public static final String GET_GUIDE_BY_ID = "/{id}";
+////    public static final String UPDATE_GUIDE = "/update/{id}";
+//    public static final String UPDATE_STATUS_GUIDE = "/updateStatus/{id}";
+    /* =========================== End Admin Guide API ===================================== */
+
+    /* =========================== Start Admin Blog API ===================================== */
+    public static final String ADMIN_BLOG = API + "/admin/blog";
+    public static final String GET_ALL_BLOGS = "/all";
+    public static final String GET_BLOG_BY_TITLE = "/title";;
+    public static final String CREATE_BLOG = "/create";
+    public static final String UPDATE_BLOG = "/update/{id}";
+    public static final String UPDATE_STATUS_BLOG = "/updateStatus/{id}";
+    public static final String UPLOAD_IMAGE = "/upload-images";
+    public static final String DELETE_BLOG = "/delete/{id}";
+    /* =========================== End Admin Blog API ===================================== */
+
+    /* =========================== Start Admin Rating API ===================================== */
+    public static final String ADMIN_RATING = API + "/admin/rating";
+    public static final String CREATE_RATING = "/create";
+    public static final String GET_ALL_RATINGS = "/all";
+    public static final String GET_RATING_BY_ID = "/{id}";
+    public static final String GET_RATING_BY_TOUR = "/allReviews";
+    public static final String UPDATE_STATUS_RATING = "/updateStatus/{id}";
+    public static final String DELETE_RATING = "/delete/{id}";
+    /* =========================== End Admin Rating API ===================================== */
+
+    /* =========================== Start Admin Voucher API ===================================== */
+//    public static final String ADMIN_VOUCHER = API + "/admin/voucher";
+//    public static final String CREATE_VOUCHER = "/create";
+//    public static final String GET_ALL_VOUCHERS = "/all";
+//    public static final String GET_VOUCHER_BY_ID = "/{id}";
+//    public static final String GET_VOUCHER_BY_CODE = "/codeVoucher";
+//    public static final String UPDATE_VOUCHER = "/update/{id}";
+//    public static final String UPDATE_STATUS_VOUCHER = "/updateStatus/{id}";
+//    public static final String DELETE_VOUCHER = "/delete/{id}";
+    /* =========================== End Admin Voucher API ===================================== */
 }

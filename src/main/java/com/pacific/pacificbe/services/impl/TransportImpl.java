@@ -1,0 +1,42 @@
+package com.pacific.pacificbe.services.impl;
+
+import com.pacific.pacificbe.dto.response.TransportResponse;
+import com.pacific.pacificbe.mapper.TransportMapper;
+import com.pacific.pacificbe.model.Transport;
+import com.pacific.pacificbe.repository.TransportRepository;
+import com.pacific.pacificbe.services.TransportService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+@Transactional
+@RequiredArgsConstructor
+public class TransportImpl implements TransportService {
+    private final TransportRepository transportRepository;
+    private final TransportMapper transportMapper;
+
+    @Override
+    public List<TransportResponse> getAllTransports() {
+        return transportRepository.findAll().stream().map(transportMapper::toResponse).collect(Collectors.toList());
+    }
+
+    @Override
+    public TransportResponse getTransportById(String id) {
+        Transport transport = transportRepository.findById(id).orElseThrow(() -> new RuntimeException("Transport not found"));
+        return transportMapper.toResponse(transport);
+    }
+
+    @Override
+    public TransportResponse saveTransport(Transport transport) {
+        return null;
+    }
+
+    @Override
+    public void deleteTransport(String id) {
+
+    }
+}

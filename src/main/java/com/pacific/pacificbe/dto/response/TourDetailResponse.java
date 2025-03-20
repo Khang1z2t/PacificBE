@@ -14,8 +14,6 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TourDetailResponse {
     String id;
-    String title;
-    String description;
     BigDecimal priceAdults;
     BigDecimal priceChildren;
     String startDate;
@@ -23,12 +21,12 @@ public class TourDetailResponse {
     Integer quantity;
 
     List<ItineraryResponse> itineraries;
-    String comboId;
     String hotelId;
     String transportId;
 
     Boolean active;
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
+    LocalDateTime deleteAt;
 
 }

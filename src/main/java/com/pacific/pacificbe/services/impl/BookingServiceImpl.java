@@ -31,10 +31,8 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingRevenueReportDTO> getTourBookingsRevenueReport(String tourId, LocalDate startDate, LocalDate endDate) {
-//        Date start = parseDate(startDate);
-//        Date end = parseDate(endDate);
-        return bookingRepository.getTourBookingsRevenue(tourId, startDate, endDate);
+    public List<BookingRevenueReportDTO> getTourBookingsRevenueReport(String tourId,String bookingStatus, LocalDate startDate, LocalDate endDate) {
+        return bookingRepository.getTourBookingsRevenue(tourId,bookingStatus, startDate, endDate);
     }
 
     @Override

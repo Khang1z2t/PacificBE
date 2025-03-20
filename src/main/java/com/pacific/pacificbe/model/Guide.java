@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Nationalized;
 
 import java.util.LinkedHashSet;
@@ -53,6 +54,12 @@ public class Guide {
     @Nationalized
     @Column(name = "phone", nullable = false, length = 20)
     private String phone;
+
+    @Size(max = 50)
+    @Nationalized
+    @ColumnDefault("'active'")
+    @Column(name = "status", length = 50)
+    private String status;
 
     @OneToMany(mappedBy = "guide")
     private Set<Tour> tours = new LinkedHashSet<>();
