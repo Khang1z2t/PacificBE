@@ -8,6 +8,7 @@ import com.pacific.pacificbe.dto.request.CreateTourRequest;
 import com.pacific.pacificbe.dto.request.TourFilterRequest;
 import com.pacific.pacificbe.dto.response.TourByIdResponse;
 import com.pacific.pacificbe.dto.response.TourResponse;
+import com.pacific.pacificbe.dto.response.showTour.TourBookingCount;
 import com.pacific.pacificbe.services.GoogleDriveService;
 import com.pacific.pacificbe.services.TourService;
 import com.pacific.pacificbe.utils.UrlMapping;
@@ -52,6 +53,14 @@ public class TourController {
     public ResponseEntity<ApiResponse<TourByIdResponse>> getTourById(@PathVariable String id) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ApiResponse<>(200, "Complete", tourService.getTourById(id)));
+    }
+
+    @GetMapping(UrlMapping.GET_TOUR_BOOKING_COUNT)
+    @Operation(summary = "Tìm kiếm số lần đặt tour")
+    public ResponseEntity<ApiResponse<List<TourBookingCount>>> searchTourBookingCounts(@PathVariable String tourId) {
+        return ResponseEntity.ok(new ApiResponse<>(
+                200, "Lấy chi tiết tour theo ngày thành công",
+                tourService.getTourBookingCounts(tourId)));
     }
 
     @GetMapping(UrlMapping.GET_TOUR_BY_CATEGORY)
@@ -112,4 +121,6 @@ public class TourController {
 //        https://drive.google.com/file/d/1GTrRDjzn82Kei0vsBQ7FGLN14iRlt5-m/view?usp=drivesdk
         return ResponseEntity.ok(googleDriveService.uploadImageToDrive(file, FolderType.TOUR));
     }
+
+
 }

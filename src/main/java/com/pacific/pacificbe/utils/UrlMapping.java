@@ -75,6 +75,7 @@ public class UrlMapping {
     public static final String DELETE_TOUR_DETAIL = "/delete/{id}";
     public static final String GET_TOUR_DETAIL_MONTH = "/month/{tourId}";
     public static final String GET_TOUR_DETAIL_DAY = "/day/{tourId}/{months}";
+    public static final String GET_TOUR_BOOKING_COUNT = "/bookingCount/{tourId}";
     /*============================ End Tour Detail API ===================================*/
 
 
