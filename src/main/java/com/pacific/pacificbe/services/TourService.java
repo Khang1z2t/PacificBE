@@ -6,6 +6,7 @@ import com.pacific.pacificbe.dto.request.UpdateTourRequest;
 import com.pacific.pacificbe.dto.response.TourByIdResponse;
 import com.pacific.pacificbe.dto.response.TourResponse;
 import com.pacific.pacificbe.dto.response.showTour.ItineraryTourDetailResponse;
+import com.pacific.pacificbe.dto.response.showTour.TourBookingCount;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
@@ -28,9 +29,11 @@ public interface TourService {
 
     TourResponse addTourImages(String id, MultipartFile[] images);
 
+    List<TourBookingCount> getTourBookingCounts(String tourId);
+
     TourResponse updateTour(String id, UpdateTourRequest request, MultipartFile thumbnail, MultipartFile[] images);
 
-    Boolean deleteTour(String id);
+    Boolean deleteTour(String id,boolean active);
 
     Boolean deleteTourForce(String id);
 }

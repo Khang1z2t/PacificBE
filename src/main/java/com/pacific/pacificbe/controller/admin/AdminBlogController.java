@@ -6,8 +6,9 @@ import com.pacific.pacificbe.dto.response.BlogResponse;
 import com.pacific.pacificbe.exception.AppException;
 import com.pacific.pacificbe.exception.ErrorCode;
 import com.pacific.pacificbe.services.BlogService;
-import com.pacific.pacificbe.services.FileStorageService;
+import com.pacific.pacificbe.services.GoogleDriveService;
 import com.pacific.pacificbe.utils.UrlMapping;
+import com.pacific.pacificbe.utils.enums.FolderType;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -28,7 +29,7 @@ import java.util.List;
 public class AdminBlogController {
 
     BlogService blogService;
-    FileStorageService fileStorageService;
+    GoogleDriveService googleDriveService;
 
     @GetMapping(UrlMapping.GET_ALL_BLOGS)
     @Operation(summary = "Lấy danh sách tất cả bài blog")
@@ -87,7 +88,7 @@ public class AdminBlogController {
         List<String> imageUrls = new ArrayList<>();
         for (MultipartFile file : files) {
             System.out.println("File nhận được: " + file.getOriginalFilename()); // Debug
-            String imageUrl = fileStorageService.storeFile(file);
+            String imageUrl = googleDriveService.uploadImageToDrive(file, FolderType.RESOURCES);
             imageUrls.add(imageUrl);
         }
 

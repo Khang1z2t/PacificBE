@@ -5,6 +5,7 @@ import com.pacific.pacificbe.dto.request.TourFilterRequest;
 import com.pacific.pacificbe.dto.request.UpdateTourRequest;
 import com.pacific.pacificbe.dto.response.TourByIdResponse;
 import com.pacific.pacificbe.dto.response.TourResponse;
+import com.pacific.pacificbe.dto.response.showTour.TourBookingCount;
 import com.pacific.pacificbe.exception.AppException;
 import com.pacific.pacificbe.exception.ErrorCode;
 import com.pacific.pacificbe.mapper.TourMapper;
@@ -139,12 +140,16 @@ public class TourServiceImpl implements TourService {
     }
 
     @Override
-    public Boolean deleteTour(String id) {
+    public Boolean deleteTour(String id, boolean active) {
         Tour tour = tourRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.TOUR_NOT_FOUND));
-        tour.setActive(false);
+        tour.setActive(active);
         tour.setDeleteAt(LocalDateTime.now());
-        tour.setStatus(TourStatus.DELETED.toString());
+        if (active) {
+            tour.setStatus(TourStatus.PUBLISHED.toString());
+        } else {
+            tour.setStatus(TourStatus.UNAVAILABLE.toString());
+        }
         tourRepository.save(tour);
         return true;
     }
@@ -171,4 +176,8 @@ public class TourServiceImpl implements TourService {
         tour.setImages(imageSet);
     }
 
+    @Override
+    public List<TourBookingCount> getTourBookingCounts(String tourId) {
+        return tourRepository.findTourBookingCounts(tourId);
+    }
 }
