@@ -1,5 +1,8 @@
 package com.pacific.pacificbe.repository;
 
-public interface WishlistRepository {
+import com.pacific.pacificbe.model.Wishlist;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface WishlistRepository extends JpaRepository<Wishlist, String> {
 
 }

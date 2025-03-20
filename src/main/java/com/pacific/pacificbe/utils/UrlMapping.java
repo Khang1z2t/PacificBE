@@ -99,6 +99,13 @@ public class UrlMapping {
     /*============================ End Booking API ===================================*/
 
 
+    /*============================ Start Wishlist API ===================================*/
+    public static final String WISHLIST = API + "/wishlist";
+    public static final String ADD_WISHLIST = "/add";
+    public static final String GET_ALL_WISHLIST = "/all";
+    public static final String DELETE_WISHLIST = "/delete/{id}";
+    /*============================ End Wishlist API ===================================*/
+
     /*============================ Start User API ===================================*/
     public static final String USERS = API + "/users";
     public static final String GET_USER_BY_ID = "/{id}";
