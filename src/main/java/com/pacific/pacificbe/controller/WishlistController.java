@@ -2,7 +2,6 @@ package com.pacific.pacificbe.controller;
 
 import com.pacific.pacificbe.dto.ApiResponse;
 import com.pacific.pacificbe.dto.response.WishlistResponse;
-import com.pacific.pacificbe.model.Wishlist;
 import com.pacific.pacificbe.services.WishlistService;
 import com.pacific.pacificbe.utils.UrlMapping;
 import io.swagger.v3.oas.annotations.Operation;

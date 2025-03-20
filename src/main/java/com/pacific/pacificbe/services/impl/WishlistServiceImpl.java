@@ -5,7 +5,6 @@ import com.pacific.pacificbe.exception.AppException;
 import com.pacific.pacificbe.exception.ErrorCode;
 import com.pacific.pacificbe.mapper.WishlistMapper;
 import com.pacific.pacificbe.model.Tour;
-import com.pacific.pacificbe.model.User;
 import com.pacific.pacificbe.model.Wishlist;
 import com.pacific.pacificbe.repository.TourRepository;
 import com.pacific.pacificbe.repository.UserRepository;
