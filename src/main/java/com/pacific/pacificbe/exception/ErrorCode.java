@@ -68,7 +68,12 @@ public enum ErrorCode {
     VOUCHER_NOT_FOUND(1028, "Voucher not found",HttpStatus.NOT_FOUND),
     INVALID_VOUCHER_STATUS(1029, "Invalid status, must be ACTIVE or INACTIVE",HttpStatus.NOT_FOUND),
     INVALID_DATE_RANGE(1030, "Invalid date range",HttpStatus.NOT_FOUND),
-    INVALID_ID(1031, "Invalid ID",HttpStatus.NOT_FOUND);
+    INVALID_ID(1031, "Invalid ID",HttpStatus.NOT_FOUND),
+
+    // Support Errors
+    SUPPORT_NOT_FOUND(1032, "Support not found",HttpStatus.NOT_FOUND),
+    INVALID_SUPPORT_STATUS(1033, "Invalid status, must be ACTIVE or INACTIVE",HttpStatus.NOT_FOUND);
+
     //  ^---------------------
     //  Lưu ý ở đây phải kết thúc enum bằng dấu ; chứ không phải dấu ,
 

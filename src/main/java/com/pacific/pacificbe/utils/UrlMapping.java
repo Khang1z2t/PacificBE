@@ -194,16 +194,6 @@ public class UrlMapping {
     public static final String DELETE_DESTINATION = "/delete/{id}";
     /* =========================== End Destination API ===================================== */
 
-
-    /* =========================== Start Admin Guide API ===================================== */
-//    public static final String ADMIN_GUIDE = API + "/admin/guide";
-//    public static final String GET_ALL_GUIDES = "/all";
-////    public static final String CREATE_GUIDE = "/create";
-////    public static final String GET_GUIDE_BY_ID = "/{id}";
-////    public static final String UPDATE_GUIDE = "/update/{id}";
-//    public static final String UPDATE_STATUS_GUIDE = "/updateStatus/{id}";
-    /* =========================== End Admin Guide API ===================================== */
-
     /* =========================== Start Admin Blog API ===================================== */
     public static final String ADMIN_BLOG = API + "/admin/blog";
     public static final String GET_ALL_BLOGS = "/all";
@@ -215,24 +205,12 @@ public class UrlMapping {
     public static final String DELETE_BLOG = "/delete/{id}";
     /* =========================== End Admin Blog API ===================================== */
 
-    /* =========================== Start Admin Rating API ===================================== */
-    public static final String ADMIN_RATING = API + "/admin/rating";
-    public static final String CREATE_RATING = "/create";
-    public static final String GET_ALL_RATINGS = "/all";
-    public static final String GET_RATING_BY_ID = "/{id}";
-    public static final String GET_RATING_BY_TOUR = "/allReviews";
-    public static final String UPDATE_STATUS_RATING = "/updateStatus/{id}";
-    public static final String DELETE_RATING = "/delete/{id}";
-    /* =========================== End Admin Rating API ===================================== */
+    /* =========================== Start Admin Support API ===================================== */
+    public static final String ADMIN_SUPPORT = API + "/admin/support";
+    public static final String GET_ALL_SUPPORTS = "/all";
+    public static final String GET_SUPPORT_BY_ID = "/{id}";
+    public static final String SEND_MAIL = "/send-mail";
+    public static final String UPDATE_STATUS_SUPPORT = "/updateStatus/{id}";
+    /* =========================== End Admin Support API ===================================== */
 
-    /* =========================== Start Admin Voucher API ===================================== */
-//    public static final String ADMIN_VOUCHER = API + "/admin/voucher";
-//    public static final String CREATE_VOUCHER = "/create";
-//    public static final String GET_ALL_VOUCHERS = "/all";
-//    public static final String GET_VOUCHER_BY_ID = "/{id}";
-//    public static final String GET_VOUCHER_BY_CODE = "/codeVoucher";
-//    public static final String UPDATE_VOUCHER = "/update/{id}";
-//    public static final String UPDATE_STATUS_VOUCHER = "/updateStatus/{id}";
-//    public static final String DELETE_VOUCHER = "/delete/{id}";
-    /* =========================== End Admin Voucher API ===================================== */
 }
