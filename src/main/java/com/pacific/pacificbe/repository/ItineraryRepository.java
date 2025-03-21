@@ -12,23 +12,21 @@ import java.util.List;
 @Repository
 public interface ItineraryRepository extends JpaRepository<Itinerary, String> {
 
-    List<Itinerary> getAll();
-
     @Query(value = """
         SELECT
             t.id AS tourId,
-            FORMAT(td.created_at, 'dd') AS dayTour,
-            i.id,
-            i.active,
-            i.day_detail,
-            i.day_number,
-            i.notes,
-            i.title
+            CAST(td.created_at AS DATE) AS dayTour,
+            i.id AS id,
+            i.active AS active,
+            i.day_detail AS dayDetail,
+            i.day_number AS dayNumber,
+            i.notes AS notes,
+            i.title AS title
         FROM tour t
         JOIN tour_details td ON t.id = td.tour_id
         JOIN itinerary i ON td.id = i.tour_detail_id
         WHERE t.id = :tourId
-        AND FORMAT(td.created_at, 'dd') = :createdDay
+        AND CAST(td.created_at AS DATE) = :createdDay
         """, nativeQuery = true)
     List<ItineraryTourDetailResponse> getItineraryByTourAndDate(
             @Param("tourId") String tourId,

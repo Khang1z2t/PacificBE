@@ -12,7 +12,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface BookingRepository extends JpaRepository<Booking, String>{
-//  doanh thu theo tháng
+    //  doanh thu theo tháng
     @Query(value = """
         SELECT
             MONTH(b.created_at) AS bookingMonth,
@@ -28,8 +28,8 @@ public interface BookingRepository extends JpaRepository<Booking, String>{
             @Param("bookingStatus") String bookingStatus
     );
 
-//    Doanh thu theo năm
-        @Query(value = """
+    //    Doanh thu theo năm
+    @Query(value = """
         SELECT
             year(b.created_at) AS booking_year,
             SUM(b.total_amount) AS total_revenue
@@ -38,12 +38,12 @@ public interface BookingRepository extends JpaRepository<Booking, String>{
             GROUP BY year(b.created_at)
             ORDER BY booking_year
         """, nativeQuery = true)
-        List<Revenue> getYearlyRevenue(
-                @Param("bookingStatus") String bookingStatus
-        );
+    List<Revenue> getYearlyRevenue(
+            @Param("bookingStatus") String bookingStatus
+    );
 
-//      Doanh thu tour theo thời gian ...
-        @Query(value = """
+    //      Doanh thu tour theo thời gian ...
+    @Query(value = """
             SELECT
                 t.id AS tour_id,
                 td.id AS tour_detail_id,
@@ -64,11 +64,11 @@ public interface BookingRepository extends JpaRepository<Booking, String>{
                 booking_date ASC
         """, nativeQuery = true)
     List<BookingRevenueReportDTO> getTourBookingsRevenue(
-                @Param("tourId") String tourId,
-                @Param("bookingStatus") String bookingStatus,
-                @Param("startDate") LocalDate startDate,
-                @Param("endDate") LocalDate endDate
-        );
+            @Param("tourId") String tourId,
+            @Param("bookingStatus") String bookingStatus,
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate
+    );
 
     //      Doanh thu theo từng tour và từng khách hàng
     @Query(value = """
@@ -93,4 +93,5 @@ public interface BookingRepository extends JpaRepository<Booking, String>{
             @Param("tourId") String tourId,
             @Param("username") String username
     );
+
 }

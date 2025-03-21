@@ -12,4 +12,6 @@ public interface BookingService {
     List<Revenue> getYearlyRevenueReport(String bookingStatus);
     List<BookingRevenueReportDTO> getTourBookingsRevenueReport(String tourId,String bookingStatus, LocalDate startDate, LocalDate endDate);
     List<TourAndBookReport> getTourAndBookingsReport(String tourId, String userName);
+
+
 }
