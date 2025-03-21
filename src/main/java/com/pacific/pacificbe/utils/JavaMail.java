@@ -13,7 +13,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.core.io.ByteArrayResource;
+import lombok.extern.slf4j.Slf4j;
+import java.io.IOException;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -36,6 +41,24 @@ public class JavaMail {
         }
     }
 
+//    public void sendEmail(String to, String subject, String body) {
+//        MimeMessage message = javaMailSender.createMimeMessage();
+//        MimeMessageHelper helper;
+//
+//        try {
+//            helper = new MimeMessageHelper(message, true, "UTF-8");
+//            helper.setTo(to);
+//            helper.setSubject(subject);
+//            helper.setText(body, true); // true để hỗ trợ HTML content
+//
+//            javaMailSender.send(message);
+//            log.info("Email đã gửi đến: {}", to);
+//        } catch (MessagingException e) {
+//            log.error("Lỗi khi gửi email đến {}: {}", to, e.getMessage());
+//            throw new AppException(ErrorCode.CANT_SEND_MAIL);
+//        }
+//    }
+
     public void sendMailVerify(User user, String otp) {
         String subjectEmail = otp + " là mã xác nhận email của bạn";
         String bodyEmail = "<h2>Xác nhận email</h2>"
@@ -57,6 +80,5 @@ public class JavaMail {
                 + "<p>Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi.</p>";
         sendEmail(user.getEmail(), subjectEmail, bodyEmail);
     }
-
 
 }
