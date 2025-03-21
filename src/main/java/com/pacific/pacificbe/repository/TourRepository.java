@@ -42,13 +42,4 @@ public interface TourRepository extends JpaRepository<Tour, String> {
             	order by t.id asc
             """, nativeQuery = true)
     List<TourBookingCount> findTourBookingCounts(@Param("tourId") String tourId);
-
-    @Procedure(procedureName = "FineTourCategory")
-    List<Tour> findTourCategory(@Param("category") String category);
-    
-    @Procedure(procedureName = "FindTourRating")
-    List<Tour> findTourRating(@Param("rating") Double rating);
-    
-    @Procedure(procedureName = "FindTourDestination")
-    List<Tour> findTourDestination(@Param("destination") String destination);
 }
