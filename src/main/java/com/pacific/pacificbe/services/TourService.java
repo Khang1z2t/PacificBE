@@ -18,12 +18,6 @@ public interface TourService {
     TourByIdResponse getTourById(String id);
     
     TourResponse createTour(CreateTourRequest request, MultipartFile thumbnail, MultipartFile[] images);
-    
-    List<TourResponse> getTourCategory(String category);
-    
-    List<TourResponse> getTourRating(Double rating);
-    
-    List<TourResponse> getTourDestination(String destination);
 
     TourResponse addTourThumbnail(String id, MultipartFile thumbnail);
 

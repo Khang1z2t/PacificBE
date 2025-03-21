@@ -94,30 +94,6 @@ public class TourServiceImpl implements TourService {
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public List<TourResponse> getTourRating(Double rating) {
-        if (rating == null) {
-            throw new IllegalArgumentException("Rating must not be null");
-        }
-        List<Tour> tours = tourRepository.findTourRating(rating);
-        return tourMapper.toTourResponseList(tours);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<TourResponse> getTourCategory(String category) {
-        List<Tour> tours = tourRepository.findTourCategory(category);
-        return tourMapper.toTourResponseList(tours);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<TourResponse> getTourDestination(String destination) {
-        List<Tour> tours = tourRepository.findTourDestination(destination);
-        return tourMapper.toTourResponseList(tours);
-    }
-
-    @Override
     public TourResponse addTourThumbnail(String id, MultipartFile thumbnail) {
         Tour tour = tourRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.TOUR_NOT_FOUND));

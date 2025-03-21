@@ -50,9 +50,6 @@ public class UrlMapping {
     public static final String TOURS = API + "/tours";
     public static final String GET_TOUR_BY_ID = "/{id}";
     public static final String GET_TOUR_BY_NO = "/no/{tourNo}";
-    public static final String GET_TOUR_BY_CATEGORY = "category/{category}";
-    public static final String GET_TOUR_BY_RATING = "rating/{rating}";
-    public static final String GET_TOUR_BY_DESTINATION = "destination/{destination}";
     public static final String ADD_TOUR_THUMBNAIL = "/add-thumbnail/{id}";
     public static final String ADD_TOUR_IMAGES = "/add-images/{id}";
     public static final String GET_ALL_TOURS = "/all";
@@ -75,7 +72,6 @@ public class UrlMapping {
     public static final String DELETE_TOUR_DETAIL = "/delete/{id}";
     public static final String GET_TOUR_DETAIL_MONTH = "/month/{tourId}";
     public static final String GET_TOUR_DETAIL_DAY = "/day/{tourId}/{months}";
-    public static final String GET_TOUR_BOOKING_COUNT = "/bookingCount/{tourId}";
     /*============================ End Tour Detail API ===================================*/
 
 
@@ -91,14 +87,17 @@ public class UrlMapping {
     public static final String APPROVE_BOOKING = "/book/{id}/approve";
     public static final String CANCEL_BOOKING = "/book/{id}/cancel";
     public static final String DECLINE_BOOKINGS = "/book/{id}/decline";
-    public static final String REVENUE_BOOKING = "/book/revenue";
-    public static final String REVENUE_BOOKING_MONTH = "/book/revenue/month";
-    public static final String REVENUE_BOOKING_YEAR = "/book/revenue/year";
-    public static final String BOOK_AND_TOUR = "/book&tour/";
     public static final String CHECKOUT_BOOKING = "/checkout";
     public static final String CHECKOUT_RETURN = "/vnpay-payment-return";
     /*============================ End Booking API ===================================*/
 
+
+    /*============================ Start Wishlist API ===================================*/
+    public static final String WISHLIST = API + "/wishlist";
+    public static final String ADD_WISHLIST = "/add/{id}";
+    public static final String GET_ALL_WISHLIST = "/all";
+    public static final String DELETE_WISHLIST = "/delete/{id}";
+    /*============================ End Wishlist API ===================================*/
 
     /*============================ Start User API ===================================*/
     public static final String USERS = API + "/users";
@@ -108,8 +107,13 @@ public class UrlMapping {
     /*============================ End User API ===================================*/
 
     /* =========================== Start Report API ===================================== */
-    public static final String EXPORT = API + "/export";
-    public static final String EXPORT_PDF = "/PDF";
+    public static final String REPORT = API + "/report";
+//    public static final String EXPORT_PDF = "/PDF";
+    public static final String GET_TOUR_BOOKING_COUNT = "/bookingCount/{tourId}";
+    public static final String REVENUE_BOOKING_MONTH = "/revenue/month";
+    public static final String REVENUE_BOOKING_YEAR = "/revenue/year";
+    public static final String REVENUE_BOOKING = "/revenue";
+    public static final String BOOK_AND_TOUR = "/book&tour";
     /* =========================== End Report API ===================================== */
 
 
@@ -205,12 +209,13 @@ public class UrlMapping {
     public static final String DELETE_BLOG = "/delete/{id}";
     /* =========================== End Admin Blog API ===================================== */
 
-    /* =========================== Start Admin Support API ===================================== */
-    public static final String ADMIN_SUPPORT = API + "/admin/support";
-    public static final String GET_ALL_SUPPORTS = "/all";
-    public static final String GET_SUPPORT_BY_ID = "/{id}";
-    public static final String SEND_MAIL = "/send-mail";
-    public static final String UPDATE_STATUS_SUPPORT = "/updateStatus/{id}";
-    /* =========================== End Admin Support API ===================================== */
-
+    /* =========================== Start Admin Rating API ===================================== */
+    public static final String ADMIN_RATING = API + "/admin/rating";
+    public static final String CREATE_RATING = "/create";
+    public static final String GET_ALL_RATINGS = "/all";
+    public static final String GET_RATING_BY_ID = "/{id}";
+    public static final String GET_RATING_BY_TOUR = "/allReviews";
+    public static final String UPDATE_STATUS_RATING = "/updateStatus/{id}";
+    public static final String DELETE_RATING = "/delete/{id}";
+    /* =========================== End Admin Rating API ===================================== */
 }
