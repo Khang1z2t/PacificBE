@@ -27,5 +27,6 @@ public class ItineraryServiceImpl implements ItineraryService {
     @Override
     public List<ItineraryTourDetailResponse> getItineraryByTourAndDate(String tourId, String createdDay) {
         return itineraryRepository.getItineraryByTourAndDate(tourId, createdDay);
+//        return null;
     }
 }

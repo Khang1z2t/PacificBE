@@ -1,7 +1,6 @@
 package com.pacific.pacificbe.controller;
 
 import com.pacific.pacificbe.dto.ApiResponse;
-import com.pacific.pacificbe.dto.response.showTour.DetailTourResponse;
 import com.pacific.pacificbe.dto.response.showTour.ItineraryTourDetailResponse;
 import com.pacific.pacificbe.model.Itinerary;
 import com.pacific.pacificbe.services.ItineraryService;
@@ -14,8 +13,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(UrlMapping.ITINERARY)
 @RequiredArgsConstructor
+@RequestMapping(UrlMapping.ITINERARY)
 public class ItineraryController {
     private final ItineraryService itineraryService;
 

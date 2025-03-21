@@ -55,32 +55,6 @@ public class TourController {
                 .body(new ApiResponse<>(200, "Complete", tourService.getTourById(id)));
     }
 
-    @GetMapping(UrlMapping.GET_TOUR_BOOKING_COUNT)
-    @Operation(summary = "Tìm kiếm số lần đặt tour")
-    public ResponseEntity<ApiResponse<List<TourBookingCount>>> searchTourBookingCounts(@PathVariable String tourId) {
-        return ResponseEntity.ok(new ApiResponse<>(
-                200, "Lấy chi tiết tour theo ngày thành công",
-                tourService.getTourBookingCounts(tourId)));
-    }
-
-    @GetMapping(UrlMapping.GET_TOUR_BY_CATEGORY)
-    @Operation(summary = "Lấy tour theo category")
-    public List<TourResponse> getTourCategory(@PathVariable("category") String category) {
-        return tourService.getTourCategory(category);
-    }
-
-    @GetMapping(UrlMapping.GET_TOUR_BY_RATING)
-    @Operation(summary = "Lấy tour theo rating")
-    public List<TourResponse> getToursByRating(@PathVariable("rating") Double rating) {
-        return tourService.getTourRating(rating);
-    }
-
-    @GetMapping(UrlMapping.GET_TOUR_BY_DESTINATION)
-    @Operation(summary = "Lấy tour theo điểm đến")
-    public List<TourResponse> getTourDestination(@PathVariable("destination") String destination) {
-        return tourService.getTourDestination(destination);
-    }
-
     @PostMapping(value = UrlMapping.ADD_TOUR, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "Thêm tour (test thêm ảnh ở postman) ở FE lưu ý tour request là model attribute nên xài qs lib")
     public ResponseEntity<ApiResponse<TourResponse>> createTour(@ModelAttribute CreateTourRequest request,
