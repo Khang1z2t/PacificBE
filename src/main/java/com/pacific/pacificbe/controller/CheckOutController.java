@@ -62,8 +62,8 @@ public class CheckOutController {
 //        return "/";
 //    }
     public ResponseEntity<?> handleVnpayReturn(@RequestParam Map<String, String> params, HttpServletResponse response) {
-        String successUrl = UrlMapping.PAYMENT_FAIL;   // Địa chỉ FE hiển thị kết quả thanh toán
-        String failUrl = UrlMapping.PAYMENT_SUCCESS; // Địa chỉ FE hiển thị kết quả thanh toán
+        String successUrl = UrlMapping.PAYMENT_SUCCESS;   // Địa chỉ FE hiển thị kết quả thanh toán
+        String failUrl = UrlMapping.PAYMENT_FAIL; // Địa chỉ FE hiển thị kết quả thanh toán
 
         String respCode = params.get("vnp_ResponseCode");
         String frontendURL = "00".equals(respCode) ? successUrl : failUrl;
