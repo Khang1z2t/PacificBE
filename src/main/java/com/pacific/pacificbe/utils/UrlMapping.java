@@ -71,7 +71,7 @@ public class UrlMapping {
     public static final String UPDATE_TOUR_DETAIL = "/update";
     public static final String DELETE_TOUR_DETAIL = "/delete/{id}";
     public static final String GET_TOUR_DETAIL_MONTH = "/month/{tourId}";
-    public static final String GET_TOUR_DETAIL_DAY = "/day/{tourId}/{months}";
+    public static final String GET_TOUR_DETAIL_DAY = "/day";
     /*============================ End Tour Detail API ===================================*/
 
 
@@ -218,4 +218,12 @@ public class UrlMapping {
     public static final String UPDATE_STATUS_RATING = "/updateStatus/{id}";
     public static final String DELETE_RATING = "/delete/{id}";
     /* =========================== End Admin Rating API ===================================== */
+
+    /* =========================== Start Admin Support API ===================================== */
+    public static final String ADMIN_SUPPORT = API + "/admin/support";
+    public static final String GET_ALL_SUPPORTS = "/all";
+    public static final String GET_SUPPORT_BY_ID = "/{id}";
+    public static final String SEND_MAIL = "/send-mail";
+    public static final String UPDATE_STATUS_SUPPORT = "/updateStatus/{id}";
+    /* =========================== End Admin Support API ===================================== */
 }

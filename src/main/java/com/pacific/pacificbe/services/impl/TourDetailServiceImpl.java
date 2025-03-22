@@ -30,7 +30,7 @@ public class TourDetailServiceImpl implements TourDetailService {
     private final TourDetailRepository tourDetailRepository;
     private final TourDetailMapper tourDetailMapper;
     private final TourMapper tourMapper;
-    private final ItineraryRepository itineraryRepository;
+//    private final ItineraryRepository itineraryRepository;
 
     @Override
     @Transactional
@@ -63,7 +63,7 @@ public class TourDetailServiceImpl implements TourDetailService {
             itinerary.setDayDetail(itineraryRequest.getDayDetail());
             itinerary.setTourDetail(tourDetail);
             tourDetail.getItineraries().add(itinerary);
-            itineraryRepository.save(itinerary);
+//            itineraryRepository.save(itinerary);
         }
         tourDetailRepository.save(tourDetail);
         return tourMapper.toTourDetailResponse(tourDetail);
