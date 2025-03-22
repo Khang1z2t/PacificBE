@@ -93,5 +93,4 @@ public interface BookingRepository extends JpaRepository<Booking, String>{
             @Param("tourId") String tourId,
             @Param("username") String username
     );
-
 }

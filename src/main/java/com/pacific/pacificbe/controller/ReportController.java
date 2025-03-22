@@ -32,7 +32,6 @@ import lombok.experimental.FieldDefaults;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ReportController {
-	ReportService reportservice;
 	TourService tourService;
 	BookingService bookingService;
 
