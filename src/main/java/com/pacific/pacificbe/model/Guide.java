@@ -15,7 +15,7 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "guide")
-public class Guide {
+public class Guide extends BaseEntity {
     @Id
     @Size(max = 255)
     @Column(name = "id", nullable = false)
@@ -55,13 +55,7 @@ public class Guide {
     @Column(name = "phone", nullable = false, length = 20)
     private String phone;
 
-    @Size(max = 50)
-    @Nationalized
-    @ColumnDefault("'active'")
-    @Column(name = "status", length = 50)
-    private String status;
-
     @OneToMany(mappedBy = "guide")
-    private Set<Tour> tours = new LinkedHashSet<>();
+    private Set<TourDetail> tourDetails = new LinkedHashSet<>();
 
 }

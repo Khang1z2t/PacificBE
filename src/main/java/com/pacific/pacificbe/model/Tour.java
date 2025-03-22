@@ -58,10 +58,6 @@ public class Tour extends BaseEntity {
     @JoinColumn(name = "destination_id")
     private Destination destination;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "guide_id")
-    private Guide guide;
-
     @OneToMany(mappedBy = "tour")
     private Set<Image> images = new LinkedHashSet<>();
 

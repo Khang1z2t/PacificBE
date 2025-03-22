@@ -59,7 +59,7 @@ public class GuideServiceImpl implements GuideService {
         guide.setFirstName(request.getFirstName());
         guide.setLastName(request.getLastName());
         guide.setPhone(request.getPhone());
-        guide.setStatus(request.getStatus());
+//        guide.setStatus(request.getStatus());
         // Lưu
         guide = guideRepository.save(guide);
 
@@ -81,10 +81,10 @@ public class GuideServiceImpl implements GuideService {
 
         // Nếu request có status mới, cập nhật theo request
         if (request.getStatus() != null) {
-            guide.setStatus(request.getStatus());
+//            guide.setStatus(request.getStatus());
         } else {
             // Nếu không có status, tự động chuyển đổi giữa ACTIVE và INACTIVE
-            guide.setStatus("ACTIVE".equalsIgnoreCase(guide.getStatus()) ? "INACTIVE" : "ACTIVE");
+//            guide.setStatus("ACTIVE".equalsIgnoreCase(guide.getStatus()) ? "INACTIVE" : "ACTIVE");
         }
 
         return guideMapper.toGuideResponse(guideRepository.save(guide));
