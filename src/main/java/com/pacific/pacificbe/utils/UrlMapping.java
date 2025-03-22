@@ -189,6 +189,8 @@ public class UrlMapping {
     /* =========================== Start Other URL ===================================== */
     public static final String FE_URL = "http://localhost:3000";
     public static final String GOOGLE_REDIRECT = FE_URL + "/google/redirect";
+    public static final String PAYMENT_FAIL = FE_URL + "checkout/fail";
+    public static final String PAYMENT_SUCCESS = FE_URL + "checkout/success";
     /* =========================== End Other URL ===================================== */
 
     /* =========================== Start Destination API ===================================== */

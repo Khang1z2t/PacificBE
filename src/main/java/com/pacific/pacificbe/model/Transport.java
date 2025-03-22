@@ -28,10 +28,6 @@ public class Transport extends BaseEntity {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @NotNull
-    @Column(name = "price", nullable = false, precision = 10, scale = 2)
-    private BigDecimal price;
-
     @Column(name = "cost", precision = 10, scale = 2)
     private BigDecimal cost;
 

@@ -12,7 +12,7 @@ public class HotelMapper {
         Hotel hotel = new Hotel();
         hotel.setName(hotelRequest.getName());
         hotel.setTypeHotel(String.valueOf(hotelRequest.getTypeHotel()));
-        hotel.setPrice(hotelRequest.getPrice());
+//        hotel.setPrice(hotelRequest.getPrice());
         return hotel;
     }
 
@@ -21,7 +21,7 @@ public class HotelMapper {
         hotelResponse.setId(hotel.getId());
         hotelResponse.setName(hotel.getName());
         hotelResponse.setTypeHotel(Integer.parseInt(hotel.getTypeHotel()));
-        hotelResponse.setPrice(hotel.getPrice());
+//        hotelResponse.setPrice(hotel.getPrice());
         return hotelResponse;
     }
 
