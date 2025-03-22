@@ -25,7 +25,6 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AdminSupportController {
     SupportService supportService;
-    private static final Logger log = LoggerFactory.getLogger(AdminSupportController.class);
 
     @GetMapping(UrlMapping.GET_ALL_SUPPORTS)
     @Operation(summary = "Lấy danh sách tất cả email cần hỗ trợ")

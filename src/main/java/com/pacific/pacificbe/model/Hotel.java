@@ -26,8 +26,18 @@ public class Hotel {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "price", precision = 10, scale = 2)
-    private BigDecimal price;
+    @Size(max = 255)
+    @Nationalized
+    @Column(name = "rating")
+    private String rating;
+
+    @Column(name = "cost", precision = 10, scale = 2)
+    private BigDecimal cost;
+
+    @Size(max = 255)
+    @Nationalized
+    @Column(name = "ImageURL")
+    private String ImageURL;
 
     @Size(max = 50)
     @Nationalized

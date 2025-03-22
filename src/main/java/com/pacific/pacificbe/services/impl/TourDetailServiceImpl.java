@@ -30,7 +30,8 @@ public class TourDetailServiceImpl implements TourDetailService {
     private final TourDetailRepository tourDetailRepository;
     private final TourDetailMapper tourDetailMapper;
     private final TourMapper tourMapper;
-//    private final ItineraryRepository itineraryRepository;
+    private final ItineraryRepository itineraryRepository;
+    private final GuideRepository guideRepository;
 
     @Override
     @Transactional
@@ -52,6 +53,10 @@ public class TourDetailServiceImpl implements TourDetailService {
         tourDetail.setHotel(hotel);
         Transport transport = transportRepository.findById(request.getTransportId())
                 .orElseThrow(() -> new AppException(ErrorCode.TRANSPORT_NOT_FOUND));
+        Guide guide = guideRepository.findById(request.getGuideId())
+                .orElseThrow(() -> new AppException(ErrorCode.GUIDE_NOT_FOUND));
+        tourDetail.setGuide(guide);
+        tourDetail.setHotel(hotel);
         tourDetail.setTransport(transport);
         tourDetail.setActive(true);
         tourDetail = tourDetailRepository.save(tourDetail);
@@ -63,7 +68,7 @@ public class TourDetailServiceImpl implements TourDetailService {
             itinerary.setDayDetail(itineraryRequest.getDayDetail());
             itinerary.setTourDetail(tourDetail);
             tourDetail.getItineraries().add(itinerary);
-//            itineraryRepository.save(itinerary);
+            itineraryRepository.save(itinerary);
         }
         tourDetailRepository.save(tourDetail);
         return tourMapper.toTourDetailResponse(tourDetail);

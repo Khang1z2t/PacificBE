@@ -21,6 +21,7 @@ public class TourDetailResponse {
     Integer quantity;
 
     List<ItineraryResponse> itineraries;
+    GuideResponse guide;
     String hotelId;
     String transportId;
 

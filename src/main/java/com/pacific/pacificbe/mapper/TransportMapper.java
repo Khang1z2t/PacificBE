@@ -11,7 +11,7 @@ public class TransportMapper {
         Transport transport = new Transport();
         transport.setName(request.getName());
         transport.setTypeTransport(request.getTypeTransport());
-        transport.setPrice(request.getPrice());
+//        transport.setPrice(request.getPrice());
         return transport;
     }
 
@@ -20,7 +20,7 @@ public class TransportMapper {
         response.setId(transport.getId());
         response.setName(transport.getName());
         response.setTypeTransport(transport.getTypeTransport());
-        response.setPrice(transport.getPrice());
+//        response.setPrice(transport.getPrice());
         return response;
     }
 }

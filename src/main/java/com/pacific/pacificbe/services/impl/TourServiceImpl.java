@@ -6,6 +6,7 @@ import com.pacific.pacificbe.dto.request.UpdateTourRequest;
 import com.pacific.pacificbe.dto.response.TourByIdResponse;
 import com.pacific.pacificbe.dto.response.TourResponse;
 import com.pacific.pacificbe.dto.response.showTour.TourBookingCount;
+import com.pacific.pacificbe.dto.response.showTour.TourDateResponse;
 import com.pacific.pacificbe.exception.AppException;
 import com.pacific.pacificbe.exception.ErrorCode;
 import com.pacific.pacificbe.mapper.TourMapper;
@@ -74,7 +75,7 @@ public class TourServiceImpl implements TourService {
         if (request.getGuideId() != null) {
             Guide guide = guideRepository.findById(request.getGuideId())
                     .orElseThrow(() -> new AppException(ErrorCode.GUIDE_NOT_FOUND));
-            tour.setGuide(guide);
+//            tour.setGuide(guide);
         }
 
         if (request.getDestinationId() != null) {
@@ -136,6 +137,11 @@ public class TourServiceImpl implements TourService {
                 .orElseThrow(() -> new AppException(ErrorCode.TOUR_NOT_FOUND));
         tourRepository.delete(tour);
         return true;
+    }
+
+    @Override
+    public List<TourDateResponse> getToursByDate(String startDate, String endDate) {
+        return tourRepository.findToursByDate(startDate, endDate);
     }
 
     private void addImagesToTour(MultipartFile[] images, Tour tour) {

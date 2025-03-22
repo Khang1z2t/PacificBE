@@ -7,6 +7,8 @@ import com.pacific.pacificbe.dto.response.TourByIdResponse;
 import com.pacific.pacificbe.dto.response.TourResponse;
 import com.pacific.pacificbe.dto.response.showTour.ItineraryTourDetailResponse;
 import com.pacific.pacificbe.dto.response.showTour.TourBookingCount;
+import com.pacific.pacificbe.dto.response.showTour.TourDateResponse;
+import com.pacific.pacificbe.model.Tour;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
@@ -30,4 +32,6 @@ public interface TourService {
     Boolean deleteTour(String id,boolean active);
 
     Boolean deleteTourForce(String id);
+
+    List<TourDateResponse> getToursByDate(String startDate, String endDate);
 }
