@@ -12,6 +12,6 @@ import java.math.BigDecimal;
 public class HotelResponse {
     String id;
     String name;
-    BigDecimal price;
+    BigDecimal cost;
     int typeHotel;
 }

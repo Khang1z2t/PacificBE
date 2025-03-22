@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 public class TransportResponse {
     String id;
     String name;
-    BigDecimal price;
+    BigDecimal cost;
     String typeTransport;
     boolean active;
 }
