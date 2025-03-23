@@ -1,5 +1,6 @@
 package com.pacific.pacificbe.services.impl;
 
+import com.pacific.pacificbe.dto.request.TransportRequest;
 import com.pacific.pacificbe.dto.response.TransportResponse;
 import com.pacific.pacificbe.mapper.TransportMapper;
 import com.pacific.pacificbe.model.Transport;
@@ -31,12 +32,27 @@ public class TransportImpl implements TransportService {
     }
 
     @Override
-    public TransportResponse saveTransport(Transport transport) {
-        return null;
+    public TransportResponse addTransport(TransportRequest request) {
+        Transport transport = transportMapper.toEntity(request);
+        transport = transportRepository.save(transport);
+        return transportMapper.toResponse(transport);
     }
 
     @Override
-    public void deleteTransport(String id) {
+    public TransportResponse updateTransport(String id, TransportRequest request) {
+        Transport transport = transportRepository.findById(id).orElseThrow(() -> new RuntimeException("Transport not found"));
+        transportMapper.updateEntityFromRequest(request, transport);
+        transport = transportRepository.save(transport);
+        return transportMapper.toResponse(transport);
+    }
 
+    @Override
+    public boolean deleteTransport(String id) {
+        if (transportRepository.existsById(id)) {
+            transportRepository.deleteById(id);
+            return true;
+        } else {
+            throw new RuntimeException("Transport not found");
+        }
     }
 }

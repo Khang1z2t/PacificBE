@@ -1,5 +1,7 @@
 package com.pacific.pacificbe.controller;
 
+import com.pacific.pacificbe.dto.ApiResponse;
+import com.pacific.pacificbe.dto.request.TransportRequest;
 import com.pacific.pacificbe.dto.response.TransportResponse;
 import com.pacific.pacificbe.services.TransportService;
 import com.pacific.pacificbe.utils.UrlMapping;
@@ -8,10 +10,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -36,4 +35,24 @@ public class TransportController {
         return ResponseEntity.ok(response);
     }
 
+    @Operation(summary = "Thêm phương tiện", description = "Thêm một phương tiện mới")
+    @PostMapping(UrlMapping.ADD_TRANSPORT)
+    public ResponseEntity<ApiResponse<TransportResponse>> addTransport(@RequestBody TransportRequest request) {
+        TransportResponse response = transportService.addTransport(request);
+        return ResponseEntity.ok(new ApiResponse<>(200, null, response));
+    }
+
+    @Operation(summary = "Cập nhật phương tiện", description = "Cập nhật thông tin của phương tiện dựa trên ID")
+    @PutMapping(UrlMapping.UPDATE_TRANSPORT)
+    public ResponseEntity<ApiResponse<TransportResponse>> updateTransport(@PathVariable String id, @RequestBody TransportRequest request) {
+        TransportResponse response = transportService.updateTransport(id, request);
+        return ResponseEntity.ok(new ApiResponse<>(200, null, response));
+    }
+
+    @Operation(summary = "Xóa phương tiện", description = "Xóa phương tiện dựa trên ID")
+    @DeleteMapping(UrlMapping.DELETE_TRANSPORT)
+    public ResponseEntity<ApiResponse<Boolean>> deleteTransport(@PathVariable String id) {
+        boolean result = transportService.deleteTransport(id);
+        return ResponseEntity.ok(new ApiResponse<>(200, null, result));
+    }
 }

@@ -1,5 +1,6 @@
 package com.pacific.pacificbe.mapper;
 
+import com.pacific.pacificbe.dto.request.TransportRequest;
 import com.pacific.pacificbe.dto.response.TransportResponse;
 import com.pacific.pacificbe.model.Transport;
 import org.springframework.stereotype.Component;
@@ -7,10 +8,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class TransportMapper {
 
-    public Transport toEntity(Transport request) {
+    public Transport toEntity(TransportRequest request) {
         Transport transport = new Transport();
         transport.setName(request.getName());
-        transport.setTypeTransport(request.getTypeTransport());
+        transport.setTypeTransport(String.valueOf(request.getTypeTransport()));
         transport.setPrice(request.getPrice());
         return transport;
     }
@@ -22,5 +23,11 @@ public class TransportMapper {
         response.setTypeTransport(transport.getTypeTransport());
         response.setPrice(transport.getPrice());
         return response;
+    }
+
+    public void updateEntityFromRequest(TransportRequest request, Transport transport) {
+        transport.setName(request.getName());
+        transport.setTypeTransport(String.valueOf(request.getTypeTransport()));
+        transport.setPrice(request.getPrice());
     }
 }
