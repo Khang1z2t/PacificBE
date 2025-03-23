@@ -1,7 +1,9 @@
 package com.pacific.pacificbe.controller;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 import com.pacific.pacificbe.dto.ApiResponse;
@@ -42,11 +44,13 @@ public class TourController {
             @RequestParam(required = false) String title,
             @RequestParam(required = false) BigDecimal minPrice,
             @RequestParam(required = false) BigDecimal maxPrice,
-            @RequestParam(required = false) String categoryId
+            @RequestParam(required = false) String categoryId,
+            @RequestParam(required = false) LocalDate startDate,
+            @RequestParam(required = false) LocalDate endDate
     ) {
         return ResponseEntity.ok(
                 ApiResponse.<List<TourResponse>>builder()
-                        .data(tourService.getAllTours(title, minPrice, maxPrice, categoryId))
+                        .data(tourService.getAllTours(title, minPrice, maxPrice, categoryId, startDate, endDate))
                         .build()
         );
     }

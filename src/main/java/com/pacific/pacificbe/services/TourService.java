@@ -12,11 +12,13 @@ import com.pacific.pacificbe.model.Tour;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 public interface TourService {
-    List<TourResponse> getAllTours(String title, BigDecimal minPrice, BigDecimal maxPrice, String categoryId);
+    List<TourResponse> getAllTours(String title, BigDecimal minPrice, BigDecimal maxPrice, String categoryId,LocalDate startDate, LocalDate endDate);
 
     TourByIdResponse getTourById(String id);
     
