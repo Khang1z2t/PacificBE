@@ -93,6 +93,14 @@ public class UrlMapping {
     public static final String CHECKOUT_RETURN = "/vnpay-payment-return";
     /*============================ End Booking API ===================================*/
 
+    /*============================ Start PAYMENT API ===================================*/
+
+    public static final String PAYMENTS = API + "/payments";
+    public static final String GET_ALL_PAYMENTS = "/all";
+    public static final String GET_PAYMENT_BY_ID = "/{id}";
+
+    /*============================ End PAYMENT API ===================================*/
+
 
     /*============================ Start Wishlist API ===================================*/
     public static final String WISHLIST = API + "/wishlist";
