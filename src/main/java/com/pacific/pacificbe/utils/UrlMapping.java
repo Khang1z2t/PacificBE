@@ -50,6 +50,7 @@ public class UrlMapping {
     public static final String TOURS = API + "/tours";
     public static final String GET_TOUR_BY_ID = "/{id}";
     public static final String GET_TOUR_BY_NO = "/no/{tourNo}";
+    public static final String GET_TOUR_BY_DATE = "/date/{startDate}/{endDate}";
     public static final String ADD_TOUR_THUMBNAIL = "/add-thumbnail/{id}";
     public static final String ADD_TOUR_IMAGES = "/add-images/{id}";
     public static final String GET_ALL_TOURS = "/all";
@@ -71,7 +72,7 @@ public class UrlMapping {
     public static final String UPDATE_TOUR_DETAIL = "/update";
     public static final String DELETE_TOUR_DETAIL = "/delete/{id}";
     public static final String GET_TOUR_DETAIL_MONTH = "/month/{tourId}";
-    public static final String GET_TOUR_DETAIL_DAY = "/day/{tourId}/{months}";
+    public static final String GET_TOUR_DETAIL_DAY = "/day";
     /*============================ End Tour Detail API ===================================*/
 
 
@@ -82,8 +83,9 @@ public class UrlMapping {
     public static final String GET_BOOKING_BY_NO = "/book/no/{bookingNo}";
     public static final String GET_BOOKING_BY_USER = "/book/user/{userId}";
     public static final String BOOK_TOUR = "/book-tour";
-    public static final String UPDATE_BOOKING = "/book/{id}/update";
-    public static final String DELETE_BOOKING = "/book/{id}/delete";
+    public static final String CREATE_BOOKING = "/add";
+    public static final String UPDATE_BOOKING = "/{id}/update";
+    public static final String DELETE_BOOKING = "/{id}/delete";
     public static final String APPROVE_BOOKING = "/book/{id}/approve";
     public static final String CANCEL_BOOKING = "/book/{id}/cancel";
     public static final String DECLINE_BOOKINGS = "/book/{id}/decline";
@@ -187,6 +189,8 @@ public class UrlMapping {
     /* =========================== Start Other URL ===================================== */
     public static final String FE_URL = "http://localhost:3000";
     public static final String GOOGLE_REDIRECT = FE_URL + "/google/redirect";
+    public static final String PAYMENT_FAIL = FE_URL + "/checkout/fail";
+    public static final String PAYMENT_SUCCESS = FE_URL + "/checkout/success";
     /* =========================== End Other URL ===================================== */
 
     /* =========================== Start Destination API ===================================== */

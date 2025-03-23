@@ -29,7 +29,7 @@ public class CheckOutController {
     public String checkoutTour(@RequestParam("amount") int orderTotal,
                                @RequestParam("orderInfo") String orderInfo,
                                HttpServletRequest request) {
-        if(orderTotal <= 0) {
+        if (orderTotal <= 0) {
             return "/";
         }
         String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
@@ -62,8 +62,8 @@ public class CheckOutController {
 //        return "/";
 //    }
     public ResponseEntity<?> handleVnpayReturn(@RequestParam Map<String, String> params, HttpServletResponse response) {
-        String successUrl = "http://localhost:3000/checkout/success"; // Địa chỉ FE hiển thị kết quả thanh toán
-        String failUrl = "http://localhost:3000/checkout/fail"; // Địa chỉ FE hiển thị kết quả thanh toán
+        String successUrl = UrlMapping.PAYMENT_SUCCESS;   // Địa chỉ FE hiển thị kết quả thanh toán
+        String failUrl = UrlMapping.PAYMENT_FAIL; // Địa chỉ FE hiển thị kết quả thanh toán
 
         String respCode = params.get("vnp_ResponseCode");
         String frontendURL = "00".equals(respCode) ? successUrl : failUrl;

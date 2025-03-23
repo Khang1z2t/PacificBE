@@ -52,8 +52,8 @@ public class TourDetailController {
     @GetMapping(UrlMapping.GET_TOUR_DETAIL_DAY)
     @Operation(summary = "Lấy chi tiết tour theo ngày")
     public ResponseEntity<ApiResponse<List<DetailTourResponse>>> getTourDetailDay(
-            @PathVariable String tourId,
-            @PathVariable String months
+            @RequestParam String tourId,
+            @RequestParam String months
     ) {
         return ResponseEntity.ok(new ApiResponse<>(200, "Lấy chi tiết tour theo ngày thành công", tourDetailService.getTourDetailDay(tourId,months)));
     }

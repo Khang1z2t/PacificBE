@@ -26,6 +26,8 @@ public class CreateTourDetailRequest {
     Integer quantity;
     @Schema(description = "Id của tour", example = "1")
     String tourId;
+    @Schema(description = "id của hdv", example = "1")
+    String guideId;
     @Schema(description = "Id của khách sạn", example = "1")
     String hotelId;
     @Schema(description = "Id của phương tiện", example = "1")

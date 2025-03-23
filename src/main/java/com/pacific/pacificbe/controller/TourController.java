@@ -1,6 +1,7 @@
 package com.pacific.pacificbe.controller;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.pacific.pacificbe.dto.ApiResponse;
@@ -9,6 +10,8 @@ import com.pacific.pacificbe.dto.request.TourFilterRequest;
 import com.pacific.pacificbe.dto.response.TourByIdResponse;
 import com.pacific.pacificbe.dto.response.TourResponse;
 import com.pacific.pacificbe.dto.response.showTour.TourBookingCount;
+import com.pacific.pacificbe.dto.response.showTour.TourDateResponse;
+import com.pacific.pacificbe.model.Tour;
 import com.pacific.pacificbe.services.GoogleDriveService;
 import com.pacific.pacificbe.services.TourService;
 import com.pacific.pacificbe.utils.UrlMapping;
@@ -96,5 +99,10 @@ public class TourController {
         return ResponseEntity.ok(googleDriveService.uploadImageToDrive(file, FolderType.TOUR));
     }
 
-
+    @GetMapping(UrlMapping.GET_TOUR_BY_DATE)
+    @Operation(summary = "Lấy danh sách tour theo ngày")
+    public ResponseEntity<List<TourDateResponse>> getToursByDate(@PathVariable LocalDateTime startDate,
+                                                                 @PathVariable LocalDateTime endDate) {
+        return ResponseEntity.ok(tourService.getToursByDate(startDate, endDate));
+    }
 }

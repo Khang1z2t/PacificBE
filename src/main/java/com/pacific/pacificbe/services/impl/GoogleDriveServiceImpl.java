@@ -6,6 +6,7 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.drive.model.File;
+import com.google.api.services.drive.model.Permission;
 import com.google.auth.http.HttpCredentialsAdapter;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.pacific.pacificbe.config.DriveFolderConfig;
@@ -55,6 +56,14 @@ public class GoogleDriveServiceImpl implements GoogleDriveService {
             FileContent mediaContent = new FileContent(file.getContentType(), tempFile);
             File uploadedFile = driveService.files().create(fileMetadata, mediaContent)
                     .setFields("id,webContentLink,webViewLink")
+                    .execute();
+
+            Permission permission = new Permission();
+            permission.setType("anyone"); // Ai cũng xem được
+            permission.setRole("reader"); // Chỉ có quyền xem
+
+            driveService.permissions().create(uploadedFile.getId(), permission)
+                    .setFields("id")
                     .execute();
 
             tempFile.delete();
