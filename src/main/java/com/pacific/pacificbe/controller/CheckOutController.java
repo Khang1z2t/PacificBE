@@ -1,5 +1,9 @@
 package com.pacific.pacificbe.controller;
 
+import com.pacific.pacificbe.model.Invoice;
+import com.pacific.pacificbe.model.Payment;
+import com.pacific.pacificbe.repository.PaymentRepository;
+import com.pacific.pacificbe.services.PaymentService;
 import com.pacific.pacificbe.services.VNPAYService;
 import com.pacific.pacificbe.utils.UrlMapping;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,8 +17,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Base64;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -23,6 +32,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CheckOutController {
     private final VNPAYService vnPayService;
+    private final PaymentService ps;
 
     @GetMapping(UrlMapping.CHECKOUT_BOOKING)
     @Operation(summary = "Thanh toán tour")
@@ -37,6 +47,7 @@ public class CheckOutController {
     }
 
     @GetMapping(UrlMapping.CHECKOUT_RETURN)
+    @Operation(summary = "Trả về kết quả thanh toán từ VNPAY Lưu ý : OrderInfo sẽ được mã hóa base64")
 //    public String paymentCompleted(HttpServletRequest request, Model model) {
 //        int paymentStatus = vnPayService.orderReturn(request);
 //        System.out.println("Payment status: " + paymentStatus);
@@ -61,24 +72,30 @@ public class CheckOutController {
 ////        lsDAO.save(payment);
 //        return "/";
 //    }
-    public ResponseEntity<?> handleVnpayReturn(@RequestParam Map<String, String> params, HttpServletResponse response) {
-        String successUrl = UrlMapping.PAYMENT_SUCCESS;   // Địa chỉ FE hiển thị kết quả thanh toán
-        String failUrl = UrlMapping.PAYMENT_FAIL; // Địa chỉ FE hiển thị kết quả thanh toán
+    public void handleVnpayReturn(@RequestParam Map<String, String> params, HttpServletResponse response) throws IOException {
+        String redirectUrl;
+        Payment p = new Payment();
 
-        String respCode = params.get("vnp_ResponseCode");
-        String frontendURL = "00".equals(respCode) ? successUrl : failUrl;
-        // Tạo URL redirect kèm theo query params
-        String redirectUrl = frontendURL + "?" + params.entrySet()
-                .stream()
-                .map(entry -> entry.getKey() + "=" + entry.getValue())
-                .collect(Collectors.joining("&"));
+        if ("00".equals(params.get("vnp_ResponseCode"))) {
+            p.setTransactionId(params.get("vnp_TransactionNo"));
+            p.setTotalAmount(new BigDecimal(params.get("vnp_Amount")).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP));
 
-        try {
-            response.sendRedirect(redirectUrl);
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Redirect failed");
+            String startDateStr = params.get("vnp_PayDate");
+            if (startDateStr != null && !startDateStr.isEmpty()) {
+                p.setCreatedAt(LocalDateTime.parse(startDateStr, DateTimeFormatter.ofPattern("yyyyMMddHHmmss")));
+            }
+            p.setStatus("COMPLETED");
+            p.setActive(true);
+            p.setPaymentMethod("VNPAY");
+            p.setNote(params.get("vnp_OrderInfo")); // Lưu kiểu base64 => FE giải mã ra
+            ps.savePayment(p);
+
+            redirectUrl = UrlMapping.PAYMENT_SUCCESS;
+        } else {
+            redirectUrl = UrlMapping.PAYMENT_FAIL;
         }
 
-        return ResponseEntity.ok().build();
+        System.out.println("Redirecting to: " + redirectUrl);
+        response.sendRedirect(redirectUrl);
     }
 }
