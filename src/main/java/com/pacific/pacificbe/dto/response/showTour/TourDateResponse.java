@@ -25,7 +25,7 @@ public class TourDateResponse {
     String destination;
 
     Boolean active;
-    Date createdAt;
-    Date updatedAt;
-    Date deletedAt;
+    LocalDateTime createdAt;
+    LocalDateTime updatedAt;
+    LocalDateTime deletedAt;
 }

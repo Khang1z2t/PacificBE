@@ -12,6 +12,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -63,8 +64,8 @@ public interface TourRepository extends JpaRepository<Tour, String> {
         from tour t
             join tour_details td on t.id = td.tour_id
         where
-            td.created_at is null or td.start_date between :startDate and :endDate
+            td.start_date is null or td.start_date between :startDate and :endDate
         """,nativeQuery = true)
-    List<TourDateResponse> findToursByDate(@Param("startDate") String startDate,
-                                           @Param("endDate") String endDate);
+    List<TourDateResponse> findToursByDate(@Param("startDate") LocalDateTime startDate,
+                                           @Param("endDate") LocalDateTime endDate);
 }

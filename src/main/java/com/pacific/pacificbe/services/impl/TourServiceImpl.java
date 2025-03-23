@@ -140,7 +140,7 @@ public class TourServiceImpl implements TourService {
     }
 
     @Override
-    public List<TourDateResponse> getToursByDate(String startDate, String endDate) {
+    public List<TourDateResponse> getToursByDate(LocalDateTime startDate, LocalDateTime endDate) {
         return tourRepository.findToursByDate(startDate, endDate);
     }
 

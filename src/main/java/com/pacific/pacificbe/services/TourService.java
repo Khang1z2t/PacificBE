@@ -12,6 +12,7 @@ import com.pacific.pacificbe.model.Tour;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface TourService {
@@ -33,5 +34,5 @@ public interface TourService {
 
     Boolean deleteTourForce(String id);
 
-    List<TourDateResponse> getToursByDate(String startDate, String endDate);
+    List<TourDateResponse> getToursByDate(LocalDateTime startDate, LocalDateTime endDate);
 }

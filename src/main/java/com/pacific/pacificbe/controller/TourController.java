@@ -1,6 +1,7 @@
 package com.pacific.pacificbe.controller;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.pacific.pacificbe.dto.ApiResponse;
@@ -100,8 +101,8 @@ public class TourController {
 
     @GetMapping(UrlMapping.GET_TOUR_BY_DATE)
     @Operation(summary = "Lấy danh sách tour theo ngày")
-    public ResponseEntity<List<TourDateResponse>> getToursByDate(@PathVariable String startDate,
-                                                                 @PathVariable String endDate) {
+    public ResponseEntity<List<TourDateResponse>> getToursByDate(@PathVariable LocalDateTime startDate,
+                                                                 @PathVariable LocalDateTime endDate) {
         return ResponseEntity.ok(tourService.getToursByDate(startDate, endDate));
     }
 }
