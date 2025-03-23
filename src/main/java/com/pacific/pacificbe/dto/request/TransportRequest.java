@@ -12,7 +12,8 @@ import java.math.BigDecimal;
 public class TransportRequest {
     private String id;
     private String name;
-    BigDecimal price;
-    private int typeTransport;
+    private BigDecimal cost;
+    private String ImageURL;
+    private String typeTransport;
     private boolean active;
 }

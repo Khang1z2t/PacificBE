@@ -22,26 +22,37 @@ public class TransportImpl implements TransportService {
 
     @Override
     public List<TransportResponse> getAllTransports() {
-        return transportRepository.findAll().stream().map(transportMapper::toResponse).collect(Collectors.toList());
+        return transportRepository.findAll().stream()
+                .map(transportMapper::toResponse)
+                .collect(Collectors.toList());
     }
 
     @Override
     public TransportResponse getTransportById(String id) {
-        Transport transport = transportRepository.findById(id).orElseThrow(() -> new RuntimeException("Transport not found"));
+        Transport transport = transportRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Transport not found"));
         return transportMapper.toResponse(transport);
     }
 
     @Override
     public TransportResponse addTransport(TransportRequest request) {
-        Transport transport = transportMapper.toEntity(request);
+        Transport transport = new Transport();
+        transport.setName(request.getName());
+        transport.setCost(request.getCost());
+        transport.setTypeTransport(request.getTypeTransport());
+        transport.setImageURL(request.getImageURL()); // Thêm imageURL
         transport = transportRepository.save(transport);
         return transportMapper.toResponse(transport);
     }
 
     @Override
     public TransportResponse updateTransport(String id, TransportRequest request) {
-        Transport transport = transportRepository.findById(id).orElseThrow(() -> new RuntimeException("Transport not found"));
-        transportMapper.updateEntityFromRequest(request, transport);
+        Transport transport = transportRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Transport not found"));
+        transport.setName(request.getName());
+        transport.setCost(request.getCost());
+        transport.setTypeTransport(request.getTypeTransport());
+        transport.setImageURL(request.getImageURL()); // Cập nhật imageURL
         transport = transportRepository.save(transport);
         return transportMapper.toResponse(transport);
     }
