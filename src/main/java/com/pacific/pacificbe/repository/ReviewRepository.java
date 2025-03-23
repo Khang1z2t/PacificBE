@@ -13,10 +13,9 @@ public interface ReviewRepository extends JpaRepository<Review, String>{
     void delete(Review review);
 
     @Query("SELECT new com.pacific.pacificbe.dto.response.ReviewResponse( " +
-            "r.id, r.status, r.comment, r.rating, u.email, t.title, r.createdAt) " +
+            "r.id, r.status, r.comment, r.rating, u.email, t.title, r.createdAt) " + // Giữ nguyên u.email
             "FROM Review r " +
             "JOIN r.user u " +
             "JOIN r.tour t")
     List<ReviewResponse> getAllReviewsWithDetails();
-
 }

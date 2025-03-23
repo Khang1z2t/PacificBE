@@ -16,4 +16,7 @@ public interface AdminReviewService {
     AdminReviewResponse updateReview(String id, AdminReviewRequest request);
 
     void deleteReview(String id);
+
+    void updateReviewStatus(String id, String status);
+
 }

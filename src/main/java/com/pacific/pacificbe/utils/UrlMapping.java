@@ -165,13 +165,7 @@ public class UrlMapping {
     public static final String GET_ADMIN_REVIEW_BY_ID = "/get/{id}";
     public static final String UPDATE_ADMIN_REVIEW = "/update/{id}";
     public static final String DELETE_ADMIN_REVIEW = "/delete/{id}";
-    public static final String GET_ALL_REVIEWS = "/all";
-    public static final String CREATE_REVIEW = "/create";
-    public static final String GET_REVIEW_BY_ID = "/get/{id}";
-    public static final String GET_REVIEW_BY_TOUR = "/get/allReviews";
-    public static final String UPDATE_REVIEW = "/update/{id}";
-    public static final String UPDATE_STATUS_REVIEW = "/updateStatus/{id}";
-    public static final String DELETE_REVIEW = "/delete/{id}";
+    public static final String UPDATE_ADMIN_REVIEW_STATUS = "/updateStatus/{id}";
     /* =========================== End Admin_review API ===================================== */
 
     /* =========================== Start Admin Guide API ===================================== */

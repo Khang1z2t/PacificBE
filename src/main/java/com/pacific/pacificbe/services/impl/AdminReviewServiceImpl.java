@@ -121,4 +121,15 @@ public class AdminReviewServiceImpl implements AdminReviewService {
 
         reviewRepository.delete(review);
     }
+
+    @Override
+    public void updateReviewStatus(String id, String status) {
+        Review review = reviewRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.REVIEW_NOT_FOUND));
+
+        review.setStatus(status);
+        reviewRepository.save(review);
+    }
+
+
 }

@@ -71,4 +71,24 @@ public class AdminReviewController {
         adminReviewService.deleteReview(id);
         return ResponseEntity.noContent().build();
     }
+
+    @Operation(
+            summary = "Cập nhật trạng thái đánh giá",
+            description = "Cập nhật trạng thái của đánh giá theo ID"
+    )
+
+    @PatchMapping(UrlMapping.UPDATE_ADMIN_REVIEW_STATUS)
+    public ResponseEntity<ApiResponse<Void>> updateReviewStatus(
+            @PathVariable String id,
+            @RequestParam(required = true) String status) {
+
+        if (status == null || status.isEmpty()) {
+            return ResponseEntity.badRequest().body(ApiResponse.<Void>builder().message("Trạng thái không được để trống").build());
+        }
+
+        adminReviewService.updateReviewStatus(id, status);
+        return ResponseEntity.ok(ApiResponse.<Void>builder().message("Cập nhật trạng thái thành công").build());
+    }
+
+
 }
