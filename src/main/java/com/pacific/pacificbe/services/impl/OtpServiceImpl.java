@@ -10,6 +10,7 @@ import com.pacific.pacificbe.services.OtpService;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.Optional;
@@ -23,6 +24,7 @@ public class OtpServiceImpl implements OtpService {
     UserRepository userRepository;
 
     @Override
+    @Transactional
     public String generateOtp(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
@@ -38,6 +40,7 @@ public class OtpServiceImpl implements OtpService {
     }
 
     @Override
+    @Transactional
     public boolean verifyOtp(String email, String otp) {
         Optional<Otp> otpOptional = otpRepository.findByEmailAndExpiresAtAfter(email, Instant.now());
 
