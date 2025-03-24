@@ -79,4 +79,11 @@ public class Booking extends BaseEntity {
     @OneToMany(mappedBy = "booking")
     private Set<Review> reviews = new LinkedHashSet<>();
 
+    @OneToMany(mappedBy = "booking")
+    private Set<BookingDetail> bookingDetails = new LinkedHashSet<>();
+
+    @Size(max = 225)
+    @Column(name = "booking_no", length = 225)
+    private String bookingNo;
+
 }
