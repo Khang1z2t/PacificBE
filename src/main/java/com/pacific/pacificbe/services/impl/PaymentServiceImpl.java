@@ -19,9 +19,9 @@ import java.util.List;
 @RequiredArgsConstructor
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE, makeFinal = true)
 public class PaymentServiceImpl implements PaymentService {
-    private final PaymentRepository pr;
-    private final PaymentMapper pm;
-    private final UserRepository ur;
+    private final PaymentRepository paymentRepository;
+    private final PaymentMapper paymentMapper;
+    private final UserRepository userRepository;
 
     @Override
     public void savePayment(Payment payment) {
@@ -29,10 +29,10 @@ public class PaymentServiceImpl implements PaymentService {
         if(userid == null) {
             throw new AppException(ErrorCode.NEED_LOGIN);
         }
-        var user = ur.findById(userid).orElseThrow(
+        var user = userRepository.findById(userid).orElseThrow(
                 () -> new AppException(ErrorCode.USER_NOT_FOUND));
         payment.setUser(user);
-        pr.save(payment);
+        paymentRepository.save(payment);
     }
 
     @Override
@@ -41,9 +41,9 @@ public class PaymentServiceImpl implements PaymentService {
         if(userId == null) {
             throw new AppException(ErrorCode.NEED_LOGIN);
         }
-        var user = ur.findById(userId).orElseThrow(
+        var user = userRepository.findById(userId).orElseThrow(
                 () -> new AppException(ErrorCode.USER_NOT_FOUND));
-        List<Payment> payments = pr.findAllByUser(user);
-        return pm.toPaymentResponseList(payments);
+        List<Payment> payments = paymentRepository.findAllByUser(user);
+        return paymentMapper.toPaymentResponseList(payments);
     }
 }

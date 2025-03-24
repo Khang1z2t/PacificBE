@@ -119,6 +119,9 @@ public class User extends BaseEntity implements UserDetails {
     @OneToMany(mappedBy = "user")
     private Set<Wishlist> wishlists = new LinkedHashSet<>();
 
+    @OneToMany(mappedBy = "user")
+    private Set<Payment> payments = new LinkedHashSet<>();
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role));
