@@ -821,7 +821,83 @@ INSERT INTO booking (id, active, created_at, delete_at, updated_at, adult_num, b
 -- USER010 với 2 booking
 ('BK019', 1, '2024-07-25', NULL, GETDATE(), 3, 'Pending', 1, 'Credit Card', 'Extra night stay', 850.00, 4, 'COMBO007', 'PM009', 'TD019', 'USER010'),
 ('BK020', 1, '2024-02-28', NULL, GETDATE(), 2, 'Completed', 0, 'Mobile Wallet', NULL, 500.00, 2, 'COMBO008', 'PM010', 'TD020', 'USER010');
+-- Insert sample data into category table
+INSERT INTO category (ID, STATUS, TITLE, TYPE) VALUES
+                                                   ('CAT001', 'active', 'Adventure', 'Outdoor'),
+                                                   ('CAT002', 'active', 'Relaxation', 'Indoor'),
+                                                   ('CAT003', 'active', 'Sports', 'Outdoor'),
+                                                   ('CAT004', 'active', 'Technology', 'Indoor'),
+                                                   ('CAT005', 'active', 'Music', 'Indoor'),
+                                                   ('CAT006', 'active', 'Art', 'Indoor'),
+                                                   ('CAT007', 'active', 'Fitness', 'Outdoor'),
+                                                   ('CAT008', 'active', 'Cooking', 'Indoor'),
+                                                   ('CAT009', 'active', 'Travel', 'Outdoor'),
+                                                   ('CAT010', 'active', 'Photography', 'Outdoor');
 
+
+-- Insert sample data into destination table
+INSERT INTO destination (id, city, country, full_address, name, region) VALUES
+                                                                            ('DEST001', 'Hanoi', 'Vietnam', '123 Street, Hanoi', 'Hanoi City', 'North'),
+                                                                            ('DEST002', 'Ho Chi Minh City', 'Vietnam', '456 Avenue, HCMC', 'Saigon', 'South'),
+                                                                            ('DEST003', 'Da Nang', 'Vietnam', '789 Road, Da Nang', 'Da Nang Beach', 'Central'),
+                                                                            ('DEST004', 'Nha Trang', 'Vietnam', '101 Beach St, Nha Trang', 'Nha Trang Bay', 'Central'),
+                                                                            ('DEST005', 'Phu Quoc', 'Vietnam', '202 Island Rd, Phu Quoc', 'Phu Quoc Island', 'South'),
+                                                                            ('DEST006', 'Bangkok', 'Thailand', '303 Sukhumvit Rd, Bangkok', 'Bangkok City', 'Central'),
+                                                                            ('DEST007', 'Singapore', 'Singapore', '404 Orchard Rd, Singapore', 'Singapore City', 'Southeast Asia'),
+                                                                            ('DEST008', 'Tokyo', 'Japan', '505 Shibuya, Tokyo', 'Tokyo Metropolis', 'East Asia'),
+                                                                            ('DEST009', 'Paris', 'France', '606 Champs-Élysées, Paris', 'Paris City', 'Europe'),
+                                                                            ('DEST010', 'New York', 'USA', '707 Fifth Avenue, New York', 'New York City', 'North America');
+
+-- Insert sample data into guide table
+INSERT INTO guide (id, address, email, experience_years, first_name, last_name, phone) VALUES
+                                                                                           ('GUIDE001', '789 Road, Hanoi', 'guide1@example.com', 5, 'John', 'Doe', '0123456789'),
+                                                                                           ('GUIDE002', '101 Street, HCMC', 'guide2@example.com', 3, 'Jane', 'Smith', '0987654321'),
+                                                                                           ('GUIDE003', '456 Avenue, Da Nang', 'guide3@example.com', 7, 'Alice', 'Nguyen', '0365478921'),
+                                                                                           ('GUIDE004', '222 Beach St, Nha Trang', 'guide4@example.com', 6, 'David', 'Tran', '0978523641'),
+                                                                                           ('GUIDE005', '333 Island Rd, Phu Quoc', 'guide5@example.com', 4, 'Emma', 'Le', '0832567894'),
+                                                                                           ('GUIDE006', '101 Sukhumvit Rd, Bangkok', 'guide6@example.com', 8, 'Michael', 'Wong', '0654789321'),
+                                                                                           ('GUIDE007', '202 Orchard Rd, Singapore', 'guide7@example.com', 9, 'Sophia', 'Tan', '0765893245'),
+                                                                                           ('GUIDE008', '303 Shibuya, Tokyo', 'guide8@example.com', 10, 'Liam', 'Kobayashi', '0954236781'),
+                                                                                           ('GUIDE009', '404 Champs-Élysées, Paris', 'guide9@example.com', 12, 'Olivia', 'Dupont', '0332145698'),
+                                                                                           ('GUIDE010', '505 Fifth Avenue, New York', 'guide10@example.com', 15, 'Noah', 'Johnson', '0987456321');
+
+
+-- Insert sample data into hotel table
+INSERT INTO hotel (id, name, price, type_hotel) VALUES
+                                                    ('HOTEL001', 'Luxury Hotel', 150.00, '5-star'),
+                                                    ('HOTEL002', 'Budget Hotel', 50.00, '3-star'),
+                                                    ('HOTEL003', 'Riverside Resort', 120.00, '4-star'),
+                                                    ('HOTEL004', 'Mountain View Lodge', 90.00, '3-star'),
+                                                    ('HOTEL005', 'Seaside Inn', 80.00, '3-star'),
+                                                    ('HOTEL006', 'Grand Palace Hotel', 200.00, '5-star'),
+                                                    ('HOTEL007', 'Business Suites', 110.00, '4-star'),
+                                                    ('HOTEL008', 'Eco Friendly Hotel', 70.00, '3-star'),
+                                                    ('HOTEL009', 'Boutique Stay', 130.00, '4-star'),
+                                                    ('HOTEL010', 'Skyline Tower Hotel', 180.00, '5-star');
+
+
+-- Insert sample data into payment table
+INSERT INTO payment (id, active, created_at, delete_at, updated_at, note, payment_method, status, total_amount, transaction_id) VALUES
+                                                                                                                                    ('PAY001', 1, '2023-01-01 10:00:00', NULL, '2023-01-01 10:00:00', 'Payment for tour', 'Credit Card', 'completed', 200.00, 'TRANS1'),
+                                                                                                                                    ('PAY002', 1, '2023-01-02 11:00:00', NULL, '2023-01-02 11:00:00', 'Payment for tour', 'PayPal', 'pending', 150.00, 'TRANS2'),
+                                                                                                                                    ('PAY003', 1, '2023-01-03 12:30:00', NULL, '2023-01-03 12:30:00', 'Flight booking', 'Bank Transfer', 'completed', 300.00, 'TRANS3'),
+                                                                                                                                    ('PAY004', 1, '2023-01-04 09:45:00', NULL, '2023-01-04 09:45:00', 'Hotel reservation', 'Credit Card', 'failed', 180.00, 'TRANS4'),
+                                                                                                                                    ('PAY005', 1, '2023-01-05 14:15:00', NULL, '2023-01-05 14:15:00', 'Payment for tour', 'Debit Card', 'completed', 220.00, 'TRANS5'),
+                                                                                                                                    ('PAY006', 1, '2023-01-06 16:20:00', NULL, '2023-01-06 16:20:00', 'Car rental payment', 'PayPal', 'completed', 90.00, 'TRANS6'),
+                                                                                                                                    ('PAY007', 1, '2023-01-07 08:10:00', NULL, '2023-01-07 08:10:00', 'Cruise booking', 'Bank Transfer', 'pending', 500.00, 'TRANS7'),
+                                                                                                                                    ('PAY008', 1, '2023-01-08 19:25:00', NULL, '2023-01-08 19:25:00', 'Restaurant bill', 'Credit Card', 'completed', 75.00, 'TRANS8'),
+                                                                                                                                    ('PAY009', 1, '2023-01-09 22:05:00', NULL, '2023-01-09 22:05:00', 'Tourist attraction ticket', 'Cash', 'completed', 50.00, 'TRANS9'),
+                                                                                                                                    ('PAY010', 1, '2023-01-10 11:30:00', NULL, '2023-01-10 11:30:00', 'Bus ticket payment', 'Debit Card', 'refunded', 30.00, 'TRANS10');
+
+
+-- Insert sample data into tour table
+INSERT INTO tour (id, active, created_at, delete_at, updated_at, available, description, duration, status, thumbnail_url, title, category_id, destination_id, guide_id) VALUES
+                                                                                                                                                                            ('TOUR001', 1, '2023-01-01 10:00:00', NULL, '2023-01-01 10:00:00', 1, 'Exciting adventure tour', 7, 'active', 'url1', 'Adventure Tour', 'CAT001', 'DEST001', 'GUIDE001'),
+                                                                                                                                                                            ('TOUR002', 1, '2023-01-02 11:00:00', NULL, '2023-01-02 11:00:00', 1, 'Relaxing indoor tour', 3, 'active', 'url2', 'Relaxation Tour', 'CAT002', 'DEST002', 'GUIDE002'),
+                                                                                                                                                                            ('TOUR003', 1, '2023-01-03 09:30:00', NULL, '2023-01-03 09:30:00', 1, 'Mountain hiking experience', 5, 'active', 'url3', 'Hiking Tour', 'CAT003', 'DEST003', 'GUIDE003'),
+                                                                                                                                                                            ('TOUR004', 1, '2023-01-04 14:45:00', NULL, '2023-01-04 14:45:00', 1, 'Cultural exploration tour', 4, 'active', 'url4', 'Cultural Tour', 'CAT004', 'DEST004', 'GUIDE004'),
+                                                                                                                                                                            ('TOUR005', 1, '2023-01-05 08:15:00', NULL, '2023-01-05 08:15:00', 1, 'Scenic island getaway', 6, 'active', 'url5', 'Island Tour', 'CAT005', 'DEST005', 'GUIDE005'),
+                                                                                                                                                                            ('TOUR006', 1, '2023-01-06 10:20:00', NULL, '2023-01-06 10:20:00', 1, 'City sightseeing tour', 2, 'active', 'url6', 'City Tour', 'CAT006', 'DEST006', 'GUIDE006')
 INSERT INTO review (id, active, created_at, delete_at, updated_at, comment, rating, booking_id, tour_id, user_id)
 VALUES
 ('RV001', 1, GETDATE(), NULL, GETDATE(), 'Great experience, highly recommended!', 5, 'BK001', 'TOUR001', 'USER001'),

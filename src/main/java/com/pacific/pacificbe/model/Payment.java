@@ -49,4 +49,8 @@ public class Payment extends BaseEntity {
     @OneToMany(mappedBy = "payment")
     private Set<Booking> bookings = new LinkedHashSet<>();
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userId")
+    private User user;
+
 }

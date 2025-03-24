@@ -17,8 +17,13 @@ public class AdminReviewMapper {
         response.setRating(review.getRating());
         response.setComment(review.getComment());
         response.setUserId(review.getUser().getId());
+        response.setStatus(review.getStatus());
+        response.setEmail(review.getUser().getEmail());
         response.setBookingId(review.getBooking().getId());
         response.setTourId(review.getTour().getId());
+        response.setTuorName(review.getTour().getTitle());
+
+        response.setCreatedAt(review.getCreatedAt());
         return response;
     }
 
@@ -27,6 +32,6 @@ public class AdminReviewMapper {
             review.setRating(request.getRating());
         }
         review.setComment(request.getComment());
-
+        review.setStatus(request.getStatus());
     }
 }
