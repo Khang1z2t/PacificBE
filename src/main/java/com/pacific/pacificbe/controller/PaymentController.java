@@ -1,5 +1,6 @@
 package com.pacific.pacificbe.controller;
 
+import com.pacific.pacificbe.dto.ApiResponse;
 import com.pacific.pacificbe.dto.response.PaymentResponse;
 import com.pacific.pacificbe.services.PaymentService;
 import com.pacific.pacificbe.utils.UrlMapping;
@@ -22,7 +23,7 @@ public class PaymentController {
 
     @GetMapping(UrlMapping.GET_ALL_PAYMENTS)
     @Operation(summary = "Lấy danh sách thanh toán", description = "Trả về danh sách tất cả các thanh toán")
-    public ResponseEntity<List<PaymentResponse>> getAllPayments() {
-        return ResponseEntity.ok(ps.getAllPayments());
+    public ResponseEntity<ApiResponse<List<PaymentResponse>>> getAllPayments() {
+        return ResponseEntity.ok(new ApiResponse<>(200, null, ps.getAllPayments()));
     }
 }
