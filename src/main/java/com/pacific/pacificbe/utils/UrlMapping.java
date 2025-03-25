@@ -78,7 +78,7 @@ public class UrlMapping {
 
 
     /*============================ Start Booking API ===================================*/
-    public static final String BOOKINGS = API + "/booking";
+    public static final String BOOKINGS = API + "/bookings";
     public static final String GET_ALL_BOOKINGS = "/all";
     public static final String GET_BOOKING_BY_ID = "/book/{id}";
     public static final String GET_BOOKING_BY_NO = "/book/no/{bookingNo}";
