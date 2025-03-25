@@ -11,13 +11,8 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BookingRequest {
-    Integer adultNum;
-    Integer childrenNum;
-    Integer totalNumber;
     String paymentMethod;
     String specialRequests;
-
-    String tourDetailId;
     String voucherId;
 
     List<BookingDetailRequest> bookingDetails;

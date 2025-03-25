@@ -77,12 +77,12 @@ public class UrlMapping {
 
 
     /*============================ Start Booking API ===================================*/
-    public static final String BOOKINGS = API + "/bookings";
+    public static final String BOOKINGS = API + "/booking";
     public static final String GET_ALL_BOOKINGS = "/all";
     public static final String GET_BOOKING_BY_ID = "/book/{id}";
     public static final String GET_BOOKING_BY_NO = "/book/no/{bookingNo}";
-    public static final String GET_BOOKING_BY_USER = "/book/user/{userId}";
-    public static final String BOOK_TOUR = "/book-tour";
+    public static final String GET_BOOKING_BY_USER = "/book/user";
+    public static final String BOOK_TOUR = "/tour/{id}/book";
     public static final String CREATE_BOOKING = "/add";
     public static final String UPDATE_BOOKING = "/{id}/update";
     public static final String DELETE_BOOKING = "/{id}/delete";
@@ -232,4 +232,16 @@ public class UrlMapping {
     public static final String SEND_MAIL = "/send-mail";
     public static final String UPDATE_STATUS_SUPPORT = "/updateStatus/{id}";
     /* =========================== End Admin Support API ===================================== */
+
+    /* =========================== Start Util API ===================================== */
+    public static final String UTIL = API + "/util/enum";
+    public static final String GET_ALL_UTILS = "/all";
+    public static final String GET_USER_ROLE = "/user-role";
+    public static final String GEt_GENDER = "/gender";
+    public static final String GET_BOOKING_STATUS = "/booking-status";
+    public static final String GET_TOUR_STATUS = "/tour-status";
+    public static final String GET_TOUR_DETAIL_STATUS = "/tour-detail-status";
+//    public static final String
+    /* =========================== End Util API ===================================== */
+
 }

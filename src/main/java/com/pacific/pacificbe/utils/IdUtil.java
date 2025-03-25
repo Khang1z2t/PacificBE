@@ -45,13 +45,14 @@ public class IdUtil {
     }
 
     public String createNewID(String chars) {
-        return chars + String.format("%03d", 1);
+        return chars + String.format("%04d", 1);
     }
 
-    public String createIDFromLastID(String chars, Integer index, String lastID) {
+    public String createIDFromLastID(String chars, String lastID) {
+        int index = chars.length();
         Integer IDNumber = Integer.parseInt(lastID.substring(index));
         IDNumber++;
-        return chars + String.format("%03d", IDNumber);
+        return chars + String.format("%04d", IDNumber);
     }
 
     public String generateRandomID() {

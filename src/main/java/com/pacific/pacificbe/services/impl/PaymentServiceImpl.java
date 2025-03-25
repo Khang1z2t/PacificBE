@@ -8,7 +8,7 @@ import com.pacific.pacificbe.model.Payment;
 import com.pacific.pacificbe.repository.PaymentRepository;
 import com.pacific.pacificbe.repository.UserRepository;
 import com.pacific.pacificbe.services.PaymentService;
-import com.pacific.pacificbe.utils.AuthenUtils;
+import com.pacific.pacificbe.utils.AuthUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
@@ -25,7 +25,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public void savePayment(Payment payment) {
-        String userid = AuthenUtils.getCurrentUserId();
+        String userid = AuthUtils.getCurrentUserId();
         if(userid == null) {
             throw new AppException(ErrorCode.NEED_LOGIN);
         }
@@ -37,7 +37,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public List<PaymentResponse> getAllPayments() {
-        String userId = AuthenUtils.getCurrentUserId();
+        String userId = AuthUtils.getCurrentUserId();
         if(userId == null) {
             throw new AppException(ErrorCode.NEED_LOGIN);
         }

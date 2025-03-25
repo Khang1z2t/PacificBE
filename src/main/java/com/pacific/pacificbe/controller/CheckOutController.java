@@ -1,32 +1,21 @@
 package com.pacific.pacificbe.controller;
 
-import com.pacific.pacificbe.model.Invoice;
 import com.pacific.pacificbe.model.Payment;
-import com.pacific.pacificbe.repository.PaymentRepository;
 import com.pacific.pacificbe.services.PaymentService;
 import com.pacific.pacificbe.services.VNPAYService;
-import com.pacific.pacificbe.utils.AuthenUtils;
 import com.pacific.pacificbe.utils.UrlMapping;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.nio.charset.StandardCharsets;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Base64;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @RequestMapping(UrlMapping.BOOKINGS)
 @RestController

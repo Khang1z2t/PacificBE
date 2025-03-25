@@ -1,5 +1,7 @@
 package com.pacific.pacificbe.dto.request;
 
+import com.pacific.pacificbe.utils.enums.AgeGroup;
+import com.pacific.pacificbe.utils.enums.GenderEnums;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -16,8 +18,8 @@ public class BookingDetailRequest {
     String fullName;
     String email;
     String phoneNumber;
-    String gender;
+    GenderEnums gender;
     Instant birthday;
-    String ageGroup;
+    AgeGroup ageGroup;
     BigDecimal price;
 }

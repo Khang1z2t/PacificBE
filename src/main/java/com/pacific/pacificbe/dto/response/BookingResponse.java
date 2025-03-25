@@ -4,6 +4,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -19,10 +20,12 @@ public class BookingResponse {
     String specialRequests;
     String tourDetailId;
     String voucherId;
-    String bookingStatus;
+    String status;
     String userId;
 
-    BookingDetailResponse details;
+    List<BookingDetailResponse> details;
+
+    PaymentResponse payment;
 
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
