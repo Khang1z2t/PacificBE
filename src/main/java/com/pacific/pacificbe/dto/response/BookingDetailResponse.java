@@ -3,6 +3,8 @@ package com.pacific.pacificbe.dto.response;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Data
@@ -10,19 +12,15 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class BookingResponse {
+public class BookingDetailResponse {
     String id;
-    Integer adultNum;
-    Integer childrenNum;
-    Integer totalNumber;
-    String paymentMethod;
-    String specialRequests;
-    String tourDetailId;
-    String voucherId;
-    String bookingStatus;
-    String userId;
-
-    BookingDetailResponse details;
+    String fullName;
+    String email;
+    String phoneNumber;
+    Instant birthday;
+    String ageGroup;
+    BigDecimal price;
+    String bookingId;
 
     LocalDateTime createdAt;
     LocalDateTime updatedAt;

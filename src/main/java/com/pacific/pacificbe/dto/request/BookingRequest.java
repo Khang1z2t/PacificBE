@@ -2,33 +2,23 @@ package com.pacific.pacificbe.dto.request;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.springframework.format.annotation.DateTimeFormat;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.util.List;
 
-@Getter
-@Setter
-@AllArgsConstructor
+@Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BookingRequest {
-    String userId;
-    String tourDetailId;
-
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    LocalDate bookingDate;
-
-    int adultNum;
-    int childrenNum;
-    int totalNumber;
-    BigDecimal totalAmount;
+    Integer adultNum;
+    Integer childrenNum;
+    Integer totalNumber;
     String paymentMethod;
     String specialRequests;
+
+    String tourDetailId;
     String voucherId;
 
-    LocalDateTime createdAt;
-    LocalDateTime updatedAt;
+    List<BookingDetailRequest> bookingDetails;
 }
