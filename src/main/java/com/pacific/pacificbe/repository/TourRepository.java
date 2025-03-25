@@ -13,6 +13,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface TourRepository extends JpaRepository<Tour, String> {
@@ -71,4 +72,6 @@ public interface TourRepository extends JpaRepository<Tour, String> {
             """, nativeQuery = true)
     List<TourDateResponse> findToursByDate(@Param("startDate") LocalDateTime startDate,
                                            @Param("endDate") LocalDateTime endDate);
+
+    Optional<Tour> findByTourDetails_Id(String id);
 }

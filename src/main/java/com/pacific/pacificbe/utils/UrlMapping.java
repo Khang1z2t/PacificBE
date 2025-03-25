@@ -50,6 +50,7 @@ public class UrlMapping {
     public static final String TOURS = API + "/tours";
     public static final String GET_TOUR_BY_ID = "/{id}";
     public static final String GET_TOUR_BY_NO = "/no/{tourNo}";
+    public static final String GET_TOUR_BY_TOUR_DETAIL_ID = "/tour-detail/{id}";
     public static final String GET_TOUR_BY_DATE = "/date/{startDate}/{endDate}";
     public static final String ADD_TOUR_THUMBNAIL = "/add-thumbnail/{id}";
     public static final String ADD_TOUR_IMAGES = "/add-images/{id}";

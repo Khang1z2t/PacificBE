@@ -62,6 +62,12 @@ public class TourController {
                 .body(new ApiResponse<>(200, "Complete", tourService.getTourById(id)));
     }
 
+    @GetMapping(UrlMapping.GET_TOUR_BY_TOUR_DETAIL_ID)
+    @Operation(summary = "Lấy tour theo tour detail id")
+    public ResponseEntity<ApiResponse<TourResponse>> getTourByTourDetailId(@PathVariable String id) {
+        return ResponseEntity.ok(new ApiResponse<>(200, "Hoàn thành", tourService.getTourByTourDetailId(id)));
+    }
+
     @PostMapping(value = UrlMapping.ADD_TOUR, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "Thêm tour (test thêm ảnh ở postman) ở FE lưu ý tour request là model attribute nên xài qs lib")
     public ResponseEntity<ApiResponse<TourResponse>> createTour(@ModelAttribute CreateTourRequest request,
