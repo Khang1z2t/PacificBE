@@ -10,6 +10,8 @@ import com.pacific.pacificbe.repository.PaymentRepository;
 import com.pacific.pacificbe.repository.UserRepository;
 import com.pacific.pacificbe.services.PaymentService;
 import com.pacific.pacificbe.utils.AuthUtils;
+import com.pacific.pacificbe.utils.UrlMapping;
+import com.pacific.pacificbe.utils.enums.PaymentStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;

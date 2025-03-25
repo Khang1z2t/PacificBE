@@ -2,7 +2,7 @@ package com.pacific.pacificbe.services;
 
 import com.pacific.pacificbe.config.VNPAYConfig;
 import com.pacific.pacificbe.dto.request.VNPAYRequest;
-import com.pacific.pacificbe.utils.AuthenUtils;
+import com.pacific.pacificbe.utils.AuthUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

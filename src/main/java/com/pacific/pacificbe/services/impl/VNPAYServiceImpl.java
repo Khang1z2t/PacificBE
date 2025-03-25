@@ -6,7 +6,7 @@ import com.pacific.pacificbe.exception.AppException;
 import com.pacific.pacificbe.exception.ErrorCode;
 import com.pacific.pacificbe.repository.UserRepository;
 import com.pacific.pacificbe.services.VNPAYService;
-import com.pacific.pacificbe.utils.AuthenUtils;
+import com.pacific.pacificbe.utils.AuthUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,7 +26,7 @@ public class VNPAYServiceImpl implements VNPAYService {
     @Override
     public String createOrder(HttpServletRequest request, VNPAYRequest vnpayRequest) {
 //        TIM USER
-        String userId = AuthenUtils.getCurrentUserId();
+        String userId = AuthUtils.getCurrentUserId();
         if (userId == null) {
             throw new AppException(ErrorCode.NEED_LOGIN);
         }

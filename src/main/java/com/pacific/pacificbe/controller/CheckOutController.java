@@ -7,7 +7,7 @@ import com.pacific.pacificbe.exception.ErrorCode;
 import com.pacific.pacificbe.repository.UserRepository;
 import com.pacific.pacificbe.services.PaymentService;
 import com.pacific.pacificbe.services.VNPAYService;
-import com.pacific.pacificbe.utils.AuthenUtils;
+import com.pacific.pacificbe.utils.AuthUtils;
 import com.pacific.pacificbe.utils.UrlMapping;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,11 +27,15 @@ public class CheckOutController {
     @Operation(summary = "Thanh toán tour")
     public String checkoutTour(@RequestParam("amount") int orderTotal,
                                @RequestParam("orderInfo") String orderInfo,
+                               @RequestParam("TdID") String TdID,
                                HttpServletRequest request) {
         if (orderTotal <= 0) {
             return "/";
         }
-        String userId = AuthenUtils.getCurrentUserId();
+
+
+
+        String userId = AuthUtils.getCurrentUserId();
         if (userId == null) {
             throw new AppException(ErrorCode.NEED_LOGIN);
         }
@@ -45,7 +49,8 @@ public class CheckOutController {
                 .orderInfo(userId + "|" + orderInfo)
                 .urlReturn(baseUrl)
                 .build();
-        System.out.println("VNPAY REQUEST: " + vnPayRequest.getOrderInfo());
+
+
         return vnPayService.createOrder(request, vnPayRequest);
     }
 
