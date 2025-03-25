@@ -11,4 +11,5 @@ public interface TransportService {
     TransportResponse addTransport(TransportRequest request);
     TransportResponse updateTransport(String id, TransportRequest request);
     boolean deleteTransport(String id);
+    TransportResponse updateTransportStatus(String id);
 }

@@ -10,10 +10,9 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TransportRequest {
-    private String id;
     private String name;
     private BigDecimal cost;
-    private String ImageURL;
+    private String imageURL;
     private String typeTransport;
     private boolean active;
 }

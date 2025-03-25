@@ -33,6 +33,7 @@ public class UrlMapping {
     public static final String ADD_TRANSPORT = "/add";
     public static final String UPDATE_TRANSPORT = "/update";
     public static final String DELETE_TRANSPORT = "/delete/{id}";
+    public static final String UPDATE_STATUS_TRANSPORT = "/updateStatus/{id}";
 
     /*============================ End Transport API ===================================*/
 
