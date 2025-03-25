@@ -11,6 +11,7 @@ import com.pacific.pacificbe.mapper.TourMapper;
 import com.pacific.pacificbe.model.*;
 import com.pacific.pacificbe.repository.*;
 import com.pacific.pacificbe.services.TourDetailService;
+import com.pacific.pacificbe.utils.enums.TourStatus;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -36,10 +37,8 @@ public class TourDetailServiceImpl implements TourDetailService {
     @Override
     @Transactional
     public TourDetailResponse addTourDetail(CreateTourDetailRequest request) {
-        Tour tour = tourRepository.findById(request.getTourId()).orElse(null);
-//        Combo combo = comboRepository.findById(request.getComboId()).orElse(null);
-//        Hotel hotel = hotelRepository.findById(request.getHotelId()).orElse(null);
-//        Transport transport = transportRepository.findById(request.getTransportId()).orElse(null);
+        Tour tour = tourRepository.findById(request.getTourId()).orElseThrow(
+                () -> new AppException(ErrorCode.TOUR_NOT_FOUND));
 
         TourDetail tourDetail = new TourDetail();
         tourDetail.setPriceAdults(request.getPriceAdults());
@@ -71,6 +70,8 @@ public class TourDetailServiceImpl implements TourDetailService {
             itineraryRepository.save(itinerary);
         }
         tourDetailRepository.save(tourDetail);
+        tour.setStatus(TourStatus.PUBLISHED.toString());
+        tourRepository.save(tour);
         return tourMapper.toTourDetailResponse(tourDetail);
     }
 

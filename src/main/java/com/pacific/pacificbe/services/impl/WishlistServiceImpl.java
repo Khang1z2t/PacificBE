@@ -10,7 +10,7 @@ import com.pacific.pacificbe.repository.TourRepository;
 import com.pacific.pacificbe.repository.UserRepository;
 import com.pacific.pacificbe.repository.WishlistRepository;
 import com.pacific.pacificbe.services.WishlistService;
-import com.pacific.pacificbe.utils.AuthenUtils;
+import com.pacific.pacificbe.utils.AuthUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,7 +28,7 @@ public class WishlistServiceImpl implements WishlistService {
 
     @Override
     public WishlistResponse addWishlist(String id) {
-        String userId = AuthenUtils.getCurrentUserId();
+        String userId = AuthUtils.getCurrentUserId();
         if (userId == null) {
             throw new AppException(ErrorCode.NEED_LOGIN);
         }
@@ -45,7 +45,7 @@ public class WishlistServiceImpl implements WishlistService {
 
     @Override
     public List<WishlistResponse> getAllWishlistByUser() {
-        String userId = AuthenUtils.getCurrentUserId();
+        String userId = AuthUtils.getCurrentUserId();
         if (userId == null) {
             throw new AppException(ErrorCode.NEED_LOGIN);
         }
@@ -58,7 +58,7 @@ public class WishlistServiceImpl implements WishlistService {
 
     @Override
     public Boolean deleteWishlist(String id) {
-        String userId = AuthenUtils.getCurrentUserId();
+        String userId = AuthUtils.getCurrentUserId();
         if (userId == null) {
             throw new AppException(ErrorCode.NEED_LOGIN);
         }

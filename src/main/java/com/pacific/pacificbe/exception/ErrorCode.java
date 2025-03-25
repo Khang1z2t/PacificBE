@@ -1,10 +1,6 @@
 package com.pacific.pacificbe.exception;
 
-import com.pacific.pacificbe.utils.enums.TourDetailStatus;
-import com.pacific.pacificbe.utils.enums.TourStatus;
-import com.pacific.pacificbe.utils.enums.UserRole;
-import com.pacific.pacificbe.utils.enums.UserStatus;
-import com.pacific.pacificbe.utils.enums.ReviewStatus;
+import com.pacific.pacificbe.utils.enums.*;
 import lombok.Getter;
 import org.apache.commons.lang3.EnumUtils;
 import org.springframework.http.HttpStatus;
@@ -29,6 +25,10 @@ public enum ErrorCode {
 
     USER_ROLE_INVALID(1015, "Invalid role, must be " + getEnumValues(UserRole.class), HttpStatus.BAD_REQUEST),
     USER_STATUS_INVALID(1016, "Invalid status, must be " + getEnumValues(UserStatus.class), HttpStatus.BAD_REQUEST),
+    INVALID_GENDER(1017, "Invalid gender, must be " + getEnumValues(GenderEnums.class), HttpStatus.BAD_REQUEST),
+    INVALID_AGE_GROUP(1018, "Invalid age group, must be " + getEnumValues(AgeGroup.class), HttpStatus.BAD_REQUEST),
+    INVALID_VOUCHER(1019, "Invalid voucher", HttpStatus.BAD_REQUEST),
+
 
     // Tour Error
     TOUR_NOT_FOUND(1020, "Tour not found", HttpStatus.NOT_FOUND),

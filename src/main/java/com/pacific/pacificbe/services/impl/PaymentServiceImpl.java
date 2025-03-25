@@ -9,22 +9,15 @@ import com.pacific.pacificbe.model.Payment;
 import com.pacific.pacificbe.repository.PaymentRepository;
 import com.pacific.pacificbe.repository.UserRepository;
 import com.pacific.pacificbe.services.PaymentService;
-import com.pacific.pacificbe.utils.AuthenUtils;
-import com.pacific.pacificbe.utils.UrlMapping;
-import com.pacific.pacificbe.utils.enums.PaymentStatus;
+import com.pacific.pacificbe.utils.AuthUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
-
-import static java.util.Locale.filter;
-
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE, makeFinal = true)
@@ -35,8 +28,8 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public void savePayment(Payment payment) {
-        String userid = AuthenUtils.getCurrentUserId();
-        if (userid == null) {
+        String userid = AuthUtils.getCurrentUserId();
+        if(userid == null) {
             throw new AppException(ErrorCode.NEED_LOGIN);
         }
         var user = userRepository.findById(userid).orElseThrow(
@@ -47,8 +40,8 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public List<PaymentResponse> getAllPayments() {
-        String userId = AuthenUtils.getCurrentUserId();
-        if (userId == null) {
+        String userId = AuthUtils.getCurrentUserId();
+        if(userId == null) {
             throw new AppException(ErrorCode.NEED_LOGIN);
         }
         var user = userRepository.findById(userId).orElseThrow(
