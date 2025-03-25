@@ -3,6 +3,7 @@ package com.pacific.pacificbe.dto.response;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -16,11 +17,12 @@ public class BookingResponse {
     Integer adultNum;
     Integer childrenNum;
     Integer totalNumber;
+    BigDecimal totalAmount;
     String paymentMethod;
     String specialRequests;
     String tourDetailId;
-    String voucherId;
     String status;
+    String voucherId;
     String userId;
 
     List<BookingDetailResponse> details;

@@ -83,7 +83,7 @@ public class UrlMapping {
     public static final String GET_BOOKING_BY_ID = "/book/{id}";
     public static final String GET_BOOKING_BY_NO = "/book/no/{bookingNo}";
     public static final String GET_BOOKING_BY_USER = "/book/user";
-    public static final String BOOK_TOUR = "/tour/{id}/book";
+    public static final String BOOK_TOUR = "/tour/{id}";
     public static final String CREATE_BOOKING = "/add";
     public static final String UPDATE_BOOKING = "/{id}/update";
     public static final String DELETE_BOOKING = "/{id}/delete";
