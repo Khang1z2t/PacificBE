@@ -3,6 +3,7 @@ package com.pacific.pacificbe.dto.request;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Data
@@ -13,6 +14,7 @@ import java.util.List;
 public class BookingRequest {
     String paymentMethod;
     String specialRequests;
+    BigDecimal totalAmount;
     String voucherId;
 
     List<BookingDetailRequest> bookingDetails;

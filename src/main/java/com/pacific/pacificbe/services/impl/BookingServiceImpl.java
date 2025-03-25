@@ -101,6 +101,7 @@ public class BookingServiceImpl implements BookingService {
         Booking booking = new Booking();
         booking.setPaymentMethod(request.getPaymentMethod());
         booking.setSpecialRequests(request.getSpecialRequests());
+        booking.setTotalAmount(request.getTotalAmount());
         booking.setUser(user);
         booking.setTourDetail(tourDetail);
         booking.setActive(true);
