@@ -50,31 +50,33 @@ public enum ErrorCode {
 
     // Thêm hằng số CATEGORY_IN_USE
     CATEGORY_IN_USE(1041, "Category is in use by one or more tours", HttpStatus.BAD_REQUEST),
-
+    //    ORDERINFO
+    ORDERINFO_NOT_FOUND(1042, "OrderInfo not found", HttpStatus.NOT_FOUND),
+    INVALID_ORDER_INFO(1043, "Invalid orderinfo or smthing", HttpStatus.BAD_REQUEST),
     // Admin User Errors
     INVALID_STATUS(1021, "Invalid status, must be ACTIVE or INACTIVE", HttpStatus.BAD_REQUEST),
 
     // Blog Errors
-    TITLE_NOT_FOUND(1022, "Title not found",HttpStatus.NOT_FOUND),
-    BLOG_NOT_FOUND(1023, "Blog not found",HttpStatus.NOT_FOUND),
-    FILE_NOT_FOUND(1024, "File image not found",HttpStatus.NOT_FOUND),
+    TITLE_NOT_FOUND(1022, "Title not found", HttpStatus.NOT_FOUND),
+    BLOG_NOT_FOUND(1023, "Blog not found", HttpStatus.NOT_FOUND),
+    FILE_NOT_FOUND(1024, "File image not found", HttpStatus.NOT_FOUND),
     FILE_UPLOAD_FAILED(1025, "Upload image failed", HttpStatus.BAD_REQUEST),
 
     // Review Errors
-    RATING_NOT_FOUND(1026, "Rating not found",HttpStatus.NOT_FOUND),
-    INVALID_RATING_STATUS(1027, "Invalid status, must be ACTIVE or INACTIVE",HttpStatus.NOT_FOUND),
+    RATING_NOT_FOUND(1026, "Rating not found", HttpStatus.NOT_FOUND),
+    INVALID_RATING_STATUS(1027, "Invalid status, must be ACTIVE or INACTIVE", HttpStatus.NOT_FOUND),
     REVIEW_NOT_FOUND(1034, "Review not found", HttpStatus.NOT_FOUND),
 
 
     // Voucher Errors
-    VOUCHER_NOT_FOUND(1028, "Voucher not found",HttpStatus.NOT_FOUND),
-    INVALID_VOUCHER_STATUS(1029, "Invalid status, must be ACTIVE or INACTIVE",HttpStatus.NOT_FOUND),
-    INVALID_DATE_RANGE(1030, "Invalid date range",HttpStatus.NOT_FOUND),
-    INVALID_ID(1031, "Invalid ID",HttpStatus.NOT_FOUND),
+    VOUCHER_NOT_FOUND(1028, "Voucher not found", HttpStatus.NOT_FOUND),
+    INVALID_VOUCHER_STATUS(1029, "Invalid status, must be ACTIVE or INACTIVE", HttpStatus.NOT_FOUND),
+    INVALID_DATE_RANGE(1030, "Invalid date range", HttpStatus.NOT_FOUND),
+    INVALID_ID(1031, "Invalid ID", HttpStatus.NOT_FOUND),
 
     // Support Errors
-    SUPPORT_NOT_FOUND(1032, "Support not found",HttpStatus.NOT_FOUND),
-    INVALID_SUPPORT_STATUS(1033, "Invalid status, must be ACTIVE or INACTIVE",HttpStatus.NOT_FOUND);
+    SUPPORT_NOT_FOUND(1032, "Support not found", HttpStatus.NOT_FOUND),
+    INVALID_SUPPORT_STATUS(1033, "Invalid status, must be ACTIVE or INACTIVE", HttpStatus.NOT_FOUND);
 
     //  ^---------------------
     //  Lưu ý ở đây phải kết thúc enum bằng dấu ; chứ không phải dấu ,
