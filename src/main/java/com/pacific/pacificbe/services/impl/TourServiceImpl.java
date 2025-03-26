@@ -116,7 +116,40 @@ public class TourServiceImpl implements TourService {
 
     @Override
     public TourResponse updateTour(String id, UpdateTourRequest request, MultipartFile thumbnail, MultipartFile[] images) {
-        return null;
+        Tour tour = tourRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.TOUR_NOT_FOUND));
+
+            tour.setTitle(request.getTitle());
+            System.out.println("output title = " + request.getTitle());
+
+            tour.setDescription(request.getDescription());
+            System.out.println("output des = " + request.getDescription());
+
+            tour.setDuration(request.getDuration());
+            System.out.println("output dur = " + request.getDuration());
+
+            tour.setStatus(request.getStatus());
+            System.out.println("output sta = " + request.getStatus());
+
+//            tour.setActive(request.getActive());
+//            System.out.println("output act = " + request.getActive());
+
+            Category category = categoryRepository.findById(request.getCategoryId())
+                    .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
+            tour.setCategory(category);
+
+            Destination destination = destinationRepository.findById(request.getDestinationId())
+                    .orElseThrow(() -> new AppException(ErrorCode.DESTINATION_NOT_FOUND));
+            tour.setDestination(destination);
+
+            String thumbnailUrl = googleDriveService.uploadImageToDrive(thumbnail, FolderType.TOUR);
+            tour.setThumbnailUrl(thumbnailUrl);
+
+            addImagesToTour(images, tour);
+
+
+        tour = tourRepository.save(tour);
+        return tourMapper.toTourResponse(tour);
     }
 
     @Override

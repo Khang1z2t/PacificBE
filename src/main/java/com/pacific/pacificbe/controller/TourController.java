@@ -3,17 +3,14 @@ package com.pacific.pacificbe.controller;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 import com.pacific.pacificbe.dto.ApiResponse;
 import com.pacific.pacificbe.dto.request.CreateTourRequest;
-import com.pacific.pacificbe.dto.request.TourFilterRequest;
+import com.pacific.pacificbe.dto.request.UpdateTourRequest;
 import com.pacific.pacificbe.dto.response.TourByIdResponse;
 import com.pacific.pacificbe.dto.response.TourResponse;
-import com.pacific.pacificbe.dto.response.showTour.TourBookingCount;
 import com.pacific.pacificbe.dto.response.showTour.TourDateResponse;
-import com.pacific.pacificbe.model.Tour;
 import com.pacific.pacificbe.services.GoogleDriveService;
 import com.pacific.pacificbe.services.TourService;
 import com.pacific.pacificbe.utils.UrlMapping;
@@ -88,6 +85,15 @@ public class TourController {
     public ResponseEntity<ApiResponse<TourResponse>> addTourImages(@PathVariable String id,
                                                                    @RequestParam("images") MultipartFile[] images) {
         return ResponseEntity.ok(new ApiResponse<>(200, "Hoàn thành", tourService.addTourImages(id, images)));
+    }
+
+    @PostMapping(value = UrlMapping.UPDATE_TOUR, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(summary = "Cập nhật tour")
+    public ResponseEntity<ApiResponse<TourResponse>> updateTour(@PathVariable String id,
+                                                                @ModelAttribute UpdateTourRequest request,
+                                                                @RequestParam(required = false) MultipartFile thumbnail,
+                                                                @RequestParam(required = false) MultipartFile[] images) {
+        return ResponseEntity.ok(new ApiResponse<>(200, "Hoàn thành", tourService.updateTour(id, request, thumbnail, images)));
     }
 
     @PostMapping(UrlMapping.DELETE_TOUR)

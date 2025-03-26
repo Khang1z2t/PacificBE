@@ -22,8 +22,6 @@ public class UpdateTourRequest {
     Boolean active;
     @Schema(description = "Id của category", example = "8ab68a08-4d28-43f7-9b37-61bfdc02cd48")
     String categoryId;
-    @Schema(description = "Id của guide")
-    String guideId;
     @Schema(description = "Id của điểm đến")
     String destinationId;
 }
