@@ -11,7 +11,9 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -27,12 +29,6 @@ public class Booking extends BaseEntity {
 
     @Column(name = "adult_num")
     private Integer adultNum;
-
-    @Size(max = 50)
-    @Nationalized
-    @ColumnDefault("'pending'")
-    @Column(name = "booking_status", length = 50)
-    private String bookingStatus;
 
     @Column(name = "children_num")
     private Integer childrenNum;
@@ -80,10 +76,14 @@ public class Booking extends BaseEntity {
     private Set<Review> reviews = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "booking")
-    private Set<BookingDetail> bookingDetails = new LinkedHashSet<>();
+    private List<BookingDetail> bookingDetails = new ArrayList<>();
 
     @Size(max = 225)
     @Column(name = "booking_no", length = 225)
     private String bookingNo;
+
+    @Size(max = 100)
+    @Column(name = "status", length = 100)
+    private String status;
 
 }

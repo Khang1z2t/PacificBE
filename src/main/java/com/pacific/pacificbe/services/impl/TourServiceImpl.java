@@ -46,6 +46,7 @@ public class TourServiceImpl implements TourService {
     private final GoogleDriveService googleDriveService;
     private final ImageRepository imageRepository;
     private final IdUtil idUtil;
+    private final TourDetailRepository tourDetailRepository;
 
     @Override
     public List<TourResponse> getAllTours(String title, BigDecimal minPrice, BigDecimal maxPrice, String categoryId, LocalDate startDate, LocalDate endDate) {
@@ -144,6 +145,15 @@ public class TourServiceImpl implements TourService {
     @Override
     public List<TourDateResponse> getToursByDate(LocalDateTime startDate, LocalDateTime endDate) {
         return tourRepository.findToursByDate(startDate, endDate);
+    }
+
+    @Override
+    public TourResponse getTourByTourDetailId(String tourDetailId) {
+        var tourDetail = tourDetailRepository.findById(tourDetailId).orElseThrow(
+                () -> new AppException(ErrorCode.TOUR_DETAIL_NOT_FOUND));
+        var tour = tourRepository.findByTourDetails_Id(tourDetail.getId()).orElseThrow(
+                () -> new AppException(ErrorCode.TOUR_NOT_FOUND));
+        return tourMapper.toTourResponse(tour);
     }
 
     private void addImagesToTour(MultipartFile[] images, Tour tour) {

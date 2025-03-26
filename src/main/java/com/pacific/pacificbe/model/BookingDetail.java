@@ -1,5 +1,7 @@
 package com.pacific.pacificbe.model;
 
+import com.pacific.pacificbe.utils.enums.AgeGroup;
+import com.pacific.pacificbe.utils.enums.GenderEnums;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;

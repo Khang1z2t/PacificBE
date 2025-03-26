@@ -93,4 +93,8 @@ public interface BookingRepository extends JpaRepository<Booking, String>{
             @Param("tourId") String tourId,
             @Param("username") String username
     );
+
+    @Query(value = "SELECT TOP 1 b.booking_no FROM booking b WHERE b.booking_no LIKE CONCAT('B', FORMAT(GETDATE(), 'ddMMyy'), '%') ORDER BY CAST(SUBSTRING(b.booking_no, 13, 4) AS INTEGER) DESC", nativeQuery = true)
+    String findLatestBookingNoOfToday();
+
 }

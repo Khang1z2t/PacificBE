@@ -1,31 +1,61 @@
-//package com.pacific.pacificbe.mapper;
-//
-//import com.pacific.pacificbe.dto.response.BookingResponse;
-//import com.pacific.pacificbe.model.Booking;
-//
-//import java.math.BigDecimal;
-//
-//public class BookingMapper {
-//    public static BookingResponse toBookingResponse(Booking booking) {
-//        return BookingResponse.builder()
-//                .bookingId(booking.getId())
-//                .userId(booking.getUser() != null ? booking.getUser().getId() : null)
-//                .userName(booking.getUser() != null ? booking.getUser().getUsername() : "Unknown")
-//                .tourDetailId(booking.getTourDetail() != null ? booking.getTourDetail().getId() : null)
-//                .tourName(booking.getTourDetail() != null && booking.getTourDetail().getTour() != null
-//                        ? booking.getTourDetail().getTour().getTitle()
-//                        : "Unknown")
-//                .bookingDate(booking.getCreatedAt())
-//                .adultNum(booking.getAdultNum() != null ? booking.getAdultNum() : 0)
-//                .childrenNum(booking.getChildrenNum() != null ? booking.getChildrenNum() : 0)
-//                .totalNumber(booking.getTotalNumber() != null ? booking.getTotalNumber() : 0)
-//                .totalAmount(booking.getTotalAmount() != null ? booking.getTotalAmount() : BigDecimal.ZERO)
-//                .paymentMethod(booking.getPaymentMethod() != null ? booking.getPaymentMethod() : "Unknown")
-//                .specialRequests(booking.getSpecialRequests() != null ? booking.getSpecialRequests() : "")
-//                .voucherId(booking.getVoucher() != null ? booking.getVoucher().getId() : null)
-//                .bookingStatus(booking.getBookingStatus() != null ? booking.getBookingStatus() : "pending")
-//                .createdAt(booking.getCreatedAt())
-//                .updatedAt(booking.getUpdatedAt())
-//                .build();
-//    }
-//}
+package com.pacific.pacificbe.mapper;
+
+import com.pacific.pacificbe.dto.request.BookingDetailRequest;
+import com.pacific.pacificbe.dto.request.BookingRequest;
+import com.pacific.pacificbe.dto.response.BookingDetailResponse;
+import com.pacific.pacificbe.dto.response.BookingResponse;
+import com.pacific.pacificbe.model.Booking;
+import com.pacific.pacificbe.model.BookingDetail;
+import com.pacific.pacificbe.model.Tour;
+import com.pacific.pacificbe.model.TourDetail;
+import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+@Component
+@RequiredArgsConstructor
+public class BookingMapper {
+    private final ModelMapper modelMapper;
+
+    public Booking toBooking(BookingRequest request) {
+        Booking booking = modelMapper.map(request, Booking.class);
+        List<BookingDetail> bookingDetails = request.getBookingDetails()
+                .stream()
+                .map(detail -> modelMapper.map(detail, BookingDetail.class))
+                .collect(Collectors.toList());
+        booking.setBookingDetails(bookingDetails);
+        return booking;
+    }
+
+    public BookingResponse toBookingResponse(Booking booking) {
+        BookingResponse bookingResponse = modelMapper.map(booking, BookingResponse.class);
+
+        if (booking.getTourDetail() != null) {
+            bookingResponse.setUserId(booking.getTourDetail().getId());
+        }
+
+        if (booking.getUser() != null) {
+            bookingResponse.setUserId(booking.getUser().getId());
+        }
+
+        if (booking.getVoucher() != null) {
+            bookingResponse.setVoucherId(booking.getVoucher().getId());
+        }
+
+        List<BookingDetailResponse> detailResponses = booking.getBookingDetails().stream()
+                .map(detail -> modelMapper.map(detail, BookingDetailResponse.class))
+                .collect(Collectors.toList());
+        bookingResponse.setDetails(detailResponses);
+        return bookingResponse;
+    }
+
+    public List<BookingResponse> toBookingResponses(List<Booking> bookings) {
+        return bookings.stream()
+                .map(this::toBookingResponse)
+                .toList();
+    }
+}
