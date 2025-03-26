@@ -44,8 +44,7 @@ public class TransportController {
 
     @Operation(summary = "Cập nhật phương tiện", description = "Cập nhật thông tin của phương tiện dựa trên ID")
     @PutMapping(UrlMapping.UPDATE_TRANSPORT)
-    public ResponseEntity<ApiResponse<TransportResponse>> updateTransport(
-            @PathVariable String id, @RequestBody TransportRequest request) {
+    public ResponseEntity<ApiResponse<TransportResponse>> updateTransport(@PathVariable String id, @RequestBody TransportRequest request) {
         TransportResponse response = transportService.updateTransport(id, request);
         return ResponseEntity.ok(new ApiResponse<>(200, null, response));
     }
@@ -60,12 +59,6 @@ public class TransportController {
     @Operation(summary = "Xóa phương tiện", description = "Xóa phương tiện dựa trên ID")
     @DeleteMapping(UrlMapping.DELETE_TRANSPORT)
     public ResponseEntity<ApiResponse<Boolean>> deleteTransport(@PathVariable String id) {
-        System.out.println("Received request to delete transport with id: " + id);
-
-        if (id == null || id.isEmpty()) {
-            return ResponseEntity.badRequest().body(new ApiResponse<>(400, "ID không hợp lệ", false));
-        }
-
         boolean result = transportService.deleteTransport(id);
         return ResponseEntity.ok(new ApiResponse<>(200, null, result));
     }
