@@ -30,7 +30,7 @@ public class WishlistServiceImpl implements WishlistService {
     public WishlistResponse addWishlist(String id) {
         String userId = AuthUtils.getCurrentUserId();
         if (userId == null) {
-            throw new AppException(ErrorCode.NEED_LOGIN);
+            throw new AppException(ErrorCode.USER_NOT_AUTHENTICATED);
         }
         Wishlist wishlist = new Wishlist();
         Tour tour = tourRepository.findById(id).orElseThrow(
@@ -47,7 +47,7 @@ public class WishlistServiceImpl implements WishlistService {
     public List<WishlistResponse> getAllWishlistByUser() {
         String userId = AuthUtils.getCurrentUserId();
         if (userId == null) {
-            throw new AppException(ErrorCode.NEED_LOGIN);
+            throw new AppException(ErrorCode.USER_NOT_AUTHENTICATED);
         }
         var user = userRepository.findById(userId).orElseThrow(
                 () -> new AppException(ErrorCode.USER_NOT_FOUND));
@@ -60,7 +60,7 @@ public class WishlistServiceImpl implements WishlistService {
     public Boolean deleteWishlist(String id) {
         String userId = AuthUtils.getCurrentUserId();
         if (userId == null) {
-            throw new AppException(ErrorCode.NEED_LOGIN);
+            throw new AppException(ErrorCode.USER_NOT_AUTHENTICATED);
         }
         var user = userRepository.findById(userId).orElseThrow(
                 () -> new AppException(ErrorCode.USER_NOT_FOUND));

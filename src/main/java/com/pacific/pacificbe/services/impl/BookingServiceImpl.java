@@ -26,12 +26,16 @@ import com.pacific.pacificbe.utils.enums.GenderEnums;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -70,17 +74,49 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public List<BookingResponse> getAllBookings() {
-        return List.of();
+        var bookings = bookingRepository.findAll();
+        return bookingMapper.toBookingResponses(bookings);
     }
 
     @Override
-    public List<BookingResponse> getAllByUser() {
-        return List.of();
+    public List<BookingResponse> getAllByUser(String bookingNo, String status,
+                                              LocalDateTime startDate, LocalDateTime endDate,
+                                              String tourDetailId, String paymentMethod,
+                                              BigDecimal minAmount, BigDecimal maxAmount) {
+        var userID = AuthUtils.getCurrentUserId();
+        var user = userRepository.findById(userID).orElseThrow(
+                () -> new AppException(ErrorCode.USER_NOT_FOUND));
+
+        String sortBy = "createdAt";
+        String sortDirection = "DESC";
+
+        Sort sort = Sort.by(sortDirection.equalsIgnoreCase("ASC") ?
+                Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
+        if (!Arrays.asList("createdAt", "totalAmount", "status").contains(sortBy)) {
+            sort = Sort.by(Sort.Direction.DESC, "createdAt");
+        }
+
+        List<Booking> bookings = bookingRepository
+                .findAllByUser(user,
+                        bookingNo, status,
+                        startDate, endDate,
+                        tourDetailId, paymentMethod,
+                        minAmount, maxAmount, sort);
+        return bookingMapper.toBookingResponses(bookings);
     }
 
     @Override
     public BookingResponse getBookingById(String bookingId) {
-        return null;
+        var booking = bookingRepository.findById(bookingId).orElseThrow(
+                () -> new AppException(ErrorCode.BOOKING_NOT_FOUND));
+        return bookingMapper.toBookingResponse(booking);
+    }
+
+    @Override
+    public BookingResponse getBookingByBookingNo(String bookingNo) {
+        var booking = bookingRepository.findByBookingNo(bookingNo).orElseThrow(
+                () -> new AppException(ErrorCode.BOOKING_NOT_FOUND));
+        return bookingMapper.toBookingResponse(booking);
     }
 
     @Override
@@ -97,6 +133,7 @@ public class BookingServiceImpl implements BookingService {
 
         int adultNum = 0;
         int childrenNum = 0;
+        BigDecimal totalPrice = BigDecimal.ZERO;
 
         Booking booking = new Booking();
         booking.setPaymentMethod(request.getPaymentMethod());
@@ -125,6 +162,8 @@ public class BookingServiceImpl implements BookingService {
                 throw new AppException(ErrorCode.INVALID_AGE_GROUP);
             }
 
+            totalPrice = totalPrice.add(bookingDetailRequest.getPrice());
+
             switch (ageGroup) {
                 case ADULT -> adultNum++;
                 case CHILD -> childrenNum++;
@@ -140,6 +179,7 @@ public class BookingServiceImpl implements BookingService {
         booking.setChildrenNum(childrenNum);
         booking.setTotalNumber(totalNumber);
         booking.setBookingDetails(bookingDetails);
+        booking.setTotalAmount(totalPrice);
         bookingRepository.save(booking);
         return bookingMapper.toBookingResponse(booking);
     }

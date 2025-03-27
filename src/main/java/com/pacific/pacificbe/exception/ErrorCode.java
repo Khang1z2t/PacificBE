@@ -44,15 +44,16 @@ public enum ErrorCode {
     COMBO_NOT_FOUND(1070, "Combo not found", HttpStatus.NOT_FOUND),
     HOTEL_NOT_FOUND(1071, "Hotel not found", HttpStatus.NOT_FOUND),
     TRANSPORT_NOT_FOUND(1072, "Transport not found", HttpStatus.NOT_FOUND),
-    NEED_LOGIN(1098, "You need login first", HttpStatus.UNAUTHORIZED),
+    USER_NOT_AUTHENTICATED(1098, "You need login first", HttpStatus.UNAUTHORIZED),
     CANT_SEND_MAIL(1099, "Can't send mail", HttpStatus.INTERNAL_SERVER_ERROR),
 
 
     // Thêm hằng số CATEGORY_IN_USE
     CATEGORY_IN_USE(1041, "Category is in use by one or more tours", HttpStatus.BAD_REQUEST),
-    //    ORDERINFO
-    ORDERINFO_NOT_FOUND(1042, "OrderInfo not found", HttpStatus.NOT_FOUND),
+    //    ORDER INFO OR BOOKING
+    ORDER_INFO_NOT_FOUND(1042, "OrderInfo not found", HttpStatus.NOT_FOUND),
     INVALID_ORDER_INFO(1043, "Invalid orderinfo or smthing", HttpStatus.BAD_REQUEST),
+    BOOKING_NOT_FOUND(1044, "Booking not found", HttpStatus.NOT_FOUND),
     // Admin User Errors
     INVALID_STATUS(1021, "Invalid status, must be ACTIVE or INACTIVE", HttpStatus.BAD_REQUEST),
 

@@ -17,6 +17,6 @@ public class AuthUtils {
             User userDetails = (User) authentication.getPrincipal();
             return userDetails.getId(); // Giả định rằng bạn đã tùy chỉnh UserDetails để chứa ID của người dùng
         }
-        throw new AppException(ErrorCode.USER_NOT_FOUND);
+        throw new AppException(ErrorCode.USER_NOT_AUTHENTICATED);
     }
 }

@@ -37,7 +37,7 @@ public class CheckOutController {
 
         String userId = AuthUtils.getCurrentUserId();
         if (userId == null) {
-            throw new AppException(ErrorCode.NEED_LOGIN);
+            throw new AppException(ErrorCode.USER_NOT_AUTHENTICATED);
         }
 
         String baseUrl = request.getScheme() + "://" + request.getServerName();

@@ -32,7 +32,7 @@ public class PaymentServiceImpl implements PaymentService {
     public void savePayment(Payment payment) {
         String userid = AuthUtils.getCurrentUserId();
         if(userid == null) {
-            throw new AppException(ErrorCode.NEED_LOGIN);
+            throw new AppException(ErrorCode.USER_NOT_AUTHENTICATED);
         }
         var user = userRepository.findById(userid).orElseThrow(
                 () -> new AppException(ErrorCode.USER_NOT_FOUND));
@@ -44,7 +44,7 @@ public class PaymentServiceImpl implements PaymentService {
     public List<PaymentResponse> getAllPayments() {
         String userId = AuthUtils.getCurrentUserId();
         if(userId == null) {
-            throw new AppException(ErrorCode.NEED_LOGIN);
+            throw new AppException(ErrorCode.USER_NOT_AUTHENTICATED);
         }
         var user = userRepository.findById(userId).orElseThrow(
                 () -> new AppException(ErrorCode.USER_NOT_FOUND));
