@@ -30,6 +30,8 @@ public class BookingResponse {
 
     PaymentResponse payment;
 
+    ReviewResponseBooking review;
+
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
     LocalDateTime deleteAt;

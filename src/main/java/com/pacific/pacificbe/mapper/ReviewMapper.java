@@ -1,6 +1,7 @@
 package com.pacific.pacificbe.mapper;
 
 import com.pacific.pacificbe.dto.response.ReviewResponse;
+import com.pacific.pacificbe.dto.response.ReviewResponseBooking;
 import com.pacific.pacificbe.model.Review;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -28,5 +29,15 @@ public class ReviewMapper {
 
     public ReviewResponse toResponse(Review review) {
         return modelMapper.map(review, ReviewResponse.class);
+    }
+
+    public ReviewResponseBooking toReviewResponseBooking(Review review) {
+        return modelMapper.map(review, ReviewResponseBooking.class);
+    }
+
+    public List<ReviewResponseBooking> toReviewResponseBookingList(List<Review> reviews) {
+        return reviews.stream()
+                .map(this::toReviewResponseBooking)
+                .toList();
     }
 }
