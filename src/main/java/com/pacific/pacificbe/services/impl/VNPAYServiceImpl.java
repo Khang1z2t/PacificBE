@@ -30,11 +30,17 @@ public class VNPAYServiceImpl implements VNPAYService {
         if (userId == null) {
             throw new AppException(ErrorCode.USER_NOT_AUTHENTICATED);
         }
-
+        String bookingNo = "";
+        if (vnpayRequest.getOrderInfo() != null && vnpayRequest.getOrderInfo().contains("|")) {
+            String[] parts = vnpayRequest.getOrderInfo().split("\\|");
+            if (parts.length >= 2) {
+                bookingNo = parts[1];
+            }
+        }
         //Các bạn có thể tham khảo tài liệu hướng dẫn và điều chỉnh các tham số
         String vnp_Version = "2.1.0";
         String vnp_Command = "pay";
-        String vnp_TxnRef = vnpayConfig.getRandomNumber(8);
+        String vnp_TxnRef = bookingNo; // BookingNo
         String vnp_IpAddr = vnpayConfig.getIpAddress(request);
         String vnp_TmnCode = vnpayConfig.vnp_TmnCode;
         String orderType = "order-type";

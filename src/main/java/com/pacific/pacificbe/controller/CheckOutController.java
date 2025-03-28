@@ -27,13 +27,10 @@ public class CheckOutController {
     @Operation(summary = "Thanh toán tour")
     public String checkoutTour(@RequestParam("amount") int orderTotal,
                                @RequestParam("orderInfo") String orderInfo,
-                               @RequestParam("TdID") String TdID,
                                HttpServletRequest request) {
         if (orderTotal <= 0) {
             return "/";
         }
-
-
 
         String userId = AuthUtils.getCurrentUserId();
         if (userId == null) {
