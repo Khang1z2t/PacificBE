@@ -10,6 +10,7 @@ import org.hibernate.annotations.Nationalized;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -30,24 +31,16 @@ public class Voucher extends BaseEntity {
     @Column(name = "code_voucher", nullable = false)
     private String codeVoucher;
 
-    @Column(name = "discount", precision = 5, scale = 2)
-    private BigDecimal discount;
-
     @NotNull
     @Column(name = "end_date", nullable = false)
-    private LocalDate endDate;
-
-    @Size(max = 255)
-    @Nationalized
-    @Column(name = "name_voucher")
-    private String nameVoucher;
+    private LocalDateTime endDate;
 
     @Column(name = "quantity")
     private Integer quantity;
 
     @NotNull
     @Column(name = "start_date", nullable = false)
-    private LocalDate startDate;
+    private LocalDateTime startDate;
 
     @Size(max = 50)
     @Nationalized
@@ -57,5 +50,31 @@ public class Voucher extends BaseEntity {
 
     @OneToMany(mappedBy = "voucher")
     private Set<Booking> bookings = new LinkedHashSet<>();
+
+    @Column(name = "discount_value", precision = 10, scale = 2)
+    private BigDecimal discountValue;
+
+    @Size(max = 255)
+    @Nationalized
+    @Column(name = "title")
+    private String title;
+
+    @Column(name = "min_order_value", precision = 10, scale = 2)
+    private BigDecimal minOrderValue;
+
+    @Column(name = "user_limit")
+    private Integer userLimit;
+
+    @Size(max = 20)
+    @Column(name = "apply_to", length = 20)
+    private String applyTo;
+
+    @Size(max = 225)
+    @Column(name = "tour_id", length = 225)
+    private String tourId;
+
+    @Size(max = 225)
+    @Column(name = "category_id", length = 225)
+    private String categoryId;
 
 }

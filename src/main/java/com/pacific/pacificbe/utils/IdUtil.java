@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 @Component
 public class IdUtil {
     private final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+";
+    private final String VOUCHER_CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     private final int PASSWORD_LENGTH = 12;
 
     public String generateId() {
@@ -65,6 +66,23 @@ public class IdUtil {
         }
 
         return sb.toString();
+    }
+
+    public String generateVoucherCode(int minLength, int maxLength) {
+        if (minLength < 1 || maxLength < minLength) {
+            throw new IllegalArgumentException("Invalid length range");
+        }
+
+        Random random = new Random();
+        int length = random.nextInt(maxLength - minLength + 1) + minLength;
+        StringBuilder code = new StringBuilder(length);
+
+        for (int i = 0; i < length; i++) {
+            int index = random.nextInt(VOUCHER_CHARACTERS.length());
+            code.append(VOUCHER_CHARACTERS.charAt(index));
+        }
+
+        return code.toString();
     }
 
 }

@@ -9,27 +9,24 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class VoucherRequest {
-    private String nameVoucher;
+    private String title;
     private String codeVoucher;
-    private BigDecimal discount;
+    private BigDecimal discountValue;
     private Integer quantity;
+    private Integer userLimit;
+    private BigDecimal minOrderValue;
+    private String status;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
 
-    @Builder.Default
-    private String status = "pending";
-
-    @Builder.Default
-    private Boolean active = true;
-
-
-    @FutureOrPresent(message = "Ngày bắt đầu phải từ hôm nay trở đi")
-    private LocalDate startDate;
-
-    @Future(message = "Ngày kết thúc phải sau ngày bắt đầu")
-    private LocalDate endDate;
+    private String applyTo;
+    private String tourId;
+    private String categoryId;
 }

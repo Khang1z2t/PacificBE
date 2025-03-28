@@ -40,4 +40,7 @@ public class Category {
     @OneToMany(mappedBy = "category")
     private Set<Tour> tours = new LinkedHashSet<>();
 
+    @OneToMany
+    private Set<Voucher> vouchers = new LinkedHashSet<>();
+
 }

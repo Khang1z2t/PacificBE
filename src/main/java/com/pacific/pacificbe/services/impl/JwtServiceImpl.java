@@ -1,6 +1,5 @@
 package com.pacific.pacificbe.services.impl;
 
-import com.pacific.pacificbe.model.User;
 import com.pacific.pacificbe.services.JwtService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -15,7 +14,6 @@ import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 import java.util.function.Function;
 
 @Service

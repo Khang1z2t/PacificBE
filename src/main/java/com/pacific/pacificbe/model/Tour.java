@@ -69,4 +69,8 @@ public class Tour extends BaseEntity {
 
     @OneToMany(mappedBy = "tour")
     private Set<Wishlist> wishlists = new LinkedHashSet<>();
+
+    @OneToMany
+    private Set<Voucher> vouchers = new LinkedHashSet<>();
+
 }

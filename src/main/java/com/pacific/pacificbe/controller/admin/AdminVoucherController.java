@@ -1,7 +1,6 @@
 package com.pacific.pacificbe.controller.admin;
 
 import com.pacific.pacificbe.dto.ApiResponse;
-import com.pacific.pacificbe.dto.request.UpdateStatusVoucherRequest;
 import com.pacific.pacificbe.dto.request.VoucherRequest;
 import com.pacific.pacificbe.dto.response.VoucherResponse;
 import com.pacific.pacificbe.exception.AppException;

@@ -1,5 +1,6 @@
 package com.pacific.pacificbe.mapper;
 
+import com.pacific.pacificbe.dto.request.VoucherRequest;
 import com.pacific.pacificbe.dto.response.VoucherResponse;
 import com.pacific.pacificbe.model.Voucher;
 import lombok.AccessLevel;
@@ -16,17 +17,21 @@ import java.util.List;
 public class VoucherMapper {
     ModelMapper modelMapper;
 
+    public  Voucher toVoucher(VoucherRequest voucherRequest) {
+        return modelMapper.map(voucherRequest, Voucher.class);
+    }
+
     public Voucher toVoucher(VoucherResponse voucherResponse) {
         return modelMapper.map(voucherResponse, Voucher.class);
     }
 
-    public List<VoucherResponse> toVoucherResponseList(List<Voucher> vouchers) {
-        return vouchers.stream()
-                .map(this::toResponse)
-                .toList();
+    public VoucherResponse toVoucherResponse(Voucher voucher) {
+        return modelMapper.map(voucher, VoucherResponse.class);
     }
 
-    public VoucherResponse toResponse(Voucher voucher) {
-        return modelMapper.map(voucher, VoucherResponse.class);
+    public List<VoucherResponse> toVoucherResponseList(List<Voucher> vouchers) {
+        return vouchers.stream()
+                .map(this::toVoucherResponse)
+                .toList();
     }
 }
