@@ -14,6 +14,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BookingResponse {
     String id;
+    String bookingNo;
     Integer adultNum;
     Integer childrenNum;
     Integer totalNumber;
