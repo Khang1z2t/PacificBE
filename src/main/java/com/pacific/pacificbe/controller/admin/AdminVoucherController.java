@@ -64,8 +64,8 @@ public class AdminVoucherController {
     @Operation(summary = "Cập nhật trạng thái voucher")
     public ResponseEntity<ApiResponse<VoucherResponse>> updateStatusVoucher(
             @PathVariable String id,
-            @RequestBody UpdateStatusVoucherRequest request) {
-        return ResponseEntity.ok(new ApiResponse<>(200, "Cập nhật trạng thái thành công", voucherService.updateStatus(id, request)));
+            @RequestParam String status) {
+        return ResponseEntity.ok(new ApiResponse<>(200, "Cập nhật trạng thái thành công", voucherService.updateStatus(id, status)));
     }
 
     @DeleteMapping(UrlMapping.DELETE_VOUCHER)
