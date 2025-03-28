@@ -70,7 +70,7 @@ public class Tour extends BaseEntity {
     @OneToMany(mappedBy = "tour")
     private Set<Wishlist> wishlists = new LinkedHashSet<>();
 
-    @OneToMany
+    @OneToMany(mappedBy = "tour")
     private Set<Voucher> vouchers = new LinkedHashSet<>();
 
 }

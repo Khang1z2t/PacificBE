@@ -6,6 +6,7 @@ import com.pacific.pacificbe.exception.AppException;
 import com.pacific.pacificbe.exception.ErrorCode;
 import com.pacific.pacificbe.mapper.VoucherMapper;
 import com.pacific.pacificbe.model.Voucher;
+import com.pacific.pacificbe.repository.CategoryRepository;
 import com.pacific.pacificbe.repository.TourRepository;
 import com.pacific.pacificbe.repository.VoucherRepository;
 import com.pacific.pacificbe.services.VoucherService;
@@ -36,6 +37,7 @@ public class VoucherServiceImpl implements VoucherService {
     VoucherMapper voucherMapper;
     private final TourRepository tourRepository;
     private final IdUtil idUtil;
+    private final CategoryRepository categoryRepository;
 
     @Override
     public VoucherResponse getVoucherById(String id) {
@@ -142,21 +144,20 @@ public class VoucherServiceImpl implements VoucherService {
                     if (request.getTourId() == null || request.getTourId().isEmpty()) {
                         throw new AppException(ErrorCode.VOUCHER_TOUR_ID_REQUIRED);
                     }
-                    boolean tourExists = tourRepository.existsById(request.getTourId());
-                    if (!tourExists) {
-                        throw new AppException(ErrorCode.TOUR_NOT_FOUND);
-                    }
-                    voucher.setTourId(request.getTourId());
+                    var tour = tourRepository.findById(request.getTourId())
+                            .orElseThrow(() -> new AppException(ErrorCode.TOUR_NOT_FOUND));
+                    voucher.setTour(tour);
                 } else if (ApplyTo.CATEGORY.name().equals(applyToUppercase)) {
                     if (request.getCategoryId() == null || request.getCategoryId().isEmpty()) {
                         throw new AppException(ErrorCode.VOUCHER_CATEGORY_ID_REQUIRED);
                     }
-
-                    voucher.setCategoryId(request.getCategoryId());
+                    var category = categoryRepository.findById(request.getCategoryId())
+                            .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
+                    voucher.setCategory(category);
                 }
             } else {
-                voucher.setTourId(null);
-                voucher.setCategoryId(null);
+                voucher.setTour(null);
+                voucher.setCategory(null);
             }
         } else {
             throw new AppException(ErrorCode.INVALID_APPLY_TO);

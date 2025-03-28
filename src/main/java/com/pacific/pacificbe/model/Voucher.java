@@ -48,8 +48,6 @@ public class Voucher extends BaseEntity {
     @Column(name = "status", length = 50)
     private String status;
 
-    @OneToMany(mappedBy = "voucher")
-    private Set<Booking> bookings = new LinkedHashSet<>();
 
     @Column(name = "discount_value", precision = 10, scale = 2)
     private BigDecimal discountValue;
@@ -69,12 +67,16 @@ public class Voucher extends BaseEntity {
     @Column(name = "apply_to", length = 20)
     private String applyTo;
 
-    @Size(max = 225)
-    @Column(name = "tour_id", length = 225)
-    private String tourId;
 
-    @Size(max = 225)
-    @Column(name = "category_id", length = 225)
-    private String categoryId;
+    @OneToMany(mappedBy = "voucher")
+    private Set<Booking> bookings = new LinkedHashSet<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tour_id")
+    private Tour tour;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
 
 }
