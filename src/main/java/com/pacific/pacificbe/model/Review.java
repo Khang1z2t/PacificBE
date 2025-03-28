@@ -53,4 +53,19 @@ public class Review extends BaseEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @Column(name = "price_rating", precision = 2, scale = 1)
+    private BigDecimal priceRating;
+
+    @Column(name = "service_rating", precision = 2, scale = 1)
+    private BigDecimal serviceRating;
+
+    @Column(name = "facility_rating", precision = 2, scale = 1)
+    private BigDecimal facilityRating;
+
+    @Column(name = "food_rating", precision = 2, scale = 1)
+    private BigDecimal foodRating;
+
+    @Column(name = "accommodation_rating", precision = 2, scale = 1)
+    private BigDecimal accommodationRating;
+
 }
