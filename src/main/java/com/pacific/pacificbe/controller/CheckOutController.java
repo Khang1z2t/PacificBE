@@ -4,9 +4,11 @@ import com.pacific.pacificbe.dto.request.CheckOutRequest;
 import com.pacific.pacificbe.dto.request.VNPAYRequest;
 import com.pacific.pacificbe.exception.AppException;
 import com.pacific.pacificbe.exception.ErrorCode;
+import com.pacific.pacificbe.repository.BookingRepository;
 import com.pacific.pacificbe.repository.UserRepository;
 import com.pacific.pacificbe.services.PaymentService;
 import com.pacific.pacificbe.services.VNPAYService;
+import com.pacific.pacificbe.services.impl.VNPAYServiceImpl;
 import com.pacific.pacificbe.utils.AuthUtils;
 import com.pacific.pacificbe.utils.UrlMapping;
 import io.swagger.v3.oas.annotations.Operation;
@@ -28,32 +30,17 @@ public class CheckOutController {
     public String checkoutTour(@RequestParam("amount") int orderTotal,
                                @RequestParam("orderInfo") String orderInfo,
                                HttpServletRequest request) {
-        if (orderTotal <= 0) {
-            return "/";
-        }
-
-        String userId = AuthUtils.getCurrentUserId();
-        if (userId == null) {
-            throw new AppException(ErrorCode.USER_NOT_AUTHENTICATED);
-        }
-
-        String baseUrl = request.getScheme() + "://" + request.getServerName();
-        if (request.getServerPort() != 80 && request.getServerPort() != 443) {
-            baseUrl += ":" + request.getServerPort();
-        }
-        VNPAYRequest vnPayRequest = VNPAYRequest.builder()
+        VNPAYRequest vnpayRequest = VNPAYRequest.builder()
                 .amount(orderTotal)
-                .orderInfo(userId + "|" + orderInfo)
-                .urlReturn(baseUrl)
+                .orderInfo(orderInfo) // Gửi orderInfo trực tiếp, logic ghép userId sẽ xử lý trong service
+                .urlReturn("") // Để trống, service sẽ tự tạo baseUrl
                 .build();
-
-
-        return vnPayService.createOrder(request, vnPayRequest);
+        return vnPayService.createOrder(request, vnpayRequest);
     }
 
     @GetMapping(UrlMapping.CHECKOUT_RETURN)
-    @Operation(summary = "Trả về kết quả thanh toán từ VNPAY Lưu ý : OrderInfo sẽ được mã hóa base64")
+    @Operation(summary = "Trả về kết quả thanh toán từ VNPAY")
     public RedirectView handleVnpayReturn(@ModelAttribute CheckOutRequest request) {
-        return ps.callBackPayment(request);
+        return ((VNPAYServiceImpl) vnPayService).processVnpayReturn(request);
     }
 }

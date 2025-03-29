@@ -105,6 +105,28 @@ public class ReviewServiceImpl implements ReviewService {
         );
     }
 
+//    @Override
+//    public ReviewResponse createReview(ReviewRequest request) {
+//        Review review = new Review();
+//        review.setComment(request.getComment());
+//        review.setRating(request.getRating());
+//        review.setStatus(request.getStatus());
+//
+//        Review savedReview = reviewRepository.save(review);
+//        log.info("Created review with id: {}", savedReview.getId());
+//
+//        return new ReviewResponse(
+//                savedReview.getId(),
+//                savedReview.getStatus(),
+//                savedReview.getComment(),
+//                savedReview.getRating(),
+//                savedReview.getUser().getEmail(),
+//                savedReview.getTour().getTitle(),
+//                savedReview.getCreatedAt()
+//        );
+//    }
+
+
     @Override
     public List<ReviewResponse> getAllReviews() {
         return List.of();
@@ -126,7 +148,6 @@ public class ReviewServiceImpl implements ReviewService {
 //        if (!tour.getId().equals(booking.getTourDetail().getId())) {
 //            throw new AppException(ErrorCode.TOUR_NOT_FOUND);
 //        }
-
         List<BigDecimal> ratings = Arrays.asList(
                 request.getPriceRating(),
                 request.getServiceRating(),

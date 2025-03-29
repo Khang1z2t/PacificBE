@@ -1,17 +1,29 @@
 package com.pacific.pacificbe.services.impl;
 
 import com.pacific.pacificbe.config.VNPAYConfig;
+import com.pacific.pacificbe.dto.request.CheckOutRequest;
 import com.pacific.pacificbe.dto.request.VNPAYRequest;
 import com.pacific.pacificbe.exception.AppException;
 import com.pacific.pacificbe.exception.ErrorCode;
+import com.pacific.pacificbe.model.Booking;
+import com.pacific.pacificbe.model.Payment;
+import com.pacific.pacificbe.repository.BookingRepository;
+import com.pacific.pacificbe.repository.PaymentRepository;
 import com.pacific.pacificbe.repository.UserRepository;
+import com.pacific.pacificbe.services.PaymentService;
 import com.pacific.pacificbe.services.VNPAYService;
 import com.pacific.pacificbe.utils.AuthUtils;
+import com.pacific.pacificbe.utils.UrlMapping;
+import com.pacific.pacificbe.utils.enums.PaymentStatus;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
@@ -22,25 +34,47 @@ import java.util.*;
 public class VNPAYServiceImpl implements VNPAYService {
     private final VNPAYConfig vnpayConfig;
     private final UserRepository userRepository;
+    private final BookingRepository bookingRepository;
+    private final PaymentService paymentService;
+    private final PaymentRepository paymentRepository;
 
     @Override
     public String createOrder(HttpServletRequest request, VNPAYRequest vnpayRequest) {
-//        TIM USER
+        if (vnpayRequest.getAmount() <= 0) {
+            return "/";
+        }
+
         String userId = AuthUtils.getCurrentUserId();
         if (userId == null) {
             throw new AppException(ErrorCode.USER_NOT_AUTHENTICATED);
         }
-        String bookingNo = "";
-        if (vnpayRequest.getOrderInfo() != null && vnpayRequest.getOrderInfo().contains("|")) {
-            String[] parts = vnpayRequest.getOrderInfo().split("\\|");
+
+        String baseUrl = vnpayRequest.getUrlReturn();
+        if (baseUrl == null || baseUrl.isEmpty()) {
+            baseUrl = request.getScheme() + "://" + request.getServerName();
+            if (request.getServerPort() != 80 && request.getServerPort() != 443) {
+                baseUrl += ":" + request.getServerPort();
+            }
+            vnpayRequest.setUrlReturn(baseUrl);
+        }
+
+        String orderInfo = vnpayRequest.getOrderInfo();
+        String bookingNo = orderInfo;
+        if (orderInfo != null && !orderInfo.contains("|")) {
+            orderInfo = userId + "|" + orderInfo;
+            vnpayRequest.setOrderInfo(orderInfo);
+        } else if (orderInfo != null && orderInfo.contains("|")) {
+            String[] parts = orderInfo.split("\\|");
             if (parts.length >= 2) {
                 bookingNo = parts[1];
             }
         }
-        //Các bạn có thể tham khảo tài liệu hướng dẫn và điều chỉnh các tham số
+
+        // Tạo vnp_TxnRef duy nhất cho mỗi lần thanh toán
+        String vnp_TxnRef = bookingNo + "_" + System.currentTimeMillis();
+
         String vnp_Version = "2.1.0";
         String vnp_Command = "pay";
-        String vnp_TxnRef = bookingNo; // BookingNo
         String vnp_IpAddr = vnpayConfig.getIpAddress(request);
         String vnp_TmnCode = vnpayConfig.vnp_TmnCode;
         String orderType = "order-type";
@@ -51,13 +85,10 @@ public class VNPAYServiceImpl implements VNPAYService {
         vnp_Params.put("vnp_TmnCode", vnp_TmnCode);
         vnp_Params.put("vnp_Amount", String.valueOf(vnpayRequest.getAmount() * 100));
         vnp_Params.put("vnp_CurrCode", "VND");
-
         vnp_Params.put("vnp_TxnRef", vnp_TxnRef);
-        vnp_Params.put("vnp_OrderInfo", vnpayRequest.getOrderInfo()); // Lưu thông tin đơn + jwt
+        vnp_Params.put("vnp_OrderInfo", vnpayRequest.getOrderInfo());
         vnp_Params.put("vnp_OrderType", orderType);
-
-        String locate = "vn";
-        vnp_Params.put("vnp_Locale", locate);
+        vnp_Params.put("vnp_Locale", "vn");
 
         String urlReturn = vnpayRequest.getUrlReturn() + vnpayConfig.vnp_Returnurl;
         vnp_Params.put("vnp_ReturnUrl", urlReturn);
@@ -79,16 +110,12 @@ public class VNPAYServiceImpl implements VNPAYService {
         Iterator itr = fieldNames.iterator();
         while (itr.hasNext()) {
             String fieldName = (String) itr.next();
-            String fieldValue = (String) vnp_Params.get(fieldName);
+            String fieldValue = vnp_Params.get(fieldName);
             if ((fieldValue != null) && (fieldValue.length() > 0)) {
-                //Build hash data
-                hashData.append(fieldName);
-                hashData.append('=');
+                hashData.append(fieldName).append('=');
                 try {
                     hashData.append(URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII.toString()));
-                    //Build query
-                    query.append(URLEncoder.encode(fieldName, StandardCharsets.US_ASCII.toString()));
-                    query.append('=');
+                    query.append(URLEncoder.encode(fieldName, StandardCharsets.US_ASCII.toString())).append('=');
                     query.append(URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII.toString()));
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
@@ -99,15 +126,16 @@ public class VNPAYServiceImpl implements VNPAYService {
                 }
             }
         }
+
         String queryUrl = query.toString();
         String salt = vnpayConfig.vnp_HashSecret;
         String vnp_SecureHash = vnpayConfig.hmacSHA512(salt, hashData.toString());
         queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
-        String paymentUrl = vnpayConfig.vnp_PayUrl + "?" + queryUrl;
-        return paymentUrl;
+        return vnpayConfig.vnp_PayUrl + "?" + queryUrl;
     }
 
     @Override
+    @Transactional
     public int orderReturn(HttpServletRequest request) {
         Map fields = new HashMap();
         for (Enumeration params = request.getParameterNames(); params.hasMoreElements(); ) {
@@ -131,15 +159,84 @@ public class VNPAYServiceImpl implements VNPAYService {
         if (fields.containsKey("vnp_SecureHash")) {
             fields.remove("vnp_SecureHash");
         }
+
         String signValue = vnpayConfig.hashAllFields(fields);
         if (signValue.equals(vnp_SecureHash)) {
-            if ("00".equals(request.getParameter("vnp_TransactionStatus"))) {
+            String vnp_TransactionStatus = request.getParameter("vnp_TransactionStatus");
+            String vnp_TxnRef = request.getParameter("vnp_TxnRef");
+            String bookingNo = vnp_TxnRef.split("_")[0];
+
+            if ("00".equals(vnp_TransactionStatus)) {
+                Optional<Booking> bookingOpt = bookingRepository.findByBookingNo(bookingNo);
+                if (bookingOpt.isPresent()) {
+                    Booking booking = bookingOpt.get();
+                    booking.setStatus("CONFIRMED");
+                    bookingRepository.save(booking);
+                }
                 return 1;
             } else {
+                Optional<Booking> bookingOpt = bookingRepository.findByBookingNo(bookingNo);
+                if (bookingOpt.isPresent()) {
+                    Booking booking = bookingOpt.get();
+                    booking.setStatus("FAILED");
+                    bookingRepository.save(booking);
+                }
                 return 0;
             }
         } else {
             return -1;
+        }
+    }
+
+    // Phương thức nội bộ để xử lý callback
+    private RedirectView handleVnpayReturn(CheckOutRequest request) {
+        return paymentService.callBackPayment(request);
+    }
+
+    //    Thay thế callBackPayment của PaymentServiceImpl
+    @Override
+    @Transactional
+    public RedirectView processVnpayReturn(CheckOutRequest request) {
+        String orderInfo = request.getVnp_OrderInfo();
+        String[] parts = orderInfo.split("\\|");
+        String userId = parts[0];
+        String bookingNo = parts[1];
+        var user = userRepository.findById(userId).orElseThrow(
+                () -> new AppException(ErrorCode.USER_NOT_FOUND));
+        var bookingOpt = bookingRepository.findByBookingNo(bookingNo);
+        if (bookingOpt.isPresent()) {
+            Booking booking = bookingOpt.get();
+            if ("00".equals(request.getVnp_ResponseCode())) {
+                Payment payment = new Payment();
+                payment.setTransactionId(request.getVnp_TransactionNo());
+                payment.setActive(true);
+                payment.setTotalAmount(new BigDecimal(request.getVnp_Amount()).divide(new BigDecimal(100)).setScale(2, RoundingMode.HALF_UP));
+                payment.setStatus(PaymentStatus.COMPLETED.toString());
+                payment.setUser(user);
+                payment.setNote(bookingNo);
+                paymentRepository.save(payment);
+
+                booking.setStatus("CONFIRMED");
+                bookingRepository.save(booking);
+                // Gửi email xác nhận thanh toán thành công
+
+
+                return new RedirectView(UrlMapping.PAYMENT_SUCCESS);
+            } else {
+                Payment payment = new Payment();
+                payment.setTransactionId(request.getVnp_TransactionNo());
+                payment.setActive(true);
+                payment.setTotalAmount(new BigDecimal(request.getVnp_Amount()).divide(new BigDecimal(100)).setScale(2, RoundingMode.HALF_UP));
+                payment.setStatus(PaymentStatus.FAILED.toString());
+                payment.setUser(user);
+                payment.setNote(bookingNo);
+                paymentRepository.save(payment);
+                booking.setStatus("PENDING");
+                bookingRepository.save(booking);
+                return new RedirectView(UrlMapping.PAYMENT_FAIL);
+            }
+        } else {
+            throw new AppException(ErrorCode.BOOKING_NOT_FOUND);
         }
     }
 }
