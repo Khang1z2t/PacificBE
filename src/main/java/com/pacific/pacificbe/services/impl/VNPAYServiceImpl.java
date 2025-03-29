@@ -13,6 +13,7 @@ import com.pacific.pacificbe.repository.UserRepository;
 import com.pacific.pacificbe.services.PaymentService;
 import com.pacific.pacificbe.services.VNPAYService;
 import com.pacific.pacificbe.utils.AuthUtils;
+import com.pacific.pacificbe.utils.JavaMail;
 import com.pacific.pacificbe.utils.UrlMapping;
 import com.pacific.pacificbe.utils.enums.PaymentStatus;
 import jakarta.servlet.http.HttpServletRequest;
@@ -37,6 +38,7 @@ public class VNPAYServiceImpl implements VNPAYService {
     private final BookingRepository bookingRepository;
     private final PaymentService paymentService;
     private final PaymentRepository paymentRepository;
+    private final JavaMail javaMail;
 
     @Override
     public String createOrder(HttpServletRequest request, VNPAYRequest vnpayRequest) {
@@ -167,20 +169,8 @@ public class VNPAYServiceImpl implements VNPAYService {
             String bookingNo = vnp_TxnRef.split("_")[0];
 
             if ("00".equals(vnp_TransactionStatus)) {
-                Optional<Booking> bookingOpt = bookingRepository.findByBookingNo(bookingNo);
-                if (bookingOpt.isPresent()) {
-                    Booking booking = bookingOpt.get();
-                    booking.setStatus("CONFIRMED");
-                    bookingRepository.save(booking);
-                }
                 return 1;
             } else {
-                Optional<Booking> bookingOpt = bookingRepository.findByBookingNo(bookingNo);
-                if (bookingOpt.isPresent()) {
-                    Booking booking = bookingOpt.get();
-                    booking.setStatus("FAILED");
-                    bookingRepository.save(booking);
-                }
                 return 0;
             }
         } else {
@@ -219,7 +209,7 @@ public class VNPAYServiceImpl implements VNPAYService {
                 booking.setStatus("CONFIRMED");
                 bookingRepository.save(booking);
                 // Gửi email xác nhận thanh toán thành công
-
+                javaMail.sendMailBooking(user, bookingNo, booking.getTourDetail().getTour().getTitle(), booking.getTourDetail().getStartDate().toString(), payment.getTotalAmount().toString());
 
                 return new RedirectView(UrlMapping.PAYMENT_SUCCESS);
             } else {

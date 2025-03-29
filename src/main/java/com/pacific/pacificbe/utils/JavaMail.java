@@ -16,7 +16,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.core.io.ByteArrayResource;
 import lombok.extern.slf4j.Slf4j;
+
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 @Slf4j
 @Service
@@ -24,6 +29,23 @@ import java.io.IOException;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class JavaMail {
     JavaMailSender javaMailSender;
+
+
+    private String formatDate(String date) {
+        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat outputFormat = new SimpleDateFormat("dd/MM/yyyy");
+        try {
+            return outputFormat.format(inputFormat.parse(date));
+        } catch (Exception e) {
+            return date;
+        }
+    }
+
+    private String formatCurrency(String amount) {
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+        return currencyFormat.format(new BigDecimal(amount));
+    }
+
 
     public void sendEmail(String to, String subject, String body) {
         MimeMessage message = javaMailSender.createMimeMessage();
@@ -81,4 +103,16 @@ public class JavaMail {
         sendEmail(user.getEmail(), subjectEmail, bodyEmail);
     }
 
+    public void sendMailBooking(User user, String bookingNo, String tourName, String tourDate, String totalPrice) {
+        String subjectEmail = "Xác nhận đặt tour " + tourName;
+        String bodyEmail = "<div style='font-family: Arial, sans-serif;'>"
+                + "<h2 style='color: #2E86C1;'>Xác nhận đặt tour</h2>"
+                + "<p>Xin chào <strong>" + user.getFirstName() + " " + user.getLastName() + "</strong>,</p>"
+                + "<p>Cảm ơn bạn đã đặt tour <strong>" + tourName + "</strong> vào ngày <strong>" + formatDate(tourDate) + "</strong>.</p>"
+                + "<p>Mã đặt tour của bạn là: <strong style='color: #E74C3C;'>" + bookingNo + "</strong></p>"
+                + "<p>Tổng giá trị đơn hàng là: <strong style='color: #27AE60;'>" + formatCurrency(totalPrice) + "</strong></p>"
+                + "<p>Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi.</p>"
+                + "</div>";
+        sendEmail(user.getEmail(), subjectEmail, bodyEmail);
+    }
 }
