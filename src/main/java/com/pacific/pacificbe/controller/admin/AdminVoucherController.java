@@ -80,8 +80,8 @@ public class AdminVoucherController {
     @Operation(summary = "Kiểm tra voucher")
     public ResponseEntity<Boolean> checkVoucher(
             @RequestParam String codeVoucher,
-            @RequestParam String tourId,
-            @RequestParam BigDecimal orderValue) {
+            @RequestParam(required = false) String tourId,
+            @RequestParam(required = false, defaultValue = "0") BigDecimal orderValue) {
         return ResponseEntity.ok(voucherService.checkVoucherCode(codeVoucher, orderValue, tourId));
     }
 
