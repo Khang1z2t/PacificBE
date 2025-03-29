@@ -15,6 +15,7 @@ import com.pacific.pacificbe.services.VNPAYService;
 import com.pacific.pacificbe.utils.AuthUtils;
 import com.pacific.pacificbe.utils.JavaMail;
 import com.pacific.pacificbe.utils.UrlMapping;
+import com.pacific.pacificbe.utils.enums.BookingStatus;
 import com.pacific.pacificbe.utils.enums.PaymentStatus;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
@@ -206,7 +207,7 @@ public class VNPAYServiceImpl implements VNPAYService {
                 payment.setNote(bookingNo);
                 paymentRepository.save(payment);
 
-                booking.setStatus("CONFIRMED");
+                booking.setStatus(BookingStatus.COMPLETED.toString());
                 bookingRepository.save(booking);
                 // Gửi email xác nhận thanh toán thành công
                 javaMail.sendMailBooking(user, bookingNo, booking.getTourDetail().getTour().getTitle(), booking.getTourDetail().getStartDate().toString(), payment.getTotalAmount().toString());
@@ -221,7 +222,7 @@ public class VNPAYServiceImpl implements VNPAYService {
                 payment.setUser(user);
                 payment.setNote(bookingNo);
                 paymentRepository.save(payment);
-                booking.setStatus("PENDING");
+                booking.setStatus(BookingStatus.PENDING.toString());
                 bookingRepository.save(booking);
                 return new RedirectView(UrlMapping.PAYMENT_FAIL);
             }

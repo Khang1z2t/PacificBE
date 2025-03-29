@@ -41,6 +41,6 @@ public class CheckOutController {
     @GetMapping(UrlMapping.CHECKOUT_RETURN)
     @Operation(summary = "Trả về kết quả thanh toán từ VNPAY")
     public RedirectView handleVnpayReturn(@ModelAttribute CheckOutRequest request) {
-        return ((VNPAYServiceImpl) vnPayService).processVnpayReturn(request);
+        return vnPayService.processVnpayReturn(request);
     }
 }
