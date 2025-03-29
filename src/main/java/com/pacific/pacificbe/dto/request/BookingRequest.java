@@ -15,7 +15,7 @@ public class BookingRequest {
     String paymentMethod;
     String specialRequests;
     BigDecimal totalAmount;
-    String voucherId;
+    String voucherCode;
 
     List<BookingDetailRequest> bookingDetails;
 }

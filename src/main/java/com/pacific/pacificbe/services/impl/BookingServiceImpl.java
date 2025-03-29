@@ -17,6 +17,7 @@ import com.pacific.pacificbe.repository.TourDetailRepository;
 import com.pacific.pacificbe.repository.UserRepository;
 import com.pacific.pacificbe.repository.VoucherRepository;
 import com.pacific.pacificbe.services.BookingService;
+import com.pacific.pacificbe.services.VoucherService;
 import com.pacific.pacificbe.utils.AuthUtils;
 import com.pacific.pacificbe.utils.IdUtil;
 import com.pacific.pacificbe.utils.enums.AgeGroup;
@@ -30,6 +31,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -50,6 +52,7 @@ public class BookingServiceImpl implements BookingService {
     private final VoucherRepository voucherRepository;
     private final IdUtil idUtil;
     private final BookingDetailRepository bookingDetailRepository;
+    private final VoucherService voucherService;
 
     @Override
     public List<Revenue> getMonthlyRevenueReport(String years, String bookingStatus) {
@@ -143,10 +146,23 @@ public class BookingServiceImpl implements BookingService {
         booking.setActive(true);
         booking.setBookingNo(generatorBookingNo(lastBookingNo));
         booking.setStatus(BookingStatus.PENDING.toString());
-        if (request.getVoucherId() != null) {
-            var voucher = voucherRepository.findById(request.getVoucherId()).orElseThrow(
+        if (request.getVoucherCode() != null) {
+            var voucher = voucherRepository.findByCodeVoucher(request.getVoucherCode()).orElseThrow(
                     () -> new AppException(ErrorCode.INVALID_VOUCHER));
+
+            Boolean isValid = voucherService.checkVoucherCode(
+                    voucher.getCodeVoucher(),
+                    request.getTotalAmount(),
+                    tourDetail.getTour().getId()
+            );
+
+            if (!isValid) {
+                throw new AppException(ErrorCode.INVALID_VOUCHER);
+            }
+
             booking.setVoucher(voucher);
+            voucher.setQuantity(voucher.getQuantity() - 1);
+            voucherRepository.save(voucher);
         }
         bookingRepository.save(booking);
 
@@ -178,9 +194,27 @@ public class BookingServiceImpl implements BookingService {
         booking.setChildrenNum(childrenNum);
         booking.setTotalNumber(totalNumber);
         booking.setBookingDetails(bookingDetails);
-        booking.setTotalAmount(totalPrice);
+
+//        update lại giá nếu có voucher
+        BigDecimal finalTotalPrice = getFinalPrice(totalPrice, booking);
+        booking.setTotalAmount(finalTotalPrice);
         bookingRepository.save(booking);
         return bookingMapper.toBookingResponse(booking);
+    }
+
+    private static BigDecimal getFinalPrice(BigDecimal totalPrice, Booking booking) {
+        BigDecimal finalTotalPrice = totalPrice;
+        if (booking.getVoucher() != null) {
+            BigDecimal discountPercentage = booking.getVoucher().getDiscountValue(); // Ví dụ: 30 (30%)
+            BigDecimal discountAmount = totalPrice
+                    .multiply(discountPercentage)
+                    .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP); // Tính số tiền giảm
+            finalTotalPrice = totalPrice.subtract(discountAmount); // Trừ số tiền giảm
+            if (finalTotalPrice.compareTo(BigDecimal.ZERO) < 0) {
+                finalTotalPrice = BigDecimal.ZERO; // Đảm bảo không âm
+            }
+        }
+        return finalTotalPrice;
     }
 
     private static BookingDetail getBookingDetail(BookingDetailRequest bookingDetailRequest, Booking booking) {

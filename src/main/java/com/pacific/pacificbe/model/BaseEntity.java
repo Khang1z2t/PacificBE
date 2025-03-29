@@ -3,6 +3,7 @@ package com.pacific.pacificbe.model;
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.PrePersist;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.CreatedDate;
@@ -33,6 +34,13 @@ public abstract class BaseEntity {
 
     @Column(name = "delete_at")
     private LocalDateTime deleteAt;
+
+    @PrePersist
+    public void onCreate() {
+        if (!this.active) {
+            this.active = true;
+        }
+    }
 }
 
 

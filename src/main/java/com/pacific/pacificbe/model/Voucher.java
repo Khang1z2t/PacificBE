@@ -1,5 +1,6 @@
 package com.pacific.pacificbe.model;
 
+import com.pacific.pacificbe.utils.enums.VoucherStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -7,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Nationalized;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -18,6 +20,7 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "voucher")
+@EntityListeners(AuditingEntityListener.class)
 public class Voucher extends BaseEntity {
     @Id
     @Size(max = 255)
@@ -79,4 +82,11 @@ public class Voucher extends BaseEntity {
     @JoinColumn(name = "category_id")
     private Category category;
 
+    @PreUpdate
+    public void onPreUpdate() {
+        if (this.quantity != null && this.quantity < 0) {
+            this.quantity = 0;
+            this.status = VoucherStatus.OUT_OF_STOCK.toString();
+        }
+    }
 }

@@ -3,6 +3,7 @@ package com.pacific.pacificbe.services;
 import com.pacific.pacificbe.dto.request.VoucherRequest;
 import com.pacific.pacificbe.dto.response.VoucherResponse;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,5 +23,5 @@ public interface VoucherService {
 
     Optional<VoucherResponse> getVoucherByCode(String codeVoucher);
 
-    Boolean checkVoucherCode(String codeVoucher);
+    Boolean checkVoucherCode(String codeVoucher, BigDecimal orderValue, String tourId);
 }
