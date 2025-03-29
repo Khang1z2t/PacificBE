@@ -1,9 +1,11 @@
 package com.pacific.pacificbe.controller;
 
 import com.pacific.pacificbe.dto.ApiResponse;
+import com.pacific.pacificbe.dto.request.AddReviewRequest;
 import com.pacific.pacificbe.dto.request.ReviewRequest;
 import com.pacific.pacificbe.dto.request.UpdateStatusReviewRequest;
 import com.pacific.pacificbe.dto.response.ReviewResponse;
+import com.pacific.pacificbe.dto.response.ReviewResponseBooking;
 import com.pacific.pacificbe.repository.ReviewRepository;
 import com.pacific.pacificbe.services.ReviewService;
 import com.pacific.pacificbe.utils.UrlMapping;
@@ -18,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(UrlMapping.ADMIN_RATING)
+@RequestMapping(UrlMapping.RATING)
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ReviewController {
@@ -60,10 +62,10 @@ public class ReviewController {
         return ResponseEntity.ok(reviews);
     }
 
-    @PostMapping(UrlMapping.CREATE_RATING)
+    @PostMapping(UrlMapping.ADD_RATING)
     @Operation(summary = "Tạo mới đánh giá")
-    public ResponseEntity<ApiResponse<ReviewResponse>> createReview(@RequestBody ReviewRequest request) {
-        ReviewResponse response = reviewService.createReview(request);
-        return ResponseEntity.ok(ApiResponse.<ReviewResponse>builder().data(response).build());
+    public ResponseEntity<ApiResponse<ReviewResponseBooking>> createReview(@RequestBody AddReviewRequest request) {
+        return ResponseEntity.ok(new ApiResponse<>(200, "Tạo mới đánh giá thành công",
+                reviewService.createReviewByUser(request)));
     }
 }

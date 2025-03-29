@@ -28,7 +28,7 @@ public class Review extends BaseEntity {
     @Column(name = "comment")
     private String comment;
 
-    @Column(name = "rating", precision = 2, scale = 1)
+    @Column(name = "rating", precision = 3, scale = 1)
     private BigDecimal rating;
 
     @Size(max = 50)
@@ -38,7 +38,7 @@ public class Review extends BaseEntity {
     private String status;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "booking_id", nullable = false)
     private Booking booking;
@@ -53,19 +53,19 @@ public class Review extends BaseEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(name = "price_rating", precision = 2, scale = 1)
+    @Column(name = "price_rating", precision = 3, scale = 1)
     private BigDecimal priceRating;
 
-    @Column(name = "service_rating", precision = 2, scale = 1)
+    @Column(name = "service_rating", precision = 3, scale = 1)
     private BigDecimal serviceRating;
 
-    @Column(name = "facility_rating", precision = 2, scale = 1)
+    @Column(name = "facility_rating", precision = 3, scale = 1)
     private BigDecimal facilityRating;
 
-    @Column(name = "food_rating", precision = 2, scale = 1)
+    @Column(name = "food_rating", precision = 3, scale = 1)
     private BigDecimal foodRating;
 
-    @Column(name = "accommodation_rating", precision = 2, scale = 1)
+    @Column(name = "accommodation_rating", precision = 3, scale = 1)
     private BigDecimal accommodationRating;
 
 }

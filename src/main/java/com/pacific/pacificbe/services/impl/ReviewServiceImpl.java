@@ -4,6 +4,7 @@ import com.pacific.pacificbe.dto.request.AddReviewRequest;
 import com.pacific.pacificbe.dto.request.ReviewRequest;
 import com.pacific.pacificbe.dto.request.UpdateStatusReviewRequest;
 import com.pacific.pacificbe.dto.response.ReviewResponse;
+import com.pacific.pacificbe.dto.response.ReviewResponseBooking;
 import com.pacific.pacificbe.exception.AppException;
 import com.pacific.pacificbe.exception.ErrorCode;
 import com.pacific.pacificbe.mapper.ReviewMapper;
@@ -25,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -103,35 +105,13 @@ public class ReviewServiceImpl implements ReviewService {
         );
     }
 
-//    @Override
-//    public ReviewResponse createReview(ReviewRequest request) {
-//        Review review = new Review();
-//        review.setComment(request.getComment());
-//        review.setRating(request.getRating());
-//        review.setStatus(request.getStatus());
-//
-//        Review savedReview = reviewRepository.save(review);
-//        log.info("Created review with id: {}", savedReview.getId());
-//
-//        return new ReviewResponse(
-//                savedReview.getId(),
-//                savedReview.getStatus(),
-//                savedReview.getComment(),
-//                savedReview.getRating(),
-//                savedReview.getUser().getEmail(),
-//                savedReview.getTour().getTitle(),
-//                savedReview.getCreatedAt()
-//        );
-//    }
-
-
     @Override
     public List<ReviewResponse> getAllReviews() {
         return List.of();
     }
 
     @Override
-    public ReviewResponse createReviewByUser(AddReviewRequest request) {
+    public ReviewResponseBooking createReviewByUser(AddReviewRequest request) {
         String userId = AuthUtils.getCurrentUserId();
         var user = userRepository.findById(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
@@ -146,7 +126,6 @@ public class ReviewServiceImpl implements ReviewService {
 //        if (!tour.getId().equals(booking.getTourDetail().getId())) {
 //            throw new AppException(ErrorCode.TOUR_NOT_FOUND);
 //        }
-        BigDecimal rating = BigDecimal.ZERO;
 
         List<BigDecimal> ratings = Arrays.asList(
                 request.getPriceRating(),
@@ -156,15 +135,18 @@ public class ReviewServiceImpl implements ReviewService {
                 request.getAccommodationRating()
         );
 
-        // Filter out null values
         List<BigDecimal> validRatings = ratings.stream()
                 .filter(Objects::nonNull)
                 .toList();
 
-        // Sum all ratings and divide by count
-        rating = validRatings.stream()
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-
+        BigDecimal rating;
+        if (validRatings.isEmpty()) {
+            rating = BigDecimal.ZERO;
+        } else {
+            BigDecimal sum = validRatings.stream()
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+            rating = sum.divide(BigDecimal.valueOf(validRatings.size()), 1, RoundingMode.HALF_UP);
+        }
 
         Review review = new Review();
         review.setComment(request.getComment());
@@ -178,9 +160,9 @@ public class ReviewServiceImpl implements ReviewService {
         review.setBooking(booking);
         review.setStatus(ReviewStatus.APPROVED.name());
         review.setRating(rating);
+        reviewRepository.save(review);
 
-
-        return reviewMapper.toResponse();
+        return reviewMapper.toReviewResponseBooking(review);
     }
 
     @Override

@@ -4,6 +4,7 @@ import com.pacific.pacificbe.dto.request.AddReviewRequest;
 import com.pacific.pacificbe.dto.request.ReviewRequest;
 import com.pacific.pacificbe.dto.request.UpdateStatusReviewRequest;
 import com.pacific.pacificbe.dto.response.ReviewResponse;
+import com.pacific.pacificbe.dto.response.ReviewResponseBooking;
 
 import java.util.List;
 
@@ -23,5 +24,5 @@ public interface ReviewService {
 
     List<ReviewResponse> getAllReviews();
 
-    ReviewResponse createReviewByUser(AddReviewRequest request);
+    ReviewResponseBooking createReviewByUser(AddReviewRequest request);
 }

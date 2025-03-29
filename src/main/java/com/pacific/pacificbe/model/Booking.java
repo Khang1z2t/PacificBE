@@ -72,8 +72,8 @@ public class Booking extends BaseEntity {
     @OneToMany(mappedBy = "booking")
     private Set<Invoice> invoices = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "booking")
-    private Set<Review> reviews = new LinkedHashSet<>();
+    @OneToOne(mappedBy = "booking")
+    private Review review;
 
     @OneToMany(mappedBy = "booking")
     private List<BookingDetail> bookingDetails = new ArrayList<>();
