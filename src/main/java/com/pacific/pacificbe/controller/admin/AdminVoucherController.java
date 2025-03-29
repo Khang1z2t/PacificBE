@@ -14,6 +14,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -73,6 +74,15 @@ public class AdminVoucherController {
     public ResponseEntity<ApiResponse<String>> deleteVoucher(@PathVariable String id) {
         voucherService.deleteVoucher(id);
         return ResponseEntity.ok(new ApiResponse<>(200, "Xóa thành công", "Voucher đã được xóa"));
+    }
+
+    @GetMapping(UrlMapping.CHECK_VOUCHER)
+    @Operation(summary = "Kiểm tra voucher")
+    public ResponseEntity<Boolean> checkVoucher(
+            @RequestParam String codeVoucher,
+            @RequestParam String tourId,
+            @RequestParam BigDecimal orderValue) {
+        return ResponseEntity.ok(voucherService.checkVoucherCode(codeVoucher, orderValue, tourId));
     }
 
 }
