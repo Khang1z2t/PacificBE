@@ -6,10 +6,9 @@ import com.pacific.pacificbe.exception.AppException;
 import com.pacific.pacificbe.exception.ErrorCode;
 import com.pacific.pacificbe.mapper.VoucherMapper;
 import com.pacific.pacificbe.model.Voucher;
-import com.pacific.pacificbe.repository.CategoryRepository;
-import com.pacific.pacificbe.repository.TourRepository;
-import com.pacific.pacificbe.repository.VoucherRepository;
+import com.pacific.pacificbe.repository.*;
 import com.pacific.pacificbe.services.VoucherService;
+import com.pacific.pacificbe.utils.AuthUtils;
 import com.pacific.pacificbe.utils.IdUtil;
 import com.pacific.pacificbe.utils.enums.ApplyTo;
 import com.pacific.pacificbe.utils.enums.VoucherStatus;
@@ -23,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,6 +38,8 @@ public class VoucherServiceImpl implements VoucherService {
     private final TourRepository tourRepository;
     private final IdUtil idUtil;
     private final CategoryRepository categoryRepository;
+    private final BookingRepository bookingRepository;
+    private final UserRepository userRepository;
 
     @Override
     public VoucherResponse getVoucherById(String id) {
@@ -129,8 +131,51 @@ public class VoucherServiceImpl implements VoucherService {
     }
 
     @Override
-    public Boolean checkVoucherCode(String codeVoucher) {
+    public Boolean checkVoucherCode(String codeVoucher, BigDecimal orderValue, String tourId) {
+        String userId = AuthUtils.getCurrentUserId();
+        var user = userRepository.findById(userId).orElseThrow(
+                () -> new AppException(ErrorCode.USER_NOT_FOUND));
         var voucher = voucherRepository.findByCodeVoucher(codeVoucher).orElse(null);
+
+        if (voucher != null) {
+            LocalDateTime now = LocalDateTime.now();
+            if (voucher.getStartDate().isAfter(now) || voucher.getEndDate().isBefore(now)) {
+                return false;
+            }
+            if (voucher.getQuantity() < 0) {
+                return false;
+            }
+            if (!voucher.getStatus().equals(VoucherStatus.ACTIVE.toString())) {
+                return false;
+            }
+            if (voucher.getMinOrderValue().compareTo(orderValue) > 0) {
+                return false;
+            }
+
+            long userVoucherUsage = bookingRepository.countByUserIdAndVoucherId(user.getId(), voucher.getId());
+            if (voucher.getUserLimit() != null && userVoucherUsage >= voucher.getUserLimit()) {
+                return false;
+            }
+
+            ApplyTo applyTo = ApplyTo.valueOf(voucher.getApplyTo());
+            switch (applyTo) {
+                case TOUR:
+                    if (voucher.getTour() == null || !voucher.getTour().getId().equals(tourId)) {
+                        return false;
+                    }
+                    break;
+                case CATEGORY:
+                    var tour = tourRepository.findById(tourId).orElse(null);
+                    if (tour == null || voucher.getCategory() == null ||
+                            !voucher.getCategory().getId().equals(tour.getCategory().getId())) {
+                        return false;
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
         return voucher != null;
     }
 
