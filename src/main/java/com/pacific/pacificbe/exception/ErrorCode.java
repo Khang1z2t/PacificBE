@@ -32,7 +32,8 @@ public enum ErrorCode {
     INVALID_AGE_GROUP(1018, "Invalid age group, must be " +
             getEnumValues(AgeGroup.class), HttpStatus.BAD_REQUEST),
     INVALID_VOUCHER(1019, "Invalid voucher", HttpStatus.BAD_REQUEST),
-
+    INVALID_VOUCHER_DISCOUNT(1020, "Invalid voucher discount", HttpStatus.BAD_REQUEST),
+    INVALID_VOUCHER_MIN_ORDER(1021, "Invalid voucher min order", HttpStatus.BAD_REQUEST),
 
     // Tour Error
     TOUR_NOT_FOUND(1020, "Tour not found", HttpStatus.NOT_FOUND),
@@ -87,6 +88,8 @@ public enum ErrorCode {
     VOUCHER_TOUR_ID_REQUIRED(1034, "Tour ID is required", HttpStatus.BAD_REQUEST),
     VOUCHER_CATEGORY_ID_REQUIRED(1035, "Category ID is required", HttpStatus.BAD_REQUEST),
     INVALID_MIN_ORDER_VALUE(1036, "Min order value must be greater than 0", HttpStatus.BAD_REQUEST),
+    VOUCHER_MAX_DISCOUNT_INVALID(1037, "Max discount must be greater than 0", HttpStatus.BAD_REQUEST),
+
 
     // Support Errors
     SUPPORT_NOT_FOUND(1032, "Support not found", HttpStatus.NOT_FOUND),

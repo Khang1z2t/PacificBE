@@ -127,7 +127,31 @@ public class VoucherServiceImpl implements VoucherService {
 
     @Override
     public Optional<VoucherResponse> getVoucherByCode(String codeVoucher) {
-        return Optional.empty();
+        String userId = AuthUtils.getCurrentUserId();
+        var user = userRepository.findById(userId).orElseThrow(
+                () -> new AppException(ErrorCode.USER_NOT_FOUND));
+        var voucher = voucherRepository.findByCodeVoucher(codeVoucher).orElse(null);
+        if (voucher != null) {
+            LocalDateTime now = LocalDateTime.now();
+            if (voucher.getStartDate().isAfter(now) || voucher.getEndDate().isBefore(now)) {
+                return Optional.empty();
+            }
+            if (voucher.getQuantity() < 0) {
+                return Optional.empty();
+            }
+            if (!voucher.getStatus().equals(VoucherStatus.ACTIVE.toString())) {
+                return Optional.empty();
+            }
+            if (voucher.getMinOrderValue().compareTo(BigDecimal.ZERO) > 0) {
+                return Optional.empty();
+            }
+
+            long userVoucherUsage = bookingRepository.countByUserIdAndVoucherId(user.getId(), voucher.getId());
+            if (voucher.getUserLimit() != null && userVoucherUsage >= voucher.getUserLimit()) {
+                return Optional.empty();
+            }
+        }
+        return Optional.ofNullable(voucherMapper.toVoucherResponse(voucher));
     }
 
     @Override

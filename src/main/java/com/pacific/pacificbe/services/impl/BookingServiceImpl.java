@@ -11,6 +11,7 @@ import com.pacific.pacificbe.exception.ErrorCode;
 import com.pacific.pacificbe.mapper.BookingMapper;
 import com.pacific.pacificbe.model.Booking;
 import com.pacific.pacificbe.model.BookingDetail;
+import com.pacific.pacificbe.model.Voucher;
 import com.pacific.pacificbe.repository.BookingDetailRepository;
 import com.pacific.pacificbe.repository.BookingRepository;
 import com.pacific.pacificbe.repository.TourDetailRepository;
@@ -35,6 +36,7 @@ import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.chrono.ChronoLocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -125,11 +127,11 @@ public class BookingServiceImpl implements BookingService {
     @Transactional
     public BookingResponse bookingTour(String tourDetailId, BookingRequest request) {
         String userId = AuthUtils.getCurrentUserId();
-        var user = userRepository.findById(userId).orElseThrow(
-                () -> new AppException(ErrorCode.USER_NOT_FOUND));
+        var user = userRepository.findById(userId)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
-        var tourDetail = tourDetailRepository.findById(tourDetailId).orElseThrow(
-                () -> new AppException(ErrorCode.TOUR_DETAIL_NOT_FOUND));
+        var tourDetail = tourDetailRepository.findById(tourDetailId)
+                .orElseThrow(() -> new AppException(ErrorCode.TOUR_DETAIL_NOT_FOUND));
 
         String lastBookingNo = bookingRepository.findLatestBookingNoOfToday();
 
@@ -137,35 +139,41 @@ public class BookingServiceImpl implements BookingService {
         int childrenNum = 0;
         BigDecimal totalPrice = BigDecimal.ZERO;
 
+        // Tạo booking
         Booking booking = new Booking();
         booking.setPaymentMethod(request.getPaymentMethod());
         booking.setSpecialRequests(request.getSpecialRequests());
-        booking.setTotalAmount(request.getTotalAmount());
         booking.setUser(user);
         booking.setTourDetail(tourDetail);
         booking.setActive(true);
         booking.setBookingNo(generatorBookingNo(lastBookingNo));
         booking.setStatus(BookingStatus.PENDING.toString());
-        if (request.getVoucherCode() != null) {
-            var voucher = voucherRepository.findByCodeVoucher(request.getVoucherCode()).orElseThrow(
-                    () -> new AppException(ErrorCode.INVALID_VOUCHER));
 
-            Boolean isValid = voucherService.checkVoucherCode(
+        // Xử lý voucher nếu có
+        Voucher voucher = null;
+        if (request.getVoucherCode() != null && !request.getVoucherCode().isEmpty()) {
+            voucher = voucherRepository.findByCodeVoucher(request.getVoucherCode())
+                    .orElseThrow(() -> new AppException(ErrorCode.INVALID_VOUCHER));
+
+            // Kiểm tra tính hợp lệ của voucher
+            boolean isValid = voucherService.checkVoucherCode(
                     voucher.getCodeVoucher(),
-                    request.getTotalAmount(),
+                    BigDecimal.ZERO, // Sẽ cập nhật totalPrice sau
                     tourDetail.getTour().getId()
             );
 
-            if (!isValid) {
+            if (!isValid || voucher.getQuantity() <= 0 || voucher.getStatus().equals("INACTIVE")) {
                 throw new AppException(ErrorCode.INVALID_VOUCHER);
             }
 
+            // Gán voucher nhưng chưa giảm quantity ngay
             booking.setVoucher(voucher);
-            voucher.setQuantity(voucher.getQuantity() - 1);
-            voucherRepository.save(voucher);
         }
+
+        // Lưu booking trước để có ID
         bookingRepository.save(booking);
 
+        // Xử lý booking details
         List<BookingDetail> bookingDetails = new ArrayList<>();
         for (BookingDetailRequest bookingDetailRequest : request.getBookingDetails()) {
             GenderEnums genderEnums = bookingDetailRequest.getGender();
@@ -195,26 +203,31 @@ public class BookingServiceImpl implements BookingService {
         booking.setTotalNumber(totalNumber);
         booking.setBookingDetails(bookingDetails);
 
-//        update lại giá nếu có voucher
+        // Cập nhật giá cuối cùng với voucher
         BigDecimal finalTotalPrice = getFinalPrice(totalPrice, booking);
+        if (voucher != null && finalTotalPrice.compareTo(voucher.getMinOrderValue()) < 0) {
+            throw new AppException(ErrorCode.INVALID_VOUCHER_MIN_ORDER);
+        }
         booking.setTotalAmount(finalTotalPrice);
+
+        // Giảm quantity của voucher sau khi xác nhận booking thành công
+        if (voucher != null) {
+            voucher.setQuantity(voucher.getQuantity() - 1);
+            voucherRepository.save(voucher);
+        }
+
         bookingRepository.save(booking);
         return bookingMapper.toBookingResponse(booking);
     }
 
-    private static BigDecimal getFinalPrice(BigDecimal totalPrice, Booking booking) {
-        BigDecimal finalTotalPrice = totalPrice;
-        if (booking.getVoucher() != null) {
-            BigDecimal discountPercentage = booking.getVoucher().getDiscountValue(); // Ví dụ: 30 (30%)
-            BigDecimal discountAmount = totalPrice
-                    .multiply(discountPercentage)
-                    .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP); // Tính số tiền giảm
-            finalTotalPrice = totalPrice.subtract(discountAmount); // Trừ số tiền giảm
-            if (finalTotalPrice.compareTo(BigDecimal.ZERO) < 0) {
-                finalTotalPrice = BigDecimal.ZERO; // Đảm bảo không âm
-            }
+    private BigDecimal getFinalPrice(BigDecimal totalPrice, Booking booking) {
+        if (booking.getVoucher() == null) {
+            return totalPrice;
         }
-        return finalTotalPrice;
+        Voucher voucher = booking.getVoucher();
+        BigDecimal discountValue = voucher.getDiscountValue();
+        BigDecimal discount = totalPrice.multiply(discountValue).divide(BigDecimal.valueOf(100));
+        return totalPrice.subtract(discount);
     }
 
     private static BookingDetail getBookingDetail(BookingDetailRequest bookingDetailRequest, Booking booking) {
