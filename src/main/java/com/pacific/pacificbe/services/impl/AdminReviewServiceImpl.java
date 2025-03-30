@@ -14,7 +14,6 @@ import com.pacific.pacificbe.repository.ReviewRepository;
 import com.pacific.pacificbe.repository.TourRepository;
 import com.pacific.pacificbe.repository.UserRepository;
 import com.pacific.pacificbe.services.AdminReviewService;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -131,5 +130,10 @@ public class AdminReviewServiceImpl implements AdminReviewService {
         reviewRepository.save(review);
     }
 
-
+    @Override
+    public List<AdminReviewResponse> findByTourId(String tourId) {
+        return reviewRepository.findByTourId(tourId).stream()
+                .map(adminReviewMapper::toResponse)
+                .collect(Collectors.toList());
+    }
 }
