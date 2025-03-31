@@ -12,6 +12,9 @@ import com.pacific.pacificbe.repository.WishlistRepository;
 import com.pacific.pacificbe.services.WishlistService;
 import com.pacific.pacificbe.utils.AuthUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +30,7 @@ public class WishlistServiceImpl implements WishlistService {
     private final WishlistMapper wishlistMapper;
 
     @Override
+    @CachePut(value = "wishlists", key = "#result.user.id + '-' + #result.tour.id")
     public WishlistResponse addWishlist(String id) {
         String userId = AuthUtils.getCurrentUserId();
         if (userId == null) {
@@ -44,6 +48,7 @@ public class WishlistServiceImpl implements WishlistService {
     }
 
     @Override
+    @Cacheable(value = "wishlists", key = "#root.methodName + '-' + #userId")
     public List<WishlistResponse> getAllWishlistByUser() {
         String userId = AuthUtils.getCurrentUserId();
         if (userId == null) {
@@ -55,8 +60,8 @@ public class WishlistServiceImpl implements WishlistService {
         return wishlistMapper.toWishlistResponseList(wishlists);
     }
 
-
     @Override
+    @CacheEvict(value = "wishlists", key = "'getAllWishlistByUser-' + #userId")
     public Boolean deleteWishlist(String id) {
         String userId = AuthUtils.getCurrentUserId();
         if (userId == null) {

@@ -9,6 +9,7 @@ import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.time.Duration;
 
@@ -16,27 +17,33 @@ import java.time.Duration;
 public class RedisConfig {
 
     @Bean
-    public RedisCacheConfiguration cacheConfiguration() {
+    public ObjectMapper redisObjectMapper() {
         ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule()); // Hỗ trợ LocalDateTime
-        objectMapper.activateDefaultTyping(
-                objectMapper.getPolymorphicTypeValidator(),
-                ObjectMapper.DefaultTyping.NON_FINAL
-        ); // Bật type information cho các class không phải final
-
-        return RedisCacheConfiguration.defaultCacheConfig()
-                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(
-                        new GenericJackson2JsonRedisSerializer(objectMapper)));
+        // Đăng ký JavaTimeModule để hỗ trợ LocalDateTime
+        objectMapper.registerModule(new JavaTimeModule());
+        // Không cần activateDefaultTyping nếu không có tính đa hình
+        // objectMapper.activateDefaultTyping(
+        //         objectMapper.getPolymorphicTypeValidator(),
+        //         ObjectMapper.DefaultTyping.NON_FINAL
+        // );
+        objectMapper.findAndRegisterModules(); // Tự động tìm và đăng ký các module khác
+        return objectMapper;
     }
 
     @Bean
-    public RedisCacheManager cacheManager(RedisConnectionFactory redisConnectionFactory) {
-        RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig()
-                .entryTtl(Duration.ofHours(1))
-                .disableCachingNullValues();
+    public RedisCacheConfiguration cacheConfiguration(ObjectMapper redisObjectMapper) {
+        return RedisCacheConfiguration.defaultCacheConfig()
+                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
+                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(
+                        new GenericJackson2JsonRedisSerializer(redisObjectMapper)))
+                .entryTtl(Duration.ofHours(1)) // Set TTL for cache entries
+                .disableCachingNullValues(); // Disable caching of null values
+    }
 
+    @Bean
+    public RedisCacheManager cacheManager(RedisConnectionFactory redisConnectionFactory, RedisCacheConfiguration cacheConfiguration) {
         return RedisCacheManager.builder(redisConnectionFactory)
-                .cacheDefaults(config)
+                .cacheDefaults(cacheConfiguration)
                 .build();
     }
 }
