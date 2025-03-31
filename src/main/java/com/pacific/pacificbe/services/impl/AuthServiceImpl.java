@@ -1,9 +1,6 @@
 package com.pacific.pacificbe.services.impl;
 
-import com.pacific.pacificbe.dto.request.LoginRequest;
-import com.pacific.pacificbe.dto.request.ResetUserPasswordRequest;
-import com.pacific.pacificbe.dto.request.UserRegisterRequest;
-import com.pacific.pacificbe.dto.request.VerifyOtpRequest;
+import com.pacific.pacificbe.dto.request.*;
 import com.pacific.pacificbe.dto.request.oauth2.GoogleTokenRequest;
 import com.pacific.pacificbe.dto.response.AuthenticationResponse;
 import com.pacific.pacificbe.dto.response.UserRegisterResponse;
@@ -18,6 +15,7 @@ import com.pacific.pacificbe.integration.google.GoogleUserClient;
 import com.pacific.pacificbe.services.AuthService;
 import com.pacific.pacificbe.services.JwtService;
 import com.pacific.pacificbe.services.OtpService;
+import com.pacific.pacificbe.utils.AuthUtils;
 import com.pacific.pacificbe.utils.IdUtil;
 import com.pacific.pacificbe.utils.JavaMail;
 import com.pacific.pacificbe.utils.UrlMapping;
@@ -241,5 +239,44 @@ public class AuthServiceImpl implements AuthService {
 
         String url = UrlMapping.GOOGLE_REDIRECT + "?access_token=" + accessToken + "&refresh_token=" + accessToken;
         return new RedirectView(url);
+    }
+
+    @Override
+    public boolean changePassword(ChangePasswordRequest request) {
+        String userId = AuthUtils.getCurrentUserId();
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        if (passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
+            if (request.getNewPassword().equals(request.getConfirmPassword())) {
+                user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+                user.setStatus(UserStatus.ACTIVE.toString());
+                userRepository.save(user);
+                return true;
+            } else {
+                throw new AppException(ErrorCode.PASSWORD_NOT_MATCH);
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean updateUsername(String username) {
+        String userId = AuthUtils.getCurrentUserId();
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+
+        if (!user.getUsername().equalsIgnoreCase(user.getEmail().split("@")[0])) {
+            return false;
+        } else if (!user.getStatus().equals(UserStatus.REQUIRE_USERNAME_CHANGE.toString())) {
+            return false;
+        } else if (!user.getStatus().equals(UserStatus.REQUIRE_USERNAME_PASSWORD_CHANGE.toString())) {
+            return false;
+        } else if (userRepository.existsByUsername(username)) {
+            return false;
+        }
+        user.setUsername(username);
+        user.setStatus(UserStatus.ACTIVE.toString());
+        userRepository.save(user);
+        return true;
     }
 }

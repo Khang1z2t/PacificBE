@@ -32,11 +32,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.chrono.ChronoLocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -156,7 +154,7 @@ public class BookingServiceImpl implements BookingService {
                     .orElseThrow(() -> new AppException(ErrorCode.INVALID_VOUCHER));
 
             // Kiểm tra tính hợp lệ của voucher
-            boolean isValid = voucherService.checkVoucherCode(
+            boolean isValid = voucherService.checkVoucher(
                     voucher.getCodeVoucher(),
                     BigDecimal.ZERO, // Sẽ cập nhật totalPrice sau
                     tourDetail.getTour().getId()

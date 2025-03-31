@@ -78,11 +78,11 @@ public class AdminVoucherController {
 
     @GetMapping(UrlMapping.CHECK_VOUCHER)
     @Operation(summary = "Kiểm tra voucher")
-    public ResponseEntity<Boolean> checkVoucher(
+    public ResponseEntity<ApiResponse<?>> checkVoucher(
             @RequestParam String codeVoucher,
             @RequestParam(required = false) String tourId,
             @RequestParam(required = false, defaultValue = "0") BigDecimal orderValue) {
-        return ResponseEntity.ok(voucherService.checkVoucherCode(codeVoucher, orderValue, tourId));
+        return ResponseEntity.ok(new ApiResponse<>(200, null, voucherService.checkVoucherCode(codeVoucher, orderValue, tourId)));
     }
 
 }

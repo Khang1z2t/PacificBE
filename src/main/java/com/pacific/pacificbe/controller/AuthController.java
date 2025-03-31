@@ -1,10 +1,7 @@
 package com.pacific.pacificbe.controller;
 
 import com.pacific.pacificbe.dto.ApiResponse;
-import com.pacific.pacificbe.dto.request.LoginRequest;
-import com.pacific.pacificbe.dto.request.ResetUserPasswordRequest;
-import com.pacific.pacificbe.dto.request.UserRegisterRequest;
-import com.pacific.pacificbe.dto.request.VerifyOtpRequest;
+import com.pacific.pacificbe.dto.request.*;
 import com.pacific.pacificbe.dto.response.AuthenticationResponse;
 import com.pacific.pacificbe.dto.response.UserRegisterResponse;
 import com.pacific.pacificbe.dto.response.UserResponse;
@@ -48,7 +45,6 @@ public class AuthController {
         return authService.loginGoogleCallback(code, error);
     }
 
-
     @GetMapping(UrlMapping.AUTHENTICATE_TOKEN)
     @Operation(summary = "API xác thực token")
     ResponseEntity<ApiResponse<UserResponse>> authenticateToken() {
@@ -57,7 +53,7 @@ public class AuthController {
 
     @PostMapping(UrlMapping.SEND_VERIFY_MAIL)
     @Operation(summary = "API gửi mail xác thực")
-    ResponseEntity<?> sendVerifyMail(@RequestParam String email) {
+    ResponseEntity<?> sendVerifyMail(@RequestBody String email) {
         return ResponseEntity.ok(authService.sendEmailVerify(email));
     }
 
@@ -83,6 +79,18 @@ public class AuthController {
     @Operation(summary = "API reset mật khẩu")
     ResponseEntity<?> resetPassword(@RequestBody ResetUserPasswordRequest request) {
         return ResponseEntity.ok(authService.resetPassword(request));
+    }
+
+    @PostMapping(UrlMapping.CHANGE_PASSWORD)
+    @Operation(summary = "API đổi mật khẩu")
+    ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequest request) {
+        return ResponseEntity.ok(authService.changePassword(request));
+    }
+
+    @PostMapping(UrlMapping.UPDATE_USERNAME)
+    @Operation(summary = "API cập nhật tên người dùng")
+    ResponseEntity<?> updateUsername(@RequestParam String username) {
+        return ResponseEntity.ok(authService.updateUsername(username));
     }
 
 }
