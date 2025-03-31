@@ -2,6 +2,7 @@ package com.pacific.pacificbe.controller;
 
 import com.pacific.pacificbe.dto.ApiResponse;
 import com.pacific.pacificbe.dto.request.TransportRequest;
+import com.pacific.pacificbe.dto.response.TourResponse;
 import com.pacific.pacificbe.dto.response.TransportResponse;
 import com.pacific.pacificbe.services.TransportService;
 import com.pacific.pacificbe.utils.UrlMapping;
@@ -9,8 +10,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -62,4 +65,17 @@ public class TransportController {
         boolean result = transportService.deleteTransport(id);
         return ResponseEntity.ok(new ApiResponse<>(200, null, result));
     }
+
+
+    @PostMapping(value = UrlMapping.ADD_TRANSPORT_IMAGES, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(summary = "Thêm ảnh cho transport")
+    public ResponseEntity<ApiResponse<TransportResponse>> addTransportImages(
+            @PathVariable String id,
+            @RequestParam("image") MultipartFile image) {
+
+        TransportResponse response = transportService.addTransportImage(id, image);
+        return ResponseEntity.ok(new ApiResponse<>(200, "Ảnh đã được tải lên Google Drive", response));
+    }
+
+
 }

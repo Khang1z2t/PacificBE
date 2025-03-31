@@ -10,8 +10,10 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 public class HotelResponse {
-    String id;
-    String name;
-    BigDecimal cost;
-    int typeHotel;
+    private String id;
+    private String name;
+    private BigDecimal rating;
+    private BigDecimal cost;
+    private String typeHotel;
+    private String imageURL;
 }

@@ -29,11 +29,9 @@ public enum ErrorCode {
     INVALID_AGE_GROUP(1018, "Invalid age group, must be " + getEnumValues(AgeGroup.class), HttpStatus.BAD_REQUEST),
     INVALID_VOUCHER(1019, "Invalid voucher", HttpStatus.BAD_REQUEST),
 
-
     // Tour Error
     TOUR_NOT_FOUND(1020, "Tour not found", HttpStatus.NOT_FOUND),
     TOUR_STATUS_INVALID(1021, "Invalid status, must be " + getEnumValues(TourStatus.class), HttpStatus.BAD_REQUEST),
-
 
     TOUR_DETAIL_NOT_FOUND(1030, "Tour detail not found", HttpStatus.NOT_FOUND),
     TOUR_DETAIL_STATUS_INVALID(1031, "Invalid status, must be " + getEnumValues(TourDetailStatus.class), HttpStatus.BAD_REQUEST),
@@ -47,12 +45,25 @@ public enum ErrorCode {
     NEED_LOGIN(1098, "You need login first", HttpStatus.UNAUTHORIZED),
     CANT_SEND_MAIL(1099, "Can't send mail", HttpStatus.INTERNAL_SERVER_ERROR),
 
+    // Image and File related errors
+    INVALID_IMAGE(1100, "Invalid image file", HttpStatus.BAD_REQUEST),
+    UPLOAD_IMAGE_FAILED(1101, "Failed to upload image", HttpStatus.INTERNAL_SERVER_ERROR),
+    IMAGE_NOT_FOUND(1102, "Image not found", HttpStatus.NOT_FOUND),
+    IMAGE_SIZE_EXCEEDED(1103, "Image size exceeds maximum limit", HttpStatus.BAD_REQUEST),
+    UNSUPPORTED_IMAGE_FORMAT(1104, "Unsupported image format", HttpStatus.BAD_REQUEST),
+
+    // Transport specific errors
+    TRANSPORT_IN_USE(1200, "Transport is in use by one or more tours", HttpStatus.BAD_REQUEST),
+    INVALID_TRANSPORT_TYPE(1201, "Invalid transport type", HttpStatus.BAD_REQUEST),
+    TRANSPORT_ALREADY_EXISTS(1202, "Transport with this name already exists", HttpStatus.BAD_REQUEST),
 
     // Thêm hằng số CATEGORY_IN_USE
     CATEGORY_IN_USE(1041, "Category is in use by one or more tours", HttpStatus.BAD_REQUEST),
-    //    ORDERINFO
+
+    // OrderInfo
     ORDERINFO_NOT_FOUND(1042, "OrderInfo not found", HttpStatus.NOT_FOUND),
     INVALID_ORDER_INFO(1043, "Invalid orderinfo or smthing", HttpStatus.BAD_REQUEST),
+
     // Admin User Errors
     INVALID_STATUS(1021, "Invalid status, must be ACTIVE or INACTIVE", HttpStatus.BAD_REQUEST),
 
@@ -67,7 +78,6 @@ public enum ErrorCode {
     INVALID_RATING_STATUS(1027, "Invalid status, must be ACTIVE or INACTIVE", HttpStatus.NOT_FOUND),
     REVIEW_NOT_FOUND(1034, "Review not found", HttpStatus.NOT_FOUND),
 
-
     // Voucher Errors
     VOUCHER_NOT_FOUND(1028, "Voucher not found", HttpStatus.NOT_FOUND),
     INVALID_VOUCHER_STATUS(1029, "Invalid status, must be ACTIVE or INACTIVE", HttpStatus.NOT_FOUND),
@@ -77,9 +87,6 @@ public enum ErrorCode {
     // Support Errors
     SUPPORT_NOT_FOUND(1032, "Support not found", HttpStatus.NOT_FOUND),
     INVALID_SUPPORT_STATUS(1033, "Invalid status, must be ACTIVE or INACTIVE", HttpStatus.NOT_FOUND);
-
-    //  ^---------------------
-    //  Lưu ý ở đây phải kết thúc enum bằng dấu ; chứ không phải dấu ,
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
         this.code = code;
