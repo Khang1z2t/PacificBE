@@ -21,17 +21,22 @@ public class ImageServiceImpl implements ImageService {
     @Cacheable(value = "images", key = "#fileId", unless = "#result == null")
     public byte[] getImage(String fileId) {
         try {
-            var imageBytes = googleImageClient.getImage(fileId);
+            byte[] imageBytes = googleImageClient.getImage(fileId);
+            if (imageBytes == null) {
+                log.warn("Image bytes are null for fileId: {}", fileId);
+                return null;
+            }
+            log.info("Successfully fetched image for fileId: {}, size: {}", fileId, imageBytes.length);
             return imageBytes;
         } catch (Exception e) {
-            log.error("Error fetching image from Google: {}", e.getMessage());
+            log.error("Error fetching image from Google for fileId {}: {}", fileId, e.getMessage());
             if (e.getMessage().contains("Too Many Requests") || (e.getCause() != null && e.getCause().getMessage().contains("429"))) {
-                throw new RuntimeException("Too Many Requests");
+                throw new RuntimeException("Too Many Requests", e);
             }
             if (e.getMessage().contains("Image not found")) {
-                throw new RuntimeException("Image not found");
+                throw new RuntimeException("Image not found", e);
             }
+            throw new RuntimeException("Failed to fetch image for fileId: " + fileId, e);
         }
-        return null;
     }
 }

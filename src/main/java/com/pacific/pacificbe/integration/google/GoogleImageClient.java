@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 @FeignClient(name = "googleImageClient", url = "https://lh3.googleusercontent.com")
 public interface GoogleImageClient {
-    @GetMapping(value = "/d/{fileId}")
+    @GetMapping(value = "/d/{fileId}", produces = "image/*")
     byte[] getImage(@PathVariable("fileId") String fileId);
 }

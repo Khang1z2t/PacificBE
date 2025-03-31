@@ -9,9 +9,12 @@ import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
+import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.time.Duration;
+import java.util.HashMap;
+import java.util.Map;
 
 @Configuration
 public class RedisConfig {
@@ -42,7 +45,18 @@ public class RedisConfig {
 
     @Bean
     public RedisCacheManager cacheManager(RedisConnectionFactory redisConnectionFactory, RedisCacheConfiguration cacheConfiguration) {
+        // Cấu hình riêng cho cache "images" CẤM ĐỘNG VÀO
+        RedisCacheConfiguration imagesCacheConfig = RedisCacheConfiguration.defaultCacheConfig()
+                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
+                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(RedisSerializer.byteArray()))
+                .entryTtl(Duration.ofHours(1))
+                .disableCachingNullValues();
+
+        Map<String, RedisCacheConfiguration> cacheConfigurations = new HashMap<>();
+        cacheConfigurations.put("images", imagesCacheConfig);
+
         return RedisCacheManager.builder(redisConnectionFactory)
+                .withInitialCacheConfigurations(cacheConfigurations)
                 .cacheDefaults(cacheConfiguration)
                 .build();
     }
