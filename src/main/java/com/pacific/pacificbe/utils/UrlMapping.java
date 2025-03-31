@@ -255,4 +255,10 @@ public class UrlMapping {
 //    public static final String
     /* =========================== End Util API ===================================== */
 
+
+    /* =========================== Proxy image API ===================================== */
+    public static final String PROXY_IMAGE = API + "/image/{fileId}";
+    /* =========================== Proxy image API ===================================== */
+
+
 }
