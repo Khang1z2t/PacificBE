@@ -21,6 +21,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -48,18 +49,21 @@ public class TourServiceImpl implements TourService {
     private final IdUtil idUtil;
     private final TourDetailRepository tourDetailRepository;
 
+    @Cacheable(value = "allTours", key = "#title + '-' + #minPrice + '-' + #maxPrice + '-' + #categoryId + '-' + #startDate + '-' + #endDate")
     @Override
     public List<TourResponse> getAllTours(String title, BigDecimal minPrice, BigDecimal maxPrice, String categoryId, LocalDate startDate, LocalDate endDate) {
         List<Tour> tours = tourRepository.findAllWithFilters(title, minPrice, maxPrice, categoryId, startDate, endDate);
         return tourMapper.toTourResponseList(tours);
     }
 
+    @Cacheable(value = "Tours", key = "#id")
     @Override
     public TourByIdResponse getTourById(String id) {
         Tour tour = tourRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.TOUR_NOT_FOUND));
         return tourMapper.toTourByIdResponse(tour);
     }
+
 
     @Override
     public TourResponse createTour(CreateTourRequest request, MultipartFile thumbnail, MultipartFile[] images) {
@@ -119,33 +123,33 @@ public class TourServiceImpl implements TourService {
         Tour tour = tourRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.TOUR_NOT_FOUND));
 
-            tour.setTitle(request.getTitle());
-            System.out.println("output title = " + request.getTitle());
+        tour.setTitle(request.getTitle());
+        System.out.println("output title = " + request.getTitle());
 
-            tour.setDescription(request.getDescription());
-            System.out.println("output des = " + request.getDescription());
+        tour.setDescription(request.getDescription());
+        System.out.println("output des = " + request.getDescription());
 
-            tour.setDuration(request.getDuration());
-            System.out.println("output dur = " + request.getDuration());
+        tour.setDuration(request.getDuration());
+        System.out.println("output dur = " + request.getDuration());
 
-            tour.setStatus(request.getStatus());
-            System.out.println("output sta = " + request.getStatus());
+        tour.setStatus(request.getStatus());
+        System.out.println("output sta = " + request.getStatus());
 
 //            tour.setActive(request.getActive());
 //            System.out.println("output act = " + request.getActive());
 
-            Category category = categoryRepository.findById(request.getCategoryId())
-                    .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
-            tour.setCategory(category);
+        Category category = categoryRepository.findById(request.getCategoryId())
+                .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
+        tour.setCategory(category);
 
-            Destination destination = destinationRepository.findById(request.getDestinationId())
-                    .orElseThrow(() -> new AppException(ErrorCode.DESTINATION_NOT_FOUND));
-            tour.setDestination(destination);
+        Destination destination = destinationRepository.findById(request.getDestinationId())
+                .orElseThrow(() -> new AppException(ErrorCode.DESTINATION_NOT_FOUND));
+        tour.setDestination(destination);
 
-            String thumbnailUrl = googleDriveService.uploadImageToDrive(thumbnail, FolderType.TOUR);
-            tour.setThumbnailUrl(thumbnailUrl);
+        String thumbnailUrl = googleDriveService.uploadImageToDrive(thumbnail, FolderType.TOUR);
+        tour.setThumbnailUrl(thumbnailUrl);
 
-            addImagesToTour(images, tour);
+        addImagesToTour(images, tour);
 
 
         tour = tourRepository.save(tour);
@@ -180,6 +184,7 @@ public class TourServiceImpl implements TourService {
         return tourRepository.findToursByDate(startDate, endDate);
     }
 
+    @Cacheable(value = "Tours", key = "#tourDetailId")
     @Override
     public TourResponse getTourByTourDetailId(String tourDetailId) {
         var tourDetail = tourDetailRepository.findById(tourDetailId).orElseThrow(
