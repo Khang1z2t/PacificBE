@@ -1,6 +1,7 @@
 package com.pacific.pacificbe.services.impl;
 
 import com.pacific.pacificbe.dto.request.VoucherRequest;
+import com.pacific.pacificbe.dto.response.VoucherCodeResponse;
 import com.pacific.pacificbe.dto.response.VoucherResponse;
 import com.pacific.pacificbe.exception.AppException;
 import com.pacific.pacificbe.exception.ErrorCode;
@@ -155,7 +156,7 @@ public class VoucherServiceImpl implements VoucherService {
     }
 
     @Override
-    public Boolean checkVoucherCode(String codeVoucher, BigDecimal orderValue, String tourId) {
+    public Boolean checkVoucher(String codeVoucher, BigDecimal orderValue, String tourId) {
         String userId = AuthUtils.getCurrentUserId();
         var user = userRepository.findById(userId).orElseThrow(
                 () -> new AppException(ErrorCode.USER_NOT_FOUND));
@@ -201,6 +202,21 @@ public class VoucherServiceImpl implements VoucherService {
         }
 
         return voucher != null;
+    }
+
+    @Override
+    public VoucherCodeResponse checkVoucherCode(String codeVoucher, BigDecimal orderValue, String tourId) {
+        var isValid = checkVoucher(codeVoucher, orderValue, tourId);
+        BigDecimal discountValue = BigDecimal.ZERO;
+        if (isValid) {
+            var voucher = voucherRepository.findByCodeVoucher(codeVoucher)
+                    .orElseThrow(() -> new AppException(ErrorCode.VOUCHER_NOT_FOUND));
+            discountValue = voucher.getDiscountValue();
+        }
+        return VoucherCodeResponse.builder()
+                .isValid(isValid)
+                .discountValue(discountValue)
+                .build();
     }
 
     private void checkValidApplyTo(VoucherRequest request, Voucher voucher) {
