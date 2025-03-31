@@ -167,6 +167,7 @@ public class UrlMapping {
     public static final String UPDATE_ADMIN_REVIEW = "/update/{id}";
     public static final String DELETE_ADMIN_REVIEW = "/delete/{id}";
     public static final String UPDATE_ADMIN_REVIEW_STATUS = "/updateStatus/{id}";
+    public static final String GET_ADMIN_REVIEW_BY_TOUR = "/tour/{tourId}";
     /* =========================== End Admin_review API ===================================== */
 
     /* =========================== Start Admin Guide API ===================================== */

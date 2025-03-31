@@ -19,4 +19,6 @@ public interface AdminReviewService {
 
     void updateReviewStatus(String id, String status);
 
+    List<AdminReviewResponse> findByTourId(String tourId);
+
 }

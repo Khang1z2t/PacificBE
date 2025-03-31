@@ -90,5 +90,13 @@ public class AdminReviewController {
         return ResponseEntity.ok(ApiResponse.<Void>builder().message("Cập nhật trạng thái thành công").build());
     }
 
-
+    @Operation(
+            summary = "Lấy danh sách đánh giá theo Tour ID",
+            description = "Trả về danh sách tất cả các đánh giá của một tour cụ thể"
+    )
+    @GetMapping(UrlMapping.GET_ADMIN_REVIEW_BY_TOUR)
+    public ResponseEntity<ApiResponse<List<AdminReviewResponse>>> getAdminReviewByTour(@PathVariable String tourId) {
+        List<AdminReviewResponse> responses = adminReviewService.findByTourId(tourId);
+        return ResponseEntity.ok(ApiResponse.<List<AdminReviewResponse>>builder().data(responses).build());
+    }
 }
