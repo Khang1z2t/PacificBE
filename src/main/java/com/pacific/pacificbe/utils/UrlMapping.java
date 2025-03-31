@@ -10,6 +10,8 @@ public class UrlMapping {
     public static final String VERIFY_EMAIL = "/verify-email";
     public static final String SEND_RESET_PASSWORD_MAIL = "/send-reset-password-mail";
     public static final String VERIFY_RESET_PASSWORD = "/verify-reset-password";
+    public static final String UPDATE_USERNAME = "/update-username";
+    public static final String CHANGE_PASSWORD = "/change-password";
 
     public static final String COUNT_ALL_USERS = "/count/users";
     public static final String COUNT_ALL_TOURS = "/count/tours";

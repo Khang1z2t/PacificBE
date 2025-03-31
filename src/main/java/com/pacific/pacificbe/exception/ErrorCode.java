@@ -21,6 +21,7 @@ public enum ErrorCode {
     INVALID_TOKEN(1011, "Invalid token", HttpStatus.BAD_REQUEST),
     USER_NOT_ACTIVE(1012, "User is not active", HttpStatus.BAD_REQUEST),
     INVALID_USERNAME_OR_PASSWORD(1013, "Invalid username or password", HttpStatus.BAD_REQUEST),
+    PASSWORD_NOT_MATCH(1014, "Password not match", HttpStatus.BAD_REQUEST),
     INVALID_OTP(1014, "Invalid OTP", HttpStatus.BAD_REQUEST),
 
     USER_ROLE_INVALID(1015, "Invalid role, must be " +
