@@ -1,7 +1,6 @@
 package com.pacific.pacificbe.controller.admin;
 
 import com.pacific.pacificbe.dto.ApiResponse;
-import com.pacific.pacificbe.dto.request.UpdateStatusVoucherRequest;
 import com.pacific.pacificbe.dto.request.VoucherRequest;
 import com.pacific.pacificbe.dto.response.VoucherResponse;
 import com.pacific.pacificbe.exception.AppException;
@@ -15,6 +14,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -65,8 +65,8 @@ public class AdminVoucherController {
     @Operation(summary = "Cập nhật trạng thái voucher")
     public ResponseEntity<ApiResponse<VoucherResponse>> updateStatusVoucher(
             @PathVariable String id,
-            @RequestBody UpdateStatusVoucherRequest request) {
-        return ResponseEntity.ok(new ApiResponse<>(200, "Cập nhật trạng thái thành công", voucherService.updateStatus(id, request)));
+            @RequestParam String status) {
+        return ResponseEntity.ok(new ApiResponse<>(200, "Cập nhật trạng thái thành công", voucherService.updateStatus(id, status)));
     }
 
     @DeleteMapping(UrlMapping.DELETE_VOUCHER)
@@ -74,6 +74,15 @@ public class AdminVoucherController {
     public ResponseEntity<ApiResponse<String>> deleteVoucher(@PathVariable String id) {
         voucherService.deleteVoucher(id);
         return ResponseEntity.ok(new ApiResponse<>(200, "Xóa thành công", "Voucher đã được xóa"));
+    }
+
+    @GetMapping(UrlMapping.CHECK_VOUCHER)
+    @Operation(summary = "Kiểm tra voucher")
+    public ResponseEntity<Boolean> checkVoucher(
+            @RequestParam String codeVoucher,
+            @RequestParam(required = false) String tourId,
+            @RequestParam(required = false, defaultValue = "0") BigDecimal orderValue) {
+        return ResponseEntity.ok(voucherService.checkVoucherCode(codeVoucher, orderValue, tourId));
     }
 
 }

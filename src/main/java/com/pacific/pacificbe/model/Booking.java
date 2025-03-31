@@ -9,8 +9,10 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Nationalized;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -20,6 +22,7 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "booking")
+@EntityListeners(AuditingEntityListener.class)
 public class Booking extends BaseEntity {
     @Id
     @Size(max = 255)
@@ -72,8 +75,8 @@ public class Booking extends BaseEntity {
     @OneToMany(mappedBy = "booking")
     private Set<Invoice> invoices = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "booking")
-    private Set<Review> reviews = new LinkedHashSet<>();
+    @OneToOne(mappedBy = "booking")
+    private Review review;
 
     @OneToMany(mappedBy = "booking")
     private List<BookingDetail> bookingDetails = new ArrayList<>();
@@ -85,5 +88,11 @@ public class Booking extends BaseEntity {
     @Size(max = 100)
     @Column(name = "status", length = 100)
     private String status;
+
+    @PreUpdate
+    public void onPreUpdate() {
+        LocalDateTime now = LocalDateTime.now();
+
+    }
 
 }

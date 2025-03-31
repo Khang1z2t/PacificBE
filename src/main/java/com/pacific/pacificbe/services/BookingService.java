@@ -6,7 +6,9 @@ import com.pacific.pacificbe.dto.response.report.BookingRevenueReportDTO;
 import com.pacific.pacificbe.dto.response.report.Revenue;
 import com.pacific.pacificbe.dto.response.report.TourAndBookReport;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface BookingService {
@@ -20,9 +22,14 @@ public interface BookingService {
 
     List<BookingResponse> getAllBookings();
 
-    List<BookingResponse> getAllByUser();
+    List<BookingResponse> getAllByUser(String bookingNo, String status,
+                                       LocalDateTime startDate, LocalDateTime endDate,
+                                       String tourDetailId, String paymentMethod,
+                                       BigDecimal minAmount, BigDecimal maxAmount);
 
     BookingResponse getBookingById(String bookingId);
+
+    BookingResponse getBookingByBookingNo(String bookingNo);
 
     BookingResponse bookingTour(String tourDetailId, BookingRequest request);
 }

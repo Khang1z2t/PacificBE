@@ -15,6 +15,8 @@ import com.pacific.pacificbe.utils.enums.TourStatus;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,6 +38,8 @@ public class TourDetailServiceImpl implements TourDetailService {
 
     @Override
     @Transactional
+    @CacheEvict(value = {"allTourDetails", "tourDetailsByTourId", "tourDetailsByMonth", "tourDetailsByDay"},
+            key = "#request.tourId", allEntries = true)
     public TourDetailResponse addTourDetail(CreateTourDetailRequest request) {
         Tour tour = tourRepository.findById(request.getTourId()).orElseThrow(
                 () -> new AppException(ErrorCode.TOUR_NOT_FOUND));
@@ -62,7 +66,7 @@ public class TourDetailServiceImpl implements TourDetailService {
 
         for (CreateItineraryRequest itineraryRequest : request.getItineraries()) {
             Itinerary itinerary = new Itinerary();
-            itinerary.setDayNumber(itinerary.getDayNumber());
+            itinerary.setDayDetail(itineraryRequest.getDayDetail());
             itinerary.setTitle(itineraryRequest.getTitle());
             itinerary.setDayDetail(itineraryRequest.getDayDetail());
             itinerary.setTourDetail(tourDetail);
@@ -75,12 +79,14 @@ public class TourDetailServiceImpl implements TourDetailService {
         return tourMapper.toTourDetailResponse(tourDetail);
     }
 
+    @Cacheable(value = "allTourDetails")
     @Override
     public List<TourDetailResponse> getAll() {
         List<TourDetail> tourDetail = tourDetailRepository.findAll();
         return tourMapper.toTourDetailResponseList(tourDetail);
     }
 
+    @Cacheable(value = "tourDetailById", key = "#id")
     @Override
     public TourDetailResponse getTourDetailById(String id) {
         TourDetail tourDetail = tourDetailRepository.findById(id).orElseThrow(
@@ -88,17 +94,20 @@ public class TourDetailServiceImpl implements TourDetailService {
         return tourMapper.toTourDetailResponse(tourDetail);
     }
 
+    @Cacheable(value = "tourDetailsByTourId", key = "#tourId")
     @Override
     public List<TourDetailResponse> getTourDetailByTourId(String tourId) {
         List<TourDetail> tourDetail = tourDetailRepository.findByTourId(tourId);
         return tourMapper.toTourDetailResponseList(tourDetail);
     }
 
+    @Cacheable(value = "tourDetailsByMonth", key = "#tourId")
     @Override
     public List<DetailTourResponse> getTourDetailMonth(String tourId) {
         return tourDetailRepository.getTourDetailMonth(tourId);
     }
 
+    @Cacheable(value = "tourDetailsByDay", key = "#tourId + '-' + #months")
     @Override
     public List<DetailTourResponse> getTourDetailDay(String tourId, String months) {
         return tourDetailRepository.getTourDetailDay(tourId, months);

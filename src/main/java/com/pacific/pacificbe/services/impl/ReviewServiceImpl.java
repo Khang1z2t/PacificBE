@@ -1,18 +1,22 @@
 package com.pacific.pacificbe.services.impl;
 
+import com.pacific.pacificbe.dto.request.AddReviewRequest;
 import com.pacific.pacificbe.dto.request.ReviewRequest;
 import com.pacific.pacificbe.dto.request.UpdateStatusReviewRequest;
 import com.pacific.pacificbe.dto.response.ReviewResponse;
+import com.pacific.pacificbe.dto.response.ReviewResponseBooking;
 import com.pacific.pacificbe.exception.AppException;
 import com.pacific.pacificbe.exception.ErrorCode;
 import com.pacific.pacificbe.mapper.ReviewMapper;
 import com.pacific.pacificbe.model.Review;
 import com.pacific.pacificbe.model.Tour;
 import com.pacific.pacificbe.model.User;
+import com.pacific.pacificbe.repository.BookingRepository;
 import com.pacific.pacificbe.repository.ReviewRepository;
 import com.pacific.pacificbe.repository.TourRepository;
 import com.pacific.pacificbe.repository.UserRepository;
 import com.pacific.pacificbe.services.ReviewService;
+import com.pacific.pacificbe.utils.AuthUtils;
 import com.pacific.pacificbe.utils.enums.ReviewStatus;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +25,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,6 +42,7 @@ public class ReviewServiceImpl implements ReviewService {
     ReviewMapper reviewMapper;
     UserRepository userRepository;
     TourRepository tourRepository;
+    private final BookingRepository bookingRepository;
 
     @Override
     public ReviewResponse getRatingById(String id) {
@@ -121,6 +130,60 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public List<ReviewResponse> getAllReviews() {
         return List.of();
+    }
+
+    @Override
+    public ReviewResponseBooking createReviewByUser(AddReviewRequest request) {
+        String userId = AuthUtils.getCurrentUserId();
+        var user = userRepository.findById(userId)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        var tour = tourRepository.findById(request.getTourId()).orElseThrow(
+                () -> new AppException(ErrorCode.TOUR_NOT_FOUND));
+        var booking = bookingRepository.findById(request.getBookingId()).orElseThrow(
+                () -> new AppException(ErrorCode.BOOKING_NOT_FOUND));
+        if (!booking.getUser().getId().equals(user.getId())) {
+            throw new AppException(ErrorCode.BOOKING_NOT_FOUND);
+        }
+//        cần đổi khóa ngoại
+//        if (!tour.getId().equals(booking.getTourDetail().getId())) {
+//            throw new AppException(ErrorCode.TOUR_NOT_FOUND);
+//        }
+        List<BigDecimal> ratings = Arrays.asList(
+                request.getPriceRating(),
+                request.getServiceRating(),
+                request.getFacilityRating(),
+                request.getFoodRating(),
+                request.getAccommodationRating()
+        );
+
+        List<BigDecimal> validRatings = ratings.stream()
+                .filter(Objects::nonNull)
+                .toList();
+
+        BigDecimal rating;
+        if (validRatings.isEmpty()) {
+            rating = BigDecimal.ZERO;
+        } else {
+            BigDecimal sum = validRatings.stream()
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+            rating = sum.divide(BigDecimal.valueOf(validRatings.size()), 1, RoundingMode.HALF_UP);
+        }
+
+        Review review = new Review();
+        review.setComment(request.getComment());
+        review.setPriceRating(request.getPriceRating());
+        review.setServiceRating(request.getServiceRating());
+        review.setFoodRating(request.getFoodRating());
+        review.setFacilityRating(request.getFacilityRating());
+        review.setAccommodationRating(request.getAccommodationRating());
+        review.setTour(tour);
+        review.setUser(user);
+        review.setBooking(booking);
+        review.setStatus(ReviewStatus.APPROVED.name());
+        review.setRating(rating);
+        reviewRepository.save(review);
+
+        return reviewMapper.toReviewResponseBooking(review);
     }
 
     @Override

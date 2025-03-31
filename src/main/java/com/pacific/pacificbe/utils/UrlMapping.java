@@ -123,7 +123,7 @@ public class UrlMapping {
 
     /* =========================== Start Report API ===================================== */
     public static final String REPORT = API + "/report";
-//    public static final String EXPORT_PDF = "/PDF";
+    //    public static final String EXPORT_PDF = "/PDF";
     public static final String GET_TOUR_BOOKING_COUNT = "/bookingCount/{tourId}";
     public static final String REVENUE_BOOKING_MONTH = "/revenue/month";
     public static final String REVENUE_BOOKING_YEAR = "/revenue/year";
@@ -145,7 +145,7 @@ public class UrlMapping {
     /* =========================== Start Guide API ===================================== */
     public static final String GUIDE = API + "/guide";
     public static final String GET_ALL_GUIDE = "/all";
-//    public static final String CREATE_GUIDE = "/create";
+    //    public static final String CREATE_GUIDE = "/create";
 //    public static final String GET_GUIDE_BY_ID = "/{id}";
 //    public static final String UPDATE_GUIDE = "/update/{id}";
     public static final String DELETE_GUIDE = "/delete/{id}";
@@ -171,6 +171,7 @@ public class UrlMapping {
     public static final String UPDATE_ADMIN_REVIEW = "/update/{id}";
     public static final String DELETE_ADMIN_REVIEW = "/delete/{id}";
     public static final String UPDATE_ADMIN_REVIEW_STATUS = "/updateStatus/{id}";
+    public static final String GET_ADMIN_REVIEW_BY_TOUR = "/tour/{tourId}";
     /* =========================== End Admin_review API ===================================== */
 
     /* =========================== Start Admin Guide API ===================================== */
@@ -191,10 +192,13 @@ public class UrlMapping {
     public static final String UPDATE_VOUCHER = "/update/{id}";
     public static final String UPDATE_STATUS_VOUCHER = "/updateStatus/{id}";
     public static final String DELETE_VOUCHER = "/delete/{id}";
+    public static final String CHECK_VOUCHER = "/check-voucher";
     /* =========================== End Admin Voucher API ===================================== */
 
     /* =========================== Start Other URL ===================================== */
-    public static final String FE_URL = "http://localhost:3000";
+//    public static final String FE_URL = "http://localhost:3000";
+//    Trong truong hop deloy
+    public static final String FE_URL = "https://pacific-vn.vercel.app";
     public static final String GOOGLE_REDIRECT = FE_URL + "/google/redirect";
     public static final String PAYMENT_FAIL = FE_URL + "/checkout/fail";
     public static final String PAYMENT_SUCCESS = FE_URL + "/checkout/success";
@@ -212,13 +216,19 @@ public class UrlMapping {
     /* =========================== Start Admin Blog API ===================================== */
     public static final String ADMIN_BLOG = API + "/admin/blog";
     public static final String GET_ALL_BLOGS = "/all";
-    public static final String GET_BLOG_BY_TITLE = "/title";;
+    public static final String GET_BLOG_BY_TITLE = "/title";
+    ;
     public static final String CREATE_BLOG = "/create";
     public static final String UPDATE_BLOG = "/update/{id}";
     public static final String UPDATE_STATUS_BLOG = "/updateStatus/{id}";
     public static final String UPLOAD_IMAGE = "/upload-images";
     public static final String DELETE_BLOG = "/delete/{id}";
     /* =========================== End Admin Blog API ===================================== */
+
+    /* =========================== Start Rating API ===================================== */
+    public static final String RATING = API + "/rating";
+    public static final String ADD_RATING = "/add";
+    /* =========================== Start Rating API ===================================== */
 
     /* =========================== Start Admin Rating API ===================================== */
     public static final String ADMIN_RATING = API + "/admin/rating";

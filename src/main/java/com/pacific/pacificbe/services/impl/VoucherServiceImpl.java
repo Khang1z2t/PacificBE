@@ -1,27 +1,30 @@
 package com.pacific.pacificbe.services.impl;
 
-import com.pacific.pacificbe.dto.request.UpdateStatusVoucherRequest;
 import com.pacific.pacificbe.dto.request.VoucherRequest;
 import com.pacific.pacificbe.dto.response.VoucherResponse;
 import com.pacific.pacificbe.exception.AppException;
 import com.pacific.pacificbe.exception.ErrorCode;
 import com.pacific.pacificbe.mapper.VoucherMapper;
 import com.pacific.pacificbe.model.Voucher;
-import com.pacific.pacificbe.repository.VoucherRepository;
+import com.pacific.pacificbe.repository.*;
 import com.pacific.pacificbe.services.VoucherService;
+import com.pacific.pacificbe.utils.AuthUtils;
+import com.pacific.pacificbe.utils.IdUtil;
+import com.pacific.pacificbe.utils.enums.ApplyTo;
 import com.pacific.pacificbe.utils.enums.VoucherStatus;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.EnumUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Transactional
 @Service
@@ -32,134 +35,201 @@ public class VoucherServiceImpl implements VoucherService {
 
     VoucherRepository voucherRepository;
     VoucherMapper voucherMapper;
+    private final TourRepository tourRepository;
+    private final IdUtil idUtil;
+    private final CategoryRepository categoryRepository;
+    private final BookingRepository bookingRepository;
+    private final UserRepository userRepository;
 
     @Override
     public VoucherResponse getVoucherById(String id) {
         Voucher voucher = voucherRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.VOUCHER_NOT_FOUND));
-        return voucherMapper.toResponse(voucher);
+        return voucherMapper.toVoucherResponse(voucher);
     }
 
     @Override
     public List<VoucherResponse> getAllVouchers() {
-        return voucherRepository.findAll().stream()
-                .map(voucherMapper::toResponse)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public VoucherResponse deleteVoucher(String id) {
-        Voucher voucher = voucherRepository.findById(id)
-                .orElseThrow(() -> new AppException(ErrorCode.VOUCHER_NOT_FOUND));
-        VoucherResponse response = voucherMapper.toResponse(voucher);
-        voucherRepository.delete(voucher);
-        log.info("Xóa voucher thành công: {}", id);
-        return response;
-    }
-
-    @Override
-    public VoucherResponse createVoucher(VoucherRequest request) {
-        if (request.getNameVoucher() == null || request.getCodeVoucher() == null) {
-            throw new IllegalArgumentException("Tên và mã voucher không được để trống!");
-        }
-
-        Voucher voucher = new Voucher();
-        voucher.setNameVoucher(request.getNameVoucher());
-        voucher.setCodeVoucher(request.getCodeVoucher());
-        BigDecimal discount = request.getDiscount() != null ? request.getDiscount() : BigDecimal.ZERO;
-        voucher.setDiscount(discount);
-        int quantity = request.getQuantity() != null ? request.getQuantity() : 0;
-        voucher.setQuantity(quantity);
-        voucher.setStatus(request.getStatus() != null ? request.getStatus() : "pending");
-
-        // Chuyển đổi LocalDate từ request
-        LocalDate startDate = request.getStartDate() != null ? request.getStartDate() : LocalDate.now();
-        LocalDate endDate = request.getEndDate() != null ? request.getEndDate() : LocalDate.now();
-        voucher.setStartDate(startDate);
-        voucher.setEndDate(endDate);
-
-        // Lưu vào DB
-        Voucher savedVoucher = voucherRepository.saveAndFlush(voucher);
-        if (savedVoucher == null || savedVoucher.getId() == null) {
-            throw new IllegalStateException("Không thể tạo voucher, dữ liệu bị null!");
-        }
-        log.info("Tạo voucher với id: {}", savedVoucher.getId());
-
-        // Trả về VoucherResponse
-        return new VoucherResponse(
-                savedVoucher.getId(),
-                savedVoucher.getNameVoucher(),
-                savedVoucher.getCodeVoucher(),
-                savedVoucher.getDiscount(),
-                savedVoucher.getQuantity(),
-                savedVoucher.getStatus(),
-                savedVoucher.getStartDate(),
-                savedVoucher.getEndDate()
-        );
-    }
-
-    @Override
-    public Optional<VoucherResponse> getVoucherByCode(String codeVoucher) {
-        return voucherRepository.findByCodeVoucher(codeVoucher)
-                .map(voucherMapper::toResponse);
-    }
-
-    @Override
-    public VoucherResponse updateStatus(String id, UpdateStatusVoucherRequest request) {
-        Voucher voucher = voucherRepository.findById(id)
-                .orElseThrow(() -> new AppException(ErrorCode.VOUCHER_NOT_FOUND));
-        String newStatus = request.getStatus();
-        if (newStatus != null && !newStatus.trim().isEmpty()) {
-            try {
-                voucher.setStatus(VoucherStatus.valueOf(newStatus.toUpperCase()).name());
-            } catch (IllegalArgumentException e) {
-                throw new AppException(ErrorCode.INVALID_VOUCHER_STATUS);
-            }
-        } else {
-            // Toggle giữa ACTIVE <-> INACTIVE
-            VoucherStatus currentStatus = VoucherStatus.valueOf(voucher.getStatus().toUpperCase());
-            voucher.setStatus(currentStatus == VoucherStatus.ACTIVE ? VoucherStatus.INACTIVE.name() : VoucherStatus.ACTIVE.name());
-        }
-        // Cập nhật DB
-        voucherRepository.save(voucher);
-        log.info("Updated voucher [{}] to status: {}", id, voucher.getStatus());
-        return voucherMapper.toResponse(voucher);
+        var vouchers = voucherRepository.findAll();
+        return voucherMapper.toVoucherResponseList(vouchers);
     }
 
     @Override
     public VoucherResponse updateVoucher(String id, VoucherRequest request) {
-        if (id == null || id.trim().isEmpty()) {
-            log.warn("ID voucher không hợp lệ: null hoặc rỗng!");
-            throw new AppException(ErrorCode.INVALID_ID);
-        }
-        log.info("Kiểm tra voucher với ID: {}", id);
         Voucher voucher = voucherRepository.findById(id)
-                .orElseThrow(() -> {
-                    log.error("Không tìm thấy voucher với ID: {}", id);
-                    return new AppException(ErrorCode.VOUCHER_NOT_FOUND);
-                });
-        log.info("Tìm thấy voucher: {}", voucher);
+                .orElseThrow(() -> new AppException(ErrorCode.VOUCHER_NOT_FOUND));
+        voucher.setTitle(ObjectUtils.defaultIfNull(request.getTitle(), voucher.getTitle()));
+        voucher.setCodeVoucher(ObjectUtils.defaultIfNull(request.getCodeVoucher(), voucher.getCodeVoucher()));
+        voucher.setDiscountValue(ObjectUtils.defaultIfNull(request.getDiscountValue(), voucher.getDiscountValue()));
+        voucher.setQuantity(ObjectUtils.defaultIfNull(request.getQuantity(), voucher.getQuantity()));
+        voucher.setUserLimit(ObjectUtils.defaultIfNull(request.getUserLimit(), voucher.getUserLimit()));
+        voucher.setStartDate(ObjectUtils.defaultIfNull(request.getStartDate(), voucher.getStartDate()));
+        voucher.setEndDate(ObjectUtils.defaultIfNull(request.getEndDate(), voucher.getEndDate()));
+        voucher.setMinOrderValue(ObjectUtils.defaultIfNull(request.getMinOrderValue(), voucher.getMinOrderValue()));
 
-        // Cập nhật voucher
-        voucher.setNameVoucher(request.getNameVoucher());
-        voucher.setCodeVoucher(request.getCodeVoucher());
-        voucher.setDiscount(request.getDiscount());
-        voucher.setQuantity(request.getQuantity());
-        voucher.setStatus(request.getStatus());
+        checkValidApplyTo(request, voucher);
 
-        // Kiểm tra ngày hợp lệ
-        if (request.getStartDate() != null && request.getEndDate() != null) {
-            if (request.getEndDate().isBefore(request.getStartDate())) {
-                log.warn("Ngày kết thúc không thể nhỏ hơn ngày bắt đầu!");
-                throw new AppException(ErrorCode.INVALID_DATE_RANGE);
-            }
-            voucher.setStartDate(request.getStartDate());
-            voucher.setEndDate(request.getEndDate());
+        if (EnumUtils.isValidEnum(VoucherStatus.class, request.getStatus().toUpperCase())) {
+            voucher.setStatus(request.getStatus().toUpperCase());
+        } else {
+            throw new AppException(ErrorCode.INVALID_VOUCHER_STATUS);
         }
 
-        // Lưu voucher sau khi cập nhật
-        Voucher updatedVoucher = voucherRepository.save(voucher);
-        log.info("Cập nhật thành công voucher với ID: {}", id);
-        return voucherMapper.toResponse(updatedVoucher);
+        voucherRepository.save(voucher);
+        return voucherMapper.toVoucherResponse(voucher);
+    }
+
+    @Override
+    public void deleteVoucher(String id) {
+
+    }
+
+    @Override
+    public VoucherResponse updateStatus(String id, String status) {
+        return null;
+    }
+
+
+    @Override
+    public VoucherResponse createVoucher(VoucherRequest request) {
+        Voucher voucher = new Voucher();
+
+        if (request.getMinOrderValue() != null && request.getMinOrderValue().compareTo(BigDecimal.ZERO) < 0) {
+            throw new AppException(ErrorCode.INVALID_MIN_ORDER_VALUE);
+        }
+        if (request.getStartDate().isAfter(request.getEndDate())) {
+            throw new AppException(ErrorCode.INVALID_DATE_RANGE);
+        }
+        voucher.setTitle(request.getTitle());
+        voucher.setCodeVoucher(request.getCodeVoucher() == null
+                ? idUtil.generateVoucherCode(5, 10) : request.getCodeVoucher());
+        voucher.setDiscountValue(request.getDiscountValue());
+        voucher.setMinOrderValue(request.getMinOrderValue());
+        voucher.setQuantity(request.getQuantity());
+        voucher.setUserLimit(request.getUserLimit());
+
+
+        voucher.setStartDate(request.getStartDate());
+        voucher.setEndDate(request.getEndDate());
+
+        checkValidApplyTo(request, voucher);
+
+        if (EnumUtils.isValidEnum(VoucherStatus.class, request.getStatus().toUpperCase())) {
+            voucher.setStatus(request.getStatus().toUpperCase());
+        } else {
+            throw new AppException(ErrorCode.INVALID_VOUCHER_STATUS);
+        }
+        voucherRepository.save(voucher);
+
+        return voucherMapper.toVoucherResponse(voucher);
+    }
+
+
+    @Override
+    public Optional<VoucherResponse> getVoucherByCode(String codeVoucher) {
+        String userId = AuthUtils.getCurrentUserId();
+        var user = userRepository.findById(userId).orElseThrow(
+                () -> new AppException(ErrorCode.USER_NOT_FOUND));
+        var voucher = voucherRepository.findByCodeVoucher(codeVoucher).orElse(null);
+        if (voucher != null) {
+            LocalDateTime now = LocalDateTime.now();
+            if (voucher.getStartDate().isAfter(now) || voucher.getEndDate().isBefore(now)) {
+                return Optional.empty();
+            }
+            if (voucher.getQuantity() < 0) {
+                return Optional.empty();
+            }
+            if (!voucher.getStatus().equals(VoucherStatus.ACTIVE.toString())) {
+                return Optional.empty();
+            }
+            if (voucher.getMinOrderValue().compareTo(BigDecimal.ZERO) > 0) {
+                return Optional.empty();
+            }
+
+            long userVoucherUsage = bookingRepository.countByUserIdAndVoucherId(user.getId(), voucher.getId());
+            if (voucher.getUserLimit() != null && userVoucherUsage >= voucher.getUserLimit()) {
+                return Optional.empty();
+            }
+        }
+        return Optional.ofNullable(voucherMapper.toVoucherResponse(voucher));
+    }
+
+    @Override
+    public Boolean checkVoucherCode(String codeVoucher, BigDecimal orderValue, String tourId) {
+        String userId = AuthUtils.getCurrentUserId();
+        var user = userRepository.findById(userId).orElseThrow(
+                () -> new AppException(ErrorCode.USER_NOT_FOUND));
+        var voucher = voucherRepository.findByCodeVoucher(codeVoucher).orElse(null);
+
+        if (voucher != null) {
+            LocalDateTime now = LocalDateTime.now();
+            if (voucher.getStartDate().isAfter(now) || voucher.getEndDate().isBefore(now)) {
+                return false;
+            }
+            if (voucher.getQuantity() < 0) {
+                return false;
+            }
+            if (!voucher.getStatus().equals(VoucherStatus.ACTIVE.toString())) {
+                return false;
+            }
+            if (voucher.getMinOrderValue().compareTo(orderValue) > 0) {
+                return false;
+            }
+
+            long userVoucherUsage = bookingRepository.countByUserIdAndVoucherId(user.getId(), voucher.getId());
+            if (voucher.getUserLimit() != null && userVoucherUsage >= voucher.getUserLimit()) {
+                return false;
+            }
+
+            ApplyTo applyTo = ApplyTo.valueOf(voucher.getApplyTo());
+            switch (applyTo) {
+                case TOUR:
+                    if (voucher.getTour() == null || !voucher.getTour().getId().equals(tourId)) {
+                        return false;
+                    }
+                    break;
+                case CATEGORY:
+                    var tour = tourRepository.findById(tourId).orElse(null);
+                    if (tour == null || voucher.getCategory() == null ||
+                            !voucher.getCategory().getId().equals(tour.getCategory().getId())) {
+                        return false;
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        return voucher != null;
+    }
+
+    private void checkValidApplyTo(VoucherRequest request, Voucher voucher) {
+        String applyToUppercase = request.getApplyTo().toUpperCase();
+        if (EnumUtils.isValidEnum(ApplyTo.class, request.getApplyTo().toUpperCase())) {
+            voucher.setApplyTo(request.getApplyTo().toUpperCase());
+
+            if (!ApplyTo.ALL.name().equals(applyToUppercase)) {
+                if (ApplyTo.TOUR.name().equals(applyToUppercase)) {
+                    if (request.getTourId() == null || request.getTourId().isEmpty()) {
+                        throw new AppException(ErrorCode.VOUCHER_TOUR_ID_REQUIRED);
+                    }
+                    var tour = tourRepository.findById(request.getTourId())
+                            .orElseThrow(() -> new AppException(ErrorCode.TOUR_NOT_FOUND));
+                    voucher.setTour(tour);
+                } else if (ApplyTo.CATEGORY.name().equals(applyToUppercase)) {
+                    if (request.getCategoryId() == null || request.getCategoryId().isEmpty()) {
+                        throw new AppException(ErrorCode.VOUCHER_CATEGORY_ID_REQUIRED);
+                    }
+                    var category = categoryRepository.findById(request.getCategoryId())
+                            .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
+                    voucher.setCategory(category);
+                }
+            } else {
+                voucher.setTour(null);
+                voucher.setCategory(null);
+            }
+        } else {
+            throw new AppException(ErrorCode.INVALID_APPLY_TO);
+        }
     }
 }

@@ -1,19 +1,15 @@
 package com.pacific.pacificbe.mapper;
 
-import com.pacific.pacificbe.dto.request.BookingDetailRequest;
 import com.pacific.pacificbe.dto.request.BookingRequest;
 import com.pacific.pacificbe.dto.response.BookingDetailResponse;
 import com.pacific.pacificbe.dto.response.BookingResponse;
-import com.pacific.pacificbe.model.Booking;
-import com.pacific.pacificbe.model.BookingDetail;
-import com.pacific.pacificbe.model.Tour;
-import com.pacific.pacificbe.model.TourDetail;
+import com.pacific.pacificbe.dto.response.ReviewResponseBooking;
+import com.pacific.pacificbe.model.*;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
@@ -50,6 +46,12 @@ public class BookingMapper {
                 .map(detail -> modelMapper.map(detail, BookingDetailResponse.class))
                 .collect(Collectors.toList());
         bookingResponse.setDetails(detailResponses);
+
+        if (booking.getReview() != null) {
+            ReviewResponseBooking reviewResponse = modelMapper.map(booking.getReview(), ReviewResponseBooking.class);
+            bookingResponse.setReview(reviewResponse);
+        }
+
         return bookingResponse;
     }
 

@@ -74,4 +74,6 @@ public interface TourRepository extends JpaRepository<Tour, String> {
                                            @Param("endDate") LocalDateTime endDate);
 
     Optional<Tour> findByTourDetails_Id(String id);
+
+
 }

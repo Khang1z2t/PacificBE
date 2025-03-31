@@ -6,17 +6,30 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class VoucherResponse {
     private String id;
-    private String nameVoucher;
+    private String title;
     private String codeVoucher;
-    private BigDecimal discount;
+    private BigDecimal discountValue;
     private Integer quantity;
+    private Integer userLimit;
+    private BigDecimal minOrderValue;
     private String status;
-    private LocalDate startDate;
-    private LocalDate endDate;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
+
+    private String applyTo;
+    private String tourId;
+    private String categoryId;
+
+    private boolean active;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+    private LocalDateTime deleteAt;
+
 }

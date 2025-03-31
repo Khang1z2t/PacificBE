@@ -23,18 +23,27 @@ public enum ErrorCode {
     INVALID_USERNAME_OR_PASSWORD(1013, "Invalid username or password", HttpStatus.BAD_REQUEST),
     INVALID_OTP(1014, "Invalid OTP", HttpStatus.BAD_REQUEST),
 
-    USER_ROLE_INVALID(1015, "Invalid role, must be " + getEnumValues(UserRole.class), HttpStatus.BAD_REQUEST),
-    USER_STATUS_INVALID(1016, "Invalid status, must be " + getEnumValues(UserStatus.class), HttpStatus.BAD_REQUEST),
-    INVALID_GENDER(1017, "Invalid gender, must be " + getEnumValues(GenderEnums.class), HttpStatus.BAD_REQUEST),
-    INVALID_AGE_GROUP(1018, "Invalid age group, must be " + getEnumValues(AgeGroup.class), HttpStatus.BAD_REQUEST),
+    USER_ROLE_INVALID(1015, "Invalid role, must be " +
+            getEnumValues(UserRole.class), HttpStatus.BAD_REQUEST),
+    USER_STATUS_INVALID(1016, "Invalid status, must be " +
+            getEnumValues(UserStatus.class), HttpStatus.BAD_REQUEST),
+    INVALID_GENDER(1017, "Invalid gender, must be " +
+            getEnumValues(GenderEnums.class), HttpStatus.BAD_REQUEST),
+    INVALID_AGE_GROUP(1018, "Invalid age group, must be " +
+            getEnumValues(AgeGroup.class), HttpStatus.BAD_REQUEST),
     INVALID_VOUCHER(1019, "Invalid voucher", HttpStatus.BAD_REQUEST),
+
+    INVALID_VOUCHER_DISCOUNT(1020, "Invalid voucher discount", HttpStatus.BAD_REQUEST),
+    INVALID_VOUCHER_MIN_ORDER(1021, "Invalid voucher min order", HttpStatus.BAD_REQUEST),
 
     // Tour Error
     TOUR_NOT_FOUND(1020, "Tour not found", HttpStatus.NOT_FOUND),
-    TOUR_STATUS_INVALID(1021, "Invalid status, must be " + getEnumValues(TourStatus.class), HttpStatus.BAD_REQUEST),
+    TOUR_STATUS_INVALID(1021, "Invalid status, must be " +
+            getEnumValues(TourStatus.class), HttpStatus.BAD_REQUEST),
 
     TOUR_DETAIL_NOT_FOUND(1030, "Tour detail not found", HttpStatus.NOT_FOUND),
-    TOUR_DETAIL_STATUS_INVALID(1031, "Invalid status, must be " + getEnumValues(TourDetailStatus.class), HttpStatus.BAD_REQUEST),
+    TOUR_DETAIL_STATUS_INVALID(1031, "Invalid status, must be " +
+            getEnumValues(TourDetailStatus.class), HttpStatus.BAD_REQUEST),
 
     CATEGORY_NOT_FOUND(1040, "Category not found", HttpStatus.NOT_FOUND),
     GUIDE_NOT_FOUND(1050, "Guide not found", HttpStatus.NOT_FOUND),
@@ -42,7 +51,7 @@ public enum ErrorCode {
     COMBO_NOT_FOUND(1070, "Combo not found", HttpStatus.NOT_FOUND),
     HOTEL_NOT_FOUND(1071, "Hotel not found", HttpStatus.NOT_FOUND),
     TRANSPORT_NOT_FOUND(1072, "Transport not found", HttpStatus.NOT_FOUND),
-    NEED_LOGIN(1098, "You need login first", HttpStatus.UNAUTHORIZED),
+    USER_NOT_AUTHENTICATED(1098, "You need login first", HttpStatus.UNAUTHORIZED),
     CANT_SEND_MAIL(1099, "Can't send mail", HttpStatus.INTERNAL_SERVER_ERROR),
 
     // Image and File related errors
@@ -62,8 +71,11 @@ public enum ErrorCode {
 
     // OrderInfo
     ORDERINFO_NOT_FOUND(1042, "OrderInfo not found", HttpStatus.NOT_FOUND),
+    //    ORDER INFO OR BOOKING
+    ORDER_INFO_NOT_FOUND(1042, "OrderInfo not found", HttpStatus.NOT_FOUND),
     INVALID_ORDER_INFO(1043, "Invalid orderinfo or smthing", HttpStatus.BAD_REQUEST),
 
+    BOOKING_NOT_FOUND(1044, "Booking not found", HttpStatus.NOT_FOUND),
     // Admin User Errors
     INVALID_STATUS(1021, "Invalid status, must be ACTIVE or INACTIVE", HttpStatus.BAD_REQUEST),
 
@@ -80,9 +92,18 @@ public enum ErrorCode {
 
     // Voucher Errors
     VOUCHER_NOT_FOUND(1028, "Voucher not found", HttpStatus.NOT_FOUND),
-    INVALID_VOUCHER_STATUS(1029, "Invalid status, must be ACTIVE or INACTIVE", HttpStatus.NOT_FOUND),
+    INVALID_VOUCHER_STATUS(1029, "Invalid status, must be " +
+            getEnumValues(VoucherStatus.class), HttpStatus.NOT_FOUND),
     INVALID_DATE_RANGE(1030, "Invalid date range", HttpStatus.NOT_FOUND),
     INVALID_ID(1031, "Invalid ID", HttpStatus.NOT_FOUND),
+    INVALID_APPLY_TO(1032, "Invalid type of apply to, must be " +
+            getEnumValues(ApplyTo.class), HttpStatus.NOT_FOUND),
+    VOUCHER_CODE_NOT_FOUND(1033, "Voucher code not found", HttpStatus.NOT_FOUND),
+    VOUCHER_TOUR_ID_REQUIRED(1034, "Tour ID is required", HttpStatus.BAD_REQUEST),
+    VOUCHER_CATEGORY_ID_REQUIRED(1035, "Category ID is required", HttpStatus.BAD_REQUEST),
+    INVALID_MIN_ORDER_VALUE(1036, "Min order value must be greater than 0", HttpStatus.BAD_REQUEST),
+    VOUCHER_MAX_DISCOUNT_INVALID(1037, "Max discount must be greater than 0", HttpStatus.BAD_REQUEST),
+
 
     // Support Errors
     SUPPORT_NOT_FOUND(1032, "Support not found", HttpStatus.NOT_FOUND),

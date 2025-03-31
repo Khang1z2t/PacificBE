@@ -9,12 +9,13 @@ import com.pacific.pacificbe.model.Category;
 import com.pacific.pacificbe.repository.CategoryRepository;
 import com.pacific.pacificbe.services.CategoryService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,19 +26,16 @@ public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;
 
-
-
     @Override
+    @CacheEvict(value = "allCategories", allEntries = true) // Xóa cache danh sách khi thêm mới
     public CategoryResponse createCategory(CategoryRequest request) {
         Category category = categoryMapper.toEntity(request);
-        // Không cần set id thủ công nếu sử dụng @GeneratedValue(strategy = GenerationType.UUID)
-        // category.setId(UUID.randomUUID().toString());
         category = categoryRepository.save(category);
         return categoryMapper.toResponse(category);
     }
 
-
     @Override
+    @Cacheable(value = "categoryById", key = "#id") // Cache theo id
     public CategoryResponse getCategoryById(String id) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Category not found"));
@@ -45,6 +43,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @Cacheable(value = "allCategories") // Cache toàn bộ danh sách
     public List<CategoryResponse> getAllCategories() {
         return categoryRepository.findAll().stream()
                 .map(categoryMapper::toResponse)
@@ -52,6 +51,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @CacheEvict(value = {"allCategories", "categoryById"}, key = "#id") // Xóa cache liên quan khi cập nhật
     public CategoryResponse updateCategory(String id, CategoryRequest request) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Category not found"));
@@ -61,34 +61,30 @@ public class CategoryServiceImpl implements CategoryService {
         category = categoryRepository.save(category);
         return categoryMapper.toResponse(category);
     }
-    @Override
-    public List<CategoryResponse> searchCategories(String title, String status) {
-        // 1. Load all categories
-        List<Category> categories = categoryRepository.findAll();
 
-        // 2. Filter in memory
+    @Override
+    @Cacheable(value = "searchCategories", key = "#title + '-' + #status") // Cache theo title và status
+    public List<CategoryResponse> searchCategories(String title, String status) {
+        List<Category> categories = categoryRepository.findAll();
         return categories.stream()
                 .filter(cat -> {
                     if (title != null && !title.isBlank()) {
-                        // Only keep if cat.getTitle() contains "title"
                         return cat.getTitle() != null && cat.getTitle().contains(title);
                     }
-                    // if title is null or blank, no filter needed
                     return true;
                 })
                 .filter(cat -> {
                     if (status != null && !status.isBlank()) {
-                        // Only keep if cat.getStatus() equalsIgnoreCase "status"
-                        return cat.getStatus() != null
-                                && cat.getStatus().equalsIgnoreCase(status);
+                        return cat.getStatus() != null && cat.getStatus().equalsIgnoreCase(status);
                     }
-                    // if status is null or blank, no filter needed
                     return true;
                 })
                 .map(categoryMapper::toResponse)
                 .collect(Collectors.toList());
     }
+
     @Override
+    @CacheEvict(value = {"allCategories", "categoryById"}, key = "#id") // Xóa cache liên quan khi xóa
     public void deleteCategory(String id) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
@@ -97,9 +93,4 @@ public class CategoryServiceImpl implements CategoryService {
         }
         categoryRepository.delete(category);
     }
-
-
-
-
-
 }

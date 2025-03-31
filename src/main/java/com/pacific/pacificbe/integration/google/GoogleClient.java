@@ -1,4 +1,4 @@
-package com.pacific.pacificbe.repository.oauth2;
+package com.pacific.pacificbe.integration.google;
 
 import com.pacific.pacificbe.dto.request.oauth2.GoogleTokenRequest;
 import com.pacific.pacificbe.dto.response.oauth2.GoogleTokenResponse;
