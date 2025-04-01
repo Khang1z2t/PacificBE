@@ -10,6 +10,7 @@ import com.pacific.pacificbe.dto.response.showTour.ItineraryTourDetailResponse;
 import com.pacific.pacificbe.dto.response.showTour.TourBookingCount;
 import com.pacific.pacificbe.dto.response.showTour.TourDateResponse;
 import com.pacific.pacificbe.model.Tour;
+import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
@@ -20,7 +21,10 @@ import java.util.List;
 
 public interface TourService {
     //    List<TourResponse> getAllTours(String title, BigDecimal minPrice, BigDecimal maxPrice, String categoryId,LocalDate startDate, LocalDate endDate, String status,  int currentPage, int pageSize);
-    PagedTourResponse<TourResponse> getAllTours(String title, BigDecimal minPrice, BigDecimal maxPrice, String categoryId, LocalDate startDate, LocalDate endDate, String status, int currentPage, int pageSize);
+    Page<TourResponse> getAllTours(String title, BigDecimal minPrice,
+                                   BigDecimal maxPrice, String categoryId,
+                                   LocalDate startDate, LocalDate endDate,
+                                   String status, int currentPage, int pageSize);
 
     TourByIdResponse getTourById(String id);
 

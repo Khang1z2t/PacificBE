@@ -20,6 +20,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -41,7 +42,7 @@ public class TourController {
 
     @GetMapping(UrlMapping.GET_ALL_TOURS)
     @Operation(summary = "Lấy danh sách tour")
-    public ResponseEntity<ApiResponse<PagedTourResponse<TourResponse>>> getAllTours(
+    public ResponseEntity<ApiResponse<Page<TourResponse>>> getAllTours(
             @RequestParam(required = false) String title,
             @RequestParam(required = false) BigDecimal minPrice,
             @RequestParam(required = false) BigDecimal maxPrice,
@@ -49,15 +50,11 @@ public class TourController {
             @RequestParam(required = false) LocalDate startDate,
             @RequestParam(required = false) LocalDate endDate,
             @RequestParam(required = false) String status,
-            @RequestParam(defaultValue = "0") int currentPage,
-            @RequestParam(defaultValue = "6") int pageSize) {
-        Pageable pageable = PageRequest.of(currentPage, pageSize);
-        PagedTourResponse<TourResponse> response = tourService.getAllTours(title, minPrice, maxPrice, categoryId, startDate, endDate, status, currentPage, pageSize);
-        return ResponseEntity.ok(
-                ApiResponse.<PagedTourResponse<TourResponse>>builder()
-                        .data(response)
-                        .build()
-        );
+            @RequestParam(required = false, defaultValue = "0") int currentPage,
+            @RequestParam(required = false, defaultValue = "6") int pageSize) {
+        return ResponseEntity.ok(new ApiResponse<>(200, null, tourService
+                .getAllTours(title, minPrice, maxPrice, categoryId,
+                        startDate, endDate, status, currentPage, pageSize)));
     }
 
     @GetMapping(UrlMapping.GET_TOUR_BY_ID)

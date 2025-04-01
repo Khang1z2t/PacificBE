@@ -52,17 +52,13 @@ public class TourServiceImpl implements TourService {
     private final IdUtil idUtil;
     private final TourDetailRepository tourDetailRepository;
 
-        //    @Cacheable(value = "allTours", key = "#title + '-' + (#minPrice != null ? #minPrice : 'null') + '-' + (#maxPrice != null ? #maxPrice : 'null') + '-' + (#categoryId != null ? #categoryId : 'null') + '-' + (#startDate != null ? #startDate : 'null') + '-' + (#endDate != null ? #endDate : 'null') + '-' + (#status != null ? #status : 'null') + '-' + #currentPage + '-' + #pageSize")
+    //    @Cacheable(value = "allTours", key = "#title + '-' + (#minPrice != null ? #minPrice : 'null') + '-' + (#maxPrice != null ? #maxPrice : 'null') + '-' + (#categoryId != null ? #categoryId : 'null') + '-' + (#startDate != null ? #startDate : 'null') + '-' + (#endDate != null ? #endDate : 'null') + '-' + (#status != null ? #status : 'null') + '-' + #currentPage + '-' + #pageSize")
     @Override
-    public PagedTourResponse<TourResponse> getAllTours(String title, BigDecimal minPrice, BigDecimal maxPrice, String categoryId, LocalDate startDate, LocalDate endDate, String status, int currentPage, int pageSize) {
+    public Page<TourResponse> getAllTours(String title, BigDecimal minPrice, BigDecimal maxPrice, String categoryId, LocalDate startDate, LocalDate endDate, String status, int currentPage, int pageSize) {
         Pageable pageable = PageRequest.of(currentPage, pageSize);
-        Page<Tour> tourPage = tourRepository.findAllWithFilters(title, minPrice, maxPrice, categoryId, startDate, endDate, status, pageable);
-        List<TourResponse> tourResponses = tourMapper.toTourResponseList(tourPage.getContent());
-        return PagedTourResponse.<TourResponse>builder()
-                .content(tourResponses)
-                .totalPages(tourPage.getTotalPages())
-                .totalItems(tourPage.getTotalElements())
-                .build();
+        Page<Tour> tourPage = tourRepository.findAllWithFilters(title, minPrice,
+                maxPrice, categoryId, startDate, endDate, status, pageable);
+        return tourMapper.tourResponsePage(tourPage);
     }
 
     @Cacheable(value = "tourById", key = "#id")
