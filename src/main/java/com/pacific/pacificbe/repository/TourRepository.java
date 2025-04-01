@@ -3,6 +3,8 @@ package com.pacific.pacificbe.repository;
 import com.pacific.pacificbe.dto.response.showTour.TourBookingCount;
 import com.pacific.pacificbe.dto.response.showTour.TourDateResponse;
 import com.pacific.pacificbe.model.Tour;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -24,13 +26,17 @@ public interface TourRepository extends JpaRepository<Tour, String> {
             "AND (:minPrice IS NULL OR td.priceAdults >= :minPrice) " +
             "AND (:maxPrice IS NULL OR td.priceAdults <= :maxPrice) " +
             "AND (:categoryId IS NULL OR t.category.id = :categoryId)" +
+            "AND (:status IS NULL OR t.status = :status) " +
             "AND (:startDate IS NULL OR :endDate IS NULL OR (td.startDate BETWEEN :startDate AND :endDate))")
-    List<Tour> findAllWithFilters(@Param("title") String title,
-                                  @Param("minPrice") BigDecimal minPrice,
-                                  @Param("maxPrice") BigDecimal maxPrice,
-                                  @Param("categoryId") String categoryId,
-                                  @Param("startDate") LocalDate startDate,
-                                  @Param("endDate") LocalDate endDate);
+    Page<Tour> findAllWithFilters(
+            @Param("title") String title,
+            @Param("minPrice") BigDecimal minPrice,
+            @Param("maxPrice") BigDecimal maxPrice,
+            @Param("categoryId") String categoryId,
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate,
+            @Param("status") String status,
+            Pageable pageable);
 
 
     List<Tour> findToursByActiveIsTrue();

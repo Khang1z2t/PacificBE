@@ -3,6 +3,7 @@ package com.pacific.pacificbe.services;
 import com.pacific.pacificbe.dto.request.CreateTourRequest;
 import com.pacific.pacificbe.dto.request.TourFilterRequest;
 import com.pacific.pacificbe.dto.request.UpdateTourRequest;
+import com.pacific.pacificbe.dto.response.PagedTourResponse;
 import com.pacific.pacificbe.dto.response.TourByIdResponse;
 import com.pacific.pacificbe.dto.response.TourResponse;
 import com.pacific.pacificbe.dto.response.showTour.ItineraryTourDetailResponse;
@@ -18,10 +19,11 @@ import java.util.Date;
 import java.util.List;
 
 public interface TourService {
-    List<TourResponse> getAllTours(String title, BigDecimal minPrice, BigDecimal maxPrice, String categoryId,LocalDate startDate, LocalDate endDate);
+    //    List<TourResponse> getAllTours(String title, BigDecimal minPrice, BigDecimal maxPrice, String categoryId,LocalDate startDate, LocalDate endDate, String status,  int currentPage, int pageSize);
+    PagedTourResponse<TourResponse> getAllTours(String title, BigDecimal minPrice, BigDecimal maxPrice, String categoryId, LocalDate startDate, LocalDate endDate, String status, int currentPage, int pageSize);
 
     TourByIdResponse getTourById(String id);
-    
+
     TourResponse createTour(CreateTourRequest request, MultipartFile thumbnail, MultipartFile[] images);
 
     TourResponse addTourThumbnail(String id, MultipartFile thumbnail);
@@ -32,7 +34,7 @@ public interface TourService {
 
     TourResponse updateTour(String id, UpdateTourRequest request, MultipartFile thumbnail, MultipartFile[] images);
 
-    Boolean deleteTour(String id,boolean active);
+    Boolean deleteTour(String id, boolean active);
 
     Boolean deleteTourForce(String id);
 

@@ -8,6 +8,7 @@ import java.util.List;
 import com.pacific.pacificbe.dto.ApiResponse;
 import com.pacific.pacificbe.dto.request.CreateTourRequest;
 import com.pacific.pacificbe.dto.request.UpdateTourRequest;
+import com.pacific.pacificbe.dto.response.PagedTourResponse;
 import com.pacific.pacificbe.dto.response.TourByIdResponse;
 import com.pacific.pacificbe.dto.response.TourResponse;
 import com.pacific.pacificbe.dto.response.showTour.TourDateResponse;
@@ -19,6 +20,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -37,17 +41,21 @@ public class TourController {
 
     @GetMapping(UrlMapping.GET_ALL_TOURS)
     @Operation(summary = "Lấy danh sách tour")
-    public ResponseEntity<ApiResponse<List<TourResponse>>> getAllTours(
+    public ResponseEntity<ApiResponse<PagedTourResponse<TourResponse>>> getAllTours(
             @RequestParam(required = false) String title,
             @RequestParam(required = false) BigDecimal minPrice,
             @RequestParam(required = false) BigDecimal maxPrice,
             @RequestParam(required = false) String categoryId,
             @RequestParam(required = false) LocalDate startDate,
-            @RequestParam(required = false) LocalDate endDate
-    ) {
+            @RequestParam(required = false) LocalDate endDate,
+            @RequestParam(required = false) String status,
+            @RequestParam(defaultValue = "0") int currentPage,
+            @RequestParam(defaultValue = "6") int pageSize) {
+        Pageable pageable = PageRequest.of(currentPage, pageSize);
+        PagedTourResponse<TourResponse> response = tourService.getAllTours(title, minPrice, maxPrice, categoryId, startDate, endDate, status, currentPage, pageSize);
         return ResponseEntity.ok(
-                ApiResponse.<List<TourResponse>>builder()
-                        .data(tourService.getAllTours(title, minPrice, maxPrice, categoryId, startDate, endDate))
+                ApiResponse.<PagedTourResponse<TourResponse>>builder()
+                        .data(response)
                         .build()
         );
     }
@@ -99,7 +107,7 @@ public class TourController {
     @PostMapping(UrlMapping.DELETE_TOUR)
     @Operation(summary = "Xóa tour theo id (Xóa bình thường là set active = false)")
     public ResponseEntity<Boolean> deleteTour(@PathVariable String id, @RequestParam(required = true) boolean active) {
-        return ResponseEntity.ok(tourService.deleteTour(id,active));
+        return ResponseEntity.ok(tourService.deleteTour(id, active));
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
