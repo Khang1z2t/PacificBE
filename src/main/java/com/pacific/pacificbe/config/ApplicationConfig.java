@@ -6,6 +6,8 @@ import lombok.experimental.FieldDefaults;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.TaskScheduler;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -23,7 +25,7 @@ public class ApplicationConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return identifier  -> userRepository.findByUsernameOrEmail(identifier, identifier)
+        return identifier -> userRepository.findByUsernameOrEmail(identifier, identifier)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
@@ -48,5 +50,10 @@ public class ApplicationConfig {
     @Bean
     public ModelMapper modelMapper() {
         return new ModelMapper();
+    }
+
+    @Bean
+    public TaskScheduler taskScheduler() {
+        return new ThreadPoolTaskScheduler();
     }
 }

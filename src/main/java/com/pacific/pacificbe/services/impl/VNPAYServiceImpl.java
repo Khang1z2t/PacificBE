@@ -23,7 +23,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.view.RedirectView;
 
-import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URLEncoder;
@@ -106,23 +105,23 @@ public class VNPAYServiceImpl implements VNPAYService {
         String vnp_ExpireDate = formatter.format(cld.getTime());
         vnp_Params.put("vnp_ExpireDate", vnp_ExpireDate);
 
-        List fieldNames = new ArrayList(vnp_Params.keySet());
+        List<String> fieldNames = new ArrayList<>(vnp_Params.keySet());
         Collections.sort(fieldNames);
+
         StringBuilder hashData = new StringBuilder();
         StringBuilder query = new StringBuilder();
-        Iterator itr = fieldNames.iterator();
-        while (itr.hasNext()) {
-            String fieldName = (String) itr.next();
+
+        for (Iterator<String> itr = fieldNames.iterator(); itr.hasNext(); ) {
+            String fieldName = itr.next();
             String fieldValue = vnp_Params.get(fieldName);
-            if ((fieldValue != null) && (fieldValue.length() > 0)) {
-                hashData.append(fieldName).append('=');
-                try {
-                    hashData.append(URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII.toString()));
-                    query.append(URLEncoder.encode(fieldName, StandardCharsets.US_ASCII.toString())).append('=');
-                    query.append(URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII.toString()));
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
+
+            if (fieldValue != null && !fieldValue.isEmpty()) {
+                String encodedFieldName = URLEncoder.encode(fieldName, StandardCharsets.US_ASCII);
+                String encodedFieldValue = URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII);
+
+                hashData.append(fieldName).append('=').append(encodedFieldValue);
+                query.append(encodedFieldName).append('=').append(encodedFieldValue);
+
                 if (itr.hasNext()) {
                     query.append('&');
                     hashData.append('&');
@@ -140,44 +139,32 @@ public class VNPAYServiceImpl implements VNPAYService {
     @Override
     @Transactional
     public int orderReturn(HttpServletRequest request) {
-        Map fields = new HashMap();
-        for (Enumeration params = request.getParameterNames(); params.hasMoreElements(); ) {
-            String fieldName = null;
-            String fieldValue = null;
-            try {
-                fieldName = URLEncoder.encode((String) params.nextElement(), StandardCharsets.US_ASCII.toString());
-                fieldValue = URLEncoder.encode(request.getParameter(fieldName), StandardCharsets.US_ASCII.toString());
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
+        Map<String, String> fields = new HashMap<>();
+
+        request.getParameterNames().asIterator().forEachRemaining(param -> {
+            String encodedName = URLEncoder.encode(param, StandardCharsets.US_ASCII);
+            String encodedValue = URLEncoder.encode(request.getParameter(param), StandardCharsets.US_ASCII);
+            if (!encodedValue.isEmpty()) {
+                fields.put(encodedName, encodedValue);
             }
-            if ((fieldValue != null) && (fieldValue.length() > 0)) {
-                fields.put(fieldName, fieldValue);
-            }
-        }
+        });
+
+        // Xóa các tham số không cần thiết
+        fields.computeIfPresent("vnp_SecureHashType", (k, v) -> null);
+        fields.computeIfPresent("vnp_SecureHash", (k, v) -> null);
 
         String vnp_SecureHash = request.getParameter("vnp_SecureHash");
-        if (fields.containsKey("vnp_SecureHashType")) {
-            fields.remove("vnp_SecureHashType");
-        }
-        if (fields.containsKey("vnp_SecureHash")) {
-            fields.remove("vnp_SecureHash");
-        }
-
         String signValue = vnpayConfig.hashAllFields(fields);
-        if (signValue.equals(vnp_SecureHash)) {
-            String vnp_TransactionStatus = request.getParameter("vnp_TransactionStatus");
-            String vnp_TxnRef = request.getParameter("vnp_TxnRef");
-            String bookingNo = vnp_TxnRef.split("_")[0];
 
-            if ("00".equals(vnp_TransactionStatus)) {
-                return 1;
-            } else {
-                return 0;
-            }
-        } else {
-            return -1;
+        if (!signValue.equals(vnp_SecureHash)) {
+            return -1; // Chữ ký không hợp lệ
         }
+
+        String vnp_TransactionStatus = request.getParameter("vnp_TransactionStatus");
+
+        return "00".equals(vnp_TransactionStatus) ? 1 : 0;
     }
+
 
     // Phương thức nội bộ để xử lý callback
     private RedirectView handleVnpayReturn(CheckOutRequest request) {
@@ -201,29 +188,33 @@ public class VNPAYServiceImpl implements VNPAYService {
                 Payment payment = new Payment();
                 payment.setTransactionId(request.getVnp_TransactionNo());
                 payment.setActive(true);
-                payment.setTotalAmount(new BigDecimal(request.getVnp_Amount()).divide(new BigDecimal(100)).setScale(2, RoundingMode.HALF_UP));
+                payment.setTotalAmount(
+                        new BigDecimal(request.getVnp_Amount())
+                                .divide(new BigDecimal(100), RoundingMode.HALF_UP)
+                                .setScale(2, RoundingMode.HALF_UP)
+                );
                 payment.setStatus(PaymentStatus.COMPLETED.toString());
                 payment.setUser(user);
                 payment.setNote(bookingNo);
                 paymentRepository.save(payment);
 
-                booking.setStatus(BookingStatus.COMPLETED.toString());
+                booking.setStatus(BookingStatus.PAID.toString());
                 bookingRepository.save(booking);
                 // Gửi email xác nhận thanh toán thành công
                 javaMail.sendMailBooking(user, bookingNo, booking.getTourDetail().getTour().getTitle(), booking.getTourDetail().getStartDate().toString(), payment.getTotalAmount().toString());
 
                 return new RedirectView(UrlMapping.PAYMENT_SUCCESS);
             } else {
-                Payment payment = new Payment();
-                payment.setTransactionId(request.getVnp_TransactionNo());
-                payment.setActive(true);
-                payment.setTotalAmount(new BigDecimal(request.getVnp_Amount()).divide(new BigDecimal(100)).setScale(2, RoundingMode.HALF_UP));
-                payment.setStatus(PaymentStatus.FAILED.toString());
-                payment.setUser(user);
-                payment.setNote(bookingNo);
-                paymentRepository.save(payment);
-                booking.setStatus(BookingStatus.PENDING.toString());
-                bookingRepository.save(booking);
+//                Payment payment = new Payment();
+//                payment.setTransactionId(request.getVnp_TransactionNo());
+//                payment.setActive(true);
+//                payment.setTotalAmount(new BigDecimal(request.getVnp_Amount()).divide(new BigDecimal(100)).setScale(2, RoundingMode.HALF_UP));
+//                payment.setStatus(PaymentStatus.FAILED.toString());
+//                payment.setUser(user);
+//                payment.setNote(bookingNo);
+//                paymentRepository.save(payment);
+//                booking.setStatus(BookingStatus.PENDING.toString());
+//                bookingRepository.save(booking);
                 return new RedirectView(UrlMapping.PAYMENT_FAIL);
             }
         } else {

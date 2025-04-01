@@ -89,10 +89,4 @@ public class Booking extends BaseEntity {
     @Column(name = "status", length = 100)
     private String status;
 
-    @PreUpdate
-    public void onPreUpdate() {
-        LocalDateTime now = LocalDateTime.now();
-
-    }
-
 }

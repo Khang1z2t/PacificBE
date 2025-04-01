@@ -30,7 +30,6 @@ public class WishlistServiceImpl implements WishlistService {
     private final WishlistMapper wishlistMapper;
 
     @Override
-    @CachePut(value = "wishlists", key = "#result.user.id + '-' + #result.tour.id")
     public WishlistResponse addWishlist(String id) {
         String userId = AuthUtils.getCurrentUserId();
         if (userId == null) {
@@ -48,7 +47,6 @@ public class WishlistServiceImpl implements WishlistService {
     }
 
     @Override
-    @Cacheable(value = "wishlists", key = "#root.methodName + '-' + #userId")
     public List<WishlistResponse> getAllWishlistByUser() {
         String userId = AuthUtils.getCurrentUserId();
         if (userId == null) {
@@ -61,7 +59,6 @@ public class WishlistServiceImpl implements WishlistService {
     }
 
     @Override
-    @CacheEvict(value = "wishlists", key = "'getAllWishlistByUser-' + #userId")
     public Boolean deleteWishlist(String id) {
         String userId = AuthUtils.getCurrentUserId();
         if (userId == null) {

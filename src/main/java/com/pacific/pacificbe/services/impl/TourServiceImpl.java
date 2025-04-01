@@ -59,7 +59,6 @@ public class TourServiceImpl implements TourService {
         return tourMapper.toTourResponseList(tours);
     }
 
-    @Cacheable(value = "tourById", key = "#id")
     @Override
     public TourByIdResponse getTourById(String id) {
         Tour tour = tourRepository.findById(id)
@@ -69,7 +68,6 @@ public class TourServiceImpl implements TourService {
 
     @Override
     @Transactional
-    @CacheEvict(value = "allTours", allEntries = true)
     public TourResponse createTour(CreateTourRequest request, MultipartFile thumbnail, MultipartFile[] images) {
         Tour tour = new Tour();
         tour.setTitle(request.getTitle());
@@ -107,7 +105,6 @@ public class TourServiceImpl implements TourService {
 
     @Override
     @Transactional
-    @CacheEvict(value = {"tourById", "allTours"}, key = "#id")
     public TourResponse addTourThumbnail(String id, MultipartFile thumbnail) {
         Tour tour = tourRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.TOUR_NOT_FOUND));
@@ -119,7 +116,6 @@ public class TourServiceImpl implements TourService {
 
     @Override
     @Transactional
-    @CacheEvict(value = {"tourById", "allTours"}, key = "#id")
     public TourResponse addTourImages(String id, MultipartFile[] images) {
         Tour tour = tourRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.TOUR_NOT_FOUND));
@@ -130,7 +126,6 @@ public class TourServiceImpl implements TourService {
 
     @Override
     @Transactional
-    @CacheEvict(value = {"tourById", "allTours"}, key = "#id")
     public TourResponse updateTour(String id, UpdateTourRequest request, MultipartFile thumbnail, MultipartFile[] images) {
         Tour tour = tourRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.TOUR_NOT_FOUND));
@@ -163,7 +158,6 @@ public class TourServiceImpl implements TourService {
 
     @Override
     @Transactional
-    @CacheEvict(value = {"tourById", "allTours"}, key = "#id")
     public Boolean deleteTour(String id, boolean active) {
         Tour tour = tourRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.TOUR_NOT_FOUND));
@@ -180,7 +174,6 @@ public class TourServiceImpl implements TourService {
 
     @Override
     @Transactional
-    @CacheEvict(value = {"tourById", "allTours"}, key = "#id")
     public Boolean deleteTourForce(String id) {
         Tour tour = tourRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.TOUR_NOT_FOUND));
@@ -193,7 +186,6 @@ public class TourServiceImpl implements TourService {
         return tourRepository.findToursByDate(startDate, endDate);
     }
 
-    @Cacheable(value = "tourByTourDetailId", key = "#tourDetailId")
     @Override
     public TourResponse getTourByTourDetailId(String tourDetailId) {
         var tourDetail = tourDetailRepository.findById(tourDetailId).orElseThrow(

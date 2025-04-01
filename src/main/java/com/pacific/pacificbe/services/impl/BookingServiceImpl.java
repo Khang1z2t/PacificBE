@@ -28,13 +28,16 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -53,6 +56,7 @@ public class BookingServiceImpl implements BookingService {
     private final IdUtil idUtil;
     private final BookingDetailRepository bookingDetailRepository;
     private final VoucherService voucherService;
+    private final TaskScheduler taskScheduler;
 
     @Override
     public List<Revenue> getMonthlyRevenueReport(String years, String bookingStatus) {
@@ -241,9 +245,6 @@ public class BookingServiceImpl implements BookingService {
         return bookingDetail;
     }
 
-//    private Date parseDate(LocalDate localDate) {
-//        return (localDate == null) ? null : java.sql.Date.valueOf(localDate);
-//    }
 
     private String generatorBookingNo(String lastBookingNo) {
         Date now = new Date();
