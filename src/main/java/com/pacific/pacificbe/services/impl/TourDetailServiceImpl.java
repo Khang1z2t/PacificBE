@@ -38,8 +38,6 @@ public class TourDetailServiceImpl implements TourDetailService {
 
     @Override
     @Transactional
-    @CacheEvict(value = {"allTourDetails", "tourDetailsByTourId", "tourDetailsByMonth", "tourDetailsByDay"},
-            key = "#request.tourId", allEntries = true)
     public TourDetailResponse addTourDetail(CreateTourDetailRequest request) {
         Tour tour = tourRepository.findById(request.getTourId()).orElseThrow(
                 () -> new AppException(ErrorCode.TOUR_NOT_FOUND));
@@ -86,7 +84,6 @@ public class TourDetailServiceImpl implements TourDetailService {
         return tourMapper.toTourDetailResponseList(tourDetail);
     }
 
-    @Cacheable(value = "tourDetailById", key = "#id")
     @Override
     public TourDetailResponse getTourDetailById(String id) {
         TourDetail tourDetail = tourDetailRepository.findById(id).orElseThrow(
@@ -94,20 +91,17 @@ public class TourDetailServiceImpl implements TourDetailService {
         return tourMapper.toTourDetailResponse(tourDetail);
     }
 
-    @Cacheable(value = "tourDetailsByTourId", key = "#tourId")
     @Override
     public List<TourDetailResponse> getTourDetailByTourId(String tourId) {
         List<TourDetail> tourDetail = tourDetailRepository.findByTourId(tourId);
         return tourMapper.toTourDetailResponseList(tourDetail);
     }
 
-    @Cacheable(value = "tourDetailsByMonth", key = "#tourId")
     @Override
     public List<DetailTourResponse> getTourDetailMonth(String tourId) {
         return tourDetailRepository.getTourDetailMonth(tourId);
     }
 
-    @Cacheable(value = "tourDetailsByDay", key = "#tourId + '-' + #months")
     @Override
     public List<DetailTourResponse> getTourDetailDay(String tourId, String months) {
         return tourDetailRepository.getTourDetailDay(tourId, months);

@@ -12,6 +12,7 @@ import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
+import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,19 +20,16 @@ import java.util.Map;
 @Configuration
 public class RedisConfig {
 
-    @Bean
-    public ObjectMapper redisObjectMapper() {
-        ObjectMapper objectMapper = new ObjectMapper();
-        // Đăng ký JavaTimeModule để hỗ trợ LocalDateTime
-        objectMapper.registerModule(new JavaTimeModule());
-        // Không cần activateDefaultTyping nếu không có tính đa hình
-//         objectMapper.activateDefaultTyping(
-//                 objectMapper.getPolymorphicTypeValidator(),
-//                 ObjectMapper.DefaultTyping.NON_FINAL
-//         );
-        objectMapper.findAndRegisterModules(); // Tự động tìm và đăng ký các module khác
-        return objectMapper;
-    }
+@Bean
+public ObjectMapper redisObjectMapper() {
+    ObjectMapper objectMapper = new ObjectMapper();
+    // Register JavaTimeModule to support LocalDateTime
+    objectMapper.registerModule(new JavaTimeModule());
+    // Set a custom date format
+    objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"));
+    objectMapper.findAndRegisterModules(); // Automatically find and register other modules
+    return objectMapper;
+}
 
     @Bean
     public RedisCacheConfiguration cacheConfiguration(ObjectMapper redisObjectMapper) {
