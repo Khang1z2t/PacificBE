@@ -20,11 +20,7 @@ import java.util.Date;
 import java.util.List;
 
 public interface TourService {
-    //    List<TourResponse> getAllTours(String title, BigDecimal minPrice, BigDecimal maxPrice, String categoryId,LocalDate startDate, LocalDate endDate, String status,  int currentPage, int pageSize);
-    Page<TourResponse> getAllTours(String title, BigDecimal minPrice,
-                                   BigDecimal maxPrice, String categoryId,
-                                   LocalDate startDate, LocalDate endDate,
-                                   String status, int currentPage, int pageSize);
+    List<TourResponse> getAllTours(String title, BigDecimal minPrice, BigDecimal maxPrice, String categoryId,LocalDate startDate, LocalDate endDate);
 
     TourByIdResponse getTourById(String id);
 

@@ -42,19 +42,19 @@ public class TourController {
 
     @GetMapping(UrlMapping.GET_ALL_TOURS)
     @Operation(summary = "Lấy danh sách tour")
-    public ResponseEntity<ApiResponse<Page<TourResponse>>> getAllTours(
+    public ResponseEntity<ApiResponse<List<TourResponse>>> getAllTours(
             @RequestParam(required = false) String title,
             @RequestParam(required = false) BigDecimal minPrice,
             @RequestParam(required = false) BigDecimal maxPrice,
             @RequestParam(required = false) String categoryId,
             @RequestParam(required = false) LocalDate startDate,
-            @RequestParam(required = false) LocalDate endDate,
-            @RequestParam(required = false) String status,
-            @RequestParam(required = false, defaultValue = "0") int currentPage,
-            @RequestParam(required = false, defaultValue = "6") int pageSize) {
-        return ResponseEntity.ok(new ApiResponse<>(200, null, tourService
-                .getAllTours(title, minPrice, maxPrice, categoryId,
-                        startDate, endDate, status, currentPage, pageSize)));
+            @RequestParam(required = false) LocalDate endDate
+    ) {
+        return ResponseEntity.ok(
+                ApiResponse.<List<TourResponse>>builder()
+                        .data(tourService.getAllTours(title, minPrice, maxPrice, categoryId, startDate, endDate))
+                        .build()
+        );
     }
 
     @GetMapping(UrlMapping.GET_TOUR_BY_ID)

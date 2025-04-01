@@ -26,17 +26,13 @@ public interface TourRepository extends JpaRepository<Tour, String> {
             "AND (:minPrice IS NULL OR td.priceAdults >= :minPrice) " +
             "AND (:maxPrice IS NULL OR td.priceAdults <= :maxPrice) " +
             "AND (:categoryId IS NULL OR t.category.id = :categoryId)" +
-            "AND (:status IS NULL OR t.status = :status) " +
             "AND (:startDate IS NULL OR :endDate IS NULL OR (td.startDate BETWEEN :startDate AND :endDate))")
-    Page<Tour> findAllWithFilters(
-            @Param("title") String title,
-            @Param("minPrice") BigDecimal minPrice,
-            @Param("maxPrice") BigDecimal maxPrice,
-            @Param("categoryId") String categoryId,
-            @Param("startDate") LocalDate startDate,
-            @Param("endDate") LocalDate endDate,
-            @Param("status") String status,
-            Pageable pageable);
+    List<Tour> findAllWithFilters(@Param("title") String title,
+                                  @Param("minPrice") BigDecimal minPrice,
+                                  @Param("maxPrice") BigDecimal maxPrice,
+                                  @Param("categoryId") String categoryId,
+                                  @Param("startDate") LocalDate startDate,
+                                  @Param("endDate") LocalDate endDate);
 
 
     List<Tour> findToursByActiveIsTrue();

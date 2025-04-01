@@ -52,13 +52,11 @@ public class TourServiceImpl implements TourService {
     private final IdUtil idUtil;
     private final TourDetailRepository tourDetailRepository;
 
-    //    @Cacheable(value = "allTours", key = "#title + '-' + (#minPrice != null ? #minPrice : 'null') + '-' + (#maxPrice != null ? #maxPrice : 'null') + '-' + (#categoryId != null ? #categoryId : 'null') + '-' + (#startDate != null ? #startDate : 'null') + '-' + (#endDate != null ? #endDate : 'null') + '-' + (#status != null ? #status : 'null') + '-' + #currentPage + '-' + #pageSize")
+    @Cacheable(value = "allTours", key = "#title + '-' + #minPrice + '-' + #maxPrice + '-' + #categoryId + '-' + #startDate + '-' + #endDate")
     @Override
-    public Page<TourResponse> getAllTours(String title, BigDecimal minPrice, BigDecimal maxPrice, String categoryId, LocalDate startDate, LocalDate endDate, String status, int currentPage, int pageSize) {
-        Pageable pageable = PageRequest.of(currentPage, pageSize);
-        Page<Tour> tourPage = tourRepository.findAllWithFilters(title, minPrice,
-                maxPrice, categoryId, startDate, endDate, status, pageable);
-        return tourMapper.tourResponsePage(tourPage);
+    public List<TourResponse> getAllTours(String title, BigDecimal minPrice, BigDecimal maxPrice, String categoryId, LocalDate startDate, LocalDate endDate) {
+        List<Tour> tours = tourRepository.findAllWithFilters(title, minPrice, maxPrice, categoryId, startDate, endDate);
+        return tourMapper.toTourResponseList(tours);
     }
 
     @Cacheable(value = "tourById", key = "#id")
