@@ -40,12 +40,8 @@ public class AdminVoucherController {
 
     @GetMapping(UrlMapping.GET_VOUCHER_BY_CODE)
     @Operation(summary = "Lấy thông tin voucher theo mã")
-    public ResponseEntity<ApiResponse<VoucherResponse>> getVoucherByCode(
-            @RequestParam String codeVoucher) {
-
-        return voucherService.getVoucherByCode(codeVoucher)
-                .map(voucher -> ResponseEntity.ok(new ApiResponse<>(200, "Lấy thành công", voucher)))
-                .orElseThrow(() -> new AppException(ErrorCode.VOUCHER_NOT_FOUND));
+    public ResponseEntity<ApiResponse<VoucherResponse>> getVoucherByCode(@RequestParam String codeVoucher) {
+        return ResponseEntity.ok(new ApiResponse<>(200,"Lấy thông tin thành công", voucherService.getVoucherByCode(codeVoucher)));
     }
 
     @PostMapping(UrlMapping.CREATE_VOUCHER)

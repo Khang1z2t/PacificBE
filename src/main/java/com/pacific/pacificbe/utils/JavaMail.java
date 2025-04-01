@@ -103,12 +103,12 @@ public class JavaMail {
         sendEmail(user.getEmail(), subjectEmail, bodyEmail);
     }
 
-    public void sendMailBooking(User user, String bookingNo, String tourName, String tourDate, String totalPrice) {
+    public void sendMailBooking(User user, String bookingNo, String tourName, String createDate, String totalPrice) {
         String subjectEmail = "Xác nhận đặt tour " + tourName;
         String bodyEmail = "<div style='font-family: Arial, sans-serif;'>"
                 + "<h2 style='color: #2E86C1;'>Xác nhận đặt tour</h2>"
                 + "<p>Xin chào <strong>" + user.getFirstName() + " " + user.getLastName() + "</strong>,</p>"
-                + "<p>Cảm ơn bạn đã đặt tour <strong>" + tourName + "</strong> vào ngày <strong>" + formatDate(tourDate) + "</strong>.</p>"
+                + "<p>Cảm ơn bạn đã đặt tour <strong>" + tourName + "</strong> vào ngày <strong>" + formatDate(createDate) + "</strong>.</p>"
                 + "<p>Mã đặt tour của bạn là: <strong style='color: #E74C3C;'>" + bookingNo + "</strong></p>"
                 + "<p>Tổng giá trị đơn hàng là: <strong style='color: #27AE60;'>" + formatCurrency(totalPrice) + "</strong></p>"
                 + "<p>Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi.</p>"

@@ -150,10 +150,9 @@ public class BookingServiceImpl implements BookingService {
         booking.setActive(true);
         booking.setBookingNo(generatorBookingNo(lastBookingNo));
         booking.setStatus(BookingStatus.PENDING.toString());
-
-        // Xử lý voucher nếu có
+//        // Xử lý voucher nếu có
         Voucher voucher = null;
-        if (request.getVoucherCode() != null && !request.getVoucherCode().isEmpty()) {
+        if (request.getVoucherCode() != null && request.getVoucherCode().isEmpty()) {
             voucher = voucherRepository.findByCodeVoucher(request.getVoucherCode())
                     .orElseThrow(() -> new AppException(ErrorCode.INVALID_VOUCHER));
 

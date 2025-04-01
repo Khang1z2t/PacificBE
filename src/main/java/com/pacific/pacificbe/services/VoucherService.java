@@ -22,7 +22,7 @@ public interface VoucherService {
 
     VoucherResponse createVoucher(VoucherRequest request);
 
-    Optional<VoucherResponse> getVoucherByCode(String codeVoucher);
+    VoucherResponse getVoucherByCode(String codeVoucher);
 
     Boolean checkVoucher(String codeVoucher, BigDecimal orderValue, String tourId);
 
