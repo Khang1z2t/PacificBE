@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Nhắc nhở thanh toán đơn hàng</title>
+    <style>
+        body {
+            font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #eef2f6;
+            color: #2d3748;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+        }
+
+        .header {
+            background: linear-gradient(120deg, #f38b11, #ffb111);
+            padding: 25px;
+            text-align: center;
+            color: #ffffff;
+            position: relative;
+        }
+
+        .header img.logo {
+            max-width: 180px;
+            height: auto;
+            margin-bottom: 15px;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .content {
+            padding: 35px;
+        }
+
+        .content p {
+            font-size: 16px;
+            line-height: 1.8;
+            margin: 15px 0;
+            color: #4a5568;
+        }
+
+        .content strong {
+            color: #1a202c;
+            font-weight: 600;
+        }
+
+        .tour-info {
+            background: #f7fafc;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 25px 0;
+            border-left: 5px solid #f38b11;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .tour-info strong {
+            color: #f38b11;
+            font-weight: 600;
+        }
+
+        .total {
+            text-align: right;
+            font-size: 22px;
+            font-weight: 700;
+            color: #e53e3e;
+            margin-top: 25px;
+            padding-top: 10px;
+            border-top: 1px dashed #e2e8f0;
+        }
+
+        .payment-link {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .payment-link a {
+            display: inline-block;
+            padding: 12px 30px;
+            background: #f77914;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 16px;
+            transition: background 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .payment-link a:hover {
+            background: #f68022;
+            transform: translateY(-2px);
+        }
+
+        .warning {
+            color: #e53e3e;
+            font-weight: 600;
+            font-size: 15px;
+            margin-top: 20px;
+            background: #fff5f5;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #feb2b2;
+        }
+
+        .footer {
+            background: #edf2f7;
+            text-align: center;
+            font-size: 14px;
+            color: #718096;
+            padding: 20px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .footer a {
+            color: #3182ce;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+            color: #2b6cb0;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <img src="https://lh3.googleusercontent.com/d/1IQghoy4jSZeOKcHOvcZWKFy8muLXGFtD" alt="Pacific Travel"
+             class="logo">
+        <h1>Nhắc nhở thanh toán đơn hàng quá hạn</h1>
+    </div>
+    <div class="content">
+        <p>Kính gửi <strong>{{firstName}} {{lastName}}</strong>,</p>
+        <p>Chúng tôi xin thông báo rằng đơn booking của quý khách với mã <strong>{{bookingNo}}</strong> hiện đã quá hạn
+            thanh toán. Vui lòng hoàn tất thanh toán trong thời gian sớm nhất để đảm bảo giữ chỗ cho chuyến đi. <em>Nếu
+                quý khách đã thanh toán, xin vui lòng bỏ qua thông báo này.</em></p>
+        <div class="tour-info">
+            <p><strong>Tên tour:</strong> {{tourTitle}}</p>
+            <p><strong>Ngày khởi hành:</strong> {{startDate}}</p>
+            <p><strong>Ngày kết thúc:</strong> {{endDate}}</p>
+            <p><strong>Số người:</strong> {{totalNumber}} (Người lớn: {{adultNum}}, Trẻ em: {{childrenNum}})</p>
+        </div>
+        <p class="total">Tổng số tiền cần thanh toán: <strong>{{totalAmount}}</strong></p>
+<!--        <p class="payment-link"><a href="{{paymentLink}}">Thanh toán ngay</a></p>-->
+        <p class="warning">Lưu ý: Đơn booking sẽ bị hủy nếu không được thanh toán trước {{deadline}}.</p>
+    </div>
+    <div class="footer">
+        <p>Cảm ơn quý khách đã lựa chọn dịch vụ của chúng tôi!</p>
+        <p>Liên hệ hỗ trợ: <a href="mailto:pacific.musketeers.tni@gmail.com">pacific.musketeers.tni@gmail.com</a> |
+            Hotline: <a
+                    href="tel:0865399254">0865399254</a></p>
+    </div>
+</div>
+</body>
+</html>
