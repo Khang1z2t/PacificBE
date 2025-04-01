@@ -3,6 +3,8 @@ package com.pacific.pacificbe.repository;
 import com.pacific.pacificbe.dto.response.showTour.TourBookingCount;
 import com.pacific.pacificbe.dto.response.showTour.TourDateResponse;
 import com.pacific.pacificbe.model.Tour;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

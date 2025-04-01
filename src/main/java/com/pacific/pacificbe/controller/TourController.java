@@ -8,6 +8,7 @@ import java.util.List;
 import com.pacific.pacificbe.dto.ApiResponse;
 import com.pacific.pacificbe.dto.request.CreateTourRequest;
 import com.pacific.pacificbe.dto.request.UpdateTourRequest;
+import com.pacific.pacificbe.dto.response.PagedTourResponse;
 import com.pacific.pacificbe.dto.response.TourByIdResponse;
 import com.pacific.pacificbe.dto.response.TourResponse;
 import com.pacific.pacificbe.dto.response.showTour.TourDateResponse;
@@ -19,6 +20,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -99,7 +104,7 @@ public class TourController {
     @PostMapping(UrlMapping.DELETE_TOUR)
     @Operation(summary = "Xóa tour theo id (Xóa bình thường là set active = false)")
     public ResponseEntity<Boolean> deleteTour(@PathVariable String id, @RequestParam(required = true) boolean active) {
-        return ResponseEntity.ok(tourService.deleteTour(id,active));
+        return ResponseEntity.ok(tourService.deleteTour(id, active));
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")

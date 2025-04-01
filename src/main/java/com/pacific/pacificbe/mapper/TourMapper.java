@@ -12,6 +12,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -54,11 +55,15 @@ public class TourMapper {
                 .toList();
     }
 
+    public Page<TourResponse> tourResponsePage(Page<Tour> tours) {
+        return tours.map(this::toTourResponse);
+    }
+
     public List<TourDetailResponse> toTourDetailResponseList(List<TourDetail> tourDetails) {
         return tourDetails.stream().map(this::toTourDetailResponse).toList();
     }
 
-    private <T extends BaseTourResponse> T toBaseTourResponse(T tourResponse, Tour tour ) {
+    private <T extends BaseTourResponse> T toBaseTourResponse(T tourResponse, Tour tour) {
         modelMapper.map(tour, tourResponse);
 
         tourResponse.setImages(tour.getImages().stream()

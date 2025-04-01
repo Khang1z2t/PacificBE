@@ -32,8 +32,9 @@ import lombok.experimental.FieldDefaults;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ReportController {
-	TourService tourService;
-	BookingService bookingService;
+	private final ReportService reportservice;
+	private final TourService tourService;
+	private final BookingService bookingService;
 
 	@GetMapping(UrlMapping.GET_TOUR_BOOKING_COUNT)
 	@Operation(summary = "Tìm kiếm số lần đặt tour")

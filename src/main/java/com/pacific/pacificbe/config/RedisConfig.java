@@ -25,10 +25,10 @@ public class RedisConfig {
         // Đăng ký JavaTimeModule để hỗ trợ LocalDateTime
         objectMapper.registerModule(new JavaTimeModule());
         // Không cần activateDefaultTyping nếu không có tính đa hình
-        // objectMapper.activateDefaultTyping(
-        //         objectMapper.getPolymorphicTypeValidator(),
-        //         ObjectMapper.DefaultTyping.NON_FINAL
-        // );
+//         objectMapper.activateDefaultTyping(
+//                 objectMapper.getPolymorphicTypeValidator(),
+//                 ObjectMapper.DefaultTyping.NON_FINAL
+//         );
         objectMapper.findAndRegisterModules(); // Tự động tìm và đăng ký các module khác
         return objectMapper;
     }
