@@ -109,9 +109,10 @@ public class VoucherServiceImpl implements VoucherService {
         voucher.setQuantity(request.getQuantity());
         voucher.setUserLimit(request.getUserLimit());
 
-
         voucher.setStartDate(request.getStartDate());
         voucher.setEndDate(request.getEndDate());
+        voucher.setFirstTimeUserOnly(request.getFirstTimeUserOnly());
+        voucher.setMaxDiscountAmount(request.getMaxDiscountAmount());
 
         checkValidApplyTo(request, voucher);
 
@@ -171,24 +172,42 @@ public class VoucherServiceImpl implements VoucherService {
 
         if (voucher != null) {
             LocalDateTime now = LocalDateTime.now();
+
+            // Kiểm tra thời gian hiệu lực
             if (voucher.getStartDate().isAfter(now) || voucher.getEndDate().isBefore(now)) {
                 return false;
             }
+
+            // Kiểm tra số lượng voucher
             if (voucher.getQuantity() < 0) {
                 return false;
             }
+
+            // Kiểm tra trạng thái voucher
             if (!voucher.getStatus().equals(VoucherStatus.ACTIVE.toString())) {
                 return false;
             }
+
+            // Kiểm tra giá trị đơn hàng tối thiểu
             if (voucher.getMinOrderValue().compareTo(orderValue) > 0) {
                 return false;
             }
 
+            // Kiểm tra giới hạn sử dụng của user
             long userVoucherUsage = bookingRepository.countByUserIdAndVoucherId(user.getId(), voucher.getId());
             if (voucher.getUserLimit() != null && userVoucherUsage >= voucher.getUserLimit()) {
                 return false;
             }
 
+            // Kiểm tra chỉ dành cho người dùng mới
+            if (voucher.getFirstTimeUserOnly()) {
+                long userBookingCount = bookingRepository.countByUser(user);
+                if (userBookingCount > 0) {
+                    return false;
+                }
+            }
+
+            // Kiểm tra áp dụng cho tour hoặc category
             ApplyTo applyTo = ApplyTo.valueOf(voucher.getApplyTo());
             switch (applyTo) {
                 case TOUR:
@@ -206,23 +225,27 @@ public class VoucherServiceImpl implements VoucherService {
                 default:
                     break;
             }
+
+            return true; // Voucher hợp lệ
         }
 
-        return voucher != null;
+        return false; // Không tìm thấy voucher
     }
 
     @Override
     public VoucherCodeResponse checkVoucherCode(String codeVoucher, BigDecimal orderValue, String tourId) {
         var isValid = checkVoucher(codeVoucher, orderValue, tourId);
         BigDecimal discountValue = BigDecimal.ZERO;
+        String code = null;
         if (isValid) {
             var voucher = voucherRepository.findByCodeVoucher(codeVoucher)
                     .orElseThrow(() -> new AppException(ErrorCode.VOUCHER_NOT_FOUND));
             discountValue = voucher.getDiscountValue();
+            code = voucher.getCodeVoucher();
         }
         return VoucherCodeResponse.builder()
-                .voucherCode(codeVoucher)
                 .isValid(isValid)
+                .voucherCode(code)
                 .discountValue(discountValue)
                 .build();
     }
