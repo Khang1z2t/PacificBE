@@ -22,18 +22,6 @@ import java.util.Map;
 
 @Configuration
 public class RedisConfig {
-
-@Bean
-public ObjectMapper redisObjectMapper() {
-    ObjectMapper objectMapper = new ObjectMapper();
-    // Register JavaTimeModule to support LocalDateTime
-    objectMapper.registerModule(new JavaTimeModule());
-    // Set a custom date format
-    objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"));
-    objectMapper.findAndRegisterModules(); // Automatically find and register other modules
-    return objectMapper;
-}
-
     @Bean
     public RedisCacheConfiguration cacheConfiguration(ObjectMapper redisObjectMapper) {
         return RedisCacheConfiguration.defaultCacheConfig()

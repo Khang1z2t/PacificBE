@@ -11,7 +11,6 @@ import org.hibernate.annotations.Nationalized;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -69,6 +68,12 @@ public class Voucher extends BaseEntity {
     @Size(max = 20)
     @Column(name = "apply_to", length = 20)
     private String applyTo;
+
+    @Column(name = "max_discount_amount", precision = 10, scale = 2)
+    private BigDecimal maxDiscountAmount;
+
+    @Column(name = "first_time_user_only")
+    private Boolean firstTimeUserOnly;
 
 
     @OneToMany(mappedBy = "voucher")

@@ -1,6 +1,7 @@
 package com.pacific.pacificbe.scheduler;
 
 import com.pacific.pacificbe.model.Booking;
+import com.pacific.pacificbe.model.TourDetail;
 import com.pacific.pacificbe.repository.BookingRepository;
 import com.pacific.pacificbe.utils.JavaMail;
 import com.pacific.pacificbe.utils.enums.BookingStatus;
@@ -9,11 +10,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.lang.reflect.Array;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
@@ -27,11 +29,22 @@ public class BookingScheduler {
     private final BookingRepository bookingRepository;
     private final JavaMail javaMail;
 
+    // Chạy lúc 0h mỗi ngày
+    @Scheduled(cron = "0 0 0 * * ?")
+    public void cleanOldBookings() {
+        LocalDate yearAgo = LocalDate.now().minusYears(1);
+        List<Booking> oldBookings = bookingRepository.findByStatusAndTourDetail_EndDate(
+                BookingStatus.COMPLETED.toString(), yearAgo);
+        bookingRepository.deleteAll(oldBookings);
+    }
+
+    @Transactional
     @Scheduled(fixedDelay = 300000)
     public void updateBookingStatus() {
         LocalDateTime now = LocalDateTime.now();
         List<String> statusList = Arrays.asList(
                 BookingStatus.PENDING.toString(),
+                BookingStatus.PAID.toString(),
                 BookingStatus.ON_GOING.toString()
         );
         List<Booking> bookings = bookingRepository.findByStatusIn(statusList);

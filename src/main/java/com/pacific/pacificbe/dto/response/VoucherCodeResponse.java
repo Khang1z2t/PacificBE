@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class VoucherCodeResponse {
+    String voucherCode;
     boolean isValid;
     BigDecimal discountValue;
 }

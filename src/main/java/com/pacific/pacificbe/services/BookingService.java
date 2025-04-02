@@ -32,4 +32,5 @@ public interface BookingService {
     BookingResponse getBookingByBookingNo(String bookingNo);
 
     BookingResponse bookingTour(String tourDetailId, BookingRequest request);
+
 }

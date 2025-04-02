@@ -201,7 +201,7 @@ public class VNPAYServiceImpl implements VNPAYService {
                 booking.setStatus(BookingStatus.PAID.toString());
                 bookingRepository.save(booking);
                 // Gửi email xác nhận thanh toán thành công
-                javaMail.sendMailBooking(user, bookingNo, booking.getTourDetail().getTour().getTitle(), booking.getTourDetail().getStartDate().toString(), payment.getTotalAmount().toString());
+                javaMail.sendMailBooking(user, bookingNo, booking.getTourDetail().getTour().getTitle(), booking.getCreatedAt().toString(), payment.getTotalAmount().toString());
 
                 return new RedirectView(UrlMapping.PAYMENT_SUCCESS);
             } else {

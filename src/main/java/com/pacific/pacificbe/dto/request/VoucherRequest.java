@@ -22,6 +22,8 @@ public class VoucherRequest {
     private Integer quantity;
     private Integer userLimit;
     private BigDecimal minOrderValue;
+    private BigDecimal maxDiscountAmount;
+    private Boolean firstTimeUserOnly;
     private String status;
     private LocalDateTime startDate;
     private LocalDateTime endDate;

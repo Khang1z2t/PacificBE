@@ -130,4 +130,9 @@ public interface BookingRepository extends JpaRepository<Booking, String> {
                                 Sort sort);
 
     List<Booking> findByStatusIn(List<String> statuses);
+
+    @Query("select b from Booking b where b.status = ?1 and b.tourDetail.endDate = ?2")
+    List<Booking> findByStatusAndTourDetail_EndDate(String status, LocalDate endDate);
+
+    long countByUser(User user);
 }
