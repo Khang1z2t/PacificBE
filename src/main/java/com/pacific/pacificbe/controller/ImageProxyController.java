@@ -25,7 +25,9 @@ public class ImageProxyController {
     public ResponseEntity<byte[]> proxyImage(@PathVariable String fileId) {
         try {
             var imageData = imageService.getImage(fileId);
+//            var mediaType = imageService.getImageMediaType(fileId);
             return ResponseEntity.ok()
+                    .contentType(MediaType.IMAGE_JPEG)
                     .header("Cache-Control", "max-age=3600")
                     .body(imageData);
 

@@ -33,6 +33,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -227,7 +228,9 @@ public class BookingServiceImpl implements BookingService {
         }
         Voucher voucher = booking.getVoucher();
         BigDecimal discountValue = voucher.getDiscountValue();
-        BigDecimal discount = totalPrice.multiply(discountValue).divide(BigDecimal.valueOf(100));
+        BigDecimal discount = totalPrice
+                .multiply(discountValue)
+                .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
         return totalPrice.subtract(discount);
     }
 
