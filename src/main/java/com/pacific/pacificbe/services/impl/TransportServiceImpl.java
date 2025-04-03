@@ -61,10 +61,7 @@ public class TransportServiceImpl implements TransportService {
 
         // Lưu thông tin ảnh vào bảng Image nếu có
         if (imageUrl != null) {
-            Image newImage = new Image();
-            newImage.setImageUrl(imageUrl);
-            newImage.setTransport(transport);
-            imageRepository.save(newImage);
+//            transport.setImageURL();
         }
 
         return transportMapper.toResponse(transport);
@@ -116,12 +113,6 @@ public class TransportServiceImpl implements TransportService {
                 .orElseThrow(() -> new AppException(ErrorCode.TRANSPORT_NOT_FOUND));
 
         String imageUrl = uploadImage(image);
-
-        // Lưu thông tin ảnh mới vào bảng Image
-        Image newImage = new Image();
-        newImage.setImageUrl(imageUrl);
-        newImage.setTransport(transport);
-        imageRepository.save(newImage);
 
         // Cập nhật imageURL chính của transport (nếu cần)
         if (transport.getImageURL() == null || transport.getImageURL().isEmpty()) {

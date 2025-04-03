@@ -59,6 +59,4 @@ public class Transport extends BaseEntity {
     @OneToMany(mappedBy = "transport", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<TourDetail> tourDetails = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "transport", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Image> images = new LinkedHashSet<>();
 }
