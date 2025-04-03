@@ -145,7 +145,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public String sendEmailVerify(String email) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_AUTHENTICATED));
         String otp = otpService.generateOtp(email);
         javaMail.sendMailVerify(user, otp);
         return "Gửi email thành công";

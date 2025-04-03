@@ -53,7 +53,7 @@ public class AuthController {
 
     @PostMapping(UrlMapping.SEND_VERIFY_MAIL)
     @Operation(summary = "API gửi mail xác thực")
-    ResponseEntity<?> sendVerifyMail(@RequestBody String email) {
+    ResponseEntity<?> sendVerifyMail(@RequestParam String email) {
         return ResponseEntity.ok(authService.sendEmailVerify(email));
     }
 
