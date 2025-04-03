@@ -5,7 +5,6 @@ import com.pacific.pacificbe.dto.response.report.Revenue;
 import com.pacific.pacificbe.dto.response.report.TourAndBookReport;
 import com.pacific.pacificbe.model.Booking;
 import com.pacific.pacificbe.model.User;
-import jakarta.validation.constraints.Size;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

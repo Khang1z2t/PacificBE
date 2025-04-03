@@ -5,9 +5,7 @@ import com.pacific.pacificbe.dto.response.TransportResponse;
 import com.pacific.pacificbe.exception.AppException;
 import com.pacific.pacificbe.exception.ErrorCode;
 import com.pacific.pacificbe.mapper.TransportMapper;
-import com.pacific.pacificbe.model.Image;
 import com.pacific.pacificbe.model.Transport;
-import com.pacific.pacificbe.repository.ImageRepository;
 import com.pacific.pacificbe.repository.TransportRepository;
 import com.pacific.pacificbe.services.GoogleDriveService;
 import com.pacific.pacificbe.services.TransportService;
@@ -28,7 +26,6 @@ public class TransportServiceImpl implements TransportService {
     private final TransportRepository transportRepository;
     private final TransportMapper transportMapper;
     private final GoogleDriveService googleDriveService;
-    private final ImageRepository imageRepository;
 
     @Override
     public List<TransportResponse> getAllTransports() {
@@ -60,9 +57,9 @@ public class TransportServiceImpl implements TransportService {
         transport = transportRepository.save(transport);
 
         // Lưu thông tin ảnh vào bảng Image nếu có
-        if (imageUrl != null) {
+//        if (imageUrl != null) {
 //            transport.setImageURL();
-        }
+//        }
 
         return transportMapper.toResponse(transport);
     }

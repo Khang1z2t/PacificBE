@@ -32,7 +32,6 @@ public class BookingScheduler {
 
     private final BookingRepository bookingRepository;
     private final JavaMail javaMail;
-    private final TourDetailRepository tourDetailRepository;
 
     // Chạy lúc 0h mỗi ngày
     @Scheduled(cron = "0 0 0 * * ?")
