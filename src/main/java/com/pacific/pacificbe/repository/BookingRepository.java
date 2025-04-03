@@ -129,7 +129,8 @@ public interface BookingRepository extends JpaRepository<Booking, String> {
                                 @Param("maxAmount") BigDecimal maxAmount,
                                 Sort sort);
 
-    List<Booking> findByStatusIn(List<String> statuses);
+    @Query("SELECT b FROM Booking b JOIN FETCH b.tourDetail WHERE b.status IN :statusList")
+    List<Booking> findByStatusIn(@Param("statusList") List<String> statusList);
 
     @Query("select b from Booking b where b.status = ?1 and b.tourDetail.endDate = ?2")
     List<Booking> findByStatusAndTourDetail_EndDate(String status, LocalDate endDate);

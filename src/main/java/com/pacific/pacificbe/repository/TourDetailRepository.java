@@ -2,6 +2,7 @@ package com.pacific.pacificbe.repository;
 
 import com.pacific.pacificbe.dto.response.report.Revenue;
 import com.pacific.pacificbe.dto.response.showTour.DetailTourResponse;
+import com.pacific.pacificbe.model.Booking;
 import com.pacific.pacificbe.model.TourDetail;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -45,4 +46,6 @@ public interface TourDetailRepository extends JpaRepository<TourDetail, String> 
             String tourId,
             String months
     );
+
+    TourDetail findByBookings(Booking bookings);
 }
