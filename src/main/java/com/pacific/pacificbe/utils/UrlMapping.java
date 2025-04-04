@@ -33,8 +33,10 @@ public class UrlMapping {
     public static final String GET_ALL_TRANSPORTS = "/all";
     public static final String GET_TRANSPORT_BY_ID = "/{id}";
     public static final String ADD_TRANSPORT = "/add";
-    public static final String UPDATE_TRANSPORT = "/update";
+    public static final String UPDATE_TRANSPORT = "/update/{id}";
     public static final String DELETE_TRANSPORT = "/delete/{id}";
+    public static final String UPDATE_STATUS_TRANSPORT = "/updateStatus/{id}";
+    public static final String ADD_TRANSPORT_IMAGES = "/add-images/{id}";
 
     /*============================ End Transport API ===================================*/
 
@@ -43,8 +45,10 @@ public class UrlMapping {
     public static final String GET_ALL_HOTELS = "/all";
     public static final String GET_HOTEL_BY_ID = "/{id}";
     public static final String ADD_HOTEL = "/add";
-    public static final String UPDATE_HOTEL = "/update";
+    public static final String UPDATE_HOTEL = "/update/{id}";
     public static final String DELETE_HOTEL = "/delete/{id}";
+    public static final String ADD_HOTEL_WITH_IMAGE = "/add-with-image";
+    public static final String UPDATE_HOTEL_IMAGE = "/update-image/{id}";
 
     /*============================ End Hotel API ===================================*/
 

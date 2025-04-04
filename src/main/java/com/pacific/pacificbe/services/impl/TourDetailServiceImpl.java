@@ -15,11 +15,11 @@ import com.pacific.pacificbe.utils.enums.TourStatus;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -31,7 +31,6 @@ public class TourDetailServiceImpl implements TourDetailService {
     private final HotelRepository hotelRepository;
     private final TransportRepository transportRepository;
     private final TourDetailRepository tourDetailRepository;
-    private final TourDetailMapper tourDetailMapper;
     private final TourMapper tourMapper;
     private final ItineraryRepository itineraryRepository;
     private final GuideRepository guideRepository;
@@ -45,7 +44,9 @@ public class TourDetailServiceImpl implements TourDetailService {
         TourDetail tourDetail = new TourDetail();
         tourDetail.setPriceAdults(request.getPriceAdults());
         tourDetail.setPriceChildren(request.getPriceChildren());
-        tourDetail.setStartDate(request.getStartDate());
+        LocalDateTime startDate = LocalDateTime.of(
+                request.getStartDate(), request.getStartTime());
+        tourDetail.setStartDate(startDate);
         tourDetail.setEndDate(request.getEndDate());
         tourDetail.setQuantity(request.getQuantity());
         tourDetail.setTour(tour);

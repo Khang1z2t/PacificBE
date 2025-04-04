@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 public class ImageProxyController {
-    private final GoogleImageClient googleImageClient;
     private final ImageService imageService;
 
     @GetMapping(UrlMapping.PROXY_IMAGE)
@@ -28,7 +27,7 @@ public class ImageProxyController {
 //            var mediaType = imageService.getImageMediaType(fileId);
             return ResponseEntity.ok()
                     .contentType(MediaType.IMAGE_JPEG)
-                    .header("Cache-Control", "max-age=3600")
+                    .header("Cache-Control", "max-age=86400")
                     .body(imageData);
 
         } catch (Exception e) {

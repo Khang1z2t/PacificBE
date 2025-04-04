@@ -10,7 +10,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -32,7 +32,7 @@ public class TourDetail extends BaseEntity {
 
     @NotNull
     @Column(name = "end_date", nullable = false)
-    private LocalDate endDate;
+    private LocalDateTime endDate;
 
     @Column(name = "price_adults", precision = 10, scale = 2)
     private BigDecimal priceAdults;
@@ -49,7 +49,7 @@ public class TourDetail extends BaseEntity {
 
     @NotNull
     @Column(name = "start_date", nullable = false)
-    private LocalDate startDate;
+    private LocalDateTime startDate;
 
     @Size(max = 50)
     @Column(name = "status", length = 50)

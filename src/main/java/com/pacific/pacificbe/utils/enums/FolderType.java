@@ -6,4 +6,6 @@ public enum FolderType {
     TOUR,
     TOUR_DETAIL,
     RESOURCES,
+    TRANSPORTS,
+    HOTELS,
 }

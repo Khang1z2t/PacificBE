@@ -16,8 +16,8 @@ public class TourDetailResponse {
     String id;
     BigDecimal priceAdults;
     BigDecimal priceChildren;
-    String startDate;
-    String endDate;
+    LocalDateTime startDate;
+    LocalDateTime endDate;
     Integer quantity;
 
     List<ItineraryResponse> itineraries;

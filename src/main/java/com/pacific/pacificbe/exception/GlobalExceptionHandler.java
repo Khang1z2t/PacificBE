@@ -5,6 +5,7 @@ import com.pacific.pacificbe.dto.ApiResponse;
 import jakarta.validation.ConstraintViolation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -29,7 +30,9 @@ public class GlobalExceptionHandler {
         ApiResponse apiResponse = new ApiResponse();
         apiResponse.setMessage(ErrorCode.UNCATEGORIZED_EXCEPTION.getMessage());
 
-        return ResponseEntity.badRequest().body(apiResponse);
+        return ResponseEntity.badRequest()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(apiResponse);
     }
 
     @ExceptionHandler(value = AppException.class)

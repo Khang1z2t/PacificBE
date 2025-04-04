@@ -8,16 +8,11 @@ import jakarta.mail.internet.MimeMessage;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import lombok.experimental.NonFinal;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.core.io.ByteArrayResource;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -58,28 +53,11 @@ public class JavaMail {
 
             javaMailSender.send(message);
         } catch (MessagingException e) {
+            log.error("Error while sending email: ", e);
             throw new AppException(ErrorCode.CANT_SEND_MAIL);
             // Handle the exception appropriately
         }
     }
-
-//    public void sendEmail(String to, String subject, String body) {
-//        MimeMessage message = javaMailSender.createMimeMessage();
-//        MimeMessageHelper helper;
-//
-//        try {
-//            helper = new MimeMessageHelper(message, true, "UTF-8");
-//            helper.setTo(to);
-//            helper.setSubject(subject);
-//            helper.setText(body, true); // true để hỗ trợ HTML content
-//
-//            javaMailSender.send(message);
-//            log.info("Email đã gửi đến: {}", to);
-//        } catch (MessagingException e) {
-//            log.error("Lỗi khi gửi email đến {}: {}", to, e.getMessage());
-//            throw new AppException(ErrorCode.CANT_SEND_MAIL);
-//        }
-//    }
 
     public void sendMailVerify(User user, String otp) {
         String subjectEmail = otp + " là mã xác nhận email của bạn";
