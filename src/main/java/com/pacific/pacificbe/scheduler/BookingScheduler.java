@@ -5,6 +5,7 @@ import com.pacific.pacificbe.model.TourDetail;
 import com.pacific.pacificbe.repository.BookingRepository;
 import com.pacific.pacificbe.repository.TourDetailRepository;
 import com.pacific.pacificbe.utils.JavaMail;
+import com.pacific.pacificbe.utils.UrlMapping;
 import com.pacific.pacificbe.utils.enums.BookingStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -75,22 +76,24 @@ public class BookingScheduler {
                     }
                 }
                 // Trường hợp 2: Đang diễn ra
-                else if (now.isAfter(booking.getTourDetail().getStartDate().atStartOfDay()) &&
-                        now.isBefore(booking.getTourDetail().getEndDate().atStartOfDay())) {
+                else if (now.isAfter(booking.getTourDetail().getStartDate()) &&
+                        now.isBefore(booking.getTourDetail().getEndDate())) {
                     if (!booking.getStatus().equals(BookingStatus.ON_GOING.toString())) {
                         booking.setStatus(BookingStatus.ON_GOING.toString());
                         bookingRepository.save(booking);
+                        log.info("Booking đã chuyển sang trạng thái ON_GOING: {}", booking.getBookingNo());
                     }
                 }
                 // Trường hợp 3: Hoàn thành
-                else if (now.isAfter(booking.getTourDetail().getEndDate().atStartOfDay())) {
+                else if (now.isAfter(booking.getTourDetail().getEndDate())) {
                     if (!booking.getStatus().equals(BookingStatus.COMPLETED.toString())) {
                         booking.setStatus(BookingStatus.COMPLETED.toString());
                         bookingRepository.save(booking);
+                        log.info("Booking đã chuyển sang trạng thái COMPLETED: {}", booking.getBookingNo());
                     }
                 }
             } catch (Exception e) {
-                log.info("Error while schedule booking ", e);
+                log.warn("Error while schedule booking: ", e);
             }
         }
     }
@@ -106,6 +109,7 @@ public class BookingScheduler {
             // Formatter cho ngày và giờ (dùng cho createdAt)
             DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
+            emailBody = emailBody.replace("{{homePageUrl}}", UrlMapping.FE_URL);
             emailBody = emailBody.replace("{{firstName}}", booking.getUser().getFirstName());
             emailBody = emailBody.replace("{{lastName}}", booking.getUser().getLastName());
             emailBody = emailBody.replace("{{bookingNo}}", booking.getBookingNo());

@@ -6,6 +6,8 @@ import lombok.experimental.FieldDefaults;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Data
@@ -16,8 +18,9 @@ import java.util.List;
 public class CreateTourDetailRequest {
     @Schema(description = "Ngày bắt đầu tour", example = "2025-12-01")
     LocalDate startDate;
+    LocalTime startTime;
     @Schema(description = "Ngày kết thúc tour", example = "2025-12-03")
-    LocalDate endDate;
+    LocalDateTime endDate;
     @Schema(description = "Giá tour cho người lớn", example = "1000000")
     BigDecimal priceAdults;
     @Schema(description = "Giá tour cho trẻ em", example = "500000")

@@ -20,6 +20,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -45,7 +46,9 @@ public class TourDetailServiceImpl implements TourDetailService {
         TourDetail tourDetail = new TourDetail();
         tourDetail.setPriceAdults(request.getPriceAdults());
         tourDetail.setPriceChildren(request.getPriceChildren());
-        tourDetail.setStartDate(request.getStartDate());
+        LocalDateTime startDate = LocalDateTime.of(
+                request.getStartDate(), request.getStartTime());
+        tourDetail.setStartDate(startDate);
         tourDetail.setEndDate(request.getEndDate());
         tourDetail.setQuantity(request.getQuantity());
         tourDetail.setTour(tour);
