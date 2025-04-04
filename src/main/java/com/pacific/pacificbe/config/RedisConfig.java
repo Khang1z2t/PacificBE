@@ -38,7 +38,7 @@ public class RedisConfig {
         RedisCacheConfiguration imagesCacheConfig = RedisCacheConfiguration.defaultCacheConfig()
                 .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
                 .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(RedisSerializer.byteArray()))
-                .entryTtl(Duration.ofHours(1))
+                .entryTtl(Duration.ofHours(720)) // 1 tháng = 30 ngày = 720 giờ
                 .disableCachingNullValues();
 
         Map<String, RedisCacheConfiguration> cacheConfigurations = new HashMap<>();

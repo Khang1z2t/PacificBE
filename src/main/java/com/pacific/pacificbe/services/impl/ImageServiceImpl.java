@@ -27,7 +27,7 @@ public class ImageServiceImpl implements ImageService {
                 log.warn("Image bytes are null for fileId: {}", fileId);
                 return null;
             }
-            log.info("Successfully fetched image for fileId: {}, size: {}", fileId, imageBytes);
+            log.info("Successfully fetched image for fileId: {}", fileId);
             return imageBytes.body().asInputStream().readAllBytes();
         } catch (Exception e) {
             log.error("Error fetching image from Google for fileId {}: {}", fileId, e.getMessage());
