@@ -58,28 +58,11 @@ public class JavaMail {
 
             javaMailSender.send(message);
         } catch (MessagingException e) {
+            log.error("Error while sending email: ", e);
             throw new AppException(ErrorCode.CANT_SEND_MAIL);
             // Handle the exception appropriately
         }
     }
-
-//    public void sendEmail(String to, String subject, String body) {
-//        MimeMessage message = javaMailSender.createMimeMessage();
-//        MimeMessageHelper helper;
-//
-//        try {
-//            helper = new MimeMessageHelper(message, true, "UTF-8");
-//            helper.setTo(to);
-//            helper.setSubject(subject);
-//            helper.setText(body, true); // true để hỗ trợ HTML content
-//
-//            javaMailSender.send(message);
-//            log.info("Email đã gửi đến: {}", to);
-//        } catch (MessagingException e) {
-//            log.error("Lỗi khi gửi email đến {}: {}", to, e.getMessage());
-//            throw new AppException(ErrorCode.CANT_SEND_MAIL);
-//        }
-//    }
 
     public void sendMailVerify(User user, String otp) {
         String subjectEmail = otp + " là mã xác nhận email của bạn";

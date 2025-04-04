@@ -6,12 +6,12 @@
     <title>Nhắc nhở thanh toán đơn hàng</title>
     <style>
         body {
-            font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #eef2f6;
-            color: #2d3748;
-            line-height: 1.5;
+            background-color: #f4f7fa;
+            color: #333333;
+            line-height: 1.6;
         }
 
         .container {
@@ -36,6 +36,8 @@
             max-width: 180px;
             height: auto;
             margin-bottom: 15px;
+            border: 2px solid #ffffff;
+            border-radius: 8px;
             filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
         }
 
@@ -144,8 +146,10 @@
 <body>
 <div class="container">
     <div class="header">
-        <img src="https://lh3.googleusercontent.com/d/1IQghoy4jSZeOKcHOvcZWKFy8muLXGFtD" alt="Pacific Travel"
-             class="logo">
+        <a href="{{homePageUrl}}" target="_blank">
+            <img src="https://lh3.googleusercontent.com/d/1IQghoy4jSZeOKcHOvcZWKFy8muLXGFtD" alt="Pacific Travel"
+                 class="logo">
+        </a>
         <h1>Nhắc nhở thanh toán đơn hàng quá hạn</h1>
     </div>
     <div class="content">
@@ -160,7 +164,7 @@
             <p><strong>Số người:</strong> {{totalNumber}} (Người lớn: {{adultNum}}, Trẻ em: {{childrenNum}})</p>
         </div>
         <p class="total">Tổng số tiền cần thanh toán: <strong>{{totalAmount}}</strong></p>
-<!--        <p class="payment-link"><a href="{{paymentLink}}">Thanh toán ngay</a></p>-->
+        <!--        <p class="payment-link"><a href="{{paymentLink}}">Thanh toán ngay</a></p>-->
         <p class="warning">Lưu ý: Booking sẽ bị hủy nếu không được thanh toán trước {{deadline}}.</p>
     </div>
     <div class="footer">

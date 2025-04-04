@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Xác nhận thanh toán thành công</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7fa;
+            color: #333333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 30px auto;
+            background: #ffffff;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #f38b11, #ffb111);
+            padding: 20px 30px;
+            text-align: left;
+            color: #ffffff;
+            border-bottom: 4px solid #ffffff;
+        }
+
+        .header img.logo {
+            max-width: 150px;
+            height: auto;
+            vertical-align: middle;
+            border: 2px solid #ffffff;
+            border-radius: 8px;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+        }
+
+        .header h1 {
+            display: inline-block;
+            margin: 0 0 0 15px;
+            font-size: 24px;
+            font-weight: 700;
+            vertical-align: middle;
+        }
+
+        .content {
+            padding: 30px;
+            background: #fafafa;
+        }
+
+        .content p {
+            font-size: 15px;
+            margin: 10px 0;
+            color: #555555;
+        }
+
+        .content strong {
+            color: #222222;
+            font-weight: 600;
+        }
+
+        .tour-info {
+            background: #ffffff;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border: 2px solid #fff3e0;
+            position: relative;
+        }
+
+        .tour-info::before {
+            content: "✔";
+            position: absolute;
+            top: -12px;
+            left: 20px;
+            background: #f38b11;
+            color: #ffffff;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 14px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .tour-info strong {
+            color: #f38b11;
+        }
+
+        .total {
+            text-align: center;
+            font-size: 20px;
+            font-weight: 700;
+            color: #f38b11;
+            margin: 20px 0;
+            padding: 10px;
+            background: #fff3e0;
+            border-radius: 8px;
+        }
+
+        .booking-link {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .booking-link a {
+            display: inline-block;
+            padding: 12px 25px;
+            background: #f38b11;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 15px;
+            transition: background 0.3s ease, box-shadow 0.2s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .booking-link a:hover {
+            background: #e07b00;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .footer {
+            background: #f38b11;
+            color: #ffffff;
+            text-align: center;
+            padding: 15px;
+            font-size: 13px;
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+        }
+
+        .footer a {
+            color: #ffffff;
+            text-decoration: underline;
+            font-weight: 500;
+        }
+
+        .footer a:hover {
+            color: #fff3e0;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <a href="{{homePageUrl}}" target="_blank">
+            <img src="https://lh3.googleusercontent.com/d/1IQghoy4jSZeOKcHOvcZWKFy8muLXGFtD" alt="Pacific Travel"
+                 class="logo">
+        </a>
+        <h1>Xác nhận thanh toán thành công</h1>
+    </div>
+    <div class="content">
+        <p>Xin chào <strong>{{firstName}} {{lastName}}</strong>,</p>
+        <p>Cảm ơn quý khách đã hoàn tất thanh toán cho đơn booking <strong>{{bookingNo}}</strong>. Chỗ của quý khách đã
+            được xác nhận thành công! Dưới đây là thông tin chi tiết:</p>
+        <div class="tour-info">
+            <p><strong>Tên tour:</strong> {{tourTitle}}</p>
+            <p><strong>Thời gian:</strong> {{startTime}}, {{startDate}} - {{endDate}}</p>
+            <p><strong>Địa điểm khởi hành:</strong> Công viên phần mềm Quang Trung, Quận 12, Hồ Chí Minh</p>
+            <p><strong>Số người:</strong> {{peopleInfo}}</p>
+        </div>
+        <p class="total">Tổng số tiền đã thanh toán: <strong>{{totalAmount}}</strong></p>
+        <p class="booking-link">
+            <a href="{{bookingLink}}">Xem thông tin booking của bạn</a>
+        </p>
+    </div>
+    <div class="footer">
+        <p>Chúng tôi rất hân hạnh được phục vụ quý khách!</p>
+        <p>Liên hệ: <a href="mailto:pacific.musketeers.tni@gmail.com">pacific.musketeers.tni@gmail.com</a> |
+            Hotline: <a href="tel:0865399254">0865399254</a></p>
+    </div>
+</div>
+</body>
+</html>

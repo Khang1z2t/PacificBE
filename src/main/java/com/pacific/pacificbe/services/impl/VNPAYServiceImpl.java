@@ -7,6 +7,7 @@ import com.pacific.pacificbe.exception.AppException;
 import com.pacific.pacificbe.exception.ErrorCode;
 import com.pacific.pacificbe.model.Booking;
 import com.pacific.pacificbe.model.Payment;
+import com.pacific.pacificbe.model.TourDetail;
 import com.pacific.pacificbe.repository.BookingRepository;
 import com.pacific.pacificbe.repository.PaymentRepository;
 import com.pacific.pacificbe.repository.UserRepository;
@@ -20,6 +21,8 @@ import com.pacific.pacificbe.utils.enums.PaymentStatus;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -27,9 +30,13 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class VNPAYServiceImpl implements VNPAYService {
@@ -165,7 +172,6 @@ public class VNPAYServiceImpl implements VNPAYService {
         return "00".equals(vnp_TransactionStatus) ? 1 : 0;
     }
 
-
     // Phương thức nội bộ để xử lý callback
     private RedirectView handleVnpayReturn(CheckOutRequest request) {
         return paymentService.callBackPayment(request);
@@ -181,30 +187,33 @@ public class VNPAYServiceImpl implements VNPAYService {
         String bookingNo = parts[1];
         var user = userRepository.findById(userId).orElseThrow(
                 () -> new AppException(ErrorCode.USER_NOT_FOUND));
-        var bookingOpt = bookingRepository.findByBookingNo(bookingNo);
-        if (bookingOpt.isPresent()) {
-            Booking booking = bookingOpt.get();
-            if ("00".equals(request.getVnp_ResponseCode())) {
-                Payment payment = new Payment();
-                payment.setTransactionId(request.getVnp_TransactionNo());
-                payment.setActive(true);
-                payment.setTotalAmount(
-                        new BigDecimal(request.getVnp_Amount())
-                                .divide(new BigDecimal(100), RoundingMode.HALF_UP)
-                                .setScale(2, RoundingMode.HALF_UP)
-                );
-                payment.setStatus(PaymentStatus.COMPLETED.toString());
-                payment.setUser(user);
-                payment.setNote(bookingNo);
-                paymentRepository.save(payment);
+//        tối giản code, hay vì return lỗi ở dưới thì return ở trên
+        var booking = bookingRepository.findByBookingNo(bookingNo)
+                .orElseThrow(() -> new AppException(ErrorCode.BOOKING_NOT_FOUND));
 
-                booking.setStatus(BookingStatus.PAID.toString());
-                bookingRepository.save(booking);
-                // Gửi email xác nhận thanh toán thành công
-                javaMail.sendMailBooking(user, bookingNo, booking.getTourDetail().getTour().getTitle(), booking.getCreatedAt().toString(), payment.getTotalAmount().toString());
+        if ("00".equals(request.getVnp_ResponseCode())) {
+            Payment payment = new Payment();
+            payment.setTransactionId(request.getVnp_TransactionNo());
+            payment.setActive(true);
+            payment.setTotalAmount(
+                    new BigDecimal(request.getVnp_Amount())
+                            .divide(new BigDecimal(100), RoundingMode.HALF_UP)
+                            .setScale(2, RoundingMode.HALF_UP)
+            );
+            payment.setStatus(PaymentStatus.COMPLETED.toString());
+            payment.setUser(user);
+            payment.setNote(bookingNo);
+            paymentRepository.save(payment);
 
-                return new RedirectView(UrlMapping.PAYMENT_SUCCESS);
-            } else {
+            booking.setStatus(BookingStatus.PAID.toString());
+            bookingRepository.save(booking);
+            // Gửi email xác nhận thanh toán thành công
+            javaMail.sendEmail(user.getEmail(),
+                    "Xác nhận thanh toán thành công cho booking: " + booking.getBookingNo(),
+                    getBookingConfirm(booking));
+            log.info("Gửi email xác nhận thanh toán thành công cho booking: {}", booking.getBookingNo());
+            return new RedirectView(UrlMapping.PAYMENT_SUCCESS);
+        } else {
 //                Payment payment = new Payment();
 //                payment.setTransactionId(request.getVnp_TransactionNo());
 //                payment.setActive(true);
@@ -215,10 +224,51 @@ public class VNPAYServiceImpl implements VNPAYService {
 //                paymentRepository.save(payment);
 //                booking.setStatus(BookingStatus.PENDING.toString());
 //                bookingRepository.save(booking);
-                return new RedirectView(UrlMapping.PAYMENT_FAIL);
+            return new RedirectView(UrlMapping.PAYMENT_FAIL);
+        }
+    }
+
+    private String getBookingConfirm(Booking booking) {
+        try {
+            Path path = new ClassPathResource("mail/booking_confirm.html").getFile().toPath();
+            String emailBody = Files.readString(path, StandardCharsets.UTF_8);
+
+            emailBody = emailBody.replace("{{homePageUrl}}", UrlMapping.FE_URL);
+            emailBody = emailBody.replace("{{firstName}}", booking.getUser().getFirstName());
+            emailBody = emailBody.replace("{{lastName}}", booking.getUser().getLastName());
+            emailBody = emailBody.replace("{{bookingNo}}", booking.getBookingNo());
+
+            // Formatter cho ngày (không có giờ)
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            // Formatter cho giờ
+            DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+
+            TourDetail tourDetail = booking.getTourDetail();
+            emailBody = emailBody.replace("{{tourTitle}}", tourDetail.getTour().getTitle());
+            emailBody = emailBody.replace("{{startTime}}", tourDetail.getStartDate().format(timeFormatter));
+            emailBody = emailBody.replace("{{startDate}}", tourDetail.getStartDate().format(dateFormatter));
+            emailBody = emailBody.replace("{{endDate}}", tourDetail.getEndDate().format(dateFormatter));
+            String peopleInfo;
+            int childrenNum = booking.getChildrenNum() != null ? booking.getChildrenNum() : 0;
+            if (childrenNum > 0) {
+                peopleInfo = booking.getTotalNumber() + " (Người lớn: " + booking.getAdultNum() + ", Trẻ em: " + childrenNum + ")";
+            } else {
+                peopleInfo = booking.getTotalNumber() + " (Người lớn: " + booking.getAdultNum() + ")";
             }
-        } else {
-            throw new AppException(ErrorCode.BOOKING_NOT_FOUND);
+            emailBody = emailBody.replace("{{peopleInfo}}", peopleInfo);
+
+            BigDecimal roundedAmount = booking.getTotalAmount()
+                    .divide(BigDecimal.valueOf(1000), 0, RoundingMode.HALF_UP)
+                    .multiply(BigDecimal.valueOf(1000));
+            emailBody = emailBody.replace("{{totalAmount}}", String.format("%,d VND", roundedAmount.longValue()));
+
+            String bookingUrl = UrlMapping.FE_URL + "/booking/" + booking.getBookingNo();
+
+            emailBody = emailBody.replace("{{bookingLink}}", bookingUrl);
+            return emailBody;
+        } catch (Exception e) {
+            log.warn("Error while getting booking confirm: ", e);
+            throw new AppException(ErrorCode.CANT_SEND_MAIL);
         }
     }
 }
