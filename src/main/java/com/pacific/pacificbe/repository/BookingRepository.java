@@ -1,11 +1,14 @@
 package com.pacific.pacificbe.repository;
 
+import com.pacific.pacificbe.dto.TopTour;
 import com.pacific.pacificbe.dto.response.report.BookingRevenueReportDTO;
 import com.pacific.pacificbe.dto.response.report.Revenue;
 import com.pacific.pacificbe.dto.response.report.TourAndBookReport;
 import com.pacific.pacificbe.model.Booking;
 import com.pacific.pacificbe.model.User;
 import jakarta.validation.constraints.Size;
+
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -25,7 +28,7 @@ public interface BookingRepository extends JpaRepository<Booking, String> {
                 SUM(b.total_amount) AS totalRevenue
             FROM booking b
             WHERE YEAR(b.created_at) = :years
-                AND (:bookingStatus IS NULL OR LOWER(b.booking_status) LIKE LOWER(CONCAT('%', :bookingStatus, '%')))
+                AND (:bookingStatus IS NULL OR LOWER(b.status) LIKE LOWER(CONCAT('%', :bookingStatus, '%')))
                 GROUP BY MONTH(b.created_at), YEAR(b.created_at)
                 ORDER BY bookingMonth
             """, nativeQuery = true)
@@ -40,7 +43,7 @@ public interface BookingRepository extends JpaRepository<Booking, String> {
                 year(b.created_at) AS booking_year,
                 SUM(b.total_amount) AS total_revenue
             FROM booking b
-            WHERE (:bookingStatus IS NULL OR LOWER(b.booking_status) LIKE LOWER(CONCAT('%', :bookingStatus, '%')))
+            WHERE (:bookingStatus IS NULL OR LOWER(b.status) LIKE LOWER(CONCAT('%', :bookingStatus, '%')))
                 GROUP BY year(b.created_at)
                 ORDER BY booking_year
             """, nativeQuery = true)
@@ -50,24 +53,24 @@ public interface BookingRepository extends JpaRepository<Booking, String> {
 
     //      Doanh thu tour theo thời gian ...
     @Query(value = """
-                SELECT
-                    t.id AS tour_id,
-                    td.id AS tour_detail_id,
-                    SUM(b.total_amount) AS tourRevenue,
-                    FORMAT(b.created_at, 'dd/MM/yyyy') AS booking_date,
-                    b.booking_status
-                FROM tour t
-                    JOIN tour_details td ON t.id = td.tour_id
-                    JOIN booking b ON td.id = b.tour_detail_id
-                WHERE
-                    (:tourId IS NULL OR t.id = :tourId)
-                    AND (:bookingStatus IS NULL OR b.booking_status = :bookingStatus)
-                    AND (:startDate IS NULL OR :endDate IS NULL
-                    OR b.created_at BETWEEN :startDate AND :endDate)
-                GROUP BY
-                    td.id, t.id, FORMAT(b.created_at, 'dd/MM/yyyy'), b.booking_status
-                ORDER BY
-                    booking_date ASC
+                            SELECT
+                                t.id AS tour_id,
+                                t.title AS tourTitle,
+                                td.id AS tour_detail_id,
+                                SUM(b.total_amount) AS tourRevenue,
+                                FORMAT(b.created_at, 'dd/MM/yyyy') AS booking_date,
+                                b.status AS bookingStatus
+                            FROM tour t
+                                JOIN tour_details td ON t.id = td.tour_id
+                                JOIN booking b ON td.id = b.tour_detail_id
+                            WHERE
+                                (:tourId IS NULL OR t.id = :tourId)
+                                AND (:bookingStatus IS NULL OR b.status = :bookingStatus)
+            AND (:startDate IS NULL OR :endDate IS NULL OR b.created_at BETWEEN :startDate AND :endDate)
+                            GROUP BY
+                                td.id, t.id, t.title, FORMAT(b.created_at, 'dd/MM/yyyy'), b.status
+                            ORDER BY
+                                booking_date ASC
             """, nativeQuery = true)
     List<BookingRevenueReportDTO> getTourBookingsRevenue(
             @Param("tourId") String tourId,
@@ -135,4 +138,44 @@ public interface BookingRepository extends JpaRepository<Booking, String> {
     List<Booking> findByStatusAndTourDetail_EndDate(String status, LocalDate endDate);
 
     long countByUser(User user);
+
+    @Query("SELECT YEAR(b.createdAt) as year, SUM(b.totalAmount) as totalRevenue " +
+            "FROM Booking b " +
+            "WHERE b.status = 'COMPLETED' " +
+            "GROUP BY YEAR(b.createdAt) " +
+            "ORDER BY YEAR(b.createdAt) DESC")
+    List<Object[]> findYearlyRevenue();
+
+    @Query("SELECT b.status, COUNT(b) " +
+            "FROM Booking b " +
+            "GROUP BY b.status")
+    List<Object[]> findBookingStatusStats();
+
+    @Query("SELECT COUNT(b) FROM Booking b")
+    long bookingCountStats(); // Để tính tổng số booking
+
+    // Tổng số booking trong khoảng thời gian
+    @Query("SELECT COUNT(b) FROM Booking b WHERE b.createdAt >= :start AND b.createdAt <= :end")
+    long countBookingsInPeriod(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
+
+    // Tổng doanh thu trong khoảng thời gian
+    @Query("SELECT COALESCE(SUM(b.totalAmount), 0) FROM Booking b WHERE b.createdAt >= :start AND b.createdAt <= :end AND b.status = 'COMPLETED'")
+    BigDecimal getRevenueInPeriod(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
+
+    // Số lượng booking bị hủy trong khoảng thời gian
+    @Query("SELECT COUNT(b) FROM Booking b WHERE b.createdAt >= :start AND b.createdAt <= :end AND b.status = 'EXPIRED'")
+    long countCancelledBookingsInPeriod(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
+
+
+@Query("SELECT new com.pacific.pacificbe.dto.TopTour(" +
+        "td.tour.id, td.tour.title, COUNT(b)) " +
+        "FROM Booking b " +
+        "JOIN b.tourDetail td " +
+        "WHERE b.createdAt >= :startDate AND b.createdAt <= :endDate " +
+        "GROUP BY td.tour.id, td.tour.title " +
+        "ORDER BY COUNT(b) DESC")
+List<TopTour> getTopBookedTours(
+        @Param("startDate") LocalDateTime startDate,
+        @Param("endDate") LocalDateTime endDate,
+        Pageable pageable);
 }

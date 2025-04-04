@@ -122,7 +122,12 @@ public class UrlMapping {
     /* =========================== Start Report API ===================================== */
     public static final String REPORT = API + "/report";
     //    public static final String EXPORT_PDF = "/PDF";
-    public static final String GET_TOUR_BOOKING_COUNT = "/bookingCount/{tourId}";
+    public static final String GET_TOUR_BOOKING_COUNT = "/bookingCount";
+    public static final String GET_STATS = "/stats";
+    public static final String BOOKING_STATUS_STATS = "/booking-status-stats";
+    public static final String REVIEW_STATS = "/review-stats";
+    public static final String TOP_BOOKED_TOURS = "/top-booked";
+    public static final String DETAIL_REVIEW_STATS = "/review-detail-stats";
     public static final String REVENUE_BOOKING_MONTH = "/revenue/month";
     public static final String REVENUE_BOOKING_YEAR = "/revenue/year";
     public static final String REVENUE_BOOKING = "/revenue";

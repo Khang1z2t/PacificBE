@@ -1,12 +1,14 @@
 package com.pacific.pacificbe.controller;
 
 import java.time.LocalDate;
-import java.util.Base64;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.pacific.pacificbe.dto.ApiResponse;
+import com.pacific.pacificbe.dto.DetailRatingStats;
+import com.pacific.pacificbe.dto.TopTour;
+import com.pacific.pacificbe.dto.response.BookingStatusStats;
+import com.pacific.pacificbe.dto.response.RatingStats;
+import com.pacific.pacificbe.dto.response.RevenueStats;
 import com.pacific.pacificbe.dto.response.report.BookingRevenueReportDTO;
 import com.pacific.pacificbe.dto.response.report.Revenue;
 import com.pacific.pacificbe.dto.response.report.TourAndBookReport;
@@ -15,8 +17,6 @@ import com.pacific.pacificbe.services.BookingService;
 import com.pacific.pacificbe.services.TourService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,7 +38,7 @@ public class ReportController {
 
 	@GetMapping(UrlMapping.GET_TOUR_BOOKING_COUNT)
 	@Operation(summary = "Tìm kiếm số lần đặt tour")
-	public ResponseEntity<ApiResponse<List<TourBookingCount>>> searchTourBookingCounts(@PathVariable String tourId) {
+	public ResponseEntity<ApiResponse<List<TourBookingCount>>> searchTourBookingCounts(@RequestParam String tourId) {
 		return ResponseEntity.ok(new ApiResponse<>(
 				200, "Lấy chi tiết tour theo ngày thành công",
 				tourService.getTourBookingCounts(tourId)));
@@ -81,6 +81,49 @@ public class ReportController {
 			@RequestParam(required = false) String userName) {
 		List<TourAndBookReport> tourAndBook = bookingService.getTourAndBookingsReport(tourId, userName);
 		return ResponseEntity.ok(tourAndBook);
+	}
+
+
+	@GetMapping(UrlMapping.BOOKING_STATUS_STATS)
+	@Operation(summary = "Get booking status statistics for piechart")
+	public ResponseEntity<ApiResponse<List<BookingStatusStats>>> getBookingStatusStats() {
+		List<BookingStatusStats> stats = bookingService.getBookingStatusStats();
+		return ResponseEntity.ok(new ApiResponse<>(200, "Success", stats));
+	}
+
+	@GetMapping(UrlMapping.GET_STATS)
+	@Operation(summary = "Xuất các trạng thái doanh thu")
+	public ResponseEntity<ApiResponse<RevenueStats>> getRevenueStats(@RequestParam(required = false, defaultValue = "week") String period) {
+		RevenueStats stats = reportservice.getRevenueStats(period);
+		return ResponseEntity.ok(new ApiResponse<>(200,"Success", stats));
+	}
+
+	@GetMapping(UrlMapping.REVIEW_STATS)
+	@Operation(summary = "Xuất data thống kê review")
+	public ResponseEntity<ApiResponse<List<RatingStats>>> getRatingDistribution(
+			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+		List<RatingStats> distribution = reportservice.getRatingDistribution(startDate, endDate);
+		return ResponseEntity.ok(new ApiResponse<>(200, "Success", distribution));
+	}
+
+	@GetMapping(UrlMapping.DETAIL_REVIEW_STATS)
+	@Operation(summary = "Xuất data thống kê review chi tiết")
+	public ResponseEntity<ApiResponse<List<DetailRatingStats>>> getDetailedRatingDistribution(
+			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+		List<DetailRatingStats> distribution = reportservice.getDetailedRatingDistribution(startDate, endDate);
+		return ResponseEntity.ok(new ApiResponse<>(200, "Success", distribution));
+	}
+
+	@GetMapping(UrlMapping.TOP_BOOKED_TOURS)
+	@Operation(summary = "Xuất danh sách tour được đặt nhiều nhất")
+	public ResponseEntity<ApiResponse<List<TopTour>>> getTopBookedTours(
+			@RequestParam(defaultValue = "5") int limit,
+			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+			@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+		List<TopTour> topTours = reportservice.getTopBookedTours(limit, startDate, endDate);
+		return ResponseEntity.ok(new ApiResponse<>(200, "Success", topTours));
 	}
 }
 

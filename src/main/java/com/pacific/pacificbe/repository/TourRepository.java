@@ -38,19 +38,25 @@ public interface TourRepository extends JpaRepository<Tour, String> {
     List<Tour> findToursByActiveIsTrue();
 
     @Query(value = """
-            select
-            	COUNT(t.id) as bookingCount,
-            	td.id as detailID,
-            	t.id as tourID
-            from tour t
-            	join tour_details td on t.id = td.tour_id
-            	join booking b on td.id = b.tour_detail_id
-            	join users us on us.id = b.user_id
-            where :tourId IS NULL OR t.id = :tourId
-            	group by t.id, td.id
-            	order by t.id asc
+            SELECT
+                COUNT(t.id) AS bookingCount,
+                td.id AS tourDetailId,
+                t.id AS tourID,
+                t.title AS tourTitle,
+                td.start_date AS startDate,
+                td.end_date AS endDate,
+                b.total_amount AS totalAmount,
+                b.booking_no AS bookingNo
+            FROM tour t
+                JOIN tour_details td ON t.id = td.tour_id
+                JOIN booking b ON td.id = b.tour_detail_id
+                JOIN users us ON us.id = b.user_id
+            WHERE :tourId IS NULL OR t.id = :tourId
+            GROUP BY td.id, t.id, t.title, td.start_date, td.end_date, b.total_amount, b.booking_no
+            ORDER BY t.id ASC
             """, nativeQuery = true)
     List<TourBookingCount> findTourBookingCounts(@Param("tourId") String tourId);
+
 
     @Query(value = """
             select

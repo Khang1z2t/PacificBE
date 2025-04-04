@@ -3,6 +3,7 @@ package com.pacific.pacificbe.services.impl;
 import com.pacific.pacificbe.dto.request.BookingDetailRequest;
 import com.pacific.pacificbe.dto.request.BookingRequest;
 import com.pacific.pacificbe.dto.response.BookingResponse;
+import com.pacific.pacificbe.dto.response.BookingStatusStats;
 import com.pacific.pacificbe.dto.response.report.BookingRevenueReportDTO;
 import com.pacific.pacificbe.dto.response.report.Revenue;
 import com.pacific.pacificbe.dto.response.report.TourAndBookReport;
@@ -35,14 +36,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -222,6 +219,33 @@ public class BookingServiceImpl implements BookingService {
         return bookingMapper.toBookingResponse(booking);
     }
 
+
+    @Override
+    public List<BookingStatusStats> getBookingStatusStats() {
+        List<Object[]> results = bookingRepository.findBookingStatusStats();
+        long totalBookings = bookingRepository.bookingCountStats();
+
+        if (totalBookings == 0) {
+            return Arrays.stream(BookingStatus.values())
+                    .map(status -> new BookingStatusStats(status.toString(), 0L, 0.0))
+                    .collect(Collectors.toList());
+        }
+
+        Map<String, Long> statusCountMap = results.stream()
+                .collect(Collectors.toMap(
+                        result -> (String) result[0],
+                        result -> (Long) result[1]
+                ));
+
+        return Arrays.stream(BookingStatus.values())
+                .map(status -> {
+                    long count = statusCountMap.getOrDefault(status.toString(), 0L);
+                    double percentage = (count * 100.0) / totalBookings;
+                    percentage = Math.round(percentage * 100.0) / 100.0;
+                    return new BookingStatusStats(status.toString(), count, percentage);
+                })
+                .collect(Collectors.toList());
+    }
     private BigDecimal getFinalPrice(BigDecimal totalPrice, Booking booking) {
         if (booking.getVoucher() == null) {
             return totalPrice;

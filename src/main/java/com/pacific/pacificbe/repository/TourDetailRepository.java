@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,4 +46,21 @@ public interface TourDetailRepository extends JpaRepository<TourDetail, String> 
             String tourId,
             String months
     );
+
+    // Đếm tổng số tour_details (có thể lọc theo thời gian)
+    @Query("SELECT COUNT(td) FROM TourDetail td WHERE " +
+            "(:startDate IS NULL OR td.startDate >= :startDate) AND " +
+            "(:endDate IS NULL OR td.endDate <= :endDate)")
+    long countTourDetails(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
+
+    // Đếm số lượng tour_details theo khoảng rating_avg
+    @Query("SELECT COUNT(td) FROM TourDetail td WHERE " +
+            "td.ratingAvg >= :minRating AND td.ratingAvg <= :maxRating AND " +
+            "(:startDate IS NULL OR td.startDate >= :startDate) AND " +
+            "(:endDate IS NULL OR td.endDate <= :endDate)")
+    long countByRatingRange(
+            @Param("minRating") float minRating,
+            @Param("maxRating") float maxRating,
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate);
 }

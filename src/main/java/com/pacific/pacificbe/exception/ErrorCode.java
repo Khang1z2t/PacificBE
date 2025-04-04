@@ -54,7 +54,8 @@ public enum ErrorCode {
     TRANSPORT_NOT_FOUND(1072, "Transport not found", HttpStatus.NOT_FOUND),
     USER_NOT_AUTHENTICATED(1098, "You need login first", HttpStatus.UNAUTHORIZED),
     CANT_SEND_MAIL(1099, "Can't send mail", HttpStatus.INTERNAL_SERVER_ERROR),
-
+    //REPORTS
+    REVENUE_NOT_FOUND(1080, "Revenue not found", HttpStatus.NOT_FOUND),
 
     // Thêm hằng số CATEGORY_IN_USE
     CATEGORY_IN_USE(1041, "Category is in use by one or more tours", HttpStatus.BAD_REQUEST),

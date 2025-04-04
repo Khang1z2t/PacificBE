@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class BookingRevenueReportDTO {
     private String tourId;
+    private String tourTitle;
     private String tourDetailId;
     private BigDecimal tourRevenue;
     private String bookingDate;
