@@ -15,7 +15,6 @@ import com.pacific.pacificbe.utils.enums.TourStatus;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,7 +31,6 @@ public class TourDetailServiceImpl implements TourDetailService {
     private final HotelRepository hotelRepository;
     private final TransportRepository transportRepository;
     private final TourDetailRepository tourDetailRepository;
-    private final TourDetailMapper tourDetailMapper;
     private final TourMapper tourMapper;
     private final ItineraryRepository itineraryRepository;
     private final GuideRepository guideRepository;

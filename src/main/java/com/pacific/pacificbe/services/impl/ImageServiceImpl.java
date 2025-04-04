@@ -1,6 +1,5 @@
 package com.pacific.pacificbe.services.impl;
 
-import com.pacific.pacificbe.dto.response.ImageData;
 import com.pacific.pacificbe.integration.google.GoogleImageClient;
 import com.pacific.pacificbe.services.ImageService;
 import feign.Response;
@@ -10,7 +9,6 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 
 @Slf4j
 @Service

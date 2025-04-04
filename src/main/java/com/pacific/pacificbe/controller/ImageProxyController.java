@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 public class ImageProxyController {
-    private final GoogleImageClient googleImageClient;
     private final ImageService imageService;
 
     @GetMapping(UrlMapping.PROXY_IMAGE)

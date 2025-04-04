@@ -3,7 +3,6 @@ package com.pacific.pacificbe.scheduler;
 import com.pacific.pacificbe.model.Booking;
 import com.pacific.pacificbe.model.TourDetail;
 import com.pacific.pacificbe.repository.BookingRepository;
-import com.pacific.pacificbe.repository.TourDetailRepository;
 import com.pacific.pacificbe.utils.JavaMail;
 import com.pacific.pacificbe.utils.UrlMapping;
 import com.pacific.pacificbe.utils.enums.BookingStatus;

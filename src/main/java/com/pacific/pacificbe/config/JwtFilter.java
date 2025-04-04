@@ -39,7 +39,7 @@ public class JwtFilter extends OncePerRequestFilter {
         }
 
         final String jwt = authHeader.substring(7);
-        String username = null;
+        String username;
 
         try {
             username = jwtService.extractUserName(jwt);
