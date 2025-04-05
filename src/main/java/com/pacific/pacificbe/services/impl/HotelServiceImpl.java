@@ -27,15 +27,12 @@ public class HotelServiceImpl implements HotelService {
     private final GoogleDriveService googleDriveService;
 
     @Override
-    @Transactional(readOnly = true)
     public List<HotelResponse> getAllHotels() {
-        return hotelRepository.findAll().stream()
-                .map(hotelMapper::toResponse)
-                .collect(Collectors.toList());
+        var hotels = hotelRepository.findAll();
+        return hotelMapper.toResponseList(hotels);
     }
 
     @Override
-    @Transactional(readOnly = true)
     public HotelResponse getHotelById(String id) {
         Hotel hotel = hotelRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.HOTEL_NOT_FOUND));
@@ -43,48 +40,15 @@ public class HotelServiceImpl implements HotelService {
     }
 
     @Override
-    @Transactional
-    public HotelResponse createHotel(HotelRequest request) {
+    public HotelResponse createHotel(HotelRequest request, MultipartFile image) {
         Hotel hotel = new Hotel();
         hotel.setName(request.getName());
-        hotel.setRating(String.valueOf(request.getRating()));
-        hotel.setCost(request.getCost());
-        hotel.setTypeHotel(request.getTypeHotel());
-        hotel.setImageURL(request.getImageURL());
-
-        hotel = hotelRepository.save(hotel);
-        return hotelMapper.toResponse(hotel);
-    }
-
-    @Override
-    @Transactional
-    public HotelResponse createHotelWithImage(HotelRequest request, MultipartFile image) {
-        String imageUrl = uploadImage(image);
-
-        Hotel hotel = new Hotel();
-        hotel.setName(request.getName());
-        hotel.setRating(String.valueOf(request.getRating()));
-        hotel.setCost(request.getCost());
-        hotel.setTypeHotel(request.getTypeHotel());
-        hotel.setImageURL(imageUrl);
-
-        hotel = hotelRepository.save(hotel);
-        return hotelMapper.toResponse(hotel);
-    }
-
-    @Override
-    @Transactional
-    public HotelResponse updateHotel(String id, HotelRequest request) {
-        Hotel hotel = hotelRepository.findById(id)
-                .orElseThrow(() -> new AppException(ErrorCode.HOTEL_NOT_FOUND));
-
-        hotel.setName(request.getName());
-        hotel.setRating(String.valueOf(request.getRating()));
+        hotel.setRating(request.getRating());
         hotel.setCost(request.getCost());
         hotel.setTypeHotel(request.getTypeHotel());
 
-        if (request.getImageURL() != null) {
-            hotel.setImageURL(request.getImageURL());
+        if (image != null && !image.isEmpty()) {
+            hotel.setImageURL(uploadImage(image));
         }
 
         hotel = hotelRepository.save(hotel);
@@ -92,7 +56,21 @@ public class HotelServiceImpl implements HotelService {
     }
 
     @Override
-    @Transactional
+    public HotelResponse updateHotel(String id, HotelRequest request) {
+        Hotel hotel = hotelRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.HOTEL_NOT_FOUND));
+
+        hotel.setName(request.getName());
+        hotel.setRating(request.getRating());
+        hotel.setCost(request.getCost());
+        hotel.setTypeHotel(request.getTypeHotel());
+
+
+        hotel = hotelRepository.save(hotel);
+        return hotelMapper.toResponse(hotel);
+    }
+
+    @Override
     public HotelResponse updateHotelImage(String id, MultipartFile image) {
         Hotel hotel = hotelRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.HOTEL_NOT_FOUND));
@@ -105,7 +83,6 @@ public class HotelServiceImpl implements HotelService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<HotelResponse> searchHotels(String name, BigDecimal minPrice, BigDecimal maxPrice, String typeHotel) {
         return hotelRepository.findByNameContainingAndCostBetweenAndTypeHotel(
                         name,
@@ -118,7 +95,6 @@ public class HotelServiceImpl implements HotelService {
     }
 
     @Override
-    @Transactional
     public void deleteHotel(String id) {
         Hotel hotel = hotelRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.HOTEL_NOT_FOUND));
@@ -130,7 +106,7 @@ public class HotelServiceImpl implements HotelService {
             throw new AppException(ErrorCode.INVALID_IMAGE);
         }
         try {
-            return googleDriveService.uploadImageToDrive(file, FolderType.HOTELS);
+            return googleDriveService.uploadImageToDrive(file, FolderType.HOTEL);
         } catch (Exception e) {
             throw new AppException(ErrorCode.UPLOAD_IMAGE_FAILED);
         }
