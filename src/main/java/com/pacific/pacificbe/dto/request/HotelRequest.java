@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 public class HotelRequest {
     private String id;
     private String name;
-    private BigDecimal rating;
+    private double rating;
     private BigDecimal cost;
     private String typeHotel;
     private String imageURL;

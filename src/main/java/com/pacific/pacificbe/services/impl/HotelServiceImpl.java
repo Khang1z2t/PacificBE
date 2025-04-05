@@ -47,7 +47,7 @@ public class HotelServiceImpl implements HotelService {
     public HotelResponse createHotel(HotelRequest request) {
         Hotel hotel = new Hotel();
         hotel.setName(request.getName());
-        hotel.setRating(String.valueOf(request.getRating()));
+        hotel.setRating(request.getRating());
         hotel.setCost(request.getCost());
         hotel.setTypeHotel(request.getTypeHotel());
         hotel.setImageURL(request.getImageURL());
@@ -63,7 +63,7 @@ public class HotelServiceImpl implements HotelService {
 
         Hotel hotel = new Hotel();
         hotel.setName(request.getName());
-        hotel.setRating(String.valueOf(request.getRating()));
+        hotel.setRating(request.getRating());
         hotel.setCost(request.getCost());
         hotel.setTypeHotel(request.getTypeHotel());
         hotel.setImageURL(imageUrl);
@@ -79,7 +79,7 @@ public class HotelServiceImpl implements HotelService {
                 .orElseThrow(() -> new AppException(ErrorCode.HOTEL_NOT_FOUND));
 
         hotel.setName(request.getName());
-        hotel.setRating(String.valueOf(request.getRating()));
+        hotel.setRating(request.getRating());
         hotel.setCost(request.getCost());
         hotel.setTypeHotel(request.getTypeHotel());
 
@@ -130,7 +130,7 @@ public class HotelServiceImpl implements HotelService {
             throw new AppException(ErrorCode.INVALID_IMAGE);
         }
         try {
-            return googleDriveService.uploadImageToDrive(file, FolderType.HOTELS);
+            return googleDriveService.uploadImageToDrive(file, FolderType.HOTEL);
         } catch (Exception e) {
             throw new AppException(ErrorCode.UPLOAD_IMAGE_FAILED);
         }

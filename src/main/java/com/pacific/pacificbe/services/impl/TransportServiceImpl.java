@@ -124,7 +124,7 @@ public class TransportServiceImpl implements TransportService {
         if (file == null || file.isEmpty()) {
             return null;
         }
-        return googleDriveService.uploadImageToDrive(file, FolderType.TRANSPORTS);
+        return googleDriveService.uploadImageToDrive(file, FolderType.TRANSPORT);
     }
 
     private Transport buildTransportFromRequest(TransportRequest request, String imageUrl) {

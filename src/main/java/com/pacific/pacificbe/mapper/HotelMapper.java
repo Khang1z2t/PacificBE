@@ -15,7 +15,7 @@ public class HotelMapper {
         hotel.setName(hotelRequest.getName());
         hotel.setTypeHotel(hotelRequest.getTypeHotel());
         hotel.setCost(hotelRequest.getCost());
-        hotel.setRating(hotelRequest.getRating().toString());
+        hotel.setRating(hotelRequest.getRating());
         hotel.setImageURL(hotelRequest.getImageURL());
         return hotel;
     }
