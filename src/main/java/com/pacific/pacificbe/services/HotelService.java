@@ -9,11 +9,10 @@ import java.util.List;
 
 public interface HotelService {
     List<HotelResponse> getAllHotels();
+
     HotelResponse getHotelById(String id);
 
-    HotelResponse createHotel(HotelRequest request);
-
-    HotelResponse createHotelWithImage(HotelRequest request, MultipartFile image);
+    HotelResponse createHotel(HotelRequest request, MultipartFile image);
 
     HotelResponse updateHotel(String id, HotelRequest request);
 

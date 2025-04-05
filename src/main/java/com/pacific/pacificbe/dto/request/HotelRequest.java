@@ -10,10 +10,8 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 public class HotelRequest {
-    private String id;
     private String name;
-    private double rating;
+    private Double rating;
     private BigDecimal cost;
     private String typeHotel;
-    private String imageURL;
 }
