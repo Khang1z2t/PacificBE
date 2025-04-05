@@ -10,9 +10,7 @@ import com.pacific.pacificbe.dto.response.report.TourAndBookReport;
 import com.pacific.pacificbe.exception.AppException;
 import com.pacific.pacificbe.exception.ErrorCode;
 import com.pacific.pacificbe.mapper.BookingMapper;
-import com.pacific.pacificbe.model.Booking;
-import com.pacific.pacificbe.model.BookingDetail;
-import com.pacific.pacificbe.model.Voucher;
+import com.pacific.pacificbe.model.*;
 import com.pacific.pacificbe.repository.BookingDetailRepository;
 import com.pacific.pacificbe.repository.BookingRepository;
 import com.pacific.pacificbe.repository.TourDetailRepository;
@@ -28,6 +26,7 @@ import com.pacific.pacificbe.utils.enums.GenderEnums;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Service;
@@ -41,6 +40,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -148,6 +148,12 @@ public class BookingServiceImpl implements BookingService {
         booking.setActive(true);
         booking.setBookingNo(generatorBookingNo(lastBookingNo));
         booking.setStatus(BookingStatus.PENDING.toString());
+
+        Hotel hotel = tourDetail.getHotel();
+        Transport transport = tourDetail.getTransport();
+
+        log.info("Hotel Cost: {}", hotel.getCost());
+        log.info("Transport Cost: {}", transport.getCost());
 //        // Xử lý voucher nếu có
         Voucher voucher = null;
         if (request.getVoucherCode() != null && request.getVoucherCode().isEmpty()) {
@@ -246,6 +252,7 @@ public class BookingServiceImpl implements BookingService {
                 })
                 .collect(Collectors.toList());
     }
+
     private BigDecimal getFinalPrice(BigDecimal totalPrice, Booking booking) {
         if (booking.getVoucher() == null) {
             return totalPrice;

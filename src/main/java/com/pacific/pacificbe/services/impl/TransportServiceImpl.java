@@ -29,9 +29,8 @@ public class TransportServiceImpl implements TransportService {
 
     @Override
     public List<TransportResponse> getAllTransports() {
-        return transportRepository.findAllByDeleteAtIsNull().stream()
-                .map(transportMapper::toResponse)
-                .collect(Collectors.toList());
+        var transports = transportRepository.findAll();
+        return transportMapper.toResponseList(transports);
     }
 
     @Override
@@ -42,25 +41,17 @@ public class TransportServiceImpl implements TransportService {
     }
 
     @Override
-    public TransportResponse addTransport(TransportRequest request) {
-        Transport transport = buildTransportFromRequest(request, null);
-        transport.setActive(true); // Mặc định active là true khi tạo mới
-        transport = transportRepository.save(transport);
-        return transportMapper.toResponse(transport);
-    }
-
-    @Override
     public TransportResponse addTransport(TransportRequest request, MultipartFile image) {
-        String imageUrl = uploadImage(image);
-        Transport transport = buildTransportFromRequest(request, imageUrl);
-        transport.setActive(true); // Mặc định active là true khi tạo mới
-        transport = transportRepository.save(transport);
+        Transport transport = new Transport();
+        transport.setName(request.getName());
+        transport.setCost(request.getCost());
+        transport.setTypeTransport(request.getTypeTransport());
 
-        // Lưu thông tin ảnh vào bảng Image nếu có
-//        if (imageUrl != null) {
-//            transport.setImageURL();
-//        }
-
+        if (image != null && !image.isEmpty()) {
+            String imageUrl = googleDriveService.uploadImageToDrive(image, FolderType.TRANSPORT);
+            transport.setImageURL(imageUrl);
+        }
+        transportRepository.save(transport);
         return transportMapper.toResponse(transport);
     }
 
@@ -72,12 +63,6 @@ public class TransportServiceImpl implements TransportService {
         transport.setName(request.getName());
         transport.setCost(request.getCost());
         transport.setTypeTransport(request.getTypeTransport());
-        transport.setActive(request.isActive());
-
-        // Chỉ cập nhật imageURL nếu có giá trị mới
-        if (request.getImageURL() != null && !request.getImageURL().isEmpty()) {
-            transport.setImageURL(request.getImageURL());
-        }
 
         transport = transportRepository.save(transport);
         return transportMapper.toResponse(transport);
@@ -132,7 +117,6 @@ public class TransportServiceImpl implements TransportService {
                 .name(request.getName())
                 .cost(request.getCost())
                 .typeTransport(request.getTypeTransport())
-                .active(request.isActive())
                 .imageURL(imageUrl)
                 .build();
     }

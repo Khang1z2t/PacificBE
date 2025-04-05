@@ -39,15 +39,17 @@ public class TransportController {
     }
 
     @Operation(summary = "Thêm phương tiện", description = "Thêm một phương tiện mới")
-    @PostMapping(UrlMapping.ADD_TRANSPORT)
-    public ResponseEntity<ApiResponse<TransportResponse>> addTransport(@RequestBody TransportRequest request) {
-        TransportResponse response = transportService.addTransport(request);
+    @PostMapping(value = UrlMapping.ADD_TRANSPORT, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ApiResponse<TransportResponse>> addTransport(@ModelAttribute TransportRequest request,
+                                                                       @RequestParam(required = false) MultipartFile image) {
+        TransportResponse response = transportService.addTransport(request, image);
         return ResponseEntity.ok(new ApiResponse<>(200, null, response));
     }
 
     @Operation(summary = "Cập nhật phương tiện", description = "Cập nhật thông tin của phương tiện dựa trên ID")
     @PutMapping(UrlMapping.UPDATE_TRANSPORT)
-    public ResponseEntity<ApiResponse<TransportResponse>> updateTransport(@PathVariable String id, @RequestBody TransportRequest request) {
+    public ResponseEntity<ApiResponse<TransportResponse>> updateTransport(@PathVariable String id,
+                                                                          @RequestBody TransportRequest request) {
         TransportResponse response = transportService.updateTransport(id, request);
         return ResponseEntity.ok(new ApiResponse<>(200, null, response));
     }
@@ -69,9 +71,7 @@ public class TransportController {
 
     @PostMapping(value = UrlMapping.ADD_TRANSPORT_IMAGES, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "Thêm ảnh cho transport")
-    public ResponseEntity<ApiResponse<TransportResponse>> addTransportImages(
-            @PathVariable String id,
-            @RequestParam("image") MultipartFile image) {
+    public ResponseEntity<ApiResponse<TransportResponse>> addTransportImages(@PathVariable String id, @RequestParam("image") MultipartFile image) {
 
         TransportResponse response = transportService.addTransportImage(id, image);
         return ResponseEntity.ok(new ApiResponse<>(200, "Ảnh đã được tải lên Google Drive", response));

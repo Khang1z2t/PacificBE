@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -16,4 +17,9 @@ public class HotelResponse {
     private BigDecimal cost;
     private String typeHotel;
     private String image;
+
+    private boolean active;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+    private LocalDateTime deleteAt;
 }
