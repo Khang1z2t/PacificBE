@@ -82,12 +82,24 @@ public class VoucherServiceImpl implements VoucherService {
 
     @Override
     public void deleteVoucher(String id) {
-
+        Voucher voucher = voucherRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.VOUCHER_NOT_FOUND));
+        voucher.setDeleteAt(LocalDateTime.now());
+        voucher.setStatus(VoucherStatus.INACTIVE.toString());
+        voucherRepository.save(voucher);
     }
 
     @Override
     public VoucherResponse updateStatus(String id, String status) {
-        return null;
+        Voucher voucher = voucherRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.VOUCHER_NOT_FOUND));
+        if (EnumUtils.isValidEnum(VoucherStatus.class, status.toUpperCase())) {
+            voucher.setStatus(status.toUpperCase());
+        } else {
+            throw new AppException(ErrorCode.INVALID_VOUCHER_STATUS);
+        }
+        voucherRepository.save(voucher);
+        return voucherMapper.toVoucherResponse(voucher);
     }
 
 
