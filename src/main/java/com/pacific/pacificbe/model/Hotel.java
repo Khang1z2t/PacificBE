@@ -14,7 +14,7 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "hotel")
-public class Hotel {
+public class Hotel extends BaseEntity {
     @Id
     @Size(max = 255)
     @Column(name = "id", nullable = false)

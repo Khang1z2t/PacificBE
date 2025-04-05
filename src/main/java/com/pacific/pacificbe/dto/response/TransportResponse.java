@@ -11,13 +11,13 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class TransportResponse {
     private String id;
     private String name;
     private BigDecimal cost;
-    private String imageURL;
+    private String image;
     private String typeTransport;
+
     private boolean active;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
