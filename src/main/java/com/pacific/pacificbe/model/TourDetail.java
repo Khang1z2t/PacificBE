@@ -1,5 +1,6 @@
 package com.pacific.pacificbe.model;
 
+import com.pacific.pacificbe.utils.enums.TourDetailStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -8,6 +9,7 @@ import lombok.Setter;
 import org.hibernate.annotations.Nationalized;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -18,6 +20,7 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "tour_details")
+@EntityListeners(AuditingEntityListener.class)
 public class TourDetail extends BaseEntity {
     @Id
     @Size(max = 255)
@@ -87,5 +90,12 @@ public class TourDetail extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "guide_id")
     private Guide guide;
+
+    @PreUpdate
+    public void preUpdate() {
+        if (this.getQuantity() != null && this.getQuantity() <= 0) {
+            this.setStatus(TourDetailStatus.CLOSED.toString());
+        }
+    }
 
 }

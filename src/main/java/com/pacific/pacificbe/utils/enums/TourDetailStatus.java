@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public enum TourDetailStatus {
     OPEN,
-    FULLY_BOOKED,
+    CLOSED,
     CANCELED,
     FINISHED
 }
