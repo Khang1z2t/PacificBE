@@ -29,7 +29,7 @@ public class Hotel {
     @Size(max = 255)
     @Nationalized
     @Column(name = "rating")
-    private String rating;
+    private Double rating;
 
     @Column(name = "cost", precision = 10, scale = 2)
     private BigDecimal cost;
