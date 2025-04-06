@@ -13,7 +13,7 @@ public interface TransportService {
 
     TransportResponse addTransport(TransportRequest request, MultipartFile image);
 
-    TransportResponse updateTransport(String id, TransportRequest request);
+    TransportResponse updateTransport(String id, TransportRequest request, MultipartFile image);
 
     boolean deleteTransport(String id);
 

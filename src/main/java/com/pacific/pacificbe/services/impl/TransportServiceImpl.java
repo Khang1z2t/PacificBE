@@ -43,6 +43,17 @@ public class TransportServiceImpl implements TransportService {
     @Override
     public TransportResponse addTransport(TransportRequest request, MultipartFile image) {
         Transport transport = new Transport();
+        return getTransportResponse(request, image, transport);
+    }
+
+    @Override
+    public TransportResponse updateTransport(String id, TransportRequest request, MultipartFile image) {
+        Transport transport = transportRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.TRANSPORT_NOT_FOUND));
+        return getTransportResponse(request, image, transport);
+    }
+
+    private TransportResponse getTransportResponse(TransportRequest request, MultipartFile image, Transport transport) {
         transport.setName(request.getName());
         transport.setCost(request.getCost());
         transport.setTypeTransport(request.getTypeTransport());
@@ -52,19 +63,6 @@ public class TransportServiceImpl implements TransportService {
             transport.setImageURL(imageUrl);
         }
         transportRepository.save(transport);
-        return transportMapper.toResponse(transport);
-    }
-
-    @Override
-    public TransportResponse updateTransport(String id, TransportRequest request) {
-        Transport transport = transportRepository.findByIdAndDeleteAtIsNull(id)
-                .orElseThrow(() -> new AppException(ErrorCode.TRANSPORT_NOT_FOUND));
-
-        transport.setName(request.getName());
-        transport.setCost(request.getCost());
-        transport.setTypeTransport(request.getTypeTransport());
-
-        transport = transportRepository.save(transport);
         return transportMapper.toResponse(transport);
     }
 

@@ -46,18 +46,15 @@ public class HotelController {
     }
 
     @Operation(summary = "Cập nhật hình ảnh khách sạn", description = "Cập nhật hình ảnh của khách sạn")
-    @PostMapping(value = UrlMapping.UPDATE_HOTEL_IMAGE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<ApiResponse<HotelResponse>> updateHotelImage(@PathVariable String id, @RequestParam("image") MultipartFile image) {
-        HotelResponse updatedHotel = hotelService.updateHotelImage(id, image);
-        return ResponseEntity.ok(new ApiResponse<>(200, "Đã cập nhật hình ảnh khách sạn thành công", updatedHotel));
+    @PostMapping(value = UrlMapping.UPDATE_HOTEL, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ApiResponse<HotelResponse>> updateHotelImage(@PathVariable String id,
+                                                                       @ModelAttribute HotelRequest request,
+                                                                       @RequestParam(required = false) MultipartFile image) {
+        HotelResponse updatedHotel = hotelService.updateHotel(id, request, image);
+        return ResponseEntity.ok(
+                new ApiResponse<>(200, "Đã cập nhật hình ảnh khách sạn thành công", updatedHotel));
     }
 
-    @Operation(summary = "Cập nhật khách sạn", description = "Cập nhật thông tin khách sạn")
-    @PutMapping(UrlMapping.UPDATE_HOTEL)
-    public ResponseEntity<ApiResponse<HotelResponse>> updateHotel(@PathVariable String id, @RequestBody HotelRequest request) {
-        HotelResponse updatedHotel = hotelService.updateHotel(id, request);
-        return ResponseEntity.ok(new ApiResponse<>(200, "Cập nhật khách sạn thành công", updatedHotel));
-    }
 
     @Operation(summary = "Xóa khách sạn", description = "Xóa khách sạn khỏi hệ thống")
     @DeleteMapping(UrlMapping.DELETE_HOTEL)
