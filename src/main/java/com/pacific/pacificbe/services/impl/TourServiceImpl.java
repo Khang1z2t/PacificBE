@@ -76,12 +76,6 @@ public class TourServiceImpl implements TourService {
             tour.setCategory(category);
         }
 
-        if (request.getGuideId() != null) {
-            Guide guide = guideRepository.findById(request.getGuideId())
-                    .orElseThrow(() -> new AppException(ErrorCode.GUIDE_NOT_FOUND));
-            // tour.setGuide(guide); // Đã comment trong code gốc, nếu cần thì mở lại
-        }
-
         if (request.getDestinationId() != null) {
             Destination destination = destinationRepository.findById(request.getDestinationId())
                     .orElseThrow(() -> new AppException(ErrorCode.DESTINATION_NOT_FOUND));
