@@ -54,7 +54,6 @@ public class BookingServiceImpl implements BookingService {
     private final IdUtil idUtil;
     private final BookingDetailRepository bookingDetailRepository;
     private final VoucherService voucherService;
-    private final TaskScheduler taskScheduler;
 
     @Override
     public List<Revenue> getMonthlyRevenueReport(String years, String bookingStatus) {
@@ -141,6 +140,10 @@ public class BookingServiceImpl implements BookingService {
 
         // Tạo booking
         Booking booking = new Booking();
+        booking.setBookerFullName(request.getBookerFullName());
+        booking.setBookerEmail(request.getBookerEmail());
+        booking.setBookerPhoneNumber(request.getBookerPhoneNumber());
+        booking.setBookerAddress(request.getBookerAddress());
         booking.setPaymentMethod(request.getPaymentMethod());
         booking.setSpecialRequests(request.getSpecialRequests());
         booking.setUser(user);

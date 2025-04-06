@@ -30,6 +30,25 @@ public class Booking extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
+    @Size(max = 255)
+    @Nationalized
+    @Column(name = "booker_full_name", length = 255)
+    private String bookerFullName;
+
+    @Size(max = 20)
+    @Column(name = "booker_phone_number", length = 20)
+    private String bookerPhoneNumber;
+
+    @Size(max = 255)
+//    @Email(message = "Email should be valid")
+    @Column(name = "booker_email", length = 255)
+    private String bookerEmail;
+
+    @Size(max = 500)
+    @Nationalized
+    @Column(name = "booker_address", length = 500)
+    private String bookerAddress;
+
     @Column(name = "adult_num")
     private Integer adultNum;
 
