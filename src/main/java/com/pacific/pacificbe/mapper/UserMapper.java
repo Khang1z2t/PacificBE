@@ -1,8 +1,10 @@
 package com.pacific.pacificbe.mapper;
 
+import com.pacific.pacificbe.dto.request.UpdateProfileRequest;
 import com.pacific.pacificbe.dto.request.UserRegisterRequest;
 import com.pacific.pacificbe.dto.response.UserResponse;
 import com.pacific.pacificbe.model.User;
+import com.pacific.pacificbe.utils.IdUtil;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -16,9 +18,12 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserMapper {
     ModelMapper modelMapper;
+    private final IdUtil idUtil;
 
     public UserResponse toUserResponse(User user) {
-        return modelMapper.map(user, UserResponse.class);
+        UserResponse userResponse = modelMapper.map(user, UserResponse.class);
+        userResponse.setAvatar(idUtil.getIdAvatar(user.getAvatarUrl()));
+        return userResponse;
     }
 
     public User toUser(UserResponse userResponse) {

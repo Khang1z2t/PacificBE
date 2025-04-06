@@ -8,7 +8,10 @@ import com.pacific.pacificbe.exception.ErrorCode;
 import com.pacific.pacificbe.mapper.UserMapper;
 import com.pacific.pacificbe.model.User;
 import com.pacific.pacificbe.repository.UserRepository;
+import com.pacific.pacificbe.services.GoogleDriveService;
 import com.pacific.pacificbe.services.UserService;
+import com.pacific.pacificbe.utils.AuthUtils;
+import com.pacific.pacificbe.utils.enums.FolderType;
 import com.pacific.pacificbe.utils.enums.UserRole;
 import com.pacific.pacificbe.utils.enums.UserStatus;
 import lombok.AccessLevel;
@@ -17,6 +20,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.EnumUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 
 import java.util.List;
@@ -29,6 +33,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserMapper userMapper;
     private final UserRepository userRepository;
+    private final GoogleDriveService googleDriveService;
 
     @Override
     public List<UserResponse> getAllUsers() {
@@ -93,6 +98,32 @@ public class UserServiceImpl implements UserService {
         }
 
         return userMapper.toUserResponse(userRepository.save(user));
+    }
+
+    @Override
+    public UserResponse updateProfile(UpdateProfileRequest request, MultipartFile avatar) {
+        String userId = AuthUtils.getCurrentUserId();
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        if (!user.getEmail().equals(request.getEmail())) {
+            user.setEmailVerified(false);
+        }
+        if (!user.getPhone().equals(request.getPhone())) {
+            user.setPhoneVerified(false);
+        }
+        user.setUsername(request.getUsername());
+        user.setFirstName(request.getFirstName());
+        user.setLastName(request.getLastName());
+        user.setEmail(request.getEmail());
+        user.setPhone(request.getPhone());
+        user.setAddress(request.getAddress());
+        user.setGender(request.getGender());
+        user.setBirthday(request.getBirthday());
+        if (avatar != null && !avatar.isEmpty()) {
+            user.setAvatarUrl(googleDriveService.uploadImageToDrive(avatar, FolderType.AVATAR));
+        }
+        userRepository.save(user);
+        return userMapper.toUserResponse(user);
     }
 
 }

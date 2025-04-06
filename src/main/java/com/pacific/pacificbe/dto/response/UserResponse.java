@@ -27,7 +27,7 @@ public class UserResponse {
     String status;
     Boolean emailVerified;
     Boolean phoneVerified;
-    String avatarUrl;
+    String avatar;
     String role;
 
     Boolean active;
