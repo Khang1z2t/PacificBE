@@ -49,8 +49,9 @@ public class TransportController {
     @Operation(summary = "Cập nhật phương tiện", description = "Cập nhật thông tin của phương tiện dựa trên ID")
     @PutMapping(UrlMapping.UPDATE_TRANSPORT)
     public ResponseEntity<ApiResponse<TransportResponse>> updateTransport(@PathVariable String id,
-                                                                          @RequestBody TransportRequest request) {
-        TransportResponse response = transportService.updateTransport(id, request);
+                                                                          @ModelAttribute TransportRequest request,
+                                                                          @RequestParam(required = false) MultipartFile image) {
+        TransportResponse response = transportService.updateTransport(id, request, image);
         return ResponseEntity.ok(new ApiResponse<>(200, null, response));
     }
 

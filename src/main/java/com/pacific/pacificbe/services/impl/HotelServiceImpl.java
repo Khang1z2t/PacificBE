@@ -42,45 +42,28 @@ public class HotelServiceImpl implements HotelService {
     @Override
     public HotelResponse createHotel(HotelRequest request, MultipartFile image) {
         Hotel hotel = new Hotel();
+        return getHotelResponse(request, image, hotel);
+    }
+
+    @Override
+    public HotelResponse updateHotel(String id, HotelRequest request, MultipartFile image) {
+        Hotel hotel = hotelRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.HOTEL_NOT_FOUND));
+        return getHotelResponse(request, image, hotel);
+    }
+
+    private HotelResponse getHotelResponse(HotelRequest request, MultipartFile image, Hotel hotel) {
         hotel.setName(request.getName());
         hotel.setRating(request.getRating());
         hotel.setCost(request.getCost());
         hotel.setTypeHotel(request.getTypeHotel());
-
         if (image != null && !image.isEmpty()) {
             hotel.setImageURL(uploadImage(image));
         }
-
         hotel = hotelRepository.save(hotel);
         return hotelMapper.toResponse(hotel);
     }
 
-    @Override
-    public HotelResponse updateHotel(String id, HotelRequest request) {
-        Hotel hotel = hotelRepository.findById(id)
-                .orElseThrow(() -> new AppException(ErrorCode.HOTEL_NOT_FOUND));
-
-        hotel.setName(request.getName());
-        hotel.setRating(request.getRating());
-        hotel.setCost(request.getCost());
-        hotel.setTypeHotel(request.getTypeHotel());
-
-
-        hotel = hotelRepository.save(hotel);
-        return hotelMapper.toResponse(hotel);
-    }
-
-    @Override
-    public HotelResponse updateHotelImage(String id, MultipartFile image) {
-        Hotel hotel = hotelRepository.findById(id)
-                .orElseThrow(() -> new AppException(ErrorCode.HOTEL_NOT_FOUND));
-
-        String imageUrl = uploadImage(image);
-        hotel.setImageURL(imageUrl);
-
-        hotel = hotelRepository.save(hotel);
-        return hotelMapper.toResponse(hotel);
-    }
 
     @Override
     public List<HotelResponse> searchHotels(String name, BigDecimal minPrice, BigDecimal maxPrice, String typeHotel) {

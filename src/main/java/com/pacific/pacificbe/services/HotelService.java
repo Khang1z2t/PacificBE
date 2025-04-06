@@ -14,9 +14,7 @@ public interface HotelService {
 
     HotelResponse createHotel(HotelRequest request, MultipartFile image);
 
-    HotelResponse updateHotel(String id, HotelRequest request);
-
-    HotelResponse updateHotelImage(String id, MultipartFile image);
+    HotelResponse updateHotel(String id, HotelRequest request, MultipartFile image);
 
     List<HotelResponse> searchHotels(
             String name,

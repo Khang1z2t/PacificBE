@@ -12,6 +12,10 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BookingRequest {
+    String bookerFullName;
+    String bookerEmail;
+    String bookerPhoneNumber;
+    String bookerAddress;
     String paymentMethod;
     String specialRequests;
     BigDecimal totalAmount;
