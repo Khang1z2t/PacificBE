@@ -40,7 +40,6 @@ public class TourServiceImpl implements TourService {
     TourRepository tourRepository;
     TourMapper tourMapper;
     private final CategoryRepository categoryRepository;
-    private final GuideRepository guideRepository;
     private final DestinationRepository destinationRepository;
     private final GoogleDriveService googleDriveService;
     private final ImageRepository imageRepository;
