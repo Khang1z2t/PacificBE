@@ -75,18 +75,12 @@ public class GuideServiceImpl implements GuideService {
     // }
 
     @Override
-    public GuideResponse updateStatus(String id, UpdateStatusGuideRequest request) {
+    public GuideResponse updateStatus(String id, boolean active) {
         Guide guide = guideRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.GUIDE_NOT_FOUND));
 
         // Nếu request có status mới, cập nhật theo request
-        if (request.getStatus() != null) {
-//            guide.setStatus(request.getStatus());
-        } else {
-            // Nếu không có status, tự động chuyển đổi giữa ACTIVE và INACTIVE
-//            guide.setStatus("ACTIVE".equalsIgnoreCase(guide.getStatus()) ? "INACTIVE" : "ACTIVE");
-        }
-
+        guide.setActive(active);
         return guideMapper.toGuideResponse(guideRepository.save(guide));
     }
 }

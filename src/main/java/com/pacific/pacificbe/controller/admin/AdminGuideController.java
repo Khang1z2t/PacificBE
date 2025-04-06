@@ -52,7 +52,7 @@ public class AdminGuideController {
     @Operation(summary = "Cập nhật trạng thái hướng dẫn viên")
     public ResponseEntity<ApiResponse<GuideResponse>> updateStatusGuide(
             @PathVariable String id,
-            @RequestBody UpdateStatusGuideRequest request) {
-        return ResponseEntity.ok(new ApiResponse<>(200, "Cập nhật trạng thái thành công", guideService.updateStatus(id, request)));
+            @RequestParam boolean active) {
+        return ResponseEntity.ok(new ApiResponse<>(200, "Cập nhật trạng thái thành công", guideService.updateStatus(id, active)));
     }
 }

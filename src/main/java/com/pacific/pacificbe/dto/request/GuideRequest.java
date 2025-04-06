@@ -18,16 +18,5 @@ public class GuideRequest {
     private String firstName;
     private String lastName;
     private String phone;
-
-    @Builder.Default
-    private String status = "active";
-
-    @Builder.Default
-    private Boolean active = true;
-
-    @Builder.Default
-    private LocalDateTime createdAt = LocalDateTime.now();
-
-    @Builder.Default
-    private LocalDateTime updatedAt = LocalDateTime.now();
+    private String active;
 }

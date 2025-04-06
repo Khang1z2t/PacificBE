@@ -4,6 +4,5 @@ import lombok.Data;
 
 @Data
 public class UpdateStatusGuideRequest {
-    private String status;
-
+    boolean status;
 }

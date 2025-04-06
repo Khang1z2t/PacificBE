@@ -20,6 +20,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -62,6 +63,7 @@ public class TourServiceImpl implements TourService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "allTours", allEntries = true)
     public TourResponse createTour(CreateTourRequest request, MultipartFile thumbnail, MultipartFile[] images) {
         Tour tour = new Tour();
         tour.setTitle(request.getTitle());
@@ -93,6 +95,7 @@ public class TourServiceImpl implements TourService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "allTours", allEntries = true)
     public TourResponse addTourThumbnail(String id, MultipartFile thumbnail) {
         Tour tour = tourRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.TOUR_NOT_FOUND));
@@ -104,6 +107,7 @@ public class TourServiceImpl implements TourService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "allTours", allEntries = true)
     public TourResponse addTourImages(String id, MultipartFile[] images) {
         Tour tour = tourRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.TOUR_NOT_FOUND));
@@ -114,6 +118,7 @@ public class TourServiceImpl implements TourService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "allTours", allEntries = true)
     public TourResponse updateTour(String id, UpdateTourRequest request, MultipartFile thumbnail, MultipartFile[] images) {
         Tour tour = tourRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.TOUR_NOT_FOUND));
@@ -146,6 +151,7 @@ public class TourServiceImpl implements TourService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "allTours", allEntries = true)
     public Boolean deleteTour(String id, boolean active) {
         Tour tour = tourRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.TOUR_NOT_FOUND));

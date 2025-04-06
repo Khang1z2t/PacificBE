@@ -151,12 +151,12 @@ public class UrlMapping {
     /* =========================== End Category API ===================================== */
 
     /* =========================== Start Guide API ===================================== */
-    public static final String GUIDE = API + "/guide";
-    public static final String GET_ALL_GUIDE = "/all";
-    //    public static final String CREATE_GUIDE = "/create";
-//    public static final String GET_GUIDE_BY_ID = "/{id}";
-//    public static final String UPDATE_GUIDE = "/update/{id}";
-    public static final String DELETE_GUIDE = "/delete/{id}";
+//    public static final String GUIDE = API + "/guide";
+//    public static final String GET_ALL_GUIDE = "/all";
+//    //    public static final String CREATE_GUIDE = "/create";
+////    public static final String GET_GUIDE_BY_ID = "/{id}";
+////    public static final String UPDATE_GUIDE = "/update/{id}";
+//    public static final String DELETE_GUIDE = "/delete/{id}";
     /* =========================== End Guide API ===================================== */
 
     /* =========================== Start Itinerary API ===================================== */
@@ -183,7 +183,7 @@ public class UrlMapping {
     /* =========================== End Admin_review API ===================================== */
 
     /* =========================== Start Admin Guide API ===================================== */
-    public static final String ADMIN_GUIDE = API + "/admin/guide";
+    public static final String ADMIN_GUIDE = API + "/guide";
     public static final String GET_ALL_GUIDES = "/all";
     public static final String CREATE_GUIDE = "/create";
     public static final String GET_GUIDE_BY_ID = "/{id}";
@@ -204,9 +204,9 @@ public class UrlMapping {
     /* =========================== End Admin Voucher API ===================================== */
 
     /* =========================== Start Other URL ===================================== */
-//    public static final String FE_URL = "http://localhost:3000";
+    public static final String FE_URL = "http://localhost:3000";
 //    Trong truong hop deloy
-    public static final String FE_URL = "https://pacific-vn.vercel.app";
+//    public static final String FE_URL = "https://pacific-vn.vercel.app";
     public static final String GOOGLE_REDIRECT = FE_URL + "/google/redirect";
     public static final String PAYMENT_FAIL = FE_URL + "/checkout/fail";
     public static final String PAYMENT_SUCCESS = FE_URL + "/checkout/success";

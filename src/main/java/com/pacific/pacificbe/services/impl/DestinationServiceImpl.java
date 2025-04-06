@@ -4,6 +4,8 @@ import com.pacific.pacificbe.model.Destination;
 import com.pacific.pacificbe.repository.DestinationRepository;
 import com.pacific.pacificbe.services.DestinationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,17 +21,20 @@ public class DestinationServiceImpl implements DestinationService {
         return destinationRepository.findById(id);
     }
 
+    @Cacheable(value = "allDestinations")
     @Override
     public List<Destination> getAllDestinations() {
         return destinationRepository.findAll();
     }
 
+    @CacheEvict(value = "allDestinations", allEntries = true)
     @Override
     public Destination createDestination(Destination destination) {
         return destinationRepository.save(destination);
     }
 
     @Override
+    @CacheEvict(value = "allDestinations", allEntries = true)
     public Optional<Destination> updateDestination(String id, Destination updatedDestination) {
         return destinationRepository.findById(id).map(existingDestination -> {
             existingDestination.setCity(updatedDestination.getCity());
@@ -42,6 +47,7 @@ public class DestinationServiceImpl implements DestinationService {
     }
 
     @Override
+    @CacheEvict(value = "allDestinations", allEntries = true)
     public boolean deleteDestination(String id) {
         if (destinationRepository.existsById(id)) {
             destinationRepository.deleteById(id);

@@ -15,5 +15,5 @@ public interface GuideService {
 
     GuideResponse updateGuide(String id, GuideRequest request);
 
-    GuideResponse updateStatus(String id, UpdateStatusGuideRequest request);
+    GuideResponse updateStatus(String id, boolean active);
 }
