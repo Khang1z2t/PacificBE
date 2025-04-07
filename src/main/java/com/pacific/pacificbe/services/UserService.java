@@ -1,6 +1,7 @@
 package com.pacific.pacificbe.services;
 
 import com.pacific.pacificbe.dto.request.*;
+import com.pacific.pacificbe.dto.response.TopBookedUsersResponse;
 import com.pacific.pacificbe.dto.response.UserResponse;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,7 +17,11 @@ public interface UserService {
 
     UserResponse updateUser(String id, UpdateUserRequest request);
 
-    UserResponse updateStatus(String id, UpdateStatusUserRequest request);
+    UserResponse updateStatus(String id, boolean active);
 
     UserResponse updateProfile(UpdateProfileRequest request, MultipartFile avatar);
+
+    Long getTotalUser();
+
+    List<TopBookedUsersResponse> getTopBookedUsers(int limit);
 }

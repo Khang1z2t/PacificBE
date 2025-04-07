@@ -1,14 +1,14 @@
 package com.pacific.pacificbe.repository;
 
-import aj.org.objectweb.asm.commons.Remapper;
+import com.pacific.pacificbe.dto.response.TopBookedUsersResponse;
 import com.pacific.pacificbe.model.User;
-import jakarta.persistence.NamedQuery;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -31,4 +31,14 @@ public interface UserRepository extends JpaRepository<User, String> {
     // Số lượng khách hàng mới hôm qua
     @Query("SELECT COUNT(u) FROM User u WHERE u.createdAt >= :startOfYesterday AND u.createdAt <= :endOfYesterday")
     long countNewUsersYesterday(@Param("startOfYesterday") LocalDateTime startOfYesterday, @Param("endOfYesterday") LocalDateTime endOfYesterday);
+
+    @Query("SELECT COUNT(u) FROM User u WHERE u.deleteAt IS NULL")
+    long countUsers();
+
+    @Query("SELECT new com.pacific.pacificbe.dto.response.TopBookedUsersResponse(" +
+            "u.id, u.firstName, u.lastName, u.email, COUNT(b.id)) " +
+            "FROM User u LEFT JOIN u.bookings b " +
+            "GROUP BY u.id, u.firstName, u.lastName, u.email " +
+            "ORDER BY COUNT(b.id) DESC")
+    List<TopBookedUsersResponse> findTopBookedUsers();
 }

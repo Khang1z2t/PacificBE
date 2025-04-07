@@ -3,6 +3,7 @@ package com.pacific.pacificbe.controller;
 import com.pacific.pacificbe.dto.ApiResponse;
 import com.pacific.pacificbe.dto.request.*;
 import com.pacific.pacificbe.dto.response.AuthenticationResponse;
+import com.pacific.pacificbe.dto.response.TopBookedUsersResponse;
 import com.pacific.pacificbe.dto.response.UserRegisterResponse;
 import com.pacific.pacificbe.dto.response.UserResponse;
 import com.pacific.pacificbe.model.User;
@@ -68,5 +69,25 @@ public class UserController {
     ResponseEntity<?> testaddUser() {
         userRepository.save(User.builder().username(idUtil.generateRandomID()).password("12345678").build());
         return ResponseEntity.ok("OK");
+    }
+
+    @PatchMapping(UrlMapping.UPDATE_STATUS_USER)
+    @Operation(summary = "API cập nhật trạng thái người dùng")
+    ResponseEntity<ApiResponse<UserResponse>> updateStatusUser(
+            @PathVariable String id,
+            @RequestParam boolean active) {
+        return ResponseEntity.ok(new ApiResponse<>(200, "Cập nhật trạng thái thành công", userService.updateStatus(id, active)));
+    }
+
+    @GetMapping(UrlMapping.COUNT_ALL_USERS)
+    @Operation(summary = "API đếm tổng số người dùng")
+    ResponseEntity<ApiResponse<Long>> getTotalUser() {
+        return ResponseEntity.ok(new ApiResponse<>(200, "Thành công", userService.getTotalUser()));
+    }
+
+    @GetMapping(UrlMapping.TOP_BOOKED_USERS)
+    @Operation(summary = "API lấy danh sách người dùng đã đặt tour nhiều nhất")
+    ResponseEntity<ApiResponse<List<TopBookedUsersResponse>>> getTopBookedUsers(@RequestParam(defaultValue = "10") int limit) {
+        return ResponseEntity.ok(new ApiResponse<>(200, "Thành công", userService.getTopBookedUsers(limit)));
     }
 }

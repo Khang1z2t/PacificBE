@@ -2,6 +2,7 @@ package com.pacific.pacificbe.services.impl;
 
 
 import com.pacific.pacificbe.dto.request.*;
+import com.pacific.pacificbe.dto.response.TopBookedUsersResponse;
 import com.pacific.pacificbe.dto.response.UserResponse;
 import com.pacific.pacificbe.exception.AppException;
 import com.pacific.pacificbe.exception.ErrorCode;
@@ -84,19 +85,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponse updateStatus(String id, UpdateStatusUserRequest request) {
+    public UserResponse updateStatus(String id, boolean active) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
-        // Nếu request có status mới, cập nhật theo request
-        if (request.getStatus() != null) {
-            user.setStatus(request.getStatus());
-        } else {
-            // Nếu không có status, tự động chuyển đổi giữa ACTIVE và INACTIVE
-            user.setStatus(UserStatus.ACTIVE.toString().equalsIgnoreCase(
-                    user.getStatus()) ? UserStatus.INACTIVE.toString() : UserStatus.ACTIVE.toString());
+        user.setActive(active);
+        if (!active) {
+            user.setStatus(UserStatus.BLOCKED.toString());
         }
-
         return userMapper.toUserResponse(userRepository.save(user));
     }
 
@@ -126,4 +122,16 @@ public class UserServiceImpl implements UserService {
         return userMapper.toUserResponse(user);
     }
 
+    @Override
+    public Long getTotalUser() {
+        return userRepository.countUsers();
+    }
+
+    @Override
+    public List<TopBookedUsersResponse> getTopBookedUsers(int limit) {
+        List<TopBookedUsersResponse> topBookedUsers = userRepository.findTopBookedUsers();
+        return topBookedUsers.stream()
+                .limit(limit)
+                .toList();
+    }
 }

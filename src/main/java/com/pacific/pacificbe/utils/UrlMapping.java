@@ -18,6 +18,8 @@ public class UrlMapping {
     public static final String COUNT_ALL_TOURS = "/count/tours";
     public static final String COUNT_ALL_GUIDES = "/count/guides";
     public static final String COUNT_ALL_BOOKINGS = "/count/bookings";
+    public static final String COUNT_ONLINE_USERS = "/count-online";
+    public static final String TOP_BOOKED_USERS = "/top-booked-users";
 
     /*============================ Start auth API ===================================*/
     public static final String AUTH = API + "/auth";
@@ -119,6 +121,7 @@ public class UrlMapping {
 
     /*============================ Start User API ===================================*/
     public static final String USERS = API + "/users";
+    public static final String UPDATE_STATUS_USER = "/updateStatus/{id}";
     public static final String GET_USER_BY_ID = "/{id}";
     public static final String GET_ALL_USERS = "/all";
 
@@ -168,7 +171,6 @@ public class UrlMapping {
     /* =========================== Start Admin User API ===================================== */
     public static final String ADD_USER = "/create";
     public static final String UPDATE_USER = "/update/{id}";
-    public static final String UPDATE_STATUS_USER = "/updateStatus/{id}";
     /* =========================== End Admin User API ===================================== */
 
     /* =========================== Start Admin_review API ===================================== */
