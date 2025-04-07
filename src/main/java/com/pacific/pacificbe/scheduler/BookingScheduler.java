@@ -3,7 +3,7 @@ package com.pacific.pacificbe.scheduler;
 import com.pacific.pacificbe.model.Booking;
 import com.pacific.pacificbe.model.TourDetail;
 import com.pacific.pacificbe.repository.BookingRepository;
-import com.pacific.pacificbe.utils.JavaMail;
+import com.pacific.pacificbe.utils.MailService;
 import com.pacific.pacificbe.utils.UrlMapping;
 import com.pacific.pacificbe.utils.enums.BookingStatus;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +31,7 @@ import java.util.List;
 public class BookingScheduler {
 
     private final BookingRepository bookingRepository;
-    private final JavaMail javaMail;
+    private final MailService mailService;
 
     // Chạy lúc 0h mỗi ngày
     @Scheduled(cron = "0 0 0 * * ?")
@@ -66,7 +66,7 @@ public class BookingScheduler {
                 if (booking.getStatus().equals(BookingStatus.PENDING.toString())) {
                     // Sau 24 giờ: Chuyển sang EXPIRED và gửi email thông báo
                     if (now.isAfter(booking.getCreatedAt().plusHours(24))) {
-                        javaMail.sendEmail(booking.getUser().getEmail(),
+                        mailService.sendEmail(booking.getUser().getEmail(),
                                 "Thông báo về Booking: " + booking.getBookingNo(),
                                 getBookingExpiredMail(booking));
                         booking.setStatus(BookingStatus.EXPIRED.toString());

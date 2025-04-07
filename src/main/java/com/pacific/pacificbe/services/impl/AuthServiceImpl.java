@@ -17,7 +17,7 @@ import com.pacific.pacificbe.services.JwtService;
 import com.pacific.pacificbe.services.OtpService;
 import com.pacific.pacificbe.utils.AuthUtils;
 import com.pacific.pacificbe.utils.IdUtil;
-import com.pacific.pacificbe.utils.JavaMail;
+import com.pacific.pacificbe.utils.MailService;
 import com.pacific.pacificbe.utils.UrlMapping;
 import com.pacific.pacificbe.utils.enums.UserRole;
 import com.pacific.pacificbe.utils.enums.UserStatus;
@@ -47,7 +47,7 @@ public class AuthServiceImpl implements AuthService {
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private final IdUtil idUtil;
     private final OtpService otpService;
-    private final JavaMail javaMail;
+    private final MailService mailService;
     private final UserMapper userMapper;
     private final AuthenticationManager authenticationManager;
     @Value("${oauth2.google.clientId}")
@@ -147,7 +147,7 @@ public class AuthServiceImpl implements AuthService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_AUTHENTICATED));
         String otp = otpService.generateOtp(email);
-        javaMail.sendMailVerify(user, otp);
+        mailService.sendMailVerify(user, otp);
         return "Gửi email thành công";
     }
 
@@ -156,7 +156,7 @@ public class AuthServiceImpl implements AuthService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         String otp = otpService.generateOtp(email);
-        javaMail.sendMailForgotPassword(user, otp);
+        mailService.sendMailForgotPassword(user, otp);
         return "Gửi email thành công";
     }
 
