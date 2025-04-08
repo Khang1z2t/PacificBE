@@ -13,9 +13,7 @@ import com.pacific.pacificbe.repository.PaymentRepository;
 import com.pacific.pacificbe.repository.UserRepository;
 import com.pacific.pacificbe.services.PaymentService;
 import com.pacific.pacificbe.services.VNPAYService;
-import com.pacific.pacificbe.utils.AuthUtils;
-import com.pacific.pacificbe.utils.JavaMail;
-import com.pacific.pacificbe.utils.UrlMapping;
+import com.pacific.pacificbe.utils.*;
 import com.pacific.pacificbe.utils.enums.BookingStatus;
 import com.pacific.pacificbe.utils.enums.PaymentStatus;
 import jakarta.servlet.http.HttpServletRequest;
@@ -45,7 +43,9 @@ public class VNPAYServiceImpl implements VNPAYService {
     private final BookingRepository bookingRepository;
     private final PaymentService paymentService;
     private final PaymentRepository paymentRepository;
-    private final JavaMail javaMail;
+    private final MailService mailService;
+    private final QrUtil qrUtil;
+    private final CalendarUtil calendarUtil;
 
     @Override
     public String createOrder(HttpServletRequest request, VNPAYRequest vnpayRequest) {
@@ -208,9 +208,26 @@ public class VNPAYServiceImpl implements VNPAYService {
             booking.setStatus(BookingStatus.PAID.toString());
             bookingRepository.save(booking);
             // Gửi email xác nhận thanh toán thành công
-            javaMail.sendEmail(user.getEmail(),
+            String qrCodeData = booking.getBookingNo() + "-" + booking.getTourDetail().getId();
+            byte[] qrCodeBytes = qrUtil.generateQRCode(qrCodeData, 200, 200);
+
+            Map<String, byte[]> attachments = new HashMap<>();
+            attachments.put("qrCode", qrCodeBytes);
+
+            mailService.queueEmail(user.getEmail(),
                     "Xác nhận thanh toán thành công cho booking: " + booking.getBookingNo(),
                     getBookingConfirm(booking));
+//            mailService.sendEmail(user.getEmail(),
+//                    "Xác nhận thanh toán thành công cho booking: " + booking.getBookingNo(),
+//                    getBookingConfirm(booking));
+
+            mailService.queueEmail(user.getEmail(),
+                    "Vé tham gia của booking: " + booking.getBookingNo(),
+                    getBookingTicket(booking),
+                    attachments);
+//            mailService.sendEmail(user.getEmail(),
+//                    "Vé tham gia của booking: " + booking.getBookingNo(),
+//                    getBookingTicket(booking));
             log.info("Gửi email xác nhận thanh toán thành công cho booking: {}", booking.getBookingNo());
             return new RedirectView(UrlMapping.PAYMENT_SUCCESS);
         } else {
@@ -269,6 +286,46 @@ public class VNPAYServiceImpl implements VNPAYService {
         } catch (Exception e) {
             log.warn("Error while getting booking confirm: ", e);
             throw new AppException(ErrorCode.CANT_SEND_MAIL);
+        }
+    }
+
+    private String getBookingTicket(Booking booking) {
+        try {
+            Path path = new ClassPathResource("mail/booking_ticket.html").getFile().toPath();
+            String emailBody = Files.readString(path, StandardCharsets.UTF_8);
+
+            emailBody = emailBody.replace("{{homePageUrl}}", UrlMapping.FE_URL);
+            emailBody = emailBody.replace("{{firstName}}", booking.getUser().getFirstName());
+            emailBody = emailBody.replace("{{lastName}}", booking.getUser().getLastName());
+
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm a");
+
+            TourDetail tourDetail = booking.getTourDetail();
+            emailBody = emailBody.replace("{{tourName}}", tourDetail.getTour().getTitle());
+            emailBody = emailBody.replace("{{startTime}}", tourDetail.getStartDate().format(timeFormatter));
+            emailBody = emailBody.replace("{{startDate}}", tourDetail.getStartDate().format(dateFormatter));
+
+            String googleCalendarUrl = calendarUtil
+                    .generateGoogleCalendarLink(
+                            booking.getBookingNo(),
+                            tourDetail.getStartDate(),
+                            tourDetail.getEndDate(),
+                            booking.getTourDetail().getTour().getTitle());
+            emailBody = emailBody.replace("{{calendarLink}}", googleCalendarUrl);
+
+            emailBody = emailBody.replace("{{qrCodeUrl}}", "cid:qrCode");
+
+            emailBody = emailBody.replace("{{ticketNumber}}", booking.getBookingNo());
+            BigDecimal roundedAmount = booking.getTotalAmount()
+                    .divide(BigDecimal.valueOf(1000), 0, RoundingMode.HALF_UP)
+                    .multiply(BigDecimal.valueOf(1000));
+            emailBody = emailBody.replace("{{ticketPrice}}", String.format("%,d VND", roundedAmount.longValue()));
+            emailBody = emailBody.replace("{{ticketHolder}}", booking.getBookerFullName());
+
+            return emailBody;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 }

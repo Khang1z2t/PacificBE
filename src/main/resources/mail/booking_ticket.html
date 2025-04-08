@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tour Ticket Information</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .container img.logo {
+            max-width: 180px;
+            height: auto;
+            margin: 0 auto 15px; /* This centers horizontally and keeps bottom margin */
+            border: 2px solid #ffffff;
+            border-radius: 8px;
+            display: block; /* This is necessary for margin auto to work */
+        }
+
+        .logo-container {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        h2 {
+            color: #333;
+            text-align: center;
+        }
+
+        p {
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .ticket-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            min-height: 120px; /* Ensures the card has enough height for the QR code */
+        }
+
+        .qr-code {
+            flex: 0 0 120px; /* Fixed width for the QR code container */
+            text-align: center;
+            margin-right: 15px; /* Adds spacing between QR code and ticket info */
+        }
+
+        .qr-code img {
+            width: 200px; /* Fixed size for the QR code */
+            height: 200px;
+            display: block; /* Ensures the image doesn't have extra space below */
+            margin: 0 auto; /* Centers the QR code within its container */
+            border: 1px solid #ddd; /* Optional: Adds a subtle border for visual clarity */
+            border-radius: 3px; /* Optional: Rounds the corners of the QR code */
+        }
+
+        .ticket-info {
+            flex: 1; /* Takes up the remaining space */
+            padding-left: 15px;
+        }
+
+        .tour-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .ticket-info p {
+            margin: 5px 0;
+        }
+
+        .location {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #ffffff; /* Changed to white */
+            border-radius: 5px;
+        }
+
+        .location p {
+            margin: 5px 0;
+            line-height: 1.4; /* Improves readability with better line spacing */
+        }
+
+        .add-to-calendar {
+            margin-top: 5px;
+            display: block;
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .add-to-calendar:hover {
+            text-decoration: underline;
+        }
+
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+            color: #888;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <a href="{{homePageUrl}}" class="logo-container" target="_blank">
+        <img src="https://lh3.googleusercontent.com/d/1IQghoy4jSZeOKcHOvcZWKFy8muLXGFtD" alt="Pacific Travel"
+             class="logo">
+    </a>
+    <h2>Thông Tin Vé Tham Gia Tour</h2>
+    <p>Xin chào <strong>{{firstName}} {{lastName}}</strong>, bạn sở hữu vé tham gia tour</p>
+    <p>Dưới đây là thông tin vé tham gia tour của bạn:</p>
+    <div class="ticket-card">
+        <div class="qr-code">
+            <img src="{{qrCodeUrl}}" alt="QR Code">
+        </div>
+        <div class="ticket-info">
+            <div class="tour-name">{{tourName}}</div>
+            <p><strong>Ngày diễn ra:</strong> {{startDate}}</p>
+            <p><strong>Thời gian:</strong> {{startTime}}</p>
+            <a href="{{calendarLink}}" class="add-to-calendar">Thêm vào lịch</a>
+            <p><strong>Số vé:</strong> {{ticketNumber}}</p>
+            <p><strong>Giá vé:</strong> {{ticketPrice}}</p>
+            <p><strong>Người sở hữu vé:</strong> {{ticketHolder}}</p>
+            <p style="color: #d9534f; font-weight: bold; margin-top: 10px;">
+                Lưu ý: Vui lòng giữ vé cẩn thận và không chia sẻ mã QR cho người khác để tránh bị sử dụng trái phép.
+            </p>
+        </div>
+    </div>
+    <div class="location">
+        <p><strong>Địa điểm:</strong><br>Công Viên Phần Mềm Quang Trung, Đ. Số 1, Tân Hưng Thuận, Quận 12, Tp. Hồ Chí
+            Minh</p><br>
+        <p><strong>Chỉ dẫn:</strong><br><a href="https://maps.app.goo.gl/FvvmfxjeuDzmqixb9" target="_blank">
+            https://maps.app.goo.gl/FvvmfxjeuDzmqixb9</a>
+        </p><br>
+        <p><strong>Nếu bạn có bất kỳ câu hỏi nào, vui lòng liên hệ:</strong>
+            <br>0865399254 hoặc email
+            <a href="mailto:pacific.musketeers.tni@gmail.com">pacific.musketeers.tni@gmail.com</a>
+        </p><br>
+    </div>
+    <div class="footer">
+        <p>Trân trọng,<br>Đội ngũ Pacific</p>
+    </div>
+</div>
+</body>
+</html>

@@ -4,9 +4,7 @@ import com.pacific.pacificbe.dto.ApiResponse;
 import com.pacific.pacificbe.dto.request.SupportRequest;
 import com.pacific.pacificbe.dto.request.UpdateStatusSupportRequest;
 import com.pacific.pacificbe.dto.response.SupportResponse;
-import com.pacific.pacificbe.repository.UserRepository;
 import com.pacific.pacificbe.services.SupportService;
-import com.pacific.pacificbe.utils.JavaMail;
 import com.pacific.pacificbe.utils.UrlMapping;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AccessLevel;
@@ -14,8 +12,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 

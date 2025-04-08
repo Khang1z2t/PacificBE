@@ -2,15 +2,13 @@ package com.pacific.pacificbe.controller;
 
 import com.pacific.pacificbe.dto.ApiResponse;
 import com.pacific.pacificbe.dto.request.*;
-import com.pacific.pacificbe.dto.response.AuthenticationResponse;
 import com.pacific.pacificbe.dto.response.TopBookedUsersResponse;
-import com.pacific.pacificbe.dto.response.UserRegisterResponse;
 import com.pacific.pacificbe.dto.response.UserResponse;
 import com.pacific.pacificbe.model.User;
 import com.pacific.pacificbe.repository.UserRepository;
 import com.pacific.pacificbe.services.UserService;
 import com.pacific.pacificbe.utils.IdUtil;
-import com.pacific.pacificbe.utils.JavaMail;
+import com.pacific.pacificbe.utils.MailService;
 import com.pacific.pacificbe.utils.UrlMapping;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AccessLevel;
@@ -30,7 +28,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserController {
     UserService userService;
-    private final JavaMail javaMail;
+    private final MailService mailService;
     private final UserRepository userRepository;
     private final IdUtil idUtil;
 
@@ -59,7 +57,7 @@ public class UserController {
     @GetMapping("test-mail")
     @Operation(summary = "API test gửi mail")
     ResponseEntity<?> testMail(@RequestParam String email, @RequestParam String subject, @RequestParam String content) {
-        javaMail.sendEmail(email, subject, content);
+        mailService.sendEmail(email, subject, content);
         return ResponseEntity.ok("OK");
     }
 

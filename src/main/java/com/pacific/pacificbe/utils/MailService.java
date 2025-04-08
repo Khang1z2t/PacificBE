@@ -1,63 +1,76 @@
 package com.pacific.pacificbe.utils;
 
+import com.pacific.pacificbe.dto.EmailMessage;
 import com.pacific.pacificbe.exception.AppException;
 import com.pacific.pacificbe.exception.ErrorCode;
 import com.pacific.pacificbe.model.User;
-import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import lombok.extern.slf4j.Slf4j;
 
-import java.math.BigDecimal;
-import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
-import java.util.Locale;
+import java.util.Map;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class JavaMail {
+public class MailService {
     JavaMailSender javaMailSender;
+    RedisTemplate<Object, Object> redisTemplate;
 
-
-    private String formatDate(String date) {
-        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
-        SimpleDateFormat outputFormat = new SimpleDateFormat("dd/MM/yyyy");
-        try {
-            return outputFormat.format(inputFormat.parse(date));
-        } catch (Exception e) {
-            return date;
-        }
+    public void queueEmail(String to, String subject, String body) {
+        queueEmail(to, subject, body, null);
     }
 
-    private String formatCurrency(String amount) {
-        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
-        return currencyFormat.format(new BigDecimal(amount));
+    public void queueEmail(String to, String subject, String body, Map<String, byte[]> attachments) {
+        EmailMessage emailMessage = new EmailMessage(to, subject, body, attachments);
+        redisTemplate.opsForList().leftPush(Constant.EMAIL_QUEUE, emailMessage);
+        log.info("Đã thêm vào hàng chờ cho email: {}", to);
     }
-
 
     public void sendEmail(String to, String subject, String body) {
-        MimeMessage message = javaMailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message);
+        sendEmail(to, subject, body, null);
+    }
 
+    public void sendEmail(String to, String subject, String body, Map<String, byte[]> attachments) {
         try {
+            MimeMessage message = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true); // multipart=true
+
             helper.setTo(to);
             helper.setSubject(subject);
-            helper.setText(body, true); // true indicates HTML content
+            helper.setText(body, true); // true = HTML
+
+            // Gắn ảnh inline nếu có
+            if (attachments != null && !attachments.isEmpty()) {
+                for (Map.Entry<String, byte[]> entry : attachments.entrySet()) {
+                    String key = entry.getKey();
+                    byte[] bytes = entry.getValue();
+
+                    // Nếu key được tham chiếu trong HTML (inline)
+                    if (body.contains("cid:" + key)) {
+                        helper.addInline(key, new ByteArrayResource(bytes), "image/png");
+                    } else {
+                        // Nếu không, coi như attachment
+                        helper.addAttachment(key, new ByteArrayResource(bytes));
+                    }
+                }
+            }
 
             javaMailSender.send(message);
-        } catch (MessagingException e) {
+        } catch (Exception e) {
             log.error("Error while sending email: ", e);
             throw new AppException(ErrorCode.CANT_SEND_MAIL);
-            // Handle the exception appropriately
         }
     }
+
 
     public void sendMailVerify(User user, String otp) {
         String subjectEmail = otp + " là mã xác nhận email của bạn";
@@ -81,16 +94,4 @@ public class JavaMail {
         sendEmail(user.getEmail(), subjectEmail, bodyEmail);
     }
 
-    public void sendMailBooking(User user, String bookingNo, String tourName, String createDate, String totalPrice) {
-        String subjectEmail = "Xác nhận đặt tour " + tourName;
-        String bodyEmail = "<div style='font-family: Arial, sans-serif;'>"
-                + "<h2 style='color: #2E86C1;'>Xác nhận đặt tour</h2>"
-                + "<p>Xin chào <strong>" + user.getFirstName() + " " + user.getLastName() + "</strong>,</p>"
-                + "<p>Cảm ơn bạn đã đặt tour <strong>" + tourName + "</strong> vào ngày <strong>" + formatDate(createDate) + "</strong>.</p>"
-                + "<p>Mã đặt tour của bạn là: <strong style='color: #E74C3C;'>" + bookingNo + "</strong></p>"
-                + "<p>Tổng giá trị đơn hàng là: <strong style='color: #27AE60;'>" + formatCurrency(totalPrice) + "</strong></p>"
-                + "<p>Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi.</p>"
-                + "</div>";
-        sendEmail(user.getEmail(), subjectEmail, bodyEmail);
-    }
 }
