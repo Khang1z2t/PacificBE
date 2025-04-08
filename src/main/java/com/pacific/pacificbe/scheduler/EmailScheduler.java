@@ -2,7 +2,6 @@ package com.pacific.pacificbe.scheduler;
 
 import com.pacific.pacificbe.dto.EmailMessage;
 import com.pacific.pacificbe.services.MailSenderInternal;
-import com.pacific.pacificbe.utils.Constant;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;

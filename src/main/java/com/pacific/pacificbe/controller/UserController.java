@@ -6,7 +6,6 @@ import com.pacific.pacificbe.dto.response.TopBookedUsersResponse;
 import com.pacific.pacificbe.dto.response.UserResponse;
 import com.pacific.pacificbe.model.User;
 import com.pacific.pacificbe.repository.UserRepository;
-import com.pacific.pacificbe.services.MailSenderInternal;
 import com.pacific.pacificbe.services.MailService;
 import com.pacific.pacificbe.services.UserService;
 import com.pacific.pacificbe.utils.IdUtil;
