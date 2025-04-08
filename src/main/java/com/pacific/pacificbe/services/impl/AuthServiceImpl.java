@@ -14,10 +14,10 @@ import com.pacific.pacificbe.integration.google.GoogleClient;
 import com.pacific.pacificbe.integration.google.GoogleUserClient;
 import com.pacific.pacificbe.services.AuthService;
 import com.pacific.pacificbe.services.JwtService;
+import com.pacific.pacificbe.services.MailService;
 import com.pacific.pacificbe.services.OtpService;
 import com.pacific.pacificbe.utils.AuthUtils;
 import com.pacific.pacificbe.utils.IdUtil;
-import com.pacific.pacificbe.utils.MailService;
 import com.pacific.pacificbe.utils.UrlMapping;
 import com.pacific.pacificbe.utils.enums.UserRole;
 import com.pacific.pacificbe.utils.enums.UserStatus;
@@ -147,7 +147,7 @@ public class AuthServiceImpl implements AuthService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_AUTHENTICATED));
         String otp = otpService.generateOtp(email);
-        mailService.sendMailVerify(user, otp);
+        sendMailVerify(user, otp);
         return "Gửi email thành công";
     }
 
@@ -156,7 +156,7 @@ public class AuthServiceImpl implements AuthService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         String otp = otpService.generateOtp(email);
-        mailService.sendMailForgotPassword(user, otp);
+        sendMailForgotPassword(user, otp);
         return "Gửi email thành công";
     }
 
@@ -278,5 +278,28 @@ public class AuthServiceImpl implements AuthService {
         user.setStatus(UserStatus.ACTIVE.toString());
         userRepository.save(user);
         return true;
+    }
+
+
+    private void sendMailVerify(User user, String otp) {
+        String subjectEmail = otp + " là mã xác nhận email của bạn";
+        String bodyEmail = "<h2>Xác nhận email</h2>"
+                + "<p>Xin chào " + user.getFirstName() + " " + user.getLastName() + ",</p>"
+                + "<p>Vui lòng sử dụng mã xác nhận bên dưới để hoàn tất việc xác nhận email:</p>"
+                + "<h3 style='color:blue;'>" + otp + "</h3>"
+                + "<p>Otp sẽ hết hạn trong vòng 30 phút.</p>"
+                + "<p>Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi.</p>";
+        mailService.queueEmail(user.getEmail(), subjectEmail, bodyEmail);
+    }
+
+    private void sendMailForgotPassword(User user, String otp) {
+        String subjectEmail = otp + " là mã xác nhận đổi mật khẩu của bạn";
+        String bodyEmail = "<h2>Xác nhận đổi mật khẩu</h2>"
+                + "<p>Xin chào " + user.getFirstName() + " " + user.getLastName() + ",</p>"
+                + "<p>Vui lòng sử dụng mã xác nhận bên dưới để hoàn tất việc đổi mật khẩu:</p>"
+                + "<h3 style='color:blue;'>" + otp + "</h3>"
+                + "<p>Otp sẽ hết hạn trong vòng 30 phút.</p>"
+                + "<p>Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi.</p>";
+        mailService.queueEmail(user.getEmail(), subjectEmail, bodyEmail);
     }
 }

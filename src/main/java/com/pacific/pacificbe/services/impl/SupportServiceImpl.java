@@ -7,8 +7,8 @@ import com.pacific.pacificbe.exception.ErrorCode;
 import com.pacific.pacificbe.mapper.SupportMapper;
 import com.pacific.pacificbe.model.Support;
 import com.pacific.pacificbe.repository.SupportRepository;
+import com.pacific.pacificbe.services.MailService;
 import com.pacific.pacificbe.services.SupportService;
-import com.pacific.pacificbe.utils.MailService;
 import com.pacific.pacificbe.utils.enums.SupportStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -107,7 +107,7 @@ public class SupportServiceImpl implements SupportService {
                 + "<p>Yêu cầu hỗ trợ của bạn hiện đã được cập nhật sang trạng thái: <strong>" + support.getStatus() + "</strong>.</p>"
                 + "<p>Cảm ơn bạn đã liên hệ với chúng tôi.</p>";
 
-        mailService.sendEmail(email, subject, body);
+        mailService.queueEmail(email, subject, body, null);
     }
 
     public Optional<Support> getUserById(String userId) {

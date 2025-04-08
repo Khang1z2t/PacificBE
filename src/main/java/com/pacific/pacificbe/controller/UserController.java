@@ -6,9 +6,10 @@ import com.pacific.pacificbe.dto.response.TopBookedUsersResponse;
 import com.pacific.pacificbe.dto.response.UserResponse;
 import com.pacific.pacificbe.model.User;
 import com.pacific.pacificbe.repository.UserRepository;
+import com.pacific.pacificbe.services.MailSenderInternal;
+import com.pacific.pacificbe.services.MailService;
 import com.pacific.pacificbe.services.UserService;
 import com.pacific.pacificbe.utils.IdUtil;
-import com.pacific.pacificbe.utils.MailService;
 import com.pacific.pacificbe.utils.UrlMapping;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AccessLevel;
@@ -57,7 +58,7 @@ public class UserController {
     @GetMapping("test-mail")
     @Operation(summary = "API test gửi mail")
     ResponseEntity<?> testMail(@RequestParam String email, @RequestParam String subject, @RequestParam String content) {
-        mailService.sendEmail(email, subject, content);
+        mailService.queueEmail(email, subject, content, null);
         return ResponseEntity.ok("OK");
     }
 
