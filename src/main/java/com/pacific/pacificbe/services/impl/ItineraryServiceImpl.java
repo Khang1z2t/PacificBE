@@ -37,8 +37,18 @@ public class ItineraryServiceImpl implements ItineraryService {
     }
 
     @Override
-    public List<Itinerary> getByTourId(String id) {
-        return itineraryRepository.findByTourId(id);
+    public List<ItineraryResponse> getByTourId(String id) {
+        List<Itinerary> itineraries = itineraryRepository.findByTourId(id);
+        return itineraries.stream().map(itinerary -> {
+            ItineraryResponse response = new ItineraryResponse();
+            response.setId(itinerary.getId());
+            response.setDayNumber(itinerary.getDayNumber());
+            response.setTitle(itinerary.getTitle());
+            response.setNotes(itinerary.getNotes());
+            response.setTourId(itinerary.getTour().getId());
+            response.setActive(itinerary.isActive());
+            return response;
+        }).toList();
     }
 
     @Override

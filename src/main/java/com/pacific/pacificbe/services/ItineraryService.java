@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface ItineraryService {
     List<Itinerary> getAll();
-    List<Itinerary> getByTourId(String id);
+    List<ItineraryResponse> getByTourId(String id);
     List<ItineraryResponse> addItinerary(String tourId, ItineraryRequest request);
 //    List<ItineraryTourDetailResponse> getItineraryByTourAndDate(String tourId, String createdDay);
 }

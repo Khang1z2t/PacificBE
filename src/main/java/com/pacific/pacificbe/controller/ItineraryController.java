@@ -39,7 +39,7 @@ public class ItineraryController {
 
     @Operation(summary = "Lấy lịch trình theo tour")
     @GetMapping(UrlMapping.ITINERARY_BY_TOUR)
-    public ResponseEntity<ApiResponse<List<Itinerary>>> getItineraryByTourId(@PathVariable String tourId) {
+    public ResponseEntity<ApiResponse<List<ItineraryResponse>>> getItineraryByTourId(@PathVariable String tourId) {
         return ResponseEntity.ok(new ApiResponse<>(200, "Lấy lịch trình theo tour thành công", itineraryService.getByTourId(tourId)));
     }
 
