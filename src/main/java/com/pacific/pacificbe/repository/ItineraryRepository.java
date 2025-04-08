@@ -31,4 +31,6 @@ public interface ItineraryRepository extends JpaRepository<Itinerary, String> {
     List<ItineraryTourDetailResponse> getItineraryByTourAndDate(
             @Param("tourId") String tourId,
             @Param("createdDay") String createdDay);
+
+    List<Itinerary> findByTourId(String id);
 }

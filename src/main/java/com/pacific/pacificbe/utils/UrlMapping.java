@@ -165,6 +165,8 @@ public class UrlMapping {
     /* =========================== Start Itinerary API ===================================== */
     public static final String ITINERARY = API + "/itinerary";
     public static final String ITINERARY_ALL = "/all";
+    public static final String ITINERARY_BY_TOUR = "/getAllByTour/{tourId}";
+    public static final String ITINERARY_ADD = "/add";
     public static final String ITINERARY_TOUR_AND_DATE = "/{tourId}/{createdDay}";
     /* =========================== End Itinerary API ===================================== */
 

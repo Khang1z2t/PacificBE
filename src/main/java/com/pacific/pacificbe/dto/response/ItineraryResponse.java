@@ -12,15 +12,10 @@ import java.time.LocalDateTime;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ItineraryResponse {
-    String itineraryId;
-    String dayDetail;
-    String dayNumber;
-    String notes;
+    String id;
+    int dayNumber;
     String title;
-    String tourDetailId;
-
-    Boolean active;
-    LocalDateTime createdAt;
-    LocalDateTime updatedAt;
-    LocalDateTime deleteAt;
+    String notes;
+    String tourId;
+    private boolean active;
 }

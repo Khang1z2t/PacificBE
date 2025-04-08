@@ -33,7 +33,6 @@ public class TourDetailServiceImpl implements TourDetailService {
     private final TransportRepository transportRepository;
     private final TourDetailRepository tourDetailRepository;
     private final TourMapper tourMapper;
-    private final ItineraryRepository itineraryRepository;
     private final GuideRepository guideRepository;
 
     @Override
@@ -64,15 +63,15 @@ public class TourDetailServiceImpl implements TourDetailService {
         tourDetail.setActive(true);
         tourDetail = tourDetailRepository.save(tourDetail);
 
-        for (CreateItineraryRequest itineraryRequest : request.getItineraries()) {
-            Itinerary itinerary = new Itinerary();
-            itinerary.setDayDetail(itineraryRequest.getDayDetail());
-            itinerary.setTitle(itineraryRequest.getTitle());
-            itinerary.setDayDetail(itineraryRequest.getDayDetail());
-            itinerary.setTourDetail(tourDetail);
-            tourDetail.getItineraries().add(itinerary);
-            itineraryRepository.save(itinerary);
-        }
+//        for (CreateItineraryRequest itineraryRequest : request.getItineraries()) {
+//            Itinerary itinerary = new Itinerary();
+//            itinerary.setDayDetail(itineraryRequest.getDayDetail());
+//            itinerary.setTitle(itineraryRequest.getTitle());
+//            itinerary.setDayDetail(itineraryRequest.getDayDetail());
+//            itinerary.setTour(tourDetail);
+//            tourDetail.getItineraries().add(itinerary);
+//            itineraryRepository.save(itinerary);
+//        }
         tourDetail.setStatus(TourDetailStatus.OPEN.toString());
         tourDetailRepository.save(tourDetail);
         tour.setStatus(TourStatus.PUBLISHED.toString());

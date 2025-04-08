@@ -38,10 +38,9 @@ public class Itinerary extends BaseEntity {
     @Column(name = "title")
     private String title;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "tour_detail_id", nullable = false)
-    private TourDetail tourDetail;
+    @JoinColumn(name = "tour_id")
+    private Tour tour;
 
 }
