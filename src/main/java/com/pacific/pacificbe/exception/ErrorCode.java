@@ -107,6 +107,8 @@ public enum ErrorCode {
     VOUCHER_CATEGORY_ID_REQUIRED(1035, "Category ID is required", HttpStatus.BAD_REQUEST),
     INVALID_MIN_ORDER_VALUE(1036, "Min order value must be greater than 0", HttpStatus.BAD_REQUEST),
     VOUCHER_MAX_DISCOUNT_INVALID(1037, "Max discount must be greater than 0", HttpStatus.BAD_REQUEST),
+//    Itinerary
+    ITINERARY_NOT_FOUND(1038, "Itinerary not found", HttpStatus.NOT_FOUND),
 
 
     // Support Errors

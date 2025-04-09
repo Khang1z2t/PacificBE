@@ -2,6 +2,7 @@ package com.pacific.pacificbe.services.impl;
 
 import com.pacific.pacificbe.dto.request.ItineraryDay;
 import com.pacific.pacificbe.dto.request.ItineraryRequest;
+import com.pacific.pacificbe.dto.request.ItineraryUpdateRequest;
 import com.pacific.pacificbe.dto.response.ItineraryResponse;
 import com.pacific.pacificbe.dto.response.showTour.ItineraryTourDetailResponse;
 import com.pacific.pacificbe.exception.ErrorCode;
@@ -84,6 +85,28 @@ public class ItineraryServiceImpl implements ItineraryService {
             response.setActive(itinerary.isActive());
             return response;
         }).toList();
+    }
+
+    @Override
+    @Transactional
+    public ItineraryResponse updateItinerary(String itineraryId, ItineraryUpdateRequest request) {
+        Itinerary itinerary = itineraryRepository.findById(itineraryId)
+                .orElseThrow(() -> new IllegalArgumentException(ErrorCode.ITINERARY_NOT_FOUND.name()));
+
+        // Cập nhật các field
+        itinerary.setTitle(request.getTitle());
+        itinerary.setNotes(request.getNotes());
+
+        Itinerary updatedItinerary = itineraryRepository.save(itinerary);
+        return itineraryMapper.mapToResponse(updatedItinerary);
+    }
+
+    @Override
+    @Transactional
+    public void deleteItinerary(String itineraryId) {
+        Itinerary itinerary = itineraryRepository.findById(itineraryId)
+                .orElseThrow(() -> new IllegalArgumentException(ErrorCode.ITINERARY_NOT_FOUND.name()));
+        itineraryRepository.delete(itinerary);
     }
 
 //    @Override

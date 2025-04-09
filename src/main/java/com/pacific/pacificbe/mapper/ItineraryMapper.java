@@ -20,4 +20,15 @@ public class ItineraryMapper {
                 .notes(itinerary.getNotes())
                 .build());
     }
+
+    public ItineraryResponse mapToResponse(Itinerary itinerary) {
+        ItineraryResponse response = new ItineraryResponse();
+        response.setId(itinerary.getId());
+        response.setDayNumber(itinerary.getDayNumber());
+        response.setTitle(itinerary.getTitle());
+        response.setNotes(itinerary.getNotes());
+        response.setTourId(itinerary.getTour().getId());
+        response.setActive(itinerary.isActive());
+        return response;
+    }
 }

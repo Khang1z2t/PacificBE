@@ -2,6 +2,7 @@ package com.pacific.pacificbe.controller;
 
 import com.pacific.pacificbe.dto.ApiResponse;
 import com.pacific.pacificbe.dto.request.ItineraryRequest;
+import com.pacific.pacificbe.dto.request.ItineraryUpdateRequest;
 import com.pacific.pacificbe.dto.response.ItineraryResponse;
 import com.pacific.pacificbe.dto.response.showTour.ItineraryTourDetailResponse;
 import com.pacific.pacificbe.model.Itinerary;
@@ -47,5 +48,18 @@ public class ItineraryController {
     @PostMapping(UrlMapping.ITINERARY_ADD)
     public ResponseEntity<ApiResponse<List<ItineraryResponse>>> addItinerary(@RequestParam String tourId, @RequestBody ItineraryRequest request) {
         return ResponseEntity.ok(new ApiResponse<>(200, "Thêm lịch trình thành công", itineraryService.addItinerary(tourId, request)));
+    }
+
+    @Operation(summary = "Cập nhật lịch trình")
+    @PutMapping(UrlMapping.ITINERARY_UPDATE)
+    public ResponseEntity<ApiResponse<ItineraryResponse>> updateItinerary(@PathVariable String id, @RequestBody ItineraryUpdateRequest request) {
+        return ResponseEntity.ok(new ApiResponse<>(200, "Cập nhật lịch trình thành công", itineraryService.updateItinerary(id, request)));
+    }
+
+    @Operation(summary = "Xóa lịch trình")
+    @DeleteMapping(UrlMapping.ITINERARY_DELETE)
+    public ResponseEntity<ApiResponse<String>> deleteItinerary(@RequestParam String itineraryId) {
+        itineraryService.deleteItinerary(itineraryId);
+        return ResponseEntity.ok(new ApiResponse<>(200, "Xóa lịch trình thành công", "Lịch trình đã được xóa"));
     }
 }
