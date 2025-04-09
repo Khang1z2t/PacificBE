@@ -44,9 +44,7 @@ public class TourDetailServiceImpl implements TourDetailService {
         TourDetail tourDetail = new TourDetail();
         tourDetail.setPriceAdults(request.getPriceAdults());
         tourDetail.setPriceChildren(request.getPriceChildren());
-        LocalDateTime startDate = LocalDateTime.of(
-                request.getStartDate(), request.getStartTime());
-        tourDetail.setStartDate(startDate);
+        tourDetail.setStartDate(request.getStartDate());
         tourDetail.setEndDate(request.getEndDate());
         tourDetail.setQuantity(request.getQuantity());
         tourDetail.setTour(tour);

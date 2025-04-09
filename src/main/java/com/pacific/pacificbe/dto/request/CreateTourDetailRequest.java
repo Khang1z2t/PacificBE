@@ -17,8 +17,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CreateTourDetailRequest {
     @Schema(description = "Ngày bắt đầu tour", example = "2025-12-01")
-    LocalDate startDate;
-    LocalTime startTime;
+    LocalDateTime startDate;
     @Schema(description = "Ngày kết thúc tour", example = "2025-12-03")
     LocalDateTime endDate;
     @Schema(description = "Giá tour cho người lớn", example = "1000000")
@@ -35,6 +34,4 @@ public class CreateTourDetailRequest {
     String hotelId;
     @Schema(description = "Id của phương tiện", example = "1")
     String transportId;
-    @Schema(description = "Lịch trình của tour")
-    List<CreateItineraryRequest> itineraries;
 }
