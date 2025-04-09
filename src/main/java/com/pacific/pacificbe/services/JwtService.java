@@ -8,7 +8,9 @@ import java.util.Map;
 import java.util.function.Function;
 
 public interface JwtService {
-    String extractUserName(String token);
+//    String extractUserName(String token);
+
+    String extractUserId(String token);
 
     <T> T extractClaim(String token, Function<Claims, T> claimsResolver);
 

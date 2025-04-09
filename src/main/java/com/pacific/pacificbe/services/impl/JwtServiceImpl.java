@@ -1,9 +1,8 @@
 package com.pacific.pacificbe.services.impl;
 
+import com.pacific.pacificbe.model.User;
 import com.pacific.pacificbe.services.JwtService;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,7 +21,7 @@ public class JwtServiceImpl implements JwtService {
     private String SECRET_KEY;
 
     @Override
-    public String extractUserName(String token) {
+    public String extractUserId(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
@@ -34,14 +33,31 @@ public class JwtServiceImpl implements JwtService {
 
     @Override
     public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
+        Map<String, Object> extraClaims = new HashMap<>();
+        return generateToken(extraClaims, userDetails);
     }
 
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
+        String userId = ((User) userDetails).getId();
+        extraClaims.put("firstName", ((User) userDetails).getFirstName());
+        extraClaims.put("lastName", ((User) userDetails).getLastName());
+        extraClaims.put("username", userDetails.getUsername());
+        extraClaims.put("email", ((User) userDetails).getEmail());
+        extraClaims.put("role", ((User) userDetails).getRole());
+        extraClaims.put("status", ((User) userDetails).getStatus());
+        extraClaims.put("version", "2.0");
+
+        Map<String, Object> header = new HashMap<>();
+        header.put("alg", "HS256");
+        header.put("typ", Header.JWT_TYPE);
+        header.put("kid", "pacific-tni-2025");
+
         return Jwts
                 .builder()
+                .setHeader(header)
                 .setClaims(extraClaims)
-                .setSubject(userDetails.getUsername())
+                .setSubject(userId) // Sử dụng userId thay vì username
+                .setIssuer("Pacific TNI")
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
@@ -50,8 +66,9 @@ public class JwtServiceImpl implements JwtService {
 
     @Override
     public boolean isTokenValid(String token, UserDetails userDetails) {
-        final String userName = extractUserName(token);
-        return (userName.equals(userDetails.getUsername())) && !isTokenExpired(token);
+        final String userId = extractUserId(token);
+        // So sánh userId thay vì username
+        return (userId.equals(((User) userDetails).getId())) && !isTokenExpired(token);
     }
 
     private boolean isTokenExpired(String token) {

@@ -1,7 +1,7 @@
 package com.pacific.pacificbe.config;
 
-import com.pacific.pacificbe.model.User;
 import com.pacific.pacificbe.services.JwtService;
+import com.pacific.pacificbe.services.impl.CustomUserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,6 +13,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -25,7 +26,7 @@ import java.io.IOException;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class JwtFilter extends OncePerRequestFilter {
     JwtService jwtService;
-    CustomUserDetailsService userDetailsService;
+    CustomUserDetailsServiceImpl userDetailsService;
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
@@ -39,18 +40,26 @@ public class JwtFilter extends OncePerRequestFilter {
         }
 
         final String jwt = authHeader.substring(7);
-        String username;
+        String userId;
 
         try {
-            username = jwtService.extractUserName(jwt);
+            userId = jwtService.extractUserId(jwt);
         } catch (Exception e) {
-            log.warn("Failed to extract username from JWT: {}", e.getMessage());
+            log.warn("Failed to extract userId from JWT: {}", e.getMessage());
             filterChain.doFilter(request, response);
             return;
         }
 
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            User userDetails = (User) userDetailsService.loadUserByUsername(username);
+        if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            UserDetails userDetails;
+            try {
+                userDetails = userDetailsService.loadUserById(userId);
+            } catch (Exception e) {
+                log.warn("Failed to load user with ID {}: {}", userId, e.getMessage());
+                filterChain.doFilter(request, response);
+                return;
+            }
+
             try {
                 if (jwtService.isTokenValid(jwt, userDetails)) {
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
@@ -61,10 +70,10 @@ public class JwtFilter extends OncePerRequestFilter {
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authToken);
                 } else {
-                    log.info("JWT token has expired for user: {}", username);
+                    log.info("JWT token has expired for userId: {}", userId);
                 }
             } catch (Exception e) {
-                log.warn("JWT validation failed for user {}: {}", username, e.getMessage());
+                log.warn("JWT validation failed for userId {}: {}", userId, e.getMessage());
             }
         }
         filterChain.doFilter(request, response);
