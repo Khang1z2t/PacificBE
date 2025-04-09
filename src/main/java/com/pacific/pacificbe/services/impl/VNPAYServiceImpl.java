@@ -209,7 +209,7 @@ public class VNPAYServiceImpl implements VNPAYService {
             booking.setStatus(BookingStatus.PAID.toString());
             bookingRepository.save(booking);
             // Gửi email xác nhận thanh toán thành công
-            String qrCodeData = booking.getBookingNo() + "-" + booking.getTourDetail().getId();
+            String qrCodeData = booking.getBookingNo();
             byte[] qrCodeBytes = qrUtil.generateQRCode(qrCodeData, 200, 200);
 
             Map<String, byte[]> attachments = new HashMap<>();
@@ -218,17 +218,10 @@ public class VNPAYServiceImpl implements VNPAYService {
             mailService.queueEmail(user.getEmail(),
                     "Xác nhận thanh toán thành công cho booking: " + booking.getBookingNo(),
                     getBookingConfirm(booking));
-//            mailService.sendEmail(user.getEmail(),
-//                    "Xác nhận thanh toán thành công cho booking: " + booking.getBookingNo(),
-//                    getBookingConfirm(booking));
-
             mailService.queueEmail(user.getEmail(),
                     "Vé tham gia của booking: " + booking.getBookingNo(),
                     getBookingTicket(booking),
                     attachments);
-//            mailService.sendEmail(user.getEmail(),
-//                    "Vé tham gia của booking: " + booking.getBookingNo(),
-//                    getBookingTicket(booking));
             log.info("Gửi email xác nhận thanh toán thành công cho booking: {}", booking.getBookingNo());
             return new RedirectView(UrlMapping.PAYMENT_SUCCESS);
         } else {
