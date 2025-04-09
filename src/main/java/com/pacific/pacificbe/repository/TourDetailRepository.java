@@ -3,12 +3,12 @@ package com.pacific.pacificbe.repository;
 
 import com.pacific.pacificbe.dto.response.showTour.DetailTourResponse;
 import com.pacific.pacificbe.model.TourDetail;
-import feign.Param;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -24,13 +24,20 @@ public interface TourDetailRepository extends JpaRepository<TourDetail, String> 
 
     //Tìm tháng tour theo id tour
     @Query(value = """
-            SELECT
-                FORMAT(td.start_date, 'yyyy-MM') AS created_month,
-                td.tour_id
-            FROM tour_details td
-            WHERE td.tour_id = :tourId OR LOWER(td.tour_id) LIKE LOWER(CONCAT('%', :tourId, '%'))
-            AND td.status = 'ACTIVE'
-            GROUP BY td.tour_id, FORMAT(td.start_date, 'yyyy-MM'),td.status
+            SELECT\s
+                    createdMonth,
+                    tour_id,
+                    STRING_AGG(status, ',') AS status
+                FROM (
+                    SELECT DISTINCT\s
+                        FORMAT(td.start_date, 'yyyy-MM') AS createdMonth,
+                        td.tour_id,
+                        td.status
+                    FROM tour_details td
+                    WHERE td.tour_id = :tourId\s
+                        OR LOWER(td.tour_id) LIKE LOWER(CONCAT('%', :tourId, '%'))
+                ) AS distinct_statuses
+                GROUP BY createdMonth, tour_id
             """, nativeQuery = true)
     List<DetailTourResponse> getTourDetailMonth(
             String tourId
@@ -40,11 +47,11 @@ public interface TourDetailRepository extends JpaRepository<TourDetail, String> 
     @Query(value = """
             SELECT
                 FORMAT(td.start_date, 'dd') AS createdDay,
-                td.id
+                td.id,
+                td.status
             FROM tour_details td
             WHERE td.tour_id = :tourId
             AND FORMAT(td.start_date, 'yyyy-MM') = :months
-            AND td.status = 'ACTIVE'
             """, nativeQuery = true)
     List<DetailTourResponse> getTourDetailDay(
             String tourId,

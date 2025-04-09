@@ -20,10 +20,11 @@ public class TourDetailResponse {
     LocalDateTime endDate;
     Integer quantity;
 
-    List<ItineraryResponse> itineraries;
     GuideResponse guide;
     String hotelId;
     String transportId;
+
+    String status;
 
     Boolean active;
     LocalDateTime createdAt;
