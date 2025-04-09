@@ -104,7 +104,7 @@ public class UserServiceImpl implements UserService {
         if (!user.getEmail().equals(request.getEmail())) {
             user.setEmailVerified(false);
         }
-        if (!user.getPhone().equals(request.getPhone())) {
+        if (user.getPhone() == null || !user.getPhone().equals(request.getPhone())) {
             user.setPhoneVerified(false);
         }
         user.setUsername(request.getUsername());

@@ -34,4 +34,6 @@ public interface AuthService {
 
     boolean updateUsername(String username);
 
+    boolean updateUsernameAndPassword(UpdateUsernameAndPassRequest request);
+
 }

@@ -33,6 +33,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.view.RedirectView;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -75,9 +77,7 @@ public class AuthServiceImpl implements AuthService {
             if (!user.isActive()) throw new AppException(ErrorCode.USER_NOT_ACTIVE);
 
             Map<String, Object> extraClaims = new HashMap<>();
-            extraClaims.put("uid", user.getId());
-            extraClaims.put("role", user.getRole());
-
+            extraClaims.put("scope", "read write trust");
             var jwtToken = jwtService.generateToken(extraClaims, user);
 
             return AuthenticationResponse.builder()
@@ -108,8 +108,7 @@ public class AuthServiceImpl implements AuthService {
         user = userRepository.save(user);
 
         Map<String, Object> extraClaims = new HashMap<>();
-        extraClaims.put("uid", user.getId());
-        extraClaims.put("role", user.getRole());
+        extraClaims.put("scope", "read write trust");
 
         return UserRegisterResponse.builder()
                 .id(user.getId())
@@ -231,9 +230,7 @@ public class AuthServiceImpl implements AuthService {
                         .build()));
 
         Map<String, Object> extraClaims = new HashMap<>();
-        extraClaims.put("provider", "google");
-        extraClaims.put("email", user.getEmail());
-        extraClaims.put("status", "require_update_username_and_password");
+        extraClaims.put("scope", "read write trust oauth2 google");
 
         var accessToken = jwtService.generateToken(extraClaims, user);
 
@@ -265,19 +262,29 @@ public class AuthServiceImpl implements AuthService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
-        if (!user.getUsername().equalsIgnoreCase(user.getEmail().split("@")[0])) {
-            return false;
-        } else if (!user.getStatus().equals(UserStatus.REQUIRE_USERNAME_CHANGE.toString())) {
-            return false;
-        } else if (!user.getStatus().equals(UserStatus.REQUIRE_USERNAME_PASSWORD_CHANGE.toString())) {
-            return false;
-        } else if (userRepository.existsByUsername(username)) {
-            return false;
+        if (userRepository.existsByUsername(username)) {
+            throw new AppException(ErrorCode.USER_ALREADY_EXISTS);
         }
+
+        LocalDateTime now = LocalDateTime.now();
+        if (user.getUsernameLastChanged() != null) {
+            long daysSinceLastChange = ChronoUnit.DAYS.between(user.getUsernameLastChanged(), now);
+            if (daysSinceLastChange < 7) {
+                return false;
+            }
+        }
+
         user.setUsername(username);
         user.setStatus(UserStatus.ACTIVE.toString());
+        user.setUsernameLastChanged(now);
+        user.setUsernameChangeCount(user.getUsernameChangeCount() + 1);
         userRepository.save(user);
         return true;
+    }
+
+    @Override
+    public boolean updateUsernameAndPassword(UpdateUsernameAndPassRequest request) {
+        return false;
     }
 
 

@@ -75,25 +75,26 @@ public interface TourDetailRepository extends JpaRepository<TourDetail, String> 
             "(td.status = 'CANCELED' AND td.startDate >= :now AND td.endDate >= :now)")
     Page<TourDetail> findTourDetailsToUpdateStatus(@Param("now") LocalDateTime now, Pageable pageable);
 
-    // Cập nhật từ OPEN -> IN_PROGRESS
     @Modifying
     @Query("UPDATE TourDetail td SET td.status = 'IN_PROGRESS' " +
             "WHERE td.status = 'OPEN' AND td.startDate < :now AND td.endDate > :now")
     int updateOpenToInProgress(@Param("now") LocalDateTime now);
 
-    // Cập nhật từ IN_PROGRESS -> CLOSED
     @Modifying
     @Query("UPDATE TourDetail td SET td.status = 'CLOSED' " +
             "WHERE td.status = 'IN_PROGRESS' AND td.endDate < :now")
     int updateInProgressToClosed(@Param("now") LocalDateTime now);
 
-    // Cập nhật từ CLOSED -> OPEN
+    @Modifying
+    @Query("UPDATE TourDetail td SET td.status = 'CLOSED' " +
+            "WHERE td.status = 'OPEN' AND td.endDate < :now")
+    int updateOpenToClosed(@Param("now") LocalDateTime now);
+
     @Modifying
     @Query("UPDATE TourDetail td SET td.status = 'OPEN' " +
             "WHERE td.status = 'CLOSED' AND td.startDate >= :now AND td.endDate >= :now")
     int updateClosedToOpen(@Param("now") LocalDateTime now);
 
-    // Cập nhật từ CANCELED -> OPEN
     @Modifying
     @Query("UPDATE TourDetail td SET td.status = 'OPEN' " +
             "WHERE td.status = 'CANCELED' AND td.startDate >= :now AND td.endDate >= :now")

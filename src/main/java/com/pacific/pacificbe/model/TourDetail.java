@@ -19,7 +19,9 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-@Table(name = "tour_details")
+@Table(name = "tour_details", indexes = {
+        @Index(name = "idx_tourdetail_status", columnList = "status, start_date, end_date")
+})
 @EntityListeners(AuditingEntityListener.class)
 public class TourDetail extends BaseEntity {
     @Id
@@ -91,7 +93,7 @@ public class TourDetail extends BaseEntity {
     @PreUpdate
     public void preUpdate() {
         if (this.getQuantity() != null && this.getQuantity() <= 0) {
-            this.setStatus(TourDetailStatus.CLOSED.toString());
+            this.setStatus(TourDetailStatus.IN_PROGRESS.toString());
         }
     }
 

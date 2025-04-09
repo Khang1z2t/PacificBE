@@ -14,7 +14,7 @@ import java.util.List;
 public class OtpScheduler {
     private final OtpRepository otpRepository;
 
-    @Scheduled(fixedRate = 300000)
+    @Scheduled(fixedRate = 300000) // 5 phút
     public void updateOtp() {
         // Xóa tất cả OTP đã hết hạn
         otpRepository.deleteByExpiresAtBefore(Instant.now());

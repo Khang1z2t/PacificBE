@@ -35,19 +35,22 @@ public class ItineraryController {
     @Operation(summary = "Lấy tất cả lịch trình")
     @GetMapping(UrlMapping.ITINERARY_ALL)
     public ResponseEntity<ApiResponse<List<Itinerary>>> getAllItinerary() {
-        return ResponseEntity.ok(new ApiResponse<>(200, "Lấy tất cả lịch trình thành công", itineraryService.getAll()));
+        return ResponseEntity.ok(new ApiResponse<>(200, "Lấy tất cả lịch trình thành công",
+                itineraryService.getAll()));
     }
 
     @Operation(summary = "Lấy lịch trình theo tour")
     @GetMapping(UrlMapping.ITINERARY_BY_TOUR)
     public ResponseEntity<ApiResponse<List<ItineraryResponse>>> getItineraryByTourId(@PathVariable String tourId) {
-        return ResponseEntity.ok(new ApiResponse<>(200, "Lấy lịch trình theo tour thành công", itineraryService.getByTourId(tourId)));
+        return ResponseEntity.ok(new ApiResponse<>(200, "Lấy lịch trình theo tour thành công",
+                itineraryService.getByTourId(tourId)));
     }
 
     @Operation(summary = "Thêm lịch trình")
     @PostMapping(UrlMapping.ITINERARY_ADD)
     public ResponseEntity<ApiResponse<List<ItineraryResponse>>> addItinerary(@RequestParam String tourId, @RequestBody ItineraryRequest request) {
-        return ResponseEntity.ok(new ApiResponse<>(200, "Thêm lịch trình thành công", itineraryService.addItinerary(tourId, request)));
+        return ResponseEntity.ok(new ApiResponse<>(200, "Thêm lịch trình thành công",
+                itineraryService.addItinerary(tourId, request)));
     }
 
     @Operation(summary = "Cập nhật lịch trình")

@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -103,6 +104,12 @@ public class User extends BaseEntity implements UserDetails {
     @Nationalized
     @Column(name = "username", nullable = false, length = 50)
     private String username;
+
+    @Column(name = "username_last_changed")
+    private LocalDateTime usernameLastChanged;
+
+    @Column(name = "username_change_count")
+    private Integer usernameChangeCount = 0;
 
     @OneToMany(mappedBy = "user")
     private Set<Blog> blogs = new LinkedHashSet<>();
