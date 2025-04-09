@@ -4,11 +4,16 @@ package com.pacific.pacificbe.repository;
 import com.pacific.pacificbe.dto.response.showTour.DetailTourResponse;
 import com.pacific.pacificbe.model.TourDetail;
 import feign.Param;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 
 @Repository
@@ -19,28 +24,28 @@ public interface TourDetailRepository extends JpaRepository<TourDetail, String> 
 
     //Tìm tháng tour theo id tour
     @Query(value = """
-    SELECT
-        FORMAT(td.start_date, 'yyyy-MM') AS created_month,
-        td.tour_id
-    FROM tour_details td
-    WHERE td.tour_id = :tourId OR LOWER(td.tour_id) LIKE LOWER(CONCAT('%', :tourId, '%'))
-    AND td.status = 'ACTIVE'
-    GROUP BY td.tour_id, FORMAT(td.start_date, 'yyyy-MM'),td.status
-    """, nativeQuery = true)
+            SELECT
+                FORMAT(td.start_date, 'yyyy-MM') AS created_month,
+                td.tour_id
+            FROM tour_details td
+            WHERE td.tour_id = :tourId OR LOWER(td.tour_id) LIKE LOWER(CONCAT('%', :tourId, '%'))
+            AND td.status = 'ACTIVE'
+            GROUP BY td.tour_id, FORMAT(td.start_date, 'yyyy-MM'),td.status
+            """, nativeQuery = true)
     List<DetailTourResponse> getTourDetailMonth(
             String tourId
     );
 
     //Tìm ngày tour theo id tour
     @Query(value = """
-    SELECT
-        FORMAT(td.start_date, 'dd') AS createdDay,
-        td.id
-    FROM tour_details td
-    WHERE td.tour_id = :tourId
-    AND FORMAT(td.start_date, 'yyyy-MM') = :months
-    AND td.status = 'ACTIVE'
-    """, nativeQuery = true)
+            SELECT
+                FORMAT(td.start_date, 'dd') AS createdDay,
+                td.id
+            FROM tour_details td
+            WHERE td.tour_id = :tourId
+            AND FORMAT(td.start_date, 'yyyy-MM') = :months
+            AND td.status = 'ACTIVE'
+            """, nativeQuery = true)
     List<DetailTourResponse> getTourDetailDay(
             String tourId,
             String months
@@ -62,4 +67,36 @@ public interface TourDetailRepository extends JpaRepository<TourDetail, String> 
             @Param("maxRating") float maxRating,
             @Param("startDate") LocalDate startDate,
             @Param("endDate") LocalDate endDate);
+
+    @Query("SELECT td FROM TourDetail td WHERE " +
+            "(td.status = 'OPEN' AND td.startDate < :now) OR " +
+            "(td.status = 'IN_PROGRESS' AND td.endDate < :now) OR " +
+            "(td.status = 'CLOSED' AND td.startDate >= :now AND td.endDate >= :now) OR " +
+            "(td.status = 'CANCELED' AND td.startDate >= :now AND td.endDate >= :now)")
+    Page<TourDetail> findTourDetailsToUpdateStatus(@Param("now") LocalDateTime now, Pageable pageable);
+
+    // Cập nhật từ OPEN -> IN_PROGRESS
+    @Modifying
+    @Query("UPDATE TourDetail td SET td.status = 'IN_PROGRESS' " +
+            "WHERE td.status = 'OPEN' AND td.startDate < :now AND td.endDate > :now")
+    int updateOpenToInProgress(@Param("now") LocalDateTime now);
+
+    // Cập nhật từ IN_PROGRESS -> CLOSED
+    @Modifying
+    @Query("UPDATE TourDetail td SET td.status = 'CLOSED' " +
+            "WHERE td.status = 'IN_PROGRESS' AND td.endDate < :now")
+    int updateInProgressToClosed(@Param("now") LocalDateTime now);
+
+    // Cập nhật từ CLOSED -> OPEN
+    @Modifying
+    @Query("UPDATE TourDetail td SET td.status = 'OPEN' " +
+            "WHERE td.status = 'CLOSED' AND td.startDate >= :now AND td.endDate >= :now")
+    int updateClosedToOpen(@Param("now") LocalDateTime now);
+
+    // Cập nhật từ CANCELED -> OPEN
+    @Modifying
+    @Query("UPDATE TourDetail td SET td.status = 'OPEN' " +
+            "WHERE td.status = 'CANCELED' AND td.startDate >= :now AND td.endDate >= :now")
+    int updateCanceledToOpen(@Param("now") LocalDateTime now);
+
 }
