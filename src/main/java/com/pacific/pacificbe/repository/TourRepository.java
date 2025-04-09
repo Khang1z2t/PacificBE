@@ -20,19 +20,22 @@ import java.util.Optional;
 @Repository
 public interface TourRepository extends JpaRepository<Tour, String> {
 
-    @Query("SELECT t FROM Tour t " +
-            "LEFT JOIN t.tourDetails td " +
-            "WHERE (:title IS NULL OR LOWER(t.title) LIKE LOWER(CONCAT('%', :title, '%'))) " +
-            "AND (:minPrice IS NULL OR td.priceAdults >= :minPrice) " +
-            "AND (:maxPrice IS NULL OR td.priceAdults <= :maxPrice) " +
-            "AND (:categoryId IS NULL OR t.category.id = :categoryId)" +
-            "AND (:startDate IS NULL OR :endDate IS NULL OR (td.startDate BETWEEN :startDate AND :endDate))")
-    List<Tour> findAllWithFilters(@Param("title") String title,
-                                  @Param("minPrice") BigDecimal minPrice,
-                                  @Param("maxPrice") BigDecimal maxPrice,
-                                  @Param("categoryId") String categoryId,
-                                  @Param("startDate") LocalDate startDate,
-                                  @Param("endDate") LocalDate endDate);
+    @Query("SELECT DISTINCT t FROM Tour t " +
+            "WHERE (:title IS NULL OR TRIM(LOWER(t.title)) LIKE LOWER(CONCAT('%', TRIM(:title), '%'))) " +
+            "AND (:categoryId IS NULL OR t.category.id = :categoryId) " +
+            "AND (:startDate IS NULL OR :endDate IS NULL OR " +
+            "     EXISTS (SELECT td FROM TourDetail td WHERE td.tour = t AND td.startDate BETWEEN :startDate AND :endDate)) " +
+            "AND (:minPrice IS NULL OR " +
+            "     (SELECT MIN(td2.priceAdults) FROM TourDetail td2 WHERE td2.tour = t AND td2.active = true) >= :minPrice) " +
+            "AND (:maxPrice IS NULL OR " +
+            "     (SELECT MAX(td2.priceAdults) FROM TourDetail td2 WHERE td2.tour = t AND td2.active = true) <= :maxPrice)")
+    List<Tour> findAllWithFilters(
+            @Param("title") String title,
+            @Param("minPrice") BigDecimal minPrice,
+            @Param("maxPrice") BigDecimal maxPrice,
+            @Param("categoryId") String categoryId,
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate);
 
 
     List<Tour> findToursByActiveIsTrue();
