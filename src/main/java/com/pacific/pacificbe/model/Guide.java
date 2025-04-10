@@ -55,6 +55,10 @@ public class Guide extends BaseEntity {
     @Column(name = "phone", nullable = false, length = 20)
     private String phone;
 
+    @Size(max = 50)
+    @Column(name = "status", length = 50)
+    private String status;
+
     @OneToMany(mappedBy = "guide")
     private Set<TourDetail> tourDetails = new LinkedHashSet<>();
 
