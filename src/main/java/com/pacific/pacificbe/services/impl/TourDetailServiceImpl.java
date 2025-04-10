@@ -11,6 +11,7 @@ import com.pacific.pacificbe.mapper.TourMapper;
 import com.pacific.pacificbe.model.*;
 import com.pacific.pacificbe.repository.*;
 import com.pacific.pacificbe.services.TourDetailService;
+import com.pacific.pacificbe.utils.enums.GuideStatus;
 import com.pacific.pacificbe.utils.enums.TourDetailStatus;
 import com.pacific.pacificbe.utils.enums.TourStatus;
 import lombok.AccessLevel;
@@ -61,15 +62,6 @@ public class TourDetailServiceImpl implements TourDetailService {
         tourDetail.setActive(true);
         tourDetail = tourDetailRepository.save(tourDetail);
 
-//        for (CreateItineraryRequest itineraryRequest : request.getItineraries()) {
-//            Itinerary itinerary = new Itinerary();
-//            itinerary.setDayDetail(itineraryRequest.getDayDetail());
-//            itinerary.setTitle(itineraryRequest.getTitle());
-//            itinerary.setDayDetail(itineraryRequest.getDayDetail());
-//            itinerary.setTour(tourDetail);
-//            tourDetail.getItineraries().add(itinerary);
-//            itineraryRepository.save(itinerary);
-//        }
         tourDetail.setStatus(TourDetailStatus.OPEN.toString());
         tourDetailRepository.save(tourDetail);
         tour.setStatus(TourStatus.PUBLISHED.toString());

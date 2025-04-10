@@ -14,7 +14,10 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-@Table(name = "tour")
+@Table(name = "tour", indexes = {
+        @Index(name = "idx_tour_title", columnList = "title"),
+        @Index(name = "idx_tour_category_id", columnList = "category_id")
+})
 public class Tour extends BaseEntity {
     @Id
     @Size(max = 255)

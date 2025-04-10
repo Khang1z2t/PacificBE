@@ -20,15 +20,26 @@ import java.util.Optional;
 @Repository
 public interface TourRepository extends JpaRepository<Tour, String> {
 
-    @Query("SELECT DISTINCT t FROM Tour t " +
-            "WHERE (:title IS NULL OR TRIM(LOWER(t.title)) LIKE LOWER(CONCAT('%', TRIM(:title), '%'))) " +
-            "AND (:categoryId IS NULL OR t.category.id = :categoryId) " +
-            "AND (:startDate IS NULL OR :endDate IS NULL OR " +
-            "     EXISTS (SELECT td FROM TourDetail td WHERE td.tour = t AND td.startDate BETWEEN :startDate AND :endDate)) " +
-            "AND (:minPrice IS NULL OR " +
-            "     (SELECT MIN(td2.priceAdults) FROM TourDetail td2 WHERE td2.tour = t AND td2.active = true) >= :minPrice) " +
-            "AND (:maxPrice IS NULL OR " +
-            "     (SELECT MAX(td2.priceAdults) FROM TourDetail td2 WHERE td2.tour = t AND td2.active = true) <= :maxPrice)")
+    @Query(value = """
+            SELECT DISTINCT t.*
+            FROM tour t
+            LEFT JOIN (
+                SELECT tour_id, MIN(price_adults) AS min_price, MAX(price_adults) AS max_price
+                FROM tour_detail
+                WHERE active = true
+                GROUP BY tour_id
+            ) price_summary ON price_summary.tour_id = t.id
+            WHERE (:title IS NULL OR LOWER(TRIM(t.title)) LIKE CONCAT('%', LOWER(TRIM(:title)), '%'))
+              AND (:categoryId IS NULL OR t.category_id = :categoryId)
+              AND (:minPrice IS NULL OR price_summary.min_price >= :minPrice)
+              AND (:maxPrice IS NULL OR price_summary.max_price <= :maxPrice)
+              AND EXISTS (
+                 SELECT 1 FROM tour_detail td
+                 WHERE td.tour_id = t.id
+                   AND td.active = true
+                   AND (:startDate IS NULL OR :endDate IS NULL OR td.start_date BETWEEN :startDate AND :endDate)
+              )
+            """, nativeQuery = true)
     List<Tour> findAllWithFilters(
             @Param("title") String title,
             @Param("minPrice") BigDecimal minPrice,
@@ -36,7 +47,6 @@ public interface TourRepository extends JpaRepository<Tour, String> {
             @Param("categoryId") String categoryId,
             @Param("startDate") LocalDate startDate,
             @Param("endDate") LocalDate endDate);
-
 
     List<Tour> findToursByActiveIsTrue();
 

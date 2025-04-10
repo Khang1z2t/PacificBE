@@ -20,7 +20,10 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "tour_details", indexes = {
-        @Index(name = "idx_tourdetail_status", columnList = "status, start_date, end_date")
+        @Index(name = "idx_tourdetail_status", columnList = "status, start_date, end_date"),
+        @Index(name = "idx_tourdetail_tour_id", columnList = "tour_id"),
+        @Index(name = "idx_tourdetail_start_date", columnList = "start_date"),
+        @Index(name = "idx_tourdetail_price_adults", columnList = "price_adults")
 })
 @EntityListeners(AuditingEntityListener.class)
 public class TourDetail extends BaseEntity {
