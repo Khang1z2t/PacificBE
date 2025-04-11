@@ -47,9 +47,12 @@ public class TourServiceImpl implements TourService {
     private final IdUtil idUtil;
     private final TourDetailRepository tourDetailRepository;
 
-    @Cacheable(value = "allTours", key = "#title + '-' + #minPrice + '-' + #maxPrice + '-' + #categoryId + '-' + #startDate + '-' + #endDate")
+    @Cacheable(
+            value = "allTours",
+//            condition = "#result != null && !#result.length == 0",
+            key = "#title + '-' + #minPrice + '-' + #maxPrice + '-' + #categoryId + '-' + #startDate + '-' + #endDate")
     @Override
-    public List<TourResponse> getAllTours(String title, BigDecimal minPrice, BigDecimal maxPrice, String categoryId, LocalDate startDate, LocalDate endDate) {
+    public List<TourResponse> getAllTours(String title, BigDecimal minPrice, BigDecimal maxPrice, String categoryId, LocalDateTime startDate, LocalDateTime endDate) {
         List<Tour> tours = tourRepository.findAllWithFilters(title, minPrice, maxPrice, categoryId, startDate, endDate);
         return tourMapper.toTourResponseList(tours);
     }

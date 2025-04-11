@@ -25,10 +25,6 @@ public class Tour extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @ColumnDefault("1")
-    @Column(name = "available")
-    private Boolean available;
-
     @NotNull
     @Column(name = "duration", nullable = false)
     private Integer duration;
