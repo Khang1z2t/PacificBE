@@ -113,9 +113,9 @@ public enum ErrorCode {
 
 
     // Support Errors
-    SUPPORT_NOT_FOUND(1032, "Support not found", HttpStatus.NOT_FOUND),
-    INVALID_SUPPORT_STATUS(1033, "Invalid status, must be ACTIVE or INACTIVE", HttpStatus.NOT_FOUND),
-
+    SUPPORT_NOT_FOUND(1040, "Support not found", HttpStatus.NOT_FOUND),
+    INVALID_SUPPORT_STATUS(1041, "Invalid status, must be ACTIVE or INACTIVE", HttpStatus.NOT_FOUND),
+    INVALID_INPUT(1042, "Check error", HttpStatus.NOT_FOUND),
 
     //  util
     CANNOT_GENERATE_ICS(2000, "Cannot generate ICS file", HttpStatus.INTERNAL_SERVER_ERROR),
