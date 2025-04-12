@@ -3,8 +3,6 @@ package com.pacific.pacificbe.repository;
 import com.pacific.pacificbe.dto.response.showTour.TourBookingCount;
 import com.pacific.pacificbe.dto.response.showTour.TourDateResponse;
 import com.pacific.pacificbe.model.Tour;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -13,13 +11,25 @@ import org.springframework.stereotype.Repository;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface TourRepository extends JpaRepository<Tour, String> {
 
+    //    @Query(value = """
+//            SELECT t.*
+//            FROM tour t
+//            JOIN tour_details td ON t.id = td.tour_id
+//            WHERE (:title IS NULL OR TRIM(LOWER(t.title)) LIKE CONCAT('%', TRIM(LOWER(:title)), '%'))
+//              AND (:minPrice IS NULL OR td.price_adults >= :minPrice)
+//              AND (:maxPrice IS NULL OR td.price_adults <= :maxPrice)
+//              AND (:startDate IS NULL OR td.start_date >= :startDate)
+//              AND (:endDate IS NULL OR td.end_date <= :endDate)
+//              AND (:categoryId IS NULL OR t.category_id = :categoryId)
+//              AND t.active = 1
+//            ORDER BY td.price_adults DESC
+//            """, nativeQuery = true)
     @Query(value = """
             SELECT DISTINCT t.*
             FROM tour t
@@ -45,8 +55,9 @@ public interface TourRepository extends JpaRepository<Tour, String> {
             @Param("minPrice") BigDecimal minPrice,
             @Param("maxPrice") BigDecimal maxPrice,
             @Param("categoryId") String categoryId,
-            @Param("startDate") LocalDate startDate,
-            @Param("endDate") LocalDate endDate);
+            @Param("startDate") LocalDateTime startDate,
+            @Param("endDate") LocalDateTime endDate);
+
 
     List<Tour> findToursByActiveIsTrue();
 
@@ -96,5 +107,7 @@ public interface TourRepository extends JpaRepository<Tour, String> {
 
     Optional<Tour> findByTourDetails_Id(String id);
 
+    @Query(value = "SELECT * FROM tour t WHERE t.active = 1 AND t.status = :status", nativeQuery = true)
+    List<Tour> findAllTour(@Param("status") String status);
 
 }
