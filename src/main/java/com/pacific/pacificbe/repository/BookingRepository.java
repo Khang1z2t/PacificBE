@@ -6,11 +6,14 @@ import com.pacific.pacificbe.dto.response.report.Revenue;
 import com.pacific.pacificbe.dto.response.report.TourAndBookReport;
 import com.pacific.pacificbe.model.Booking;
 import com.pacific.pacificbe.model.User;
+import com.pacific.pacificbe.utils.enums.BookingStatus;
+import com.pacific.pacificbe.utils.enums.TourDetailStatus;
 import jakarta.validation.constraints.Size;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -178,4 +181,37 @@ List<TopTour> getTopBookedTours(
         @Param("startDate") LocalDateTime startDate,
         @Param("endDate") LocalDateTime endDate,
         Pageable pageable);
+
+    @Query("select b from Booking b where b.status = ?1 and b.createdAt < ?2")
+    List<Booking> findByStatusAndCreatedAtBefore(String status, LocalDateTime createdAt);
+
+    @Modifying
+    @Query("UPDATE Booking b SET b.status = :newStatus WHERE b.status = :currentStatus AND b.createdAt <= :createdAt")
+    int updateStatusToExpired(@Param("newStatus") String newStatus,
+                              @Param("currentStatus") String currentStatus,
+                              @Param("createdAt") LocalDateTime createdAt);
+
+    @Modifying
+    @Query("UPDATE Booking b SET b.status = :newStatus WHERE b.status = :currentStatus AND b.tourDetail.status = :tourDetailStatus")
+    int updateStatusByTourDetailStatus(@Param("newStatus") String newStatus,
+                                       @Param("currentStatus") String currentStatus,
+                                       @Param("tourDetailStatus") String tourDetailStatus);
+
+    default int updateStatusToExpired(LocalDateTime createdAt) {
+        return updateStatusToExpired(BookingStatus.EXPIRED.toString(),
+                BookingStatus.PENDING.toString(), createdAt);
+    }
+
+    default int updateStatusToOngoing() {
+        return updateStatusByTourDetailStatus(BookingStatus.ON_GOING.toString(),
+                BookingStatus.PAID.toString(), TourDetailStatus.IN_PROGRESS.toString());
+    }
+
+    default int updateStatusToCompleted() {
+        return updateStatusByTourDetailStatus(BookingStatus.COMPLETED.toString(),
+                BookingStatus.ON_GOING.toString(), TourDetailStatus.CLOSED.toString());
+    }
+
+    @Query("select b from Booking b where b.status = ?1")
+    List<Booking> findByStatus(String status);
 }

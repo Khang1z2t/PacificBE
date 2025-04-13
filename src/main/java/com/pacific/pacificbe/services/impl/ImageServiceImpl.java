@@ -20,7 +20,12 @@ public class ImageServiceImpl implements ImageService {
     @Cacheable(value = "images", key = "#fileId", unless = "#result == null")
     public byte[] getImage(String fileId) {
         try {
-            var imageBytes = googleImageClient.getImage(fileId);
+            Response imageBytes;
+            if (fileId.startsWith("ACg8oc")) {
+                imageBytes = googleImageClient.getImageAvatar(fileId);
+            } else {
+                imageBytes = googleImageClient.getImage(fileId);
+            }
             if (imageBytes == null) {
                 log.warn("Image bytes are null for fileId: {}", fileId);
                 return null;

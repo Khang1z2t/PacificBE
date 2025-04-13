@@ -10,8 +10,10 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
+@EnableAsync // chạy bất đồng bộ
 @EnableCaching // cache
 @EnableScheduling // tự chạy sau 1 khoảng tg, tác vụ định kỳ
 @EnableJpaAuditing // tự động trong jpa khi có hành động nào đó

@@ -1,5 +1,7 @@
 package com.pacific.pacificbe.model;
 
+import com.pacific.pacificbe.utils.enums.TourDetailStatus;
+import com.pacific.pacificbe.utils.enums.TourStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -7,8 +9,10 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Nationalized;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.LinkedHashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Getter
@@ -18,6 +22,7 @@ import java.util.Set;
         @Index(name = "idx_tour_title", columnList = "title"),
         @Index(name = "idx_tour_category_id", columnList = "category_id")
 })
+@EntityListeners(AuditingEntityListener.class)
 public class Tour extends BaseEntity {
     @Id
     @Size(max = 255)
@@ -71,5 +76,19 @@ public class Tour extends BaseEntity {
 
     @OneToMany(mappedBy = "tour")
     private Set<Voucher> vouchers = new LinkedHashSet<>();
+
+    @PostLoad
+    @PostPersist
+    @PostUpdate
+    public void onLoadOrUpdate() {
+        updateStatus();
+    }
+
+    public void updateStatus() {
+        boolean hasOpenTourDetail = tourDetails.stream()
+                .anyMatch(td -> Objects.equals(td.getStatus(), TourDetailStatus.IN_PROGRESS.toString())
+                        || Objects.equals(td.getStatus(), TourDetailStatus.OPEN.toString()));
+        this.status = hasOpenTourDetail ? TourStatus.PUBLISHED.toString() : TourStatus.DRAFT.toString();
+    }
 
 }

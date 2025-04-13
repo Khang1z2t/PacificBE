@@ -107,4 +107,9 @@ public interface TourDetailRepository extends JpaRepository<TourDetail, String> 
             "WHERE td.status = 'CANCELED' AND td.startDate >= :now AND td.endDate >= :now")
     int updateCanceledToOpen(@Param("now") LocalDateTime now);
 
+    @Query("select t from TourDetail t where t.status = ?1 and t.startDate < ?2")
+    List<TourDetail> findByStatusAndStartDateBefore(String status, LocalDateTime startDate);
+
+    @Query("select t from TourDetail t where t.status = ?1 and t.endDate < ?2")
+    List<TourDetail> findByStatusAndEndDateBefore(String status, LocalDateTime endDate);
 }

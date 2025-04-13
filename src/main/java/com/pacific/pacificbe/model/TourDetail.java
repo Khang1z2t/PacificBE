@@ -1,5 +1,6 @@
 package com.pacific.pacificbe.model;
 
+import com.pacific.pacificbe.listener.TourDetailEntityListener;
 import com.pacific.pacificbe.utils.enums.TourDetailStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -9,7 +10,10 @@ import lombok.Setter;
 import org.hibernate.annotations.Nationalized;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -25,7 +29,7 @@ import java.util.Set;
         @Index(name = "idx_tourdetail_start_date", columnList = "start_date"),
         @Index(name = "idx_tourdetail_price_adults", columnList = "price_adults")
 })
-@EntityListeners(AuditingEntityListener.class)
+@EntityListeners({AuditingEntityListener.class, TourDetailEntityListener.class})
 public class TourDetail extends BaseEntity {
     @Id
     @Size(max = 255)

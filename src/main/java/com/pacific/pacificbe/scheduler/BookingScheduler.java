@@ -1,13 +1,16 @@
 package com.pacific.pacificbe.scheduler;
 
+import com.pacific.pacificbe.event.BookingStatusChangedEvent;
 import com.pacific.pacificbe.model.Booking;
 import com.pacific.pacificbe.model.TourDetail;
 import com.pacific.pacificbe.repository.BookingRepository;
 import com.pacific.pacificbe.services.MailService;
 import com.pacific.pacificbe.utils.UrlMapping;
 import com.pacific.pacificbe.utils.enums.BookingStatus;
+import com.pacific.pacificbe.utils.enums.TourDetailStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -32,68 +35,64 @@ public class BookingScheduler {
 
     private final BookingRepository bookingRepository;
     private final MailService mailService;
+    private final ApplicationEventPublisher eventPublisher;
+
 
     // Chạy lúc 0h mỗi ngày
-    @Scheduled(cron = "0 0 0 * * ?")
-    public void cleanOldBookings() {
-        LocalDate yearAgo = LocalDate.now().minusYears(1);
-        List<Booking> oldBookings = bookingRepository.findByStatusAndTourDetail_EndDate(
-                BookingStatus.COMPLETED.toString(), yearAgo);
-        bookingRepository.deleteAll(oldBookings);
-    }
+//    @Scheduled(cron = "0 0 0 * * ?")
+//    public void cleanOldBookings() {
+//        LocalDate yearAgo = LocalDate.now().minusYears(1);
+//        List<Booking> oldBookings = bookingRepository.findByStatusAndTourDetail_EndDate(
+//                BookingStatus.COMPLETED.toString(), yearAgo);
+//        bookingRepository.deleteAll(oldBookings);
+//    }
 
     @Transactional(propagation = Propagation.REQUIRED)
     @Scheduled(fixedDelay = 300000)
     public void updateBookingStatus() {
         LocalDateTime now = LocalDateTime.now();
-        List<String> statusList = Arrays.asList(
-                BookingStatus.PENDING.toString(),
-                BookingStatus.PAID.toString(),
-                BookingStatus.ON_GOING.toString()
-        );
-        List<Booking> bookings = bookingRepository.findByStatusIn(statusList);
 
-        for (Booking booking : bookings) {
-            try {
+        List<Booking> expiredBookings = bookingRepository.findByStatusAndCreatedAtBefore(
+                BookingStatus.PENDING.toString(), now.minusHours(24));
+        if (!expiredBookings.isEmpty()) {
+            int updatedCount = bookingRepository.updateStatusToExpired(now);
+            log.info("Updated {} bookings to EXPIRED", updatedCount);
+            expiredBookings.forEach(booking -> {
+                booking.setStatus(BookingStatus.EXPIRED.toString());
+                eventPublisher.publishEvent(new BookingStatusChangedEvent(this, booking));
+                mailService.queueEmail(booking.getUser().getEmail(),
+                        "Thông báo về Booking: " + booking.getBookingNo(),
+                        getBookingExpiredMail(booking));
+                log.info("Booking expired and email sent: {}", booking.getBookingNo());
+            });
+        }
 
-                TourDetail tourDetail = booking.getTourDetail();
-                if (tourDetail == null) {
-                    log.warn("TourDetail is null for booking ID: {}", booking.getId());
-                    continue; // Bỏ qua booking này
-                }
-
-                // Trường hợp 1: PENDING, chưa thanh toán
-                if (booking.getStatus().equals(BookingStatus.PENDING.toString())) {
-                    // Sau 24 giờ: Chuyển sang EXPIRED và gửi email thông báo
-                    if (now.isAfter(booking.getCreatedAt().plusHours(24))) {
-                        mailService.queueEmail(booking.getUser().getEmail(),
-                                "Thông báo về Booking: " + booking.getBookingNo(),
-                                getBookingExpiredMail(booking));
-                        booking.setStatus(BookingStatus.EXPIRED.toString());
-                        bookingRepository.save(booking);
-                        log.info("Booking hết hạn và đã được gửi mail: {}", booking.getBookingNo());
-                    }
-                }
-                // Trường hợp 2: Đang diễn ra
-                else if (now.isAfter(booking.getTourDetail().getStartDate()) &&
-                        now.isBefore(booking.getTourDetail().getEndDate())) {
-                    if (!booking.getStatus().equals(BookingStatus.ON_GOING.toString())) {
+        List<Booking> paidBookings = bookingRepository.findByStatus(BookingStatus.PAID.toString());
+        if (!paidBookings.isEmpty()) {
+            int updatedCount = bookingRepository.updateStatusToOngoing();
+            log.info("Updated {} bookings to ON_GOING", updatedCount);
+            paidBookings.stream()
+                    .filter(b -> b.getTourDetail() != null
+                            && b.getTourDetail().getStatus().equals(TourDetailStatus.IN_PROGRESS.toString()))
+                    .forEach(booking -> {
                         booking.setStatus(BookingStatus.ON_GOING.toString());
-                        bookingRepository.save(booking);
-                        log.info("Booking đã chuyển sang trạng thái ON_GOING: {}", booking.getBookingNo());
-                    }
-                }
-                // Trường hợp 3: Hoàn thành
-                else if (now.isAfter(booking.getTourDetail().getEndDate())) {
-                    if (!booking.getStatus().equals(BookingStatus.COMPLETED.toString())) {
+                        eventPublisher.publishEvent(new BookingStatusChangedEvent(this, booking));
+                        log.info("Booking updated to ON_GOING: {}", booking.getBookingNo());
+                    });
+        }
+
+        List<Booking> ongoingBookings = bookingRepository.findByStatus(BookingStatus.ON_GOING.toString());
+        if (!ongoingBookings.isEmpty()) {
+            int updatedCount = bookingRepository.updateStatusToCompleted();
+            log.info("Updated {} bookings to COMPLETED", updatedCount);
+            ongoingBookings.stream()
+                    .filter(b -> b.getTourDetail() != null
+                            && b.getTourDetail().getStatus().equals(TourDetailStatus.CLOSED.toString()))
+                    .forEach(booking -> {
                         booking.setStatus(BookingStatus.COMPLETED.toString());
-                        bookingRepository.save(booking);
-                        log.info("Booking đã chuyển sang trạng thái COMPLETED: {}", booking.getBookingNo());
-                    }
-                }
-            } catch (Exception e) {
-                log.warn("Error while schedule booking: ", e);
-            }
+                        eventPublisher.publishEvent(new BookingStatusChangedEvent(this, booking));
+                        log.info("Booking updated to COMPLETED: {}", booking.getBookingNo());
+                    });
         }
     }
 

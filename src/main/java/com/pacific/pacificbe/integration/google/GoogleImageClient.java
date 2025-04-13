@@ -9,4 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 public interface GoogleImageClient {
     @GetMapping(value = "/d/{fileId}", produces = "image/*")
     Response getImage(@PathVariable("fileId") String fileId);
+
+    @GetMapping(value = "/a/{fileId}", produces = "image/*")
+    Response getImageAvatar(@PathVariable("fileId") String fileId);
 }
