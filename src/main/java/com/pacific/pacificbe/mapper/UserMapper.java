@@ -22,7 +22,7 @@ public class UserMapper {
 
     public UserResponse toUserResponse(User user) {
         UserResponse userResponse = modelMapper.map(user, UserResponse.class);
-        userResponse.setAvatar(idUtil.getIdAvatar(user.getAvatarUrl()));
+        userResponse.setAvatar(idUtil.getIdImage(user.getAvatarUrl()));
         return userResponse;
     }
 
