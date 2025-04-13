@@ -10,13 +10,13 @@ import com.pacific.pacificbe.exception.ErrorCode;
 import com.pacific.pacificbe.mapper.ReviewMapper;
 import com.pacific.pacificbe.model.Review;
 import com.pacific.pacificbe.model.Tour;
+import com.pacific.pacificbe.model.TourDetail;
 import com.pacific.pacificbe.model.User;
-import com.pacific.pacificbe.repository.BookingRepository;
-import com.pacific.pacificbe.repository.ReviewRepository;
-import com.pacific.pacificbe.repository.TourRepository;
-import com.pacific.pacificbe.repository.UserRepository;
+import com.pacific.pacificbe.repository.*;
 import com.pacific.pacificbe.services.ReviewService;
+import com.pacific.pacificbe.services.TourDetailService;
 import com.pacific.pacificbe.utils.AuthUtils;
+import com.pacific.pacificbe.utils.enums.BookingStatus;
 import com.pacific.pacificbe.utils.enums.ReviewStatus;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -43,6 +43,7 @@ public class ReviewServiceImpl implements ReviewService {
     UserRepository userRepository;
     TourRepository tourRepository;
     private final BookingRepository bookingRepository;
+    private final TourDetailService tourDetailService;
 
     @Override
     public ReviewResponse getRatingById(String id) {
@@ -183,6 +184,9 @@ public class ReviewServiceImpl implements ReviewService {
         review.setRating(rating);
         reviewRepository.save(review);
 
+        // Cập nhật lại rating trung bình cho TourDetail
+        tourDetailService.updateRatingAvg(booking.getTourDetail().getId());
+
         return reviewMapper.toReviewResponseBooking(review);
     }
 
@@ -210,4 +214,6 @@ public class ReviewServiceImpl implements ReviewService {
         log.info("Updated rating [{}] to status: {}", id, review.getStatus());
         return reviewMapper.toResponse(review);
     }
+
+
 }

@@ -19,6 +19,7 @@ public class TourDetailResponse {
     LocalDateTime startDate;
     LocalDateTime endDate;
     Integer quantity;
+    Double ratingAvg;
 
     GuideResponse guide;
     String hotelId;

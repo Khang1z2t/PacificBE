@@ -86,4 +86,10 @@ public interface ReviewRepository extends JpaRepository<Review, String>{
             @Param("maxRating") float maxRating,
             @Param("startDate") LocalDateTime startDate,
             @Param("endDate") LocalDateTime endDate);
+
+    @Query("SELECT r FROM Review r " +
+            "WHERE r.booking.tourDetail.id = :tourDetailId " +
+            "AND r.booking.status = :status")
+    List<Review> findByTourDetailIdAndBookingStatus(@Param("tourDetailId") String tourDetailId,
+                                                    @Param("status") String status);
 }

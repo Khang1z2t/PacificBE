@@ -18,4 +18,6 @@ public interface TourDetailService {
     List<DetailTourResponse> getTourDetailMonth(String tourId);
 
     List<DetailTourResponse> getTourDetailDay(String tourId, String months);
+
+    void updateRatingAvg(String tourDetailId);
 }

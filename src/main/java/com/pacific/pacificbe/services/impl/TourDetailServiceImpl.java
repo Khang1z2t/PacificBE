@@ -11,6 +11,7 @@ import com.pacific.pacificbe.mapper.TourMapper;
 import com.pacific.pacificbe.model.*;
 import com.pacific.pacificbe.repository.*;
 import com.pacific.pacificbe.services.TourDetailService;
+import com.pacific.pacificbe.utils.enums.BookingStatus;
 import com.pacific.pacificbe.utils.enums.GuideStatus;
 import com.pacific.pacificbe.utils.enums.TourDetailStatus;
 import com.pacific.pacificbe.utils.enums.TourStatus;
@@ -35,6 +36,7 @@ public class TourDetailServiceImpl implements TourDetailService {
     private final TourDetailRepository tourDetailRepository;
     private final TourMapper tourMapper;
     private final GuideRepository guideRepository;
+    private final ReviewRepository reviewRepository;
 
     @Override
     @Transactional
@@ -98,4 +100,24 @@ public class TourDetailServiceImpl implements TourDetailService {
     public List<DetailTourResponse> getTourDetailDay(String tourId, String months) {
         return tourDetailRepository.getTourDetailDay(tourId, months);
     }
+
+
+    @Override
+    @Transactional
+    public void updateRatingAvg(String tourDetailId) {
+        TourDetail tourDetail = tourDetailRepository.findById(tourDetailId)
+                .orElseThrow(() -> new AppException(ErrorCode.TOUR_DETAIL_NOT_FOUND));
+
+        List<Review> reviews = reviewRepository.findByTourDetailIdAndBookingStatus(tourDetailId,
+                BookingStatus.COMPLETED.toString());
+
+        double ratingAvg = reviews.stream()
+                .mapToDouble(review -> review.getRating().doubleValue())
+                .average()
+                .orElse(0.0);
+
+        tourDetail.setRatingAvg(ratingAvg);
+        tourDetailRepository.save(tourDetail);
+    }
+
 }
