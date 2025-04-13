@@ -73,7 +73,7 @@ public interface TourRepository extends JpaRepository<Tour, String> {
                 b.booking_no AS bookingNo
             FROM tour t
                 JOIN tour_details td ON t.id = td.tour_id
-                JOIN booking b ON td.id = b.tour_details_id
+                JOIN booking b ON td.id = b.tour_detail_id
                 JOIN users us ON us.id = b.user_id
             WHERE :tourId IS NULL OR t.id = :tourId
             GROUP BY td.id, t.id, t.title, td.start_date, td.end_date, b.total_amount, b.booking_no
