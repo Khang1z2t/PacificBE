@@ -1,23 +1,28 @@
 package com.pacific.pacificbe.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class SupportRequest {
+    private String name;
+    private String email;
     private String subject;
     private String message;
 
     @Builder.Default
     private String status = "pending";
 
-    @Builder.Default
-    private Boolean active = true;
+    private String userEmail;
 
-    private String userId;
+    private LocalDateTime createdAt;
 }

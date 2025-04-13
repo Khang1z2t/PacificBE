@@ -15,11 +15,30 @@ import org.hibernate.annotations.OnDeleteAction;
 @Entity
 @Table(name = "support")
 public class Support extends BaseEntity {
+
     @Id
     @Size(max = 255)
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
+
+    @Size(max = 255)
+    @NotNull
+    @Nationalized
+    @Column(name = "name", nullable = false)
+    private String name;
+
+    @Size(max = 255)
+    @NotNull
+    @Nationalized
+    @Column(name = "email", nullable = false)
+    private String email;
+
+    @Size(max = 255)
+    @NotNull
+    @Nationalized
+    @Column(name = "subject", nullable = false)
+    private String subject;
 
     @NotNull
     @Nationalized
@@ -33,16 +52,13 @@ public class Support extends BaseEntity {
     @Column(name = "status", length = 50)
     private String status;
 
-    @Size(max = 255)
-    @NotNull
-    @Nationalized
-    @Column(name = "subject", nullable = false)
-    private String subject;
-
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @Lob
+    @Nationalized
+    @Column(name = "response_message")
+    private String responseMessage;
 }
