@@ -103,10 +103,9 @@ public class ItineraryServiceImpl implements ItineraryService {
 
     @Override
     @Transactional
-    public void deleteItinerary(String itineraryId) {
-        Itinerary itinerary = itineraryRepository.findById(itineraryId)
-                .orElseThrow(() -> new IllegalArgumentException(ErrorCode.ITINERARY_NOT_FOUND.name()));
-        itineraryRepository.delete(itinerary);
+    public void deleteItinerary(String tourId) {
+        tourRepository.findById(tourId).orElseThrow(() -> new RuntimeException(ErrorCode.TOUR_NOT_FOUND.toString()));
+        itineraryRepository.deleteByTourId(tourId);
     }
 
 //    @Override

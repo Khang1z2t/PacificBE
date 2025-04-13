@@ -61,8 +61,8 @@ public class ItineraryController {
 
     @Operation(summary = "Xóa lịch trình")
     @DeleteMapping(UrlMapping.ITINERARY_DELETE)
-    public ResponseEntity<ApiResponse<String>> deleteItinerary(@RequestParam String itineraryId) {
-        itineraryService.deleteItinerary(itineraryId);
+    public ResponseEntity<ApiResponse<String>> deleteItinerary(@RequestParam String tourId) {
+        itineraryService.deleteItinerary(tourId);
         return ResponseEntity.ok(new ApiResponse<>(200, "Xóa lịch trình thành công", "Lịch trình đã được xóa"));
     }
 }

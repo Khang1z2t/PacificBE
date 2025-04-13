@@ -3,6 +3,7 @@ package com.pacific.pacificbe.repository;
 import com.pacific.pacificbe.dto.response.showTour.ItineraryTourDetailResponse;
 import com.pacific.pacificbe.model.Itinerary;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -33,4 +34,9 @@ public interface ItineraryRepository extends JpaRepository<Itinerary, String> {
             @Param("createdDay") String createdDay);
 
     List<Itinerary> findByTourId(String id);
+
+
+    @Modifying
+    @Query("DELETE FROM Itinerary i WHERE i.tour.id = :tourId")
+    void deleteByTourId(@Param("tourId") String tourId);
 }
