@@ -185,6 +185,10 @@ public class VoucherServiceImpl implements VoucherService {
         if (voucher != null) {
             LocalDateTime now = LocalDateTime.now();
 
+            if (!voucher.isActive()) {
+                return false;
+            }
+
             // Kiểm tra thời gian hiệu lực
             if (voucher.getStartDate().isAfter(now) || voucher.getEndDate().isBefore(now)) {
                 return false;

@@ -154,30 +154,8 @@ public class BookingServiceImpl implements BookingService {
 
         Hotel hotel = tourDetail.getHotel();
         Transport transport = tourDetail.getTransport();
-
-        log.info("Hotel Cost: {}", hotel.getCost());
-        log.info("Transport Cost: {}", transport.getCost());
-//        // Xử lý voucher nếu có
-        Voucher voucher = null;
-        if (request.getVoucherCode() != null && request.getVoucherCode().isEmpty()) {
-            voucher = voucherRepository.findByCodeVoucher(request.getVoucherCode())
-                    .orElseThrow(() -> new AppException(ErrorCode.INVALID_VOUCHER));
-
-            // Kiểm tra tính hợp lệ của voucher
-            boolean isValid = voucherService.checkVoucher(
-                    voucher.getCodeVoucher(),
-                    BigDecimal.ZERO, // Sẽ cập nhật totalPrice sau
-                    tourDetail.getTour().getId()
-            );
-
-            if (!isValid || voucher.getQuantity() <= 0 || voucher.getStatus().equals("INACTIVE")) {
-                throw new AppException(ErrorCode.INVALID_VOUCHER);
-            }
-
-            // Gán voucher nhưng chưa giảm quantity ngay
-            booking.setVoucher(voucher);
-        }
-
+        totalPrice = totalPrice.add(hotel.getCost());
+        totalPrice = totalPrice.add(transport.getCost());
         // Lưu booking trước để có ID
         bookingRepository.save(booking);
 
@@ -210,6 +188,24 @@ public class BookingServiceImpl implements BookingService {
         booking.setChildrenNum(childrenNum);
         booking.setTotalNumber(totalNumber);
         booking.setBookingDetails(bookingDetails);
+
+        Voucher voucher = null;
+        if (request.getVoucherCode() != null && !request.getVoucherCode().isEmpty()) {
+            voucher = voucherRepository.findByCodeVoucher(request.getVoucherCode())
+                    .orElseThrow(() -> new AppException(ErrorCode.INVALID_VOUCHER));
+
+            // Kiểm tra tính hợp lệ của voucher
+            boolean isValid = voucherService.checkVoucher(
+                    voucher.getCodeVoucher(),
+                    totalPrice,
+                    tourDetail.getTour().getId()
+            );
+
+            if (!isValid) {
+                voucher = null;
+            }
+        }
+        booking.setVoucher(voucher);
 
         // Cập nhật giá cuối cùng với voucher
         BigDecimal finalTotalPrice = getFinalPrice(totalPrice, booking);
@@ -265,7 +261,11 @@ public class BookingServiceImpl implements BookingService {
         BigDecimal discount = totalPrice
                 .multiply(discountValue)
                 .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
-        return totalPrice.subtract(discount);
+
+        if (voucher.getMaxDiscountAmount() != null && discount.compareTo(voucher.getMaxDiscountAmount()) > 0) {
+            discount = voucher.getMaxDiscountAmount();
+        }
+        return totalPrice.subtract(discount).setScale(0, RoundingMode.HALF_UP);
     }
 
     private static BookingDetail getBookingDetail(BookingDetailRequest bookingDetailRequest, Booking booking) {

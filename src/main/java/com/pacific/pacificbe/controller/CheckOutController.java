@@ -27,11 +27,12 @@ public class CheckOutController {
 
     @GetMapping(UrlMapping.CHECKOUT_BOOKING)
     @Operation(summary = "Thanh toán tour")
-    public String checkoutTour(@RequestParam("amount") int orderTotal,
+    public String checkoutTour(@RequestParam("amount") double orderTotal,
                                @RequestParam("orderInfo") String orderInfo,
                                HttpServletRequest request) {
+        int amount = (int) Math.round(orderTotal);
         VNPAYRequest vnpayRequest = VNPAYRequest.builder()
-                .amount(orderTotal)
+                .amount(amount)
                 .orderInfo(orderInfo) // Gửi orderInfo trực tiếp, logic ghép userId sẽ xử lý trong service
                 .urlReturn("") // Để trống, service sẽ tự tạo baseUrl
                 .build();
