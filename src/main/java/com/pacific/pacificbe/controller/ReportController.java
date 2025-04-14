@@ -9,6 +9,7 @@ import com.pacific.pacificbe.dto.TopTour;
 import com.pacific.pacificbe.dto.response.BookingStatusStats;
 import com.pacific.pacificbe.dto.response.RatingStats;
 import com.pacific.pacificbe.dto.response.RevenueStats;
+import com.pacific.pacificbe.dto.response.YearlyRevenueOverviewDTO;
 import com.pacific.pacificbe.dto.response.report.BookingRevenueReportDTO;
 import com.pacific.pacificbe.dto.response.report.Revenue;
 import com.pacific.pacificbe.dto.response.report.TourAndBookReport;
@@ -18,6 +19,7 @@ import com.pacific.pacificbe.services.TourService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.pacific.pacificbe.services.ReportService;
@@ -125,6 +127,15 @@ public class ReportController {
 		List<TopTour> topTours = reportservice.getTopBookedTours(limit, startDate, endDate);
 		return ResponseEntity.ok(new ApiResponse<>(200, "Success", topTours));
 	}
+
+	@GetMapping(UrlMapping.GET_BOOKING_YEARLY)
+	@Operation(summary = "Lấy tổng doanh thu và doanh thu từng tháng của năm nay so với năm ngoái")
+	public ResponseEntity<ApiResponse<YearlyRevenueOverviewDTO>> getYearlyRevenueOverview() {
+		YearlyRevenueOverviewDTO overview = bookingService.getYearlyRevenueOverview();
+		return ResponseEntity.ok(new ApiResponse<>(200, "Success", overview));
+	}
+
+
 }
 
 ////	xuất file báo cáo theo pdf

@@ -3,8 +3,7 @@ package com.pacific.pacificbe.services.impl;
 import com.pacific.pacificbe.dto.request.BookingDetailRequest;
 import com.pacific.pacificbe.dto.request.BookingRequest;
 import com.pacific.pacificbe.dto.request.CancelBookingRequest;
-import com.pacific.pacificbe.dto.response.BookingResponse;
-import com.pacific.pacificbe.dto.response.BookingStatusStats;
+import com.pacific.pacificbe.dto.response.*;
 import com.pacific.pacificbe.dto.response.report.BookingRevenueReportDTO;
 import com.pacific.pacificbe.dto.response.report.Revenue;
 import com.pacific.pacificbe.dto.response.report.TourAndBookReport;
@@ -70,6 +69,61 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public List<BookingRevenueReportDTO> getTourBookingsRevenueReport(String tourId, String bookingStatus, LocalDate startDate, LocalDate endDate) {
         return bookingRepository.getTourBookingsRevenue(tourId, bookingStatus, startDate, endDate);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public YearlyRevenueOverviewDTO getYearlyRevenueOverview() {
+        YearlyRevenueOverviewDTO overview = new YearlyRevenueOverviewDTO();
+
+        // Tổng doanh thu năm nay
+        BigDecimal totalRevenue = bookingRepository.getTotalRevenueThisYear();
+        overview.setTotalRevenue(totalRevenue != null ? totalRevenue : BigDecimal.ZERO);
+
+        // Tổng doanh thu năm ngoái
+        BigDecimal lastYearRevenue = bookingRepository.getTotalRevenueLastYear();
+        lastYearRevenue = lastYearRevenue != null ? lastYearRevenue : BigDecimal.ZERO;
+
+        // Chênh lệch doanh thu
+        BigDecimal revenueChange = overview.getTotalRevenue().subtract(lastYearRevenue);
+        overview.setRevenueChange(revenueChange);
+
+        // Tỷ lệ tăng/giảm
+        ChangeDTO change = calculateChange(overview.getTotalRevenue(), lastYearRevenue);
+        overview.setChange(change);
+
+        // Doanh thu từng tháng
+        List<MonthlyRevenueDTO> monthlyRevenues = initializeMonthlyRevenues();
+        List<MonthlyRevenueDTO> dbRevenues = bookingRepository.getMonthlyRevenueThisYear();
+        for (MonthlyRevenueDTO dbRevenue : dbRevenues) {
+            monthlyRevenues.set(dbRevenue.getMonth() - 1, dbRevenue);
+        }
+        overview.setMonthlyRevenues(monthlyRevenues);
+
+        return overview;
+    }
+
+    private ChangeDTO calculateChange(BigDecimal current, BigDecimal previous) {
+        ChangeDTO change = new ChangeDTO();
+        if (previous == null || previous.compareTo(BigDecimal.ZERO) == 0) {
+            change.setValue(0.0);
+            change.setType("neutral");
+            return change;
+        }
+        BigDecimal percentage = current.subtract(previous)
+                .divide(previous, 4, RoundingMode.HALF_UP)
+                .multiply(BigDecimal.valueOf(100));
+        change.setValue(percentage.doubleValue());
+        change.setType(percentage.compareTo(BigDecimal.ZERO) > 0 ? "increase" : "decrease");
+        return change;
+    }
+
+    private List<MonthlyRevenueDTO> initializeMonthlyRevenues() {
+        List<MonthlyRevenueDTO> monthlyRevenues = new ArrayList<>();
+        for (int month = 1; month <= 12; month++) {
+            monthlyRevenues.add(new MonthlyRevenueDTO(month, BigDecimal.ZERO));
+        }
+        return monthlyRevenues;
     }
 
     @Override

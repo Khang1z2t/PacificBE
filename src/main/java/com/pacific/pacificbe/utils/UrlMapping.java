@@ -132,6 +132,7 @@ public class UrlMapping {
     //    public static final String EXPORT_PDF = "/PDF";
     public static final String GET_TOUR_BOOKING_COUNT = "/bookingCount";
     public static final String GET_STATS = "/stats";
+    public static final String GET_BOOKING_YEARLY = "/revenue-booking/yearly";
     public static final String BOOKING_STATUS_STATS = "/booking-status-stats";
     public static final String REVIEW_STATS = "/review-stats";
     public static final String TOP_BOOKED_TOURS = "/top-booked";
@@ -210,9 +211,9 @@ public class UrlMapping {
     /* =========================== End Admin Voucher API ===================================== */
 
     /* =========================== Start Other URL ===================================== */
-//    public static final String FE_URL = "http://localhost:3000";
+    public static final String FE_URL = "http://localhost:3000";
 //    Trong truong hop deloy
-    public static final String FE_URL = "https://pacific-vn.vercel.app";
+//    public static final String FE_URL = "https://pacific-vn.vercel.app";
     public static final String GOOGLE_REDIRECT = FE_URL + "/google/redirect";
     public static final String PAYMENT_FAIL = FE_URL + "/checkout/fail";
     public static final String PAYMENT_SUCCESS = FE_URL + "/checkout/success";

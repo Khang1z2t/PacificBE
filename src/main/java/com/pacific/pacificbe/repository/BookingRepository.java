@@ -1,6 +1,7 @@
 package com.pacific.pacificbe.repository;
 
 import com.pacific.pacificbe.dto.TopTour;
+import com.pacific.pacificbe.dto.response.MonthlyRevenueDTO;
 import com.pacific.pacificbe.dto.response.report.BookingRevenueReportDTO;
 import com.pacific.pacificbe.dto.response.report.Revenue;
 import com.pacific.pacificbe.dto.response.report.TourAndBookReport;
@@ -170,17 +171,17 @@ public interface BookingRepository extends JpaRepository<Booking, String> {
     long countCancelledBookingsInPeriod(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end, @Param("statuses") List<String> statuses);
 
 
-@Query("SELECT new com.pacific.pacificbe.dto.TopTour(" +
-        "td.tour.id, td.tour.title, COUNT(b)) " +
-        "FROM Booking b " +
-        "JOIN b.tourDetail td " +
-        "WHERE b.createdAt >= :startDate AND b.createdAt <= :endDate " +
-        "GROUP BY td.tour.id, td.tour.title " +
-        "ORDER BY COUNT(b) DESC")
-List<TopTour> getTopBookedTours(
-        @Param("startDate") LocalDateTime startDate,
-        @Param("endDate") LocalDateTime endDate,
-        Pageable pageable);
+    @Query("SELECT new com.pacific.pacificbe.dto.TopTour(" +
+            "td.tour.id, td.tour.title, COUNT(b)) " +
+            "FROM Booking b " +
+            "JOIN b.tourDetail td " +
+            "WHERE b.createdAt >= :startDate AND b.createdAt <= :endDate " +
+            "GROUP BY td.tour.id, td.tour.title " +
+            "ORDER BY COUNT(b) DESC")
+    List<TopTour> getTopBookedTours(
+            @Param("startDate") LocalDateTime startDate,
+            @Param("endDate") LocalDateTime endDate,
+            Pageable pageable);
 
     @Query("select b from Booking b where b.status = ?1 and b.createdAt < ?2")
     List<Booking> findByStatusAndCreatedAtBefore(String status, LocalDateTime createdAt);
@@ -214,4 +215,37 @@ List<TopTour> getTopBookedTours(
 
     @Query("select b from Booking b where b.status = ?1")
     List<Booking> findByStatus(String status);
+
+
+    //    THOGN KE DOANH THU CHO ADMIN HOME
+// Tổng doanh thu năm nay
+    @Query(value = """
+            SELECT SUM(b.total_amount)
+            FROM booking b
+            WHERE YEAR(b.created_at) = YEAR(GETDATE())
+                AND b.status = 'COMPLETED'
+            """, nativeQuery = true)
+    BigDecimal getTotalRevenueThisYear();
+
+    // Tổng doanh thu năm ngoái
+    @Query(value = """
+            SELECT SUM(b.total_amount)
+            FROM booking b
+            WHERE YEAR(b.created_at) = YEAR(GETDATE()) - 1
+                AND b.status = 'COMPLETED'
+            """, nativeQuery = true)
+    BigDecimal getTotalRevenueLastYear();
+
+    // Doanh thu từng tháng trong năm nay
+    @Query(value = """
+            SELECT 
+                MONTH(b.created_at) AS month,
+                SUM(b.total_amount) AS revenue
+            FROM booking b
+            WHERE YEAR(b.created_at) = YEAR(GETDATE())
+                AND b.status = 'COMPLETED'
+            GROUP BY MONTH(b.created_at)
+            ORDER BY MONTH(b.created_at)
+            """, nativeQuery = true)
+    List<MonthlyRevenueDTO> getMonthlyRevenueThisYear();
 }

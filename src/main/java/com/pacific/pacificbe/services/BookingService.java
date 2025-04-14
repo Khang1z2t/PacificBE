@@ -4,6 +4,7 @@ import com.pacific.pacificbe.dto.request.BookingRequest;
 import com.pacific.pacificbe.dto.request.CancelBookingRequest;
 import com.pacific.pacificbe.dto.response.BookingResponse;
 import com.pacific.pacificbe.dto.response.BookingStatusStats;
+import com.pacific.pacificbe.dto.response.YearlyRevenueOverviewDTO;
 import com.pacific.pacificbe.dto.response.report.BookingRevenueReportDTO;
 import com.pacific.pacificbe.dto.response.report.Revenue;
 import com.pacific.pacificbe.dto.response.report.TourAndBookReport;
@@ -20,6 +21,7 @@ public interface BookingService {
 
     List<BookingRevenueReportDTO> getTourBookingsRevenueReport(String tourId, String bookingStatus, LocalDate startDate, LocalDate endDate);
 
+    YearlyRevenueOverviewDTO getYearlyRevenueOverview();
 
     List<TourAndBookReport> getTourAndBookingsReport(String tourId, String userName);
 
