@@ -38,6 +38,7 @@ import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -326,22 +327,31 @@ public class BookingServiceImpl implements BookingService {
 
     /**
      * Phương thức chung để xử lý logic hủy booking.
-     * @param booking Booking cần hủy
-     * @param user Người thực hiện hủy
-     * @param request Yêu cầu hủy
-     * @param role Vai trò (User hoặc Admin)
+     *
+     * @param booking     Booking cần hủy
+     * @param user        Người thực hiện hủy
+     * @param request     Yêu cầu hủy
+     * @param role        Vai trò (User hoặc Admin)
      * @param allowOnHold Nếu true, cho phép set trạng thái ON_HOLD khi có yêu cầu hoàn tiền
      * @return BookingResponse
      */
     private BookingResponse cancelBooking(Booking booking, User user, CancelBookingRequest request, String role, boolean allowOnHold) {
+
+        // Kiểm tra trạng thái booking
+        if (!booking.getStatus().equals(BookingStatus.PENDING.toString()) &&
+                !booking.getStatus().equals(BookingStatus.PAID.toString())) {
+            request.setRefundRequested(false);
+        }
+
         // Tạo thông tin hủy
         String cancelInfo = String.format(
-                "[Cancellation] BookingId: %s,\nReason: %s,\nCancelledBy: %s,\nRefundRequested: %s,\nAdditionalNotes: %s",
+                "[Cancellation] BookingId: %s,\nReason: %s,\nCancelledBy: %s,\nRefundRequested: %s,\nAdditionalNotes: %s, \nDateRequested: %s",
                 booking.getId(),
                 request.getReason() != null ? request.getReason() : "N/A",
                 role + " - " + user.getId(),
                 request.getRefundRequested() ? "Yes" : "No",
-                request.getAdditionalNotes() != null ? request.getAdditionalNotes() : "N/A"
+                request.getAdditionalNotes() != null ? request.getAdditionalNotes() : "N/A",
+                LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"))
         );
 
         // Cập nhật notes

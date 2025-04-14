@@ -78,4 +78,11 @@ public class BookingController {
     public ResponseEntity<ApiResponse<BookingResponse>> cancelBooking(@PathVariable String id, @RequestBody CancelBookingRequest request) {
         return ResponseEntity.ok(new ApiResponse<>(200, null, bookingService.cancelBookingFromUser(id, request)));
     }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PostMapping(UrlMapping.CANCEL_BOOKING_ADMIN)
+    @Operation(summary = "Hủy đơn đặt tour (admin)")
+    public ResponseEntity<ApiResponse<BookingResponse>> cancelBookingAdmin(@PathVariable String id, @RequestBody CancelBookingRequest request) {
+        return ResponseEntity.ok(new ApiResponse<>(200, null, bookingService.cancelBookingFromAdmin(id, request)));
+    }
 }

@@ -32,6 +32,7 @@ public class BookingMapper {
 
         if (booking.getTourDetail() != null) {
             bookingResponse.setUserId(booking.getTourDetail().getId());
+            bookingResponse.setStartDate(booking.getTourDetail().getStartDate());
         }
 
         if (booking.getUser() != null) {

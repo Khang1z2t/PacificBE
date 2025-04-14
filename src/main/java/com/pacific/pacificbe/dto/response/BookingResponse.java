@@ -29,6 +29,7 @@ public class BookingResponse {
     String status;
     String voucherId;
     String userId;
+    LocalDateTime startDate;
 
     List<BookingDetailResponse> details;
 
@@ -36,6 +37,7 @@ public class BookingResponse {
 
     ReviewResponseBooking review;
 
+    boolean active;
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
     LocalDateTime deleteAt;
