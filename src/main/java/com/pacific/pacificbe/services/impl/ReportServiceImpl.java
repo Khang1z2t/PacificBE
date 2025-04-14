@@ -6,6 +6,7 @@ import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.temporal.ChronoField;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -15,10 +16,12 @@ import com.pacific.pacificbe.dto.RatingLevel;
 import com.pacific.pacificbe.dto.TopTour;
 import com.pacific.pacificbe.dto.response.RatingStats;
 import com.pacific.pacificbe.dto.response.RevenueStats;
+import com.pacific.pacificbe.model.Booking;
 import com.pacific.pacificbe.repository.BookingRepository;
 import com.pacific.pacificbe.repository.ReviewRepository;
 import com.pacific.pacificbe.repository.TourDetailRepository;
 import com.pacific.pacificbe.repository.UserRepository;
+import com.pacific.pacificbe.utils.enums.BookingStatus;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -40,15 +43,15 @@ import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class ReportServiceImpl implements ReportService{
+public class ReportServiceImpl implements ReportService {
     private JdbcTemplate jdbcTemplate;
     private final BookingRepository bookingRepository;
     private final UserRepository userRepository;
     private final TourDetailRepository tourDetailRepository;
     private final ReviewRepository reviewRepository;
 
-	@Override
-	public byte[] exportReport(String reportFileName, List<?> data, Map<String, Object> parameters) throws Exception{
+    @Override
+    public byte[] exportReport(String reportFileName, List<?> data, Map<String, Object> parameters) throws Exception {
         // Load file .jasper từ thư mục resources
         InputStream reportStream = new ClassPathResource("reportJasper/" + reportFileName + ".jasper").getInputStream();
 
@@ -60,7 +63,7 @@ public class ReportServiceImpl implements ReportService{
 
         // Xuất ra file PDF
         return JasperExportManager.exportReportToPdf(jasperPrint);
-	}
+    }
 
     @Override
     public byte[] exportBookingReport(String year, String bookStatus) throws Exception {
@@ -100,6 +103,17 @@ public class ReportServiceImpl implements ReportService{
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime startOfThisPeriod, endOfThisPeriod, startOfLastPeriod, endOfLastPeriod;
         LocalDateTime startOfToday, endOfToday, startOfYesterday, endOfYesterday;
+        List<String> revenueStatus = Arrays.asList(
+                BookingStatus.PAID.toString(),
+                BookingStatus.ON_GOING.toString(),
+                BookingStatus.COMPLETED.toString()
+        );
+
+        List<String> cancellationStatus = Arrays.asList(
+                BookingStatus.EXPIRED.toString(),
+                BookingStatus.CANCELLED.toString(),
+                BookingStatus.ON_HOLD.toString()
+        );
 
         // Tính thời gian cho hôm nay và hôm qua (dùng cho "Khách mới")
         startOfToday = now.with(LocalTime.MIN);
@@ -123,7 +137,7 @@ public class ReportServiceImpl implements ReportService{
                 break;
             case "week":
             default:
-                startOfThisPeriod = now.with(LocalTime.MIN).minusDays(now.getDayOfWeek().getValue() - 1);
+                startOfThisPeriod = now.with(ChronoField.DAY_OF_WEEK, 1).with(LocalTime.MIN);
                 endOfThisPeriod = now.with(LocalTime.MAX);
                 startOfLastPeriod = startOfThisPeriod.minusWeeks(1);
                 endOfLastPeriod = startOfThisPeriod.minusSeconds(1);
@@ -136,8 +150,8 @@ public class ReportServiceImpl implements ReportService{
         double bookingGrowthPercentage = calculateGrowthPercentage(totalBookingsThisPeriod, totalBookingsLastPeriod);
 
         // 2. Doanh thu
-        BigDecimal revenueThisPeriod = bookingRepository.getRevenueInPeriod(startOfThisPeriod, endOfThisPeriod);
-        BigDecimal revenueLastPeriod = bookingRepository.getRevenueInPeriod(startOfLastPeriod, endOfLastPeriod);
+        BigDecimal revenueThisPeriod = bookingRepository.getRevenueInPeriod(startOfThisPeriod, endOfThisPeriod, revenueStatus);
+        BigDecimal revenueLastPeriod = bookingRepository.getRevenueInPeriod(startOfLastPeriod, endOfLastPeriod, revenueStatus);
         double revenueGrowthPercentage = calculateGrowthPercentage(revenueThisPeriod, revenueLastPeriod);
 
         // 3. Khách mới (luôn tính theo ngày, không phụ thuộc vào period)
@@ -146,9 +160,9 @@ public class ReportServiceImpl implements ReportService{
         double newCustomerGrowthPercentage = calculateGrowthPercentage(newCustomersToday, newCustomersYesterday);
 
         // 4. Tỷ lệ hủy
-        long cancelledBookingsThisPeriod = bookingRepository.countCancelledBookingsInPeriod(startOfThisPeriod, endOfThisPeriod);
+        long cancelledBookingsThisPeriod = bookingRepository.countCancelledBookingsInPeriod(startOfThisPeriod, endOfThisPeriod, cancellationStatus);
         double cancellationRateThisPeriod = totalBookingsThisPeriod > 0 ? (cancelledBookingsThisPeriod * 100.0) / totalBookingsThisPeriod : 0.0;
-        long cancelledBookingsLastPeriod = bookingRepository.countCancelledBookingsInPeriod(startOfLastPeriod, endOfLastPeriod);
+        long cancelledBookingsLastPeriod = bookingRepository.countCancelledBookingsInPeriod(startOfLastPeriod, endOfLastPeriod, cancellationStatus);
         double cancellationRateLastPeriod = totalBookingsLastPeriod > 0 ? (cancelledBookingsLastPeriod * 100.0) / totalBookingsLastPeriod : 0.0;
         double cancellationRateGrowthPercentage = calculateGrowthPercentage(cancellationRateThisPeriod, cancellationRateLastPeriod);
 

@@ -2,6 +2,7 @@ package com.pacific.pacificbe.controller;
 
 import com.pacific.pacificbe.dto.ApiResponse;
 import com.pacific.pacificbe.dto.request.BookingRequest;
+import com.pacific.pacificbe.dto.request.CancelBookingRequest;
 import com.pacific.pacificbe.dto.response.BookingResponse;
 import com.pacific.pacificbe.dto.response.report.BookingRevenueReportDTO;
 import com.pacific.pacificbe.dto.response.report.Revenue;
@@ -70,5 +71,11 @@ public class BookingController {
     @Operation(summary = "Đặt tour")
     public ResponseEntity<ApiResponse<BookingResponse>> bookTour(@PathVariable String id, @RequestBody BookingRequest request) {
         return ResponseEntity.ok(new ApiResponse<>(200, null, bookingService.bookingTour(id, request)));
+    }
+
+    @PostMapping(UrlMapping.CANCEL_BOOKING)
+    @Operation(summary = "Hủy đơn đặt tour")
+    public ResponseEntity<ApiResponse<BookingResponse>> cancelBooking(@PathVariable String id, @RequestBody CancelBookingRequest request) {
+        return ResponseEntity.ok(new ApiResponse<>(200, null, bookingService.cancelBookingFromUser(id, request)));
     }
 }

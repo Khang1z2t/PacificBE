@@ -2,6 +2,7 @@ package com.pacific.pacificbe.services.impl;
 
 import com.pacific.pacificbe.dto.request.BookingDetailRequest;
 import com.pacific.pacificbe.dto.request.BookingRequest;
+import com.pacific.pacificbe.dto.request.CancelBookingRequest;
 import com.pacific.pacificbe.dto.response.BookingResponse;
 import com.pacific.pacificbe.dto.response.BookingStatusStats;
 import com.pacific.pacificbe.dto.response.report.BookingRevenueReportDTO;
@@ -224,6 +225,34 @@ public class BookingServiceImpl implements BookingService {
         return bookingMapper.toBookingResponse(booking);
     }
 
+    @Override
+    @Transactional
+    public BookingResponse cancelBookingFromUser(String bookingId, CancelBookingRequest request) {
+        var userId = AuthUtils.getCurrentUserId();
+        var user = userRepository.findById(userId)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        Booking booking = bookingRepository.findById(bookingId).orElseThrow(
+                () -> new AppException(ErrorCode.BOOKING_NOT_FOUND));
+
+        if (!Objects.equals(booking.getUser().getId(), user.getId())) {
+            throw new AppException(ErrorCode.BOOKING_NOT_FOUND);
+        }
+
+        return cancelBooking(booking, user, request, "User", true);
+    }
+
+    @Override
+    @Transactional
+    public BookingResponse cancelBookingFromAdmin(String bookingId, CancelBookingRequest request) {
+        var userId = AuthUtils.getCurrentUserId();
+        var user = userRepository.findById(userId)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        Booking booking = bookingRepository.findById(bookingId).orElseThrow(
+                () -> new AppException(ErrorCode.BOOKING_NOT_FOUND));
+
+        return cancelBooking(booking, user, request, "Admin", false);
+    }
+
 
     @Override
     public List<BookingStatusStats> getBookingStatusStats() {
@@ -293,5 +322,46 @@ public class BookingServiceImpl implements BookingService {
         } else {
             return idUtil.createIDFromLastID(chars, lastBookingNo);
         }
+    }
+
+    /**
+     * Phương thức chung để xử lý logic hủy booking.
+     * @param booking Booking cần hủy
+     * @param user Người thực hiện hủy
+     * @param request Yêu cầu hủy
+     * @param role Vai trò (User hoặc Admin)
+     * @param allowOnHold Nếu true, cho phép set trạng thái ON_HOLD khi có yêu cầu hoàn tiền
+     * @return BookingResponse
+     */
+    private BookingResponse cancelBooking(Booking booking, User user, CancelBookingRequest request, String role, boolean allowOnHold) {
+        // Tạo thông tin hủy
+        String cancelInfo = String.format(
+                "[Cancellation] BookingId: %s,\nReason: %s,\nCancelledBy: %s,\nRefundRequested: %s,\nAdditionalNotes: %s",
+                booking.getId(),
+                request.getReason() != null ? request.getReason() : "N/A",
+                role + " - " + user.getId(),
+                request.getRefundRequested() ? "Yes" : "No",
+                request.getAdditionalNotes() != null ? request.getAdditionalNotes() : "N/A"
+        );
+
+        // Cập nhật notes
+        if (booking.getNotes() != null && !booking.getNotes().isEmpty()) {
+            booking.setNotes(booking.getNotes() + "\n" + cancelInfo);
+        } else {
+            booking.setNotes(cancelInfo);
+        }
+
+        // Set trạng thái
+        if (allowOnHold && request.getRefundRequested()) {
+            booking.setStatus(BookingStatus.ON_HOLD.toString());
+        } else {
+            booking.setStatus(BookingStatus.CANCELLED.toString());
+        }
+
+        // Lưu booking
+        bookingRepository.save(booking);
+
+        // Trả về response
+        return bookingMapper.toBookingResponse(booking);
     }
 }

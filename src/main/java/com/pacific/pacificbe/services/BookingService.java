@@ -1,6 +1,7 @@
 package com.pacific.pacificbe.services;
 
 import com.pacific.pacificbe.dto.request.BookingRequest;
+import com.pacific.pacificbe.dto.request.CancelBookingRequest;
 import com.pacific.pacificbe.dto.response.BookingResponse;
 import com.pacific.pacificbe.dto.response.BookingStatusStats;
 import com.pacific.pacificbe.dto.response.report.BookingRevenueReportDTO;
@@ -34,6 +35,10 @@ public interface BookingService {
     BookingResponse getBookingByBookingNo(String bookingNo);
 
     BookingResponse bookingTour(String tourDetailId, BookingRequest request);
+
+    BookingResponse cancelBookingFromUser(String bookingId, CancelBookingRequest request);
+
+    BookingResponse cancelBookingFromAdmin(String bookingId, CancelBookingRequest request);
 
     List<BookingStatusStats> getBookingStatusStats();
 }

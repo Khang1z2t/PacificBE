@@ -162,12 +162,12 @@ public interface BookingRepository extends JpaRepository<Booking, String> {
     long countBookingsInPeriod(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
 
     // Tổng doanh thu trong khoảng thời gian
-    @Query("SELECT COALESCE(SUM(b.totalAmount), 0) FROM Booking b WHERE b.createdAt >= :start AND b.createdAt <= :end AND b.status = 'PAID'")
-    BigDecimal getRevenueInPeriod(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
+    @Query("SELECT COALESCE(SUM(b.totalAmount), 0) FROM Booking b WHERE b.createdAt >= :start AND b.createdAt <= :end AND b.status IN :statuses")
+    BigDecimal getRevenueInPeriod(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end, @Param("statuses") List<String> statuses);
 
     // Số lượng booking bị hủy trong khoảng thời gian
-    @Query("SELECT COUNT(b) FROM Booking b WHERE b.createdAt >= :start AND b.createdAt <= :end AND b.status = 'EXPIRED'")
-    long countCancelledBookingsInPeriod(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
+    @Query("SELECT COUNT(b) FROM Booking b WHERE b.createdAt >= :start AND b.createdAt <= :end AND b.status IN :statuses")
+    long countCancelledBookingsInPeriod(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end, @Param("statuses") List<String> statuses);
 
 
 @Query("SELECT new com.pacific.pacificbe.dto.TopTour(" +

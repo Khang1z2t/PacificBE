@@ -93,11 +93,10 @@ public class UrlMapping {
     public static final String GET_BOOKING_BY_NO = "/book/no/{bookingNo}";
     public static final String GET_BOOKING_BY_USER = "/book/user";
     public static final String BOOK_TOUR = "/tour/{id}";
-    public static final String CREATE_BOOKING = "/add";
+    public static final String CANCEL_BOOKING = "/book/cancel/{id}";
     public static final String UPDATE_BOOKING = "/{id}/update";
     public static final String DELETE_BOOKING = "/{id}/delete";
     public static final String APPROVE_BOOKING = "/book/{id}/approve";
-    public static final String CANCEL_BOOKING = "/book/{id}/cancel";
     public static final String DECLINE_BOOKINGS = "/book/{id}/decline";
     public static final String CHECKOUT_BOOKING = "/checkout";
     public static final String CHECKOUT_RETURN = "/vnpay-payment-return";
@@ -157,8 +156,8 @@ public class UrlMapping {
 //    public static final String GUIDE = API + "/guide";
 //    public static final String GET_ALL_GUIDE = "/all";
 //    //    public static final String CREATE_GUIDE = "/create";
-////    public static final String GET_GUIDE_BY_ID = "/{id}";
-////    public static final String UPDATE_GUIDE = "/update/{id}";
+    /// /    public static final String GET_GUIDE_BY_ID = "/{id}";
+    /// /    public static final String UPDATE_GUIDE = "/update/{id}";
 //    public static final String DELETE_GUIDE = "/delete/{id}";
     /* =========================== End Guide API ===================================== */
 
