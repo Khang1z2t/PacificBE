@@ -1,5 +1,8 @@
 package com.pacific.pacificbe.services.impl;
 
+import com.pacific.pacificbe.dto.request.gemini.GeminiRequest;
+import com.pacific.pacificbe.dto.response.gemini.GeminiResponse;
+import com.pacific.pacificbe.integration.google.GeminiClient;
 import com.pacific.pacificbe.model.Tour;
 import com.pacific.pacificbe.model.TourDetail;
 import com.pacific.pacificbe.model.User;
@@ -9,7 +12,7 @@ import com.pacific.pacificbe.repository.TourRepository;
 import com.pacific.pacificbe.repository.UserRepository;
 import com.pacific.pacificbe.repository.BookingRepository;
 import com.pacific.pacificbe.services.AiServices;
-import com.pacific.pacificbe.utils.AuthUtils;
+import com.pacific.pacificbe.utils.UrlMapping;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -24,6 +27,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.pacific.pacificbe.utils.UrlMapping.FE_URL;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -34,6 +39,7 @@ public class AiServicesImpl implements AiServices {
     private final TourDetailRepository tourDetailRepository;
     private final UserRepository userRepository;
     private final BookingRepository bookingRepository;
+    private final GeminiClient geminiClient;
 
     @Value("${google.ai.api.key}")
     private String apiKey;
@@ -147,19 +153,21 @@ public class AiServicesImpl implements AiServices {
                         "- Trả lời bằng tiếng Việt, ngắn gọn, tự nhiên.\n" +
                         "- Sử dụng gạch đầu dòng (-) cho danh sách, tối đa 3 tour, mỗi tour trên một dòng riêng.\n" +
                         "- Không hiển thị Tour ID trong câu trả lời.\n" +
-                        "- Không chèn link chi tiết tour (VD: không dùng /chi-tiet-tour/...).\n" +
+                        "- **Chèn link tên tour bằng định dạng Markdown: [Tên Tour](URL)**.\n" +  // <== THÊM DÒNG NÀY
+                        "- Cách để chèn link url cơ bản: " + FE_URL + " cộng thêm /tour-chi-tiet/{tourId} thay thế tour id vào url (id ghi đầy đủ) \n" +
+//                        "- Không chèn link chi tiết tour (VD: không dùng /tour-chi-tiet/...).\n" +
                         "- Khi hỏi tour rẻ nhất, liệt kê các tour có giá thấp nhất (dựa trên giá người lớn), không yêu cầu thêm thông tin.\n" +
                         "- Đảm bảo mỗi tour cách nhau rõ ràng, không dính liền.\n" +
                         "- Nếu không có dữ liệu phù hợp, trả lời lịch sự: 'Hiện tại không có thông tin phù hợp. Bạn muốn thử câu hỏi khác không?'.\n" +
                         "- Ví dụ:\n" +
                         "  Câu hỏi: 'Tour nào rẻ nhất?'\n" +
                         "  Trả lời:\n" +
-                        "    - Khám phá Sao Thổ cực hot 7N6Đ: 20.000 VNĐ/người lớn, 6.000 VNĐ/trẻ em, khởi hành 09/04/2025\n" +
-                        "    - Tour Campuchia - Siem Reap - Phnom Penh: 521.387 VNĐ/người lớn, 181.520 VNĐ/trẻ em, khởi hành 05/04/2025\n" +
-                        "    - Trải nghiệm Đà Lạt - Thành phố ngàn hoa: 592.286 VNĐ/người lớn, 321.327 VNĐ/trẻ em, khởi hành 08/04/2025\n" +
+                        "    - [Khám phá Sao Thổ cực hot 7N6Đ](" + FE_URL + "/tour-chi-tiet/xxxx-xxxx-xxxx): 20.000 VNĐ/người lớn, 6.000 VNĐ/trẻ em, khởi hành 09/04/2025\n" +
+                        "    - [Tour Campuchia - Siem Reap - Phnom Penh](" + FE_URL + "/tour-chi-tiet/xxxx-xxxx-xxxx): 521.387 VNĐ/người lớn, 181.520 VNĐ/trẻ em, khởi hành 05/04/2025\n" +
+                        "    - [Trải nghiệm Đà Lạt - Thành phố ngàn hoa](" + FE_URL + "/tour-chi-tiet/xxxx-xxxx-xxxx): 592.286 VNĐ/người lớn, 321.327 VNĐ/trẻ em, khởi hành 08/04/2025\n" +
                         "  Câu hỏi: 'Chi tiết tour Đà Nẵng 3N2Đ?'\n" +
                         "  Trả lời:\n" +
-                        "    - Tour Đà Nẵng 3N2Đ:\n" +
+                        "    - [Tour Đà Nẵng 3N2Đ](" + FE_URL + "/tour-chi-tiet/xxxx-xxxx-xxxx):\n" +
                         "      - Giá: 4 triệu VNĐ/người lớn\n" +
                         "      - Mô tả: Khám phá Bà Nà, Hội An\n" +
                         "      - Thời lượng: 3 ngày\n" +
@@ -173,33 +181,20 @@ public class AiServicesImpl implements AiServices {
         // Log để debug
         log.info("Prompt gửi đi: {}", prompt);
 
+        GeminiRequest request = GeminiRequest.builder()
+                .contents(List.of(
+                        new GeminiRequest.Content(
+                                List.of(new GeminiRequest.Part(prompt))
+                        )
+                ))
+                .build();
+
         // Gọi Gemini API
         try {
-            OkHttpClient client = new OkHttpClient();
-            String jsonBody = String.format("{\"contents\": [{\"parts\": [{\"text\": \"%s\"}]}]}", prompt.replace("\"", "\\\""));
-            RequestBody body = RequestBody.create(jsonBody, MediaType.parse("application/json"));
-            Request request = new Request.Builder()
-                    .url("https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + apiKey)
-                    .post(body)
-                    .build();
-
-            try (Response response = client.newCall(request).execute()) {
-                if (response.isSuccessful()) {
-                    String responseBody = response.body().string();
-                    log.info("Gemini response: {}", responseBody);
-                    JSONObject json = new JSONObject(responseBody);
-                    return json.getJSONArray("candidates")
-                            .getJSONObject(0)
-                            .getJSONObject("content")
-                            .getJSONArray("parts")
-                            .getJSONObject(0)
-                            .getString("text");
-                } else {
-                    log.error("Gemini API error: {}", response.message());
-                    return "Không thể xử lý câu hỏi. Vui lòng thử lại.";
-                }
-            }
-        } catch (Exception e) {
+            GeminiResponse response = geminiClient.generateContent(apiKey, request);
+            return response.getCandidates().getFirst().getContent().getParts().getFirst().getText();
+        } catch (
+                Exception e) {
             log.error("Exception while calling Gemini API: {}", e.getMessage());
             return "Lỗi: " + e.getMessage();
         }
