@@ -9,6 +9,6 @@ public enum BookingStatus {
     ON_HOLD, // đang giữ (đợi thanh toán hoặc đợi xác nhận hoàn hoặc nguyên nhân thứ 3)
     CANCELLED, // đã huỷ (người dùng huỷ hoặc admin huỷ)
 
-
+    REFUND_REQUESTED, // đang hoàn tiền
     CONFIRMED, // đã xác nhận (nếu có duyệt)
 }

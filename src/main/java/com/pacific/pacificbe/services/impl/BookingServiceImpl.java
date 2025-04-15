@@ -336,6 +336,12 @@ public class BookingServiceImpl implements BookingService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<BookingResponse> getAllByStatus(String status) {
+        List<Booking> bookings = bookingRepository.findByStatus(status);
+        return bookingMapper.toBookingResponses(bookings);
+    }
+
     private BigDecimal getFinalPrice(BigDecimal totalPrice, Booking booking) {
         if (booking.getVoucher() == null) {
             return totalPrice;

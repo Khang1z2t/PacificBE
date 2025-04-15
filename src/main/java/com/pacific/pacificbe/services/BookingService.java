@@ -44,4 +44,5 @@ public interface BookingService {
 
     List<BookingStatusStats> getBookingStatusStats();
 
+    List<BookingResponse> getAllByStatus(String status);
 }

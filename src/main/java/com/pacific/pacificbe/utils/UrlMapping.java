@@ -97,6 +97,7 @@ public class UrlMapping {
     public static final String BOOK_TOUR = "/tour/{id}";
     public static final String CANCEL_BOOKING = "/cancel/{id}";
     public static final String CANCEL_BOOKING_ADMIN = "/ad/cancel/{id}";
+    public static final String GET_BOOKING_BY_STATUS = "/status";
     public static final String UPDATE_BOOKING = "/{id}/update";
     public static final String DELETE_BOOKING = "/{id}/delete";
     public static final String APPROVE_BOOKING = "/book/{id}/approve";
@@ -199,6 +200,20 @@ public class UrlMapping {
     public static final String UPDATE_GUIDE = "/update/{id}";
     public static final String UPDATE_STATUS_GUIDE = "/updateStatus/{id}";
     /* =========================== End Admin Guide API ===================================== */
+
+    /* =========================== Start Wallet API ===================================== */
+    public static final String WALLET = API + "/wallet";
+    public static final String WALLET_TRANSACTION = "/transactions";
+    public static final String WALLET_DEPOSIT = "/deposit";
+    public static final String REFUND_REQUESTS = "/refund-requests";
+    public static final String WALLET_WITHDRAW = "/withdraw";
+    public static final String WALLET_REFUND = "/refund";
+    public static final String WALLET_GET_BALANCE = "/balance";
+    public static final String WALLET_APPROVE_REFUND = "/approve-refund";
+
+    /* =========================== End Wallet API ===================================== */
+
+
 
     /* =========================== Start Admin Voucher API ===================================== */
     public static final String ADMIN_VOUCHER = API + "/admin/voucher";

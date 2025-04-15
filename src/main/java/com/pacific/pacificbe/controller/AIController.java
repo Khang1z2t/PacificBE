@@ -1,5 +1,6 @@
 package com.pacific.pacificbe.controller;
 
+import com.pacific.pacificbe.services.AiServices;
 import com.pacific.pacificbe.services.TourService;
 import com.pacific.pacificbe.services.impl.AiServicesImpl;
 import com.pacific.pacificbe.services.impl.TourServiceImpl;
@@ -19,11 +20,11 @@ import java.util.Map;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 
 public class AIController {
-    private final AiServicesImpl aiServiceImpl;
+    private final AiServices aiServices;
 
     @PostMapping(UrlMapping.AI_QUERY)
     public ResponseEntity<String> processAiQuery(@RequestBody Map<String, String> request) {
-        String answer = aiServiceImpl.processQuery(request.get("query"));
+        String answer = aiServices.processQuery(request.get("query"));
         return ResponseEntity.ok(answer);
     }
 }

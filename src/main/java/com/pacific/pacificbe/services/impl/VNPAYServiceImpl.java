@@ -5,12 +5,8 @@ import com.pacific.pacificbe.dto.request.CheckOutRequest;
 import com.pacific.pacificbe.dto.request.VNPAYRequest;
 import com.pacific.pacificbe.exception.AppException;
 import com.pacific.pacificbe.exception.ErrorCode;
-import com.pacific.pacificbe.model.Booking;
-import com.pacific.pacificbe.model.Payment;
-import com.pacific.pacificbe.model.TourDetail;
-import com.pacific.pacificbe.repository.BookingRepository;
-import com.pacific.pacificbe.repository.PaymentRepository;
-import com.pacific.pacificbe.repository.UserRepository;
+import com.pacific.pacificbe.model.*;
+import com.pacific.pacificbe.repository.*;
 import com.pacific.pacificbe.services.MailService;
 import com.pacific.pacificbe.services.PaymentService;
 import com.pacific.pacificbe.services.VNPAYService;
@@ -32,6 +28,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -47,6 +44,8 @@ public class VNPAYServiceImpl implements VNPAYService {
     private final MailService mailService;
     private final QrUtil qrUtil;
     private final CalendarUtil calendarUtil;
+    private final SystemWalletRepository systemWalletRepository;
+    private final WalletTransactionRepository walletTransactionRepository;
 
     @Override
     public String createOrder(HttpServletRequest request, VNPAYRequest vnpayRequest) {
@@ -223,6 +222,29 @@ public class VNPAYServiceImpl implements VNPAYService {
                     getBookingTicket(booking),
                     attachments);
             log.info("Gửi email xác nhận thanh toán thành công cho booking: {}", booking.getBookingNo());
+//            Gui tien vao vi system
+
+            // Cập nhật số dư cho system_wallet
+            SystemWallet systemWallet = systemWalletRepository.findById("SYSTEM_WALLET")
+                    .orElseThrow(() -> new AppException(ErrorCode.WALLET_NOT_FOUND));
+            BigDecimal paymentAmount = payment.getTotalAmount();
+            systemWallet.setBalance(systemWallet.getBalance().add(paymentAmount));
+            systemWallet.setUpdatedAt(LocalDateTime.now());
+            systemWalletRepository.save(systemWallet);
+
+            // Ghi log giao dịch vào wallet_transaction
+            WalletTransaction transaction = new WalletTransaction();
+            transaction.setId(UUID.randomUUID().toString());
+            transaction.setWallet(systemWallet);
+            transaction.setBooking(booking);
+            transaction.setUser(user);
+            transaction.setAmount(paymentAmount);
+            transaction.setType("DEPOSIT");
+            transaction.setStatus("COMPLETED");
+            transaction.setCreatedAt(LocalDateTime.now());
+            transaction.setUpdatedAt(LocalDateTime.now());
+            transaction.setDescription("Deposit from payment for booking " + bookingNo);
+            walletTransactionRepository.save(transaction);
             return new RedirectView(UrlMapping.PAYMENT_SUCCESS);
         } else {
 //                Payment payment = new Payment();

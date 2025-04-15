@@ -1,0 +1,74 @@
+package com.pacific.pacificbe.controller;
+
+import com.pacific.pacificbe.dto.ApiResponse;
+import com.pacific.pacificbe.dto.request.refundFunction.DepositRequestDto;
+import com.pacific.pacificbe.dto.request.refundFunction.RefundRequestDTO;
+import com.pacific.pacificbe.dto.request.refundFunction.WithdrawRequestDto;
+import com.pacific.pacificbe.dto.response.refundFunction.ApproveRefundRequestDto;
+import com.pacific.pacificbe.dto.response.refundFunction.BalanceResponseDto;
+import com.pacific.pacificbe.dto.response.refundFunction.RefundRequestResponseDto;
+import com.pacific.pacificbe.dto.response.refundFunction.TransactionResponseDto;
+import com.pacific.pacificbe.services.WalletService;
+import com.pacific.pacificbe.utils.UrlMapping;
+import io.swagger.v3.oas.annotations.Operation;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping(UrlMapping.WALLET)
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+public class WalletController {
+
+    private final WalletService walletService;
+
+    @PostMapping(UrlMapping.WALLET_REFUND)
+    public ResponseEntity<String> refund(@RequestBody RefundRequestDTO request) {
+        walletService.refund(request);
+        return ResponseEntity.ok("Refund request submitted successfully");
+    }
+
+    @PostMapping(UrlMapping.WALLET_APPROVE_REFUND)
+    public ResponseEntity<String> approveRefund(@RequestBody ApproveRefundRequestDto request) {
+        walletService.approveRefund(request);
+        return ResponseEntity.ok("Refund request " + (request.isApproved() ? "approved" : "rejected") + " successfully");
+    }
+
+    @PostMapping(UrlMapping.WALLET_DEPOSIT)
+    public ResponseEntity<String> deposit(@RequestParam DepositRequestDto request) {
+        walletService.deposit(request);
+        return ResponseEntity.ok("Deposit processed successfully");
+    }
+
+    @PostMapping(UrlMapping.WALLET_WITHDRAW)
+    public ResponseEntity<String> withdraw(@RequestParam(required = false) WithdrawRequestDto request) {
+        walletService.withdraw(request);
+        return ResponseEntity.ok("Withdraw processed successfully");
+    }
+
+    @GetMapping(UrlMapping.WALLET_TRANSACTION)
+    public ResponseEntity<List<TransactionResponseDto>> getTransactions(@RequestParam(required = false) String userId) {
+        return ResponseEntity.ok(walletService.getTransactions(userId));
+    }
+
+    @GetMapping(UrlMapping.WALLET_GET_BALANCE)
+    @Operation(summary = "Lấy số dư theo user hoặc wallet")
+    public ResponseEntity<BalanceResponseDto> getBalance(@RequestParam String id, @RequestParam String type) {
+        return ResponseEntity.ok(walletService.getBalance(id, type));
+    }
+
+    @GetMapping(UrlMapping.REFUND_REQUESTS)
+    @Operation(summary = "Lấy danh sách yêu cầu hoàn tiền")
+    public ResponseEntity<ApiResponse<List<RefundRequestResponseDto>>> getRefundRequests() {
+        return ResponseEntity.ok(
+                ApiResponse.<List<RefundRequestResponseDto>>builder()
+                        .data(walletService.getRefundRequests())
+                        .message("Lấy danh sách yêu cầu hoàn tiền thành công")
+                        .build());
+    }
+}

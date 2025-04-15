@@ -85,4 +85,11 @@ public class BookingController {
     public ResponseEntity<ApiResponse<BookingResponse>> cancelBookingAdmin(@PathVariable String id, @RequestBody CancelBookingRequest request) {
         return ResponseEntity.ok(new ApiResponse<>(200, null, bookingService.cancelBookingFromAdmin(id, request)));
     }
+
+    @GetMapping(UrlMapping.GET_BOOKING_BY_STATUS)
+    @Operation(summary = "Lấy danh sách đơn đặt tour theo trạng thái")
+    public ResponseEntity<ApiResponse<List<BookingResponse>>> getBookingByStatus(@RequestParam String status) {
+        return ResponseEntity.ok(new ApiResponse<>(200, null, bookingService.getAllByStatus(status)));
+    }
+
 }
