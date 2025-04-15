@@ -1,10 +1,7 @@
 package com.pacific.pacificbe.services.impl;
 
 import com.pacific.pacificbe.dto.request.refundFunction.RefundRequestDTO;
-import com.pacific.pacificbe.dto.response.refundFunction.ApproveRefundRequestDto;
-import com.pacific.pacificbe.dto.response.refundFunction.BalanceResponseDto;
-import com.pacific.pacificbe.dto.response.refundFunction.RefundRequestResponseDto;
-import com.pacific.pacificbe.dto.response.refundFunction.TransactionResponseDto;
+import com.pacific.pacificbe.dto.response.refundFunction.*;
 import com.pacific.pacificbe.exception.AppException;
 import com.pacific.pacificbe.exception.ErrorCode;
 import com.pacific.pacificbe.model.Booking;
@@ -215,12 +212,10 @@ public class WalletServiceImpl implements WalletService {
             User user = userRepository.findById(userId)
                     .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
             response.setBalance(user.getDeposit());
-        } else if ("WALLET_SYSTEM".equals(type)) {
+        } else if ("SYSTEM_WALLET".equals(type)) {
             SystemWallet wallet = systemWalletRepository.findById(id)
-                    .orElseThrow(() -> new AppException(ErrorCode.WALLET_NOT_ENOUGH));
+                    .orElseThrow(() -> new AppException(ErrorCode.WALLET_NOT_FOUND));
             response.setBalance(wallet.getBalance());
-        } else {
-            throw new AppException(ErrorCode.INVALID_STATUS);
         }
 
         return response;
@@ -265,6 +260,26 @@ public class WalletServiceImpl implements WalletService {
 
             return dto;
         }).collect(Collectors.toList());
+    }
+
+    @Override
+    public SystemBalanceResponseDto getSystemBalance() {
+// Lấy ví hệ thống (giả sử chỉ có một ví hệ thống với ID cố định)
+        SystemWallet wallet = systemWalletRepository.findById(SYSTEM_WALLET_ID)
+                .orElseThrow(() -> new AppException(ErrorCode.WALLET_NOT_FOUND));
+
+        // Tính tổng tiền đã hoàn (từ các giao dịch REFUND thành công)
+        BigDecimal totalRefunded = walletTransactionRepository.sumRefundedAmount()
+                .orElse(BigDecimal.ZERO);
+
+        // Đếm tổng giao dịch
+        long totalTransactions = walletTransactionRepository.count();
+
+        SystemBalanceResponseDto response = new SystemBalanceResponseDto();
+        response.setBalance(wallet.getBalance());
+        response.setTotalRefunded(totalRefunded);
+        response.setTotalTransactions(totalTransactions);
+        return response;
     }
 
 }

@@ -2,10 +2,7 @@ package com.pacific.pacificbe.controller;
 
 import com.pacific.pacificbe.dto.ApiResponse;
 import com.pacific.pacificbe.dto.request.refundFunction.RefundRequestDTO;
-import com.pacific.pacificbe.dto.response.refundFunction.ApproveRefundRequestDto;
-import com.pacific.pacificbe.dto.response.refundFunction.BalanceResponseDto;
-import com.pacific.pacificbe.dto.response.refundFunction.RefundRequestResponseDto;
-import com.pacific.pacificbe.dto.response.refundFunction.TransactionResponseDto;
+import com.pacific.pacificbe.dto.response.refundFunction.*;
 import com.pacific.pacificbe.services.WalletService;
 import com.pacific.pacificbe.utils.UrlMapping;
 import io.swagger.v3.oas.annotations.Operation;
@@ -68,6 +65,16 @@ public class WalletController {
                 ApiResponse.<List<RefundRequestResponseDto>>builder()
                         .data(walletService.getRefundRequests())
                         .message("Lấy danh sách yêu cầu hoàn tiền thành công")
+                        .build());
+    }
+
+    @GetMapping(UrlMapping.WALLET_SYSTEM_BALANCE)
+    @Operation(summary = "Lấy số dư hệ thống")
+    public ResponseEntity<ApiResponse<SystemBalanceResponseDto>> getSystemBalance() {
+        return ResponseEntity.ok(
+                ApiResponse.<SystemBalanceResponseDto>builder()
+                        .data(walletService.getSystemBalance())
+                        .message("Lấy số dư hệ thống thành công")
                         .build());
     }
 }

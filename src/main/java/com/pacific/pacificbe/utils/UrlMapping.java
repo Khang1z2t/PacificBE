@@ -204,6 +204,7 @@ public class UrlMapping {
     /* =========================== Start Wallet API ===================================== */
     public static final String WALLET = API + "/wallet";
     public static final String WALLET_TRANSACTION = "/transactions";
+    public static final String WALLET_SYSTEM_BALANCE = "/system-balance";
     public static final String WALLET_DEPOSIT = "/deposit";
     public static final String REFUND_REQUESTS = "/refund-requests";
     public static final String WALLET_WITHDRAW = "/withdraw";
