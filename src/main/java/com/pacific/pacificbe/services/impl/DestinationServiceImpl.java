@@ -1,5 +1,6 @@
 package com.pacific.pacificbe.services.impl;
 
+import com.pacific.pacificbe.dto.response.TopDestination;
 import com.pacific.pacificbe.model.Destination;
 import com.pacific.pacificbe.repository.DestinationRepository;
 import com.pacific.pacificbe.services.DestinationService;
@@ -54,5 +55,10 @@ public class DestinationServiceImpl implements DestinationService {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public List<TopDestination> getTopDestinations() {
+        return destinationRepository.findTopDestinationsByBookingCount();
     }
 }

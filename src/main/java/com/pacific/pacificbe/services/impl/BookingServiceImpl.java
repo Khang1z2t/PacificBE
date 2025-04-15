@@ -428,4 +428,7 @@ public class BookingServiceImpl implements BookingService {
         // Trả về response
         return bookingMapper.toBookingResponse(booking);
     }
+
+//    TEST AI
+
 }

@@ -248,4 +248,13 @@ public interface BookingRepository extends JpaRepository<Booking, String> {
             ORDER BY MONTH(b.created_at)
             """, nativeQuery = true)
     List<MonthlyRevenueDTO> getMonthlyRevenueThisYear();
+
+//    Tìm theo userId
+    List<Booking> findByUserId(String userId);
+
+    @Query("SELECT b FROM Booking b WHERE b.user.id = :userId AND b.status = :status")
+    List<Booking> findByUserIdAndStatus(@Param("userId") String userId, @Param("status") String status);
+
+    @Query("SELECT b FROM Booking b WHERE b.user.id = :userId AND b.status IN :statuses")
+    List<Booking> findByUserIdAndStatuses(@Param("userId") String userId, @Param("statuses") List<String> statuses);
 }

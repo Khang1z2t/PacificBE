@@ -110,4 +110,9 @@ public interface TourRepository extends JpaRepository<Tour, String> {
     @Query(value = "SELECT * FROM tour t WHERE t.active = 1 AND t.status = :status", nativeQuery = true)
     List<Tour> findAllTour(@Param("status") String status);
 
+
+//    TEST AI
+    List<Tour> findByActiveTrueAndStatus(String status);
+    List<Tour> findByDestinationCityContainingIgnoreCase(String city);
+
 }

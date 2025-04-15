@@ -1,5 +1,6 @@
 package com.pacific.pacificbe.services;
 
+import com.pacific.pacificbe.dto.response.TopDestination;
 import com.pacific.pacificbe.model.Destination;
 
 import java.util.List;
@@ -11,4 +12,6 @@ public interface DestinationService {
     Destination createDestination(Destination destination);
     Optional<Destination> updateDestination(String id, Destination updatedDestination);
     boolean deleteDestination(String id);
-}
+
+    public List<TopDestination> getTopDestinations();
+    }

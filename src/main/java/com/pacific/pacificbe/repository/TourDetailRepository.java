@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -112,4 +113,8 @@ public interface TourDetailRepository extends JpaRepository<TourDetail, String> 
 
     @Query("select t from TourDetail t where t.status = ?1 and t.endDate < ?2")
     List<TourDetail> findByStatusAndEndDateBefore(String status, LocalDateTime endDate);
+
+//    TEST AI
+    List<TourDetail> findByTourIdAndActiveTrue(String tourId);
+    List<TourDetail> findByPriceAdultsLessThanEqual(BigDecimal price);
 }

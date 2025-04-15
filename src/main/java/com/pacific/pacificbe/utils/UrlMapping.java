@@ -14,6 +14,8 @@ public class UrlMapping {
     public static final String CHANGE_PASSWORD = "/change-password";
     public static final String UPDATE_PROFILE = "/update-profile";
 
+    public static final String AI_QUERY = API + "/ai-query";
+
     public static final String COUNT_ALL_USERS = "/count/users";
     public static final String COUNT_ALL_TOURS = "/count/tours";
     public static final String COUNT_ALL_GUIDES = "/count/guides";
@@ -224,6 +226,7 @@ public class UrlMapping {
     public static final String GET_ALL_DESTINATIONS = "/all";
     public static final String CREATE_DESTINATION = "/create";
     public static final String GET_DESTINATION_BY_ID = "/{id}";
+    public static final String GET_TOP_DESTINATIONS = "/top-destinations";
     public static final String UPDATE_DESTINATION = "/update/{id}";
     public static final String DELETE_DESTINATION = "/delete/{id}";
     /* =========================== End Destination API ===================================== */

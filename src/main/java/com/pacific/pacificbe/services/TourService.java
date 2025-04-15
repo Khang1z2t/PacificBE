@@ -35,4 +35,5 @@ public interface TourService {
     List<TourDateResponse> getToursByDate(LocalDateTime startDate, LocalDateTime endDate);
 
     TourResponse getTourByTourDetailId(String tourDetailId);
+
 }

@@ -1,5 +1,6 @@
 package com.pacific.pacificbe.services.impl;
 
+import org.springframework.beans.factory.annotation.Value;
 import com.pacific.pacificbe.dto.request.CreateTourRequest;
 import com.pacific.pacificbe.dto.request.UpdateTourRequest;
 import com.pacific.pacificbe.dto.response.TourByIdResponse;
@@ -20,6 +21,8 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import okhttp3.*;
+import org.json.JSONObject;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -191,6 +194,7 @@ public class TourServiceImpl implements TourService {
                 () -> new AppException(ErrorCode.TOUR_NOT_FOUND));
         return tourMapper.toTourResponse(tour);
     }
+
 
     private void addImagesToTour(MultipartFile[] images, Tour tour) {
         Set<Image> imageSet = new HashSet<>();

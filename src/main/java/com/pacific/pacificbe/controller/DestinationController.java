@@ -1,5 +1,6 @@
 package com.pacific.pacificbe.controller;
 
+import com.pacific.pacificbe.dto.response.TopDestination;
 import com.pacific.pacificbe.model.Destination;
 import com.pacific.pacificbe.services.DestinationService;
 import com.pacific.pacificbe.utils.UrlMapping;
@@ -56,5 +57,12 @@ public class DestinationController {
     public ResponseEntity<Void> deleteDestination(@PathVariable String id) {
         boolean deleted = destinationService.deleteDestination(id);
         return deleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
+    }
+
+    @GetMapping(UrlMapping.GET_TOP_DESTINATIONS)
+    @Operation(summary = "Lấy danh sách các điểm đến hàng đầu")
+    public ResponseEntity<List<TopDestination>> getTopDestinations() {
+        List<TopDestination> topDestinations = destinationService.getTopDestinations();
+        return ResponseEntity.ok(topDestinations);
     }
 }

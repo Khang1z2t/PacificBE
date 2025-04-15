@@ -43,4 +43,5 @@ public interface BookingService {
     BookingResponse cancelBookingFromAdmin(String bookingId, CancelBookingRequest request);
 
     List<BookingStatusStats> getBookingStatusStats();
+
 }
