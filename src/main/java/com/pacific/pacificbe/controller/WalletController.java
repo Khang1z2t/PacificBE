@@ -1,9 +1,7 @@
 package com.pacific.pacificbe.controller;
 
 import com.pacific.pacificbe.dto.ApiResponse;
-import com.pacific.pacificbe.dto.request.refundFunction.DepositRequestDto;
 import com.pacific.pacificbe.dto.request.refundFunction.RefundRequestDTO;
-import com.pacific.pacificbe.dto.request.refundFunction.WithdrawRequestDto;
 import com.pacific.pacificbe.dto.response.refundFunction.ApproveRefundRequestDto;
 import com.pacific.pacificbe.dto.response.refundFunction.BalanceResponseDto;
 import com.pacific.pacificbe.dto.response.refundFunction.RefundRequestResponseDto;
@@ -17,6 +15,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -40,14 +39,14 @@ public class WalletController {
     }
 
     @PostMapping(UrlMapping.WALLET_DEPOSIT)
-    public ResponseEntity<String> deposit(@RequestParam DepositRequestDto request) {
-        walletService.deposit(request);
+    public ResponseEntity<String> deposit(@RequestParam BigDecimal amount) {
+        walletService.deposit(amount);
         return ResponseEntity.ok("Deposit processed successfully");
     }
 
     @PostMapping(UrlMapping.WALLET_WITHDRAW)
-    public ResponseEntity<String> withdraw(@RequestParam(required = false) WithdrawRequestDto request) {
-        walletService.withdraw(request);
+    public ResponseEntity<String> withdraw(@RequestParam BigDecimal amount) {
+        walletService.withdraw(amount);
         return ResponseEntity.ok("Withdraw processed successfully");
     }
 

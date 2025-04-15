@@ -1,8 +1,6 @@
 package com.pacific.pacificbe.services.impl;
 
-import com.pacific.pacificbe.dto.request.refundFunction.DepositRequestDto;
 import com.pacific.pacificbe.dto.request.refundFunction.RefundRequestDTO;
-import com.pacific.pacificbe.dto.request.refundFunction.WithdrawRequestDto;
 import com.pacific.pacificbe.dto.response.refundFunction.ApproveRefundRequestDto;
 import com.pacific.pacificbe.dto.response.refundFunction.BalanceResponseDto;
 import com.pacific.pacificbe.dto.response.refundFunction.RefundRequestResponseDto;
@@ -86,7 +84,7 @@ public class WalletServiceImpl implements WalletService {
         Booking booking = bookingRepository.findById(request.getBookingId())
                 .orElseThrow(() -> new AppException(ErrorCode.BOOKING_NOT_FOUND));
 
-        if (!"REFUND_REQUESTED".equals(booking.getStatus())) {
+        if (!BookingStatus.REFUND_REQUESTED.toString().equals(booking.getStatus())) {
             throw new AppException(ErrorCode.INVALID_STATUS);
         }
 
@@ -116,7 +114,7 @@ public class WalletServiceImpl implements WalletService {
 
             booking.setStatus(BookingStatus.CANCELLED.toString());
         } else {
-            WalletTransaction transaction = walletTransactionRepository.findByBookingIdAndType(booking.getId(), "REFUND_REQUEST");
+            WalletTransaction transaction = walletTransactionRepository.findByBookingIdAndType(booking.getId(), BookingStatus.REFUND_REQUESTED.toString());
             transaction.setStatus(WalletStatus.REJECTED.toString());
             transaction.setUpdatedAt(LocalDateTime.now());
             walletTransactionRepository.save(transaction);
@@ -129,50 +127,50 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     @Transactional
-    public void deposit(DepositRequestDto request) {
+    public void deposit(BigDecimal amount) {
         String userId = AuthUtils.getCurrentUserId();
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
-        user.setDeposit(user.getDeposit().add(request.getAmount()));
+        user.setDeposit(user.getDeposit().add(amount));
         userRepository.save(user);
 
         WalletTransaction transaction = new WalletTransaction();
         transaction.setId(UUID.randomUUID().toString());
         transaction.setWallet(systemWalletRepository.findById(SYSTEM_WALLET_ID).orElseThrow());
         transaction.setUser(user);
-        transaction.setAmount(request.getAmount());
+        transaction.setAmount(amount);
         transaction.setType(WalletStatus.DEPOSIT.toString());
         transaction.setStatus(WalletStatus.COMPLETED.toString());
         transaction.setCreatedAt(LocalDateTime.now());
         transaction.setUpdatedAt(LocalDateTime.now());
-        transaction.setDescription("Deposit for user " + user.getId());
+        transaction.setDescription("Nạp tiền vào ví " + amount);
         walletTransactionRepository.save(transaction);
     }
 
     @Override
-    public void withdraw(WithdrawRequestDto request) {
+    public void withdraw(BigDecimal amount) {
         String userId = AuthUtils.getCurrentUserId();
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
-        if (user.getDeposit().compareTo(request.getAmount()) < 0) {
+        if (user.getDeposit().compareTo(amount) < 0) {
             throw new AppException(ErrorCode.WALLET_NOT_ENOUGH);
         }
 
-        user.setDeposit(user.getDeposit().subtract(request.getAmount()));
+        user.setDeposit(user.getDeposit().subtract(amount));
         userRepository.save(user);
 
         WalletTransaction transaction = new WalletTransaction();
         transaction.setId(UUID.randomUUID().toString());
         transaction.setWallet(systemWalletRepository.findById(SYSTEM_WALLET_ID).orElseThrow());
         transaction.setUser(user);
-        transaction.setAmount(request.getAmount());
+        transaction.setAmount(amount);
         transaction.setType(WalletStatus.WITHDRAW.toString());
         transaction.setStatus(WalletStatus.COMPLETED.toString());
         transaction.setCreatedAt(LocalDateTime.now());
         transaction.setUpdatedAt(LocalDateTime.now());
-        transaction.setDescription("Withdraw for user " + user.getId());
+        transaction.setDescription("Rút tiền " + amount);
         walletTransactionRepository.save(transaction);
     }
 
@@ -190,13 +188,19 @@ public class WalletServiceImpl implements WalletService {
             TransactionResponseDto dto = new TransactionResponseDto();
             dto.setId(t.getId());
             dto.setWalletId(t.getWallet().getId());
-            dto.setBookingNo(t.getBooking().getBookingNo());
             dto.setUserId(t.getUser().getId());
             dto.setAmount(t.getAmount());
             dto.setType(t.getType());
             dto.setStatus(t.getStatus());
             dto.setCreatedAt(t.getCreatedAt().toString());
             dto.setDescription(t.getDescription());
+
+            if (t.getBooking() != null) {
+                dto.setBookingNo(t.getBooking().getBookingNo());
+            } else {
+                dto.setBookingNo(null); // Or set a default value if needed
+            }
+
             return dto;
         }).collect(Collectors.toList());
     }
@@ -224,7 +228,7 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     public List<RefundRequestResponseDto> getRefundRequests() {
-        List<Booking> bookings = bookingRepository.findByStatus("REFUND_REQUESTED");
+        List<Booking> bookings = bookingRepository.findByStatus(BookingStatus.REFUND_REQUESTED.toString());
 
         return bookings.stream().map(booking -> {
             RefundRequestResponseDto dto = new RefundRequestResponseDto();
@@ -250,7 +254,7 @@ public class WalletServiceImpl implements WalletService {
             // Lấy lý do từ wallet_transaction
             List<WalletTransaction> transactions = walletTransactionRepository.findByBookingId(booking.getId());
             String reason = transactions.stream()
-                    .filter(t -> "REFUND_REQUESTED".equals(t.getType()))
+                    .filter(t -> BookingStatus.REFUND_REQUESTED.toString().equals(t.getType()))
                     .findFirst()
                     .map(WalletTransaction::getDescription)
                     .orElse("Không cung cấp lý do");
