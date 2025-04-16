@@ -73,9 +73,9 @@ public class WalletServiceImpl implements WalletService {
         transaction.setBooking(booking);
         transaction.setUser(booking.getUser());
         transaction.setAmount(booking.getTotalAmount().multiply(BigDecimal.valueOf(0.8)));
-        transaction.setType(WalletStatus.REFUNDED.toString());
+        transaction.setType(WalletStatus.REFUND_REQUEST.toString());
         transaction.setStatus(WalletStatus.PENDING.toString());
-        transaction.setDescription("Yêu cầu hoàn tiền cho booking: " + booking.getBookingNo());
+        transaction.setDescription(request.getReasons());
         walletTransactionRepository.save(transaction);
     }
 
@@ -106,14 +106,14 @@ public class WalletServiceImpl implements WalletService {
             systemWallet.setUpdatedAt(LocalDateTime.now());
             systemWalletRepository.save(systemWallet);
 
-            WalletTransaction transaction = walletTransactionRepository.findByBookingIdAndType(booking.getId(), BookingStatus.ON_HOLD.toString());
+            WalletTransaction transaction = walletTransactionRepository.findByBookingIdAndType(booking.getId(), WalletStatus.REFUND_REQUEST.toString());
             transaction.setType(WalletStatus.REFUNDED.toString());
             transaction.setStatus(WalletStatus.COMPLETED.toString());
             walletTransactionRepository.save(transaction);
 
             booking.setStatus(BookingStatus.CANCELLED.toString());
         } else {
-            WalletTransaction transaction = walletTransactionRepository.findByBookingIdAndType(booking.getId(), BookingStatus.ON_HOLD.toString());
+            WalletTransaction transaction = walletTransactionRepository.findByBookingIdAndType(booking.getId(), WalletStatus.REFUND_REQUEST.toString());
             transaction.setStatus(WalletStatus.REJECTED.toString());
             walletTransactionRepository.save(transaction);
 
@@ -249,7 +249,7 @@ public class WalletServiceImpl implements WalletService {
             // Lấy lý do từ wallet_transaction
             List<WalletTransaction> transactions = walletTransactionRepository.findByBookingId(booking.getId());
             String reason = transactions.stream()
-                    .filter(t -> BookingStatus.ON_HOLD.toString().equals(t.getType()))
+                    .filter(t -> WalletStatus.REFUND_REQUEST.toString().equals(t.getType()))
                     .findFirst()
                     .map(WalletTransaction::getDescription)
                     .orElse("Không cung cấp lý do");

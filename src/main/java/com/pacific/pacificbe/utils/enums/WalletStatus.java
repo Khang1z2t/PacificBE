@@ -5,9 +5,10 @@ public enum WalletStatus {
     REJECTED,
     COMPLETED,
     APPROVED,
+    REFUNDED,
 
 //    type
-    REFUNDED,
+    REFUND_REQUEST,
     DEPOSIT,
     WITHDRAW,
 }

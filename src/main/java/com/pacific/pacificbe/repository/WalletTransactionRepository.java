@@ -1,6 +1,8 @@
 package com.pacific.pacificbe.repository;
 
+import com.pacific.pacificbe.model.SystemWallet;
 import com.pacific.pacificbe.model.WalletTransaction;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
