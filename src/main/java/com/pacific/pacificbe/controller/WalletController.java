@@ -77,4 +77,23 @@ public class WalletController {
                         .message("Lấy số dư hệ thống thành công")
                         .build());
     }
+
+    @PostMapping(UrlMapping.WALLET_WITHDRAW_SYSTEM)
+    @Operation(summary = "Rút tiền từ ví hệ thống")
+    public ResponseEntity<ApiResponse<String>> withdrawSystemWallet(@RequestParam BigDecimal amount) {
+        walletService.withdrawSystemWallet(amount);
+        return ResponseEntity.ok(
+                ApiResponse.<String>builder()
+                        .message("Rút tiền từ ví hệ thống thành công")
+                        .build());
+    }
+    @PostMapping(UrlMapping.WALLET_DEPOSIT_SYSTEM)
+    @Operation(summary = "Nạp tiền vào ví hệ thống")
+    public ResponseEntity<ApiResponse<String>> depositSystemWallet(@RequestParam BigDecimal amount) {
+        walletService.depositSystemWallet(amount);
+        return ResponseEntity.ok(
+                ApiResponse.<String>builder()
+                        .message("Nạp tiền vào ví hệ thống thành công")
+                        .build());
+    }
 }

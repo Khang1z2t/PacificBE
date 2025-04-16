@@ -279,4 +279,29 @@ public class WalletServiceImpl implements WalletService {
         return response;
     }
 
+    @Override
+    public void depositSystemWallet(BigDecimal amount) {
+        SystemWallet systemWallet = systemWalletRepository.findById(SYSTEM_WALLET_ID)
+                .orElseThrow(() -> new AppException(ErrorCode.WALLET_NOT_FOUND));
+
+        systemWallet.setBalance(systemWallet.getBalance().add(amount));
+        systemWallet.setUpdatedAt(LocalDateTime.now());
+        systemWalletRepository.save(systemWallet);
+    }
+
+    @Override
+    public void withdrawSystemWallet(BigDecimal amount) {
+        SystemWallet systemWallet = systemWalletRepository.findById(SYSTEM_WALLET_ID)
+                .orElseThrow(() -> new AppException(ErrorCode.WALLET_NOT_FOUND));
+
+        if (systemWallet.getBalance().compareTo(amount) < 0) {
+            throw new AppException(ErrorCode.WALLET_NOT_ENOUGH);
+        }
+
+        systemWallet.setBalance(systemWallet.getBalance().subtract(amount));
+        systemWallet.setUpdatedAt(LocalDateTime.now());
+        systemWalletRepository.save(systemWallet);
+
+    }
+
 }
