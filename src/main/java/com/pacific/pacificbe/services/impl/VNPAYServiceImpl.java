@@ -234,7 +234,6 @@ public class VNPAYServiceImpl implements VNPAYService {
 
             // Ghi log giao dịch vào wallet_transaction
             WalletTransaction transaction = new WalletTransaction();
-            transaction.setId(UUID.randomUUID().toString());
             transaction.setWallet(systemWallet);
             transaction.setBooking(booking);
             transaction.setUser(user);

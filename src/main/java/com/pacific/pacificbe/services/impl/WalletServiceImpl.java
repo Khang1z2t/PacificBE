@@ -63,7 +63,6 @@ public class WalletServiceImpl implements WalletService {
                 .orElseThrow(() -> new AppException(ErrorCode.WALLET_NOT_FOUND));
 
         WalletTransaction transaction = new WalletTransaction();
-        transaction.setId(UUID.randomUUID().toString());
         transaction.setWallet(systemWallet);
         transaction.setBooking(booking);
         transaction.setUser(booking.getUser());
@@ -133,7 +132,6 @@ public class WalletServiceImpl implements WalletService {
         userRepository.save(user);
 
         WalletTransaction transaction = new WalletTransaction();
-        transaction.setId(UUID.randomUUID().toString());
         transaction.setWallet(systemWalletRepository.findById(SYSTEM_WALLET_ID).orElseThrow());
         transaction.setUser(user);
         transaction.setAmount(amount);
@@ -159,7 +157,6 @@ public class WalletServiceImpl implements WalletService {
         userRepository.save(user);
 
         WalletTransaction transaction = new WalletTransaction();
-        transaction.setId(UUID.randomUUID().toString());
         transaction.setWallet(systemWalletRepository.findById(SYSTEM_WALLET_ID).orElseThrow());
         transaction.setUser(user);
         transaction.setAmount(amount);
