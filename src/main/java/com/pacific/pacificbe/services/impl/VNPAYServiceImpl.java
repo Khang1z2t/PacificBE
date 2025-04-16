@@ -245,7 +245,7 @@ public class VNPAYServiceImpl implements VNPAYService {
             transaction.setAmount(paymentAmount);
             transaction.setType(WalletStatus.WITHDRAW.toString());
             transaction.setStatus(WalletStatus.COMPLETED.toString());
-            transaction.setDescription("Deposit from payment for booking " + bookingNo);
+            transaction.setDescription("Thanh toán: " + bookingNo);
             walletTransactionRepository.save(transaction);
             return new RedirectView(UrlMapping.PAYMENT_SUCCESS);
         } else {

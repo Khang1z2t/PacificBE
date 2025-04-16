@@ -59,7 +59,7 @@ public class WalletServiceImpl implements WalletService {
 
 
 // Cap nhat trang thai booking
-        booking.setStatus(BookingStatus.REFUND_REQUESTED.toString());
+        booking.setStatus(BookingStatus.ON_HOLD.toString());
         bookingRepository.save(booking);
 
         SystemWallet systemWallet = systemWalletRepository.findById(SYSTEM_WALLET_ID)
@@ -73,7 +73,7 @@ public class WalletServiceImpl implements WalletService {
         transaction.setBooking(booking);
         transaction.setUser(booking.getUser());
         transaction.setAmount(booking.getTotalAmount().multiply(BigDecimal.valueOf(0.8)));
-        transaction.setType(BookingStatus.REFUND_REQUESTED.toString());
+        transaction.setType(WalletStatus.REFUNDED.toString());
         transaction.setStatus(WalletStatus.PENDING.toString());
         transaction.setDescription("Yêu cầu hoàn tiền cho booking: " + booking.getBookingNo());
         walletTransactionRepository.save(transaction);
@@ -84,7 +84,7 @@ public class WalletServiceImpl implements WalletService {
         Booking booking = bookingRepository.findById(request.getBookingId())
                 .orElseThrow(() -> new AppException(ErrorCode.BOOKING_NOT_FOUND));
 
-        if (!BookingStatus.REFUND_REQUESTED.toString().equals(booking.getStatus())) {
+        if (!BookingStatus.ON_HOLD.toString().equals(booking.getStatus())) {
             throw new AppException(ErrorCode.INVALID_STATUS);
         }
 
@@ -106,14 +106,14 @@ public class WalletServiceImpl implements WalletService {
             systemWallet.setUpdatedAt(LocalDateTime.now());
             systemWalletRepository.save(systemWallet);
 
-            WalletTransaction transaction = walletTransactionRepository.findByBookingIdAndType(booking.getId(), BookingStatus.REFUND_REQUESTED.toString());
+            WalletTransaction transaction = walletTransactionRepository.findByBookingIdAndType(booking.getId(), BookingStatus.ON_HOLD.toString());
             transaction.setType(WalletStatus.REFUNDED.toString());
             transaction.setStatus(WalletStatus.COMPLETED.toString());
             walletTransactionRepository.save(transaction);
 
             booking.setStatus(BookingStatus.CANCELLED.toString());
         } else {
-            WalletTransaction transaction = walletTransactionRepository.findByBookingIdAndType(booking.getId(), BookingStatus.REFUND_REQUESTED.toString());
+            WalletTransaction transaction = walletTransactionRepository.findByBookingIdAndType(booking.getId(), BookingStatus.ON_HOLD.toString());
             transaction.setStatus(WalletStatus.REJECTED.toString());
             walletTransactionRepository.save(transaction);
 
@@ -223,7 +223,7 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     public List<RefundRequestResponseDto> getRefundRequests() {
-        List<Booking> bookings = bookingRepository.findByStatus(BookingStatus.REFUND_REQUESTED.toString());
+        List<Booking> bookings = bookingRepository.findByStatus(BookingStatus.ON_HOLD.toString());
 
         return bookings.stream().map(booking -> {
             RefundRequestResponseDto dto = new RefundRequestResponseDto();
@@ -249,7 +249,7 @@ public class WalletServiceImpl implements WalletService {
             // Lấy lý do từ wallet_transaction
             List<WalletTransaction> transactions = walletTransactionRepository.findByBookingId(booking.getId());
             String reason = transactions.stream()
-                    .filter(t -> BookingStatus.REFUND_REQUESTED.toString().equals(t.getType()))
+                    .filter(t -> BookingStatus.ON_HOLD.toString().equals(t.getType()))
                     .findFirst()
                     .map(WalletTransaction::getDescription)
                     .orElse("Không cung cấp lý do");
