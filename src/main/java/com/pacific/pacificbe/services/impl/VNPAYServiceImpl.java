@@ -13,6 +13,7 @@ import com.pacific.pacificbe.services.VNPAYService;
 import com.pacific.pacificbe.utils.*;
 import com.pacific.pacificbe.utils.enums.BookingStatus;
 import com.pacific.pacificbe.utils.enums.PaymentStatus;
+import com.pacific.pacificbe.utils.enums.WalletStatus;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -46,6 +47,7 @@ public class VNPAYServiceImpl implements VNPAYService {
     private final CalendarUtil calendarUtil;
     private final SystemWalletRepository systemWalletRepository;
     private final WalletTransactionRepository walletTransactionRepository;
+    private final IdUtil idUtil;
 
     @Override
     public String createOrder(HttpServletRequest request, VNPAYRequest vnpayRequest) {
@@ -232,16 +234,17 @@ public class VNPAYServiceImpl implements VNPAYService {
             systemWallet.setUpdatedAt(LocalDateTime.now());
             systemWalletRepository.save(systemWallet);
 
+            String lastTransactionId = walletTransactionRepository.findLatestWalletTransactionIdOfToday();
+
             // Ghi log giao dịch vào wallet_transaction
             WalletTransaction transaction = new WalletTransaction();
+            transaction.setId(idUtil.generateTransactionId(lastTransactionId));
             transaction.setWallet(systemWallet);
             transaction.setBooking(booking);
             transaction.setUser(user);
             transaction.setAmount(paymentAmount);
-            transaction.setType("DEPOSIT");
-            transaction.setStatus("COMPLETED");
-            transaction.setCreatedAt(LocalDateTime.now());
-            transaction.setUpdatedAt(LocalDateTime.now());
+            transaction.setType(WalletStatus.WITHDRAW.toString());
+            transaction.setStatus(WalletStatus.COMPLETED.toString());
             transaction.setDescription("Deposit from payment for booking " + bookingNo);
             walletTransactionRepository.save(transaction);
             return new RedirectView(UrlMapping.PAYMENT_SUCCESS);

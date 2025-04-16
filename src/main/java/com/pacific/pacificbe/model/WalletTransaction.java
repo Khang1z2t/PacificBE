@@ -16,11 +16,10 @@ import java.time.LocalDateTime;
 @Setter
 @Entity
 @Table(name = "wallet_transaction")
-public class WalletTransaction {
+public class WalletTransaction extends BaseEntity {
     @Id
     @Size(max = 255)
     @Column(name = "id", nullable = false)
-    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
     @NotNull
@@ -51,14 +50,6 @@ public class WalletTransaction {
     @ColumnDefault("'PENDING'")
     @Column(name = "status", length = 50)
     private String status;
-
-    @ColumnDefault("getdate()")
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
-
-    @ColumnDefault("getdate()")
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
 
     @Size(max = 500)
     @Nationalized

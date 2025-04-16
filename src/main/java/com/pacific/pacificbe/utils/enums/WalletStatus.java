@@ -6,6 +6,8 @@ public enum WalletStatus {
     REFUNDED,
     COMPLETED,
     APPROVED,
+
+//    type
     DEPOSIT,
     WITHDRAW,
 }

@@ -19,4 +19,7 @@ public interface WalletTransactionRepository extends JpaRepository<WalletTransac
 
     @Query("SELECT COALESCE(SUM(t.amount), 0) FROM WalletTransaction t WHERE t.type = 'REFUNDED' AND t.status = 'COMPLETED'")
     Optional<BigDecimal> sumRefundedAmount();
+
+    @Query(value = "SELECT TOP 1 wt.id FROM wallet_transaction wt WHERE wt.id LIKE CONCAT('T', FORMAT(GETDATE(), 'ddMMyy'), '%') ORDER BY CAST(SUBSTRING(wt.id, 8, 4) AS INTEGER) DESC", nativeQuery = true)
+    String findLatestWalletTransactionIdOfToday();
 }

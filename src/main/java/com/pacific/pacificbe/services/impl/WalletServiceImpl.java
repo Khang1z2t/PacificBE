@@ -14,6 +14,7 @@ import com.pacific.pacificbe.repository.UserRepository;
 import com.pacific.pacificbe.repository.WalletTransactionRepository;
 import com.pacific.pacificbe.services.WalletService;
 import com.pacific.pacificbe.utils.AuthUtils;
+import com.pacific.pacificbe.utils.IdUtil;
 import com.pacific.pacificbe.utils.enums.BookingStatus;
 import com.pacific.pacificbe.utils.enums.WalletStatus;
 import lombok.AccessLevel;
@@ -41,6 +42,8 @@ public class WalletServiceImpl implements WalletService {
     private final WalletTransactionRepository walletTransactionRepository;
 
     private final String SYSTEM_WALLET_ID = "SYSTEM_WALLET"; // Replace with actual wallet ID
+    private final IdUtil idUtil;
+
 
     @Override
     @Transactional
@@ -50,7 +53,7 @@ public class WalletServiceImpl implements WalletService {
         Booking booking = bookingRepository.findById(request.getBookingId())
                 .orElseThrow(() -> new AppException(ErrorCode.BOOKING_NOT_FOUND));
 
-        if (!"PAID".equals(booking.getStatus())) {
+        if (!BookingStatus.PAID.toString().equals(booking.getStatus())) {
             throw new AppException(ErrorCode.INVALID_STATUS);
         }
 
@@ -62,16 +65,17 @@ public class WalletServiceImpl implements WalletService {
         SystemWallet systemWallet = systemWalletRepository.findById(SYSTEM_WALLET_ID)
                 .orElseThrow(() -> new AppException(ErrorCode.WALLET_NOT_FOUND));
 
+        String lastTransactionId = walletTransactionRepository.findLatestWalletTransactionIdOfToday();
+
         WalletTransaction transaction = new WalletTransaction();
+        transaction.setId(idUtil.generateTransactionId(lastTransactionId));
         transaction.setWallet(systemWallet);
         transaction.setBooking(booking);
         transaction.setUser(booking.getUser());
         transaction.setAmount(booking.getTotalAmount().multiply(BigDecimal.valueOf(0.8)));
         transaction.setType(BookingStatus.REFUND_REQUESTED.toString());
         transaction.setStatus(WalletStatus.PENDING.toString());
-        transaction.setCreatedAt(LocalDateTime.now());
-        transaction.setUpdatedAt(LocalDateTime.now());
-        transaction.setDescription(request.getReasons());
+        transaction.setDescription("Yêu cầu hoàn tiền cho booking: " + booking.getBookingNo());
         walletTransactionRepository.save(transaction);
     }
 
@@ -105,14 +109,12 @@ public class WalletServiceImpl implements WalletService {
             WalletTransaction transaction = walletTransactionRepository.findByBookingIdAndType(booking.getId(), BookingStatus.REFUND_REQUESTED.toString());
             transaction.setType(WalletStatus.REFUNDED.toString());
             transaction.setStatus(WalletStatus.COMPLETED.toString());
-            transaction.setUpdatedAt(LocalDateTime.now());
             walletTransactionRepository.save(transaction);
 
             booking.setStatus(BookingStatus.CANCELLED.toString());
         } else {
             WalletTransaction transaction = walletTransactionRepository.findByBookingIdAndType(booking.getId(), BookingStatus.REFUND_REQUESTED.toString());
             transaction.setStatus(WalletStatus.REJECTED.toString());
-            transaction.setUpdatedAt(LocalDateTime.now());
             walletTransactionRepository.save(transaction);
 
             booking.setStatus(BookingStatus.PENDING.toString());
@@ -131,14 +133,15 @@ public class WalletServiceImpl implements WalletService {
         user.setDeposit(user.getDeposit().add(amount));
         userRepository.save(user);
 
+        String lastTransactionId = walletTransactionRepository.findLatestWalletTransactionIdOfToday();
+
         WalletTransaction transaction = new WalletTransaction();
+        transaction.setId(idUtil.generateTransactionId(lastTransactionId));
         transaction.setWallet(systemWalletRepository.findById(SYSTEM_WALLET_ID).orElseThrow());
         transaction.setUser(user);
         transaction.setAmount(amount);
         transaction.setType(WalletStatus.DEPOSIT.toString());
         transaction.setStatus(WalletStatus.COMPLETED.toString());
-        transaction.setCreatedAt(LocalDateTime.now());
-        transaction.setUpdatedAt(LocalDateTime.now());
         transaction.setDescription("Nạp tiền vào ví " + amount);
         walletTransactionRepository.save(transaction);
     }
@@ -156,14 +159,15 @@ public class WalletServiceImpl implements WalletService {
         user.setDeposit(user.getDeposit().subtract(amount));
         userRepository.save(user);
 
+        String lastTransactionId = walletTransactionRepository.findLatestWalletTransactionIdOfToday();
+
         WalletTransaction transaction = new WalletTransaction();
+        transaction.setId(idUtil.generateTransactionId(lastTransactionId));
         transaction.setWallet(systemWalletRepository.findById(SYSTEM_WALLET_ID).orElseThrow());
         transaction.setUser(user);
         transaction.setAmount(amount);
         transaction.setType(WalletStatus.WITHDRAW.toString());
         transaction.setStatus(WalletStatus.COMPLETED.toString());
-        transaction.setCreatedAt(LocalDateTime.now());
-        transaction.setUpdatedAt(LocalDateTime.now());
         transaction.setDescription("Rút tiền " + amount);
         walletTransactionRepository.save(transaction);
     }
@@ -186,7 +190,6 @@ public class WalletServiceImpl implements WalletService {
             dto.setAmount(t.getAmount());
             dto.setType(t.getType());
             dto.setStatus(t.getStatus());
-            dto.setCreatedAt(t.getCreatedAt().toString());
             dto.setDescription(t.getDescription());
 
             if (t.getBooking() != null) {

@@ -3,6 +3,8 @@ package com.pacific.pacificbe.utils;
 import org.springframework.stereotype.Component;
 
 import java.security.SecureRandom;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Random;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -83,6 +85,18 @@ public class IdUtil {
         }
 
         return code.toString();
+    }
+
+    public String generateTransactionId(String lastTransactionId) {
+        Date now = new Date();
+        String dayPart = new SimpleDateFormat("ddMMyy").format(now);
+        String prefix = "T";
+        String chars = prefix + dayPart;
+        if (lastTransactionId == null || !lastTransactionId.startsWith(prefix + dayPart)) {
+            return this.createNewID(chars);
+        } else {
+            return this.createIDFromLastID(chars, lastTransactionId);
+        }
     }
 
 }
