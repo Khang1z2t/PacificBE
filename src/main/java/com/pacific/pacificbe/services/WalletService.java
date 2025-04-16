@@ -16,4 +16,7 @@ public interface WalletService {
     BalanceResponseDto getBalance(String id, String type);
     List<RefundRequestResponseDto> getRefundRequests();
     public SystemBalanceResponseDto getSystemBalance();
+
+    void depositSystemWallet(BigDecimal amount);
+    void withdrawSystemWallet(BigDecimal amount);
 }
