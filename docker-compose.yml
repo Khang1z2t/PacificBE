@@ -1,11 +1,65 @@
-version: "3.8"
+version: '3.8'
+
 services:
   app:
-    image: pacific-be-app
-    container_name: pacific-be-app
+    image: pacific-be
+    container_name: pacific-be
     build:
       context: .
+      dockerfile: Dockerfile
     ports:
-      - "8081:8081"
+      - "8080:8080"
     env_file:
       - .env
+    depends_on:
+      redis:
+        condition: service_healthy
+      cloud-sql-proxy:
+        condition: service_started
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  redis:
+    image: redis:7.0-alpine
+    container_name: redis
+    volumes:
+      - redis-data:/data
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  cloud-sql-proxy:
+    image: gcr.io/cloudsql-docker/gce-proxy:1.33.2
+    container_name: cloud-sql-proxy
+    command: >
+      /cloud_sql_proxy
+      -instances=<your-gcp-project-id>:<region>:<instance-name>=tcp:1433
+      -credential_file=/secrets/cloudsql/credentials.json
+    volumes:
+      - ./service-account-key.json:/secrets/cloudsql/credentials.json:ro
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "nc", "-z", "127.0.0.1", "1433"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+volumes:
+  redis-data:
+
+networks:
+  app-network:
+    driver: bridge
