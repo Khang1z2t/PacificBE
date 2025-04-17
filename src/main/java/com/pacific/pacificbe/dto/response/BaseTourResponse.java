@@ -26,8 +26,8 @@ public class BaseTourResponse {
     BigDecimal maxPrice;
     BigDecimal minPrice;
 
-    String destination;
-    String category;
+    String destinationId;
+    String categoryId;
 
     Boolean active;
     LocalDateTime createdAt;

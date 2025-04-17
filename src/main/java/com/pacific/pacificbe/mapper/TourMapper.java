@@ -74,10 +74,10 @@ public class TourMapper {
             tourResponse.setThumbnail(idUtil.getIdImage(tour.getThumbnailUrl()));
         }
         if (tour.getCategory() != null) {
-            tourResponse.setCategory(tour.getCategory().getTitle());
+            tourResponse.setCategoryId(tour.getCategory().getId());
         }
         if (tour.getDestination() != null) {
-            tourResponse.setDestination(tour.getDestination().getCountry());
+            tourResponse.setDestinationId(tour.getDestination().getId());
         }
 
         if (tour.getTourDetails() != null) {
