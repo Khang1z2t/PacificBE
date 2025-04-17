@@ -16,12 +16,15 @@ import com.pacific.pacificbe.services.GoogleDriveService;
 import com.pacific.pacificbe.utils.GoogleAuth;
 import com.pacific.pacificbe.utils.enums.FolderType;
 import lombok.RequiredArgsConstructor;
+import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Collections;
+
+import static com.pacific.pacificbe.utils.Constant.MAX_FILE_SIZE;
 
 @Service
 @RequiredArgsConstructor
@@ -49,11 +52,19 @@ public class GoogleDriveServiceImpl implements GoogleDriveService {
             java.io.File tempFile = java.io.File.createTempFile("temp", null);
             file.transferTo(tempFile);
 
+            java.io.File compressedFile = compressImage(tempFile, 0.7f);
+
+            if (compressedFile.length() > MAX_FILE_SIZE) {
+                tempFile.delete();
+                compressedFile.delete();
+                throw new IllegalArgumentException("File sau khi nén vẫn vượt quá 10MB: " + compressedFile.length() + " bytes");
+            }
+
             File fileMetadata = new File();
             fileMetadata.setName(file.getOriginalFilename());
             fileMetadata.setParents(Collections.singletonList(folderId));
 
-            FileContent mediaContent = new FileContent(file.getContentType(), tempFile);
+            FileContent mediaContent = new FileContent(file.getContentType(), compressedFile);
             File uploadedFile = driveService.files().create(fileMetadata, mediaContent)
                     .setFields("id,webContentLink,webViewLink")
                     .execute();
@@ -72,6 +83,20 @@ public class GoogleDriveServiceImpl implements GoogleDriveService {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private java.io.File compressImage(java.io.File inputFile, float quality) throws IOException {
+        // Tạo file tạm cho ảnh nén
+        java.io.File compressedFile = java.io.File.createTempFile("compressed", ".jpg");
+
+        // Nén ảnh bằng Thumbnailator
+        Thumbnails.of(inputFile)
+                .scale(1.0) // Giữ kích thước gốc
+                .outputQuality(quality) // Chất lượng nén
+                .outputFormat("jpg") // Định dạng JPEG
+                .toFile(compressedFile);
+
+        return compressedFile;
     }
 
     @Override

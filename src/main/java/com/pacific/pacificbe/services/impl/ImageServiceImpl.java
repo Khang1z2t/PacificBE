@@ -1,13 +1,20 @@
 package com.pacific.pacificbe.services.impl;
 
+import com.pacific.pacificbe.dto.ImageUploadJob;
 import com.pacific.pacificbe.integration.google.GoogleImageClient;
 import com.pacific.pacificbe.services.ImageService;
+import com.pacific.pacificbe.utils.Constant;
+import com.pacific.pacificbe.utils.IdUtil;
 import feign.Response;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
 
 
 @Slf4j

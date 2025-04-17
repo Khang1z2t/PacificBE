@@ -37,18 +37,14 @@ public interface TourRepository extends JpaRepository<Tour, String> {
                 SELECT tour_id, MIN(price_adults) AS min_price, MAX(price_adults) AS max_price
                 FROM tour_details
                 WHERE active = 1
+                  AND (:startDate IS NULL OR :endDate IS NULL OR start_date BETWEEN :startDate AND :endDate)
                 GROUP BY tour_id
             ) price_summary ON price_summary.tour_id = t.id
             WHERE (:title IS NULL OR LOWER(TRIM(t.title)) LIKE CONCAT('%', LOWER(TRIM(:title)), '%'))
               AND (:categoryId IS NULL OR t.category_id = :categoryId)
-              AND (:minPrice IS NULL OR price_summary.min_price >= :minPrice)
-              AND (:maxPrice IS NULL OR price_summary.max_price <= :maxPrice)
-              AND EXISTS (
-                 SELECT 1 FROM tour_details td
-                 WHERE td.tour_id = t.id
-                   AND td.active = 1
-                   AND (:startDate IS NULL OR :endDate IS NULL OR td.start_date BETWEEN :startDate AND :endDate)
-              )
+              AND (:minPrice IS NULL OR price_summary.min_price >= :minPrice OR price_summary.min_price IS NULL)
+              AND (:maxPrice IS NULL OR price_summary.max_price <= :maxPrice OR price_summary.max_price IS NULL)
+              AND t.active = 1
             """, nativeQuery = true)
     List<Tour> findAllWithFilters(
             @Param("title") String title,
@@ -57,7 +53,6 @@ public interface TourRepository extends JpaRepository<Tour, String> {
             @Param("categoryId") String categoryId,
             @Param("startDate") LocalDateTime startDate,
             @Param("endDate") LocalDateTime endDate);
-
 
     List<Tour> findToursByActiveIsTrue();
 
@@ -111,8 +106,9 @@ public interface TourRepository extends JpaRepository<Tour, String> {
     List<Tour> findAllTour(@Param("status") String status);
 
 
-//    TEST AI
+    //    TEST AI
     List<Tour> findByActiveTrueAndStatus(String status);
+
     List<Tour> findByDestinationCityContainingIgnoreCase(String city);
 
 }

@@ -1,6 +1,8 @@
 package com.pacific.pacificbe.services.impl;
 
-import org.springframework.beans.factory.annotation.Value;
+import com.pacific.pacificbe.dto.ImageUploadJob;
+import com.pacific.pacificbe.services.CacheService;
+import com.pacific.pacificbe.utils.Constant;
 import com.pacific.pacificbe.dto.request.CreateTourRequest;
 import com.pacific.pacificbe.dto.request.UpdateTourRequest;
 import com.pacific.pacificbe.dto.response.TourByIdResponse;
@@ -21,16 +23,15 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import okhttp3.*;
-import org.json.JSONObject;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
@@ -46,9 +47,9 @@ public class TourServiceImpl implements TourService {
     private final CategoryRepository categoryRepository;
     private final DestinationRepository destinationRepository;
     private final GoogleDriveService googleDriveService;
-    private final ImageRepository imageRepository;
-    private final IdUtil idUtil;
     private final TourDetailRepository tourDetailRepository;
+    private final RedisTemplate<Object, Object> redisTemplate;
+    private final CacheService cacheService;
 
     @Cacheable(
             value = "allTours",
@@ -69,7 +70,6 @@ public class TourServiceImpl implements TourService {
 
     @Override
     @Transactional
-    @CacheEvict(value = "allTours", allEntries = true)
     public TourResponse createTour(CreateTourRequest request, MultipartFile thumbnail, MultipartFile[] images) {
         Tour tour = new Tour();
         tour.setTitle(request.getTitle());
@@ -94,8 +94,9 @@ public class TourServiceImpl implements TourService {
         }
         tour = tourRepository.save(tour);
         if (images != null) {
-            addImagesToTour(images, tour);
+            queueImagesForUpload(images, tour.getId());
         }
+        cacheService.evictAllToursCache();
         return tourMapper.toTourResponse(tour);
     }
 
@@ -117,7 +118,7 @@ public class TourServiceImpl implements TourService {
     public TourResponse addTourImages(String id, MultipartFile[] images) {
         Tour tour = tourRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.TOUR_NOT_FOUND));
-        addImagesToTour(images, tour);
+        queueImagesForUpload(images, tour.getId());
         tourRepository.save(tour); // Thêm save để cập nhật DB
         return tourMapper.toTourResponse(tour);
     }
@@ -148,7 +149,7 @@ public class TourServiceImpl implements TourService {
         }
 
         if (images != null) {
-            addImagesToTour(images, tour);
+            queueImagesForUpload(images, tour.getId());
         }
 
         tour = tourRepository.save(tour);
@@ -196,18 +197,18 @@ public class TourServiceImpl implements TourService {
     }
 
 
-    private void addImagesToTour(MultipartFile[] images, Tour tour) {
-        Set<Image> imageSet = new HashSet<>();
-        for (MultipartFile image : images) {
-            String imageUrl = googleDriveService.uploadImageToDrive(image, FolderType.TOUR_DETAIL);
-            String generatedId = idUtil.getIdImage(imageUrl);
-            Image newImage = new Image();
-            newImage.setId(generatedId != null ? generatedId : idUtil.generateId());
-            newImage.setImageUrl(imageUrl);
-            newImage.setTour(tour);
-            imageSet.add(imageRepository.save(newImage));
+    public void queueImagesForUpload(MultipartFile[] images, String tourId) {
+        try {
+            for (MultipartFile image : images) {
+                ImageUploadJob job = new ImageUploadJob();
+                job.setTourId(tourId);
+                job.setFileBytes(image.getBytes());
+                job.setOriginalFileName(image.getOriginalFilename());
+                redisTemplate.opsForList().leftPush(Constant.IMAGE_QUEUE, job);
+            }
+        } catch (Exception e) {
+            log.error("Lỗi upload ảnh lên google drive: {}", e.getMessage());
         }
-        tour.setImages(imageSet);
     }
 
     @Override
