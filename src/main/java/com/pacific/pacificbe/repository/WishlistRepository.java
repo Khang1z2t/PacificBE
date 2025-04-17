@@ -16,4 +16,7 @@ public interface WishlistRepository extends JpaRepository<Wishlist, String> {
     @Modifying
     @Query("delete from Wishlist w where w.id = ?1 and w.user = ?2")
     void deleteByIdAndUser(String id, User user);
+
+
+    List<Wishlist> findByUserId(String userId);
 }
