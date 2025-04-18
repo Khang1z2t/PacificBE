@@ -7,8 +7,6 @@ import com.pacific.pacificbe.integration.google.GeminiClient;
 import com.pacific.pacificbe.model.*;
 import com.pacific.pacificbe.repository.*;
 import com.pacific.pacificbe.services.AiServices;
-import com.pacific.pacificbe.services.RateLimiterService;
-import com.pacific.pacificbe.utils.UrlMapping;
 import io.github.bucket4j.Bucket;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
