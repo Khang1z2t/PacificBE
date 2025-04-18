@@ -404,21 +404,18 @@ public class BookingServiceImpl implements BookingService {
         }
 
         // Tạo thông tin hủy
-        String cancelInfo = String.format(
-                "[Cancellation] BookingId: %s,\nReason: %s,\nCancelledBy: %s,\nRefundRequested: %s,\nAdditionalNotes: %s, \nDateRequested: %s",
-                booking.getId(),
+        String reasonInfo = String.format(
+                "[Cancellation] Reason: %s|CancelledBy: %s|DateRequested: %s",
                 request.getReason() != null ? request.getReason() : "N/A",
-                role + " - " + user.getId(),
-                request.getRefundRequested() ? "Yes" : "No",
-                request.getAdditionalNotes() != null ? request.getAdditionalNotes() : "N/A",
+                role + " - " + booking.getUser().getId(),
                 LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"))
         );
 
         // Cập nhật notes
         if (booking.getNotes() != null && !booking.getNotes().isEmpty()) {
-            booking.setNotes(booking.getNotes() + "\n" + cancelInfo);
+            booking.setNotes(reasonInfo);
         } else {
-            booking.setNotes(cancelInfo);
+            booking.setNotes(reasonInfo);
         }
 
         // Set trạng thái

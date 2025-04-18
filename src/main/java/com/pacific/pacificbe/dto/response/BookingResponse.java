@@ -30,6 +30,7 @@ public class BookingResponse {
     String voucherId;
     String userId;
     LocalDateTime startDate;
+    String notes;
 
     List<BookingDetailResponse> details;
 

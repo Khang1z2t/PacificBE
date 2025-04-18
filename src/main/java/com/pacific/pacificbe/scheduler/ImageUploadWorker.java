@@ -62,7 +62,7 @@ public class ImageUploadWorker {
                 Thread.currentThread().interrupt();
                 break;
             } catch (Exception e) {
-                log.error("Lỗi xử lý công việc tải ảnh: {}", e.getMessage(), e);
+                log.error("Lỗi xử lý công việc tải ảnh: {}", e.getMessage());
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException ie) {

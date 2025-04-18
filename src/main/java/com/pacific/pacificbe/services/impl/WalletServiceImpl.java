@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -57,9 +58,17 @@ public class WalletServiceImpl implements WalletService {
             throw new AppException(ErrorCode.INVALID_STATUS);
         }
 
+        String reasonInfo = String.format(
+                "[Cancellation] Reason: %s|CancelledBy: %s|DateRequested: %s",
+                request.getReasons() != null ? request.getReasons() : "N/A",
+                "User" + " - " + booking.getUser().getId(),
+                LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"))
+        );
+
 
 // Cap nhat trang thai booking
         booking.setStatus(BookingStatus.ON_HOLD.toString());
+        booking.setNotes(reasonInfo);
         bookingRepository.save(booking);
 
         SystemWallet systemWallet = systemWalletRepository.findById(SYSTEM_WALLET_ID)
@@ -103,12 +112,12 @@ public class WalletServiceImpl implements WalletService {
             userRepository.save(user);
 
             systemWallet.setBalance(systemWallet.getBalance().subtract(refundAmount));
-            systemWallet.setUpdatedAt(LocalDateTime.now());
             systemWalletRepository.save(systemWallet);
 
             WalletTransaction transaction = walletTransactionRepository.findByBookingIdAndType(booking.getId(), WalletStatus.REFUND_REQUEST.toString());
             transaction.setType(WalletStatus.REFUNDED.toString());
             transaction.setStatus(WalletStatus.COMPLETED.toString());
+            transaction.setDescription("Hoàn tiền cho booking " + booking.getBookingNo());
             walletTransactionRepository.save(transaction);
 
             booking.setStatus(BookingStatus.CANCELLED.toString());
@@ -116,8 +125,7 @@ public class WalletServiceImpl implements WalletService {
             WalletTransaction transaction = walletTransactionRepository.findByBookingIdAndType(booking.getId(), WalletStatus.REFUND_REQUEST.toString());
             transaction.setStatus(WalletStatus.REJECTED.toString());
             walletTransactionRepository.save(transaction);
-
-            booking.setStatus(BookingStatus.PENDING.toString());
+            booking.setStatus(BookingStatus.PAID.toString());
         }
 
         bookingRepository.save(booking);
