@@ -1,4 +1,4 @@
-package com.pacific.pacificbe.services;
+package com.pacific.pacificbe.services.impl;
 
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
