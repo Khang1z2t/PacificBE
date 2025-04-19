@@ -4,6 +4,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -18,6 +19,6 @@ public class TransactionResponseDto {
     private BigDecimal amount;
     private String type; // REFUND, DEPOSIT, WITHDRAW
     private String status; // PENDING, COMPLETED, FAILED
-    private String createdAt;
+    private LocalDateTime createdAt;
     private String description;
 }

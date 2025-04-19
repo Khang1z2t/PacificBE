@@ -1,9 +1,11 @@
 package com.pacific.pacificbe.services.impl;
 
 import com.pacific.pacificbe.dto.request.refundFunction.RefundRequestDTO;
+import com.pacific.pacificbe.dto.response.BookingResponse;
 import com.pacific.pacificbe.dto.response.refundFunction.*;
 import com.pacific.pacificbe.exception.AppException;
 import com.pacific.pacificbe.exception.ErrorCode;
+import com.pacific.pacificbe.mapper.BookingMapper;
 import com.pacific.pacificbe.model.Booking;
 import com.pacific.pacificbe.model.SystemWallet;
 import com.pacific.pacificbe.model.User;
@@ -44,13 +46,13 @@ public class WalletServiceImpl implements WalletService {
 
     private final String SYSTEM_WALLET_ID = "SYSTEM_WALLET"; // Replace with actual wallet ID
     private final IdUtil idUtil;
+    private final BookingMapper bookingMapper;
 
 
     @Override
     @Transactional
-    public void refund(RefundRequestDTO request) {
+    public BookingResponse refund(RefundRequestDTO request) {
 //        Check booking
-
         Booking booking = bookingRepository.findById(request.getBookingId())
                 .orElseThrow(() -> new AppException(ErrorCode.BOOKING_NOT_FOUND));
 
@@ -64,7 +66,6 @@ public class WalletServiceImpl implements WalletService {
                 "User" + " - " + booking.getUser().getId(),
                 LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"))
         );
-
 
 // Cap nhat trang thai booking
         booking.setStatus(BookingStatus.ON_HOLD.toString());
@@ -86,6 +87,7 @@ public class WalletServiceImpl implements WalletService {
         transaction.setStatus(WalletStatus.PENDING.toString());
         transaction.setDescription(request.getReasons());
         walletTransactionRepository.save(transaction);
+        return bookingMapper.toBookingResponse(booking);
     }
 
     @Override
@@ -199,7 +201,7 @@ public class WalletServiceImpl implements WalletService {
             dto.setType(t.getType());
             dto.setStatus(t.getStatus());
             dto.setDescription(t.getDescription());
-
+            dto.setCreatedAt(t.getCreatedAt());
             if (t.getBooking() != null) {
                 dto.setBookingNo(t.getBooking().getBookingNo());
             } else {

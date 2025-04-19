@@ -91,7 +91,7 @@ public class UrlMapping {
     /*============================ Start Booking API ===================================*/
     public static final String BOOKINGS = API + "/bookings";
     public static final String GET_ALL_BOOKINGS = "/all";
-    public static final String GET_BOOKING_BY_ID = "/book/{id}";
+    public static final String  GET_BOOKING_BY_ID = "/book/{id}";
     public static final String GET_BOOKING_BY_NO = "/book/no/{bookingNo}";
     public static final String GET_BOOKING_BY_USER = "/book/user";
     public static final String BOOK_TOUR = "/tour/{id}";
@@ -232,9 +232,9 @@ public class UrlMapping {
     /* =========================== End Admin Voucher API ===================================== */
 
     /* =========================== Start Other URL ===================================== */
-//    public static final String FE_URL = "http://localhost:3000";
+    public static final String FE_URL = "http://localhost:3000";
 //    Trong truong hop deploy
-    public static final String FE_URL = "https://pacific-vn.vercel.app";
+//    public static final String FE_URL = "https://pacific-vn.vercel.app";
     public static final String GOOGLE_REDIRECT = FE_URL + "/google/redirect";
     public static final String PAYMENT_FAIL = FE_URL + "/checkout/fail";
     public static final String PAYMENT_SUCCESS = FE_URL + "/checkout/success";

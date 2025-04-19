@@ -2,6 +2,7 @@ package com.pacific.pacificbe.controller;
 
 import com.pacific.pacificbe.dto.ApiResponse;
 import com.pacific.pacificbe.dto.request.refundFunction.RefundRequestDTO;
+import com.pacific.pacificbe.dto.response.BookingResponse;
 import com.pacific.pacificbe.dto.response.refundFunction.*;
 import com.pacific.pacificbe.services.WalletService;
 import com.pacific.pacificbe.utils.UrlMapping;
@@ -24,9 +25,11 @@ public class WalletController {
     private final WalletService walletService;
 
     @PostMapping(UrlMapping.WALLET_REFUND)
-    public ResponseEntity<String> refund(@RequestBody RefundRequestDTO request) {
-        walletService.refund(request);
-        return ResponseEntity.ok("Refund request submitted successfully");
+    public ResponseEntity<ApiResponse<BookingResponse>> refund(@RequestBody RefundRequestDTO request) {
+        return ResponseEntity.ok(
+                new ApiResponse<>(200,
+                        "Refund processed successfully",
+                        walletService.refund(request)));
     }
 
     @PostMapping(UrlMapping.WALLET_APPROVE_REFUND)
