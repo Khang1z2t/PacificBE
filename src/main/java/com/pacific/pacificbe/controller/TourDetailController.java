@@ -34,6 +34,12 @@ public class TourDetailController {
                 new ApiResponse<>(200, "Cập nhật chi tiết tour thành công", tourDetailService.updateTourDetail(request,id)));
     }
 
+    @PostMapping(UrlMapping.DELETE_TOUR_DETAIL)
+    @Operation(summary = "Xóa tour theo id (Xóa bình thường là set active = false)")
+    public ResponseEntity<Boolean> deleteTour(@PathVariable String id, @RequestParam(required = true) boolean active) {
+        return ResponseEntity.ok(tourDetailService.deleteTourDetail(id, active));
+    }
+
     @GetMapping(UrlMapping.GET_ALL_TOUR_DETAILS)
     @Operation(summary = "Lấy danh sách chi tiết tour")
     public ResponseEntity<ApiResponse<List<TourDetailResponse>>> getAllTourDetails() {

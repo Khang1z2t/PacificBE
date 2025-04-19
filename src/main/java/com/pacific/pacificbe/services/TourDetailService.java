@@ -13,6 +13,8 @@ public interface TourDetailService {
 
     TourDetailResponse updateTourDetail(UpdateTourDetailRequest request, String tourDetailId);
 
+    Boolean deleteTourDetail(String id, boolean active);
+
     List<TourDetailResponse> getAll();
 
     TourDetailResponse getTourDetailById(String id);

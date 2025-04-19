@@ -20,6 +20,7 @@ import com.pacific.pacificbe.utils.enums.TourStatus;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -70,7 +71,6 @@ public class TourDetailServiceImpl implements TourDetailService {
         tourDetailRepository.save(tourDetail);
         tour.setStatus(TourStatus.PUBLISHED.toString());
         tourRepository.save(tour);
-
         return tourMapper.toTourDetailResponse(tourDetail);
     }
 
@@ -108,6 +108,23 @@ public class TourDetailServiceImpl implements TourDetailService {
         tourDetailRepository.save(tourDetail);
 
         return tourMapper.toTourDetailResponse(tourDetail);
+    }
+
+    @Override
+    @Transactional
+    @CacheEvict(value = "allTours", allEntries = true)
+    public Boolean deleteTourDetail(String id, boolean active) {
+        TourDetail tourDetail = tourDetailRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.TOUR_DETAIL_NOT_FOUND));
+        tourDetail.setActive(active);
+        tourDetail.setDeleteAt(LocalDateTime.now());
+        if (active) {
+            tourDetail.setStatus(TourDetailStatus.OPEN.toString());
+        } else {
+            tourDetail.setStatus(TourDetailStatus.CLOSED.toString());
+        }
+        tourDetailRepository.save(tourDetail);
+        return true;
     }
 
     @Cacheable(value = "allTourDetails")
