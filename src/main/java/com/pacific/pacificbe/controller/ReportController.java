@@ -1,5 +1,6 @@
 package com.pacific.pacificbe.controller;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -14,9 +15,12 @@ import com.pacific.pacificbe.dto.response.report.BookingRevenueReportDTO;
 import com.pacific.pacificbe.dto.response.report.Revenue;
 import com.pacific.pacificbe.dto.response.report.TourAndBookReport;
 import com.pacific.pacificbe.dto.response.showTour.TourBookingCount;
+import com.pacific.pacificbe.model.Tour;
 import com.pacific.pacificbe.services.BookingService;
+import com.pacific.pacificbe.services.ExportExcelService;
 import com.pacific.pacificbe.services.TourService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -37,10 +41,11 @@ public class ReportController {
 	private final ReportService reportservice;
 	private final TourService tourService;
 	private final BookingService bookingService;
+	private final ExportExcelService exportExcelService;
 
 	@GetMapping(UrlMapping.GET_TOUR_BOOKING_COUNT)
 	@Operation(summary = "Tìm kiếm số lần đặt tour")
-	public ResponseEntity<ApiResponse<List<TourBookingCount>>> searchTourBookingCounts(@RequestParam String tourId) {
+	public ResponseEntity<ApiResponse<List<TourBookingCount>>> searchTourBookingCounts(@RequestParam (required = false) String tourId) {
 		return ResponseEntity.ok(new ApiResponse<>(
 				200, "Lấy chi tiết tour theo ngày thành công",
 				tourService.getTourBookingCounts(tourId)));
@@ -135,42 +140,20 @@ public class ReportController {
 		return ResponseEntity.ok(new ApiResponse<>(200, "Success", overview));
 	}
 
+	@GetMapping(UrlMapping.EXPORT_EXCEL)
+	@Operation(summary = "xuất báo cáo theo excel")
+	public void exportToExcel(HttpServletResponse response,
+							  @RequestParam String exportType ) throws IOException {
+		List<BookingStatusStats> stats = bookingService.getBookingStatusStats();
+		switch (exportType.toLowerCase()) {
+			case "booking":
+				exportExcelService.exportToExcel(response, stats, "Report");
+				break;
+			case "tour":
+				break;
+			default:
+				throw new IllegalArgumentException("Loại xuất không được hỗ trợ: " + exportType);
+		}
+	}
 
 }
-
-////	xuất file báo cáo theo pdf
-//@GetMapping(UrlMapping.EXPORT_PDF)
-//public ResponseEntity<byte[]> exportReport(@RequestParam String reportName) {
-//	try {
-//		// Lấy dữ liệu từ DB (giả sử có service lấy dữ liệu)
-//		List<?> data = List.of(); // Thay bằng dữ liệu thực tế từ database
-//
-//		// Thêm tham số nếu cần
-//		Map<String, Object> parameters = new HashMap();
-//		parameters.put("ReportTitle", "Báo cáo sản phẩm");
-//
-//		byte[] pdfReport = reportservice.exportReport(reportName, data, parameters);
-//
-//		return ResponseEntity.ok()
-//				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + reportName + ".pdf")
-//				.contentType(MediaType.APPLICATION_PDF).body(pdfReport);
-//	} catch (Exception e) {
-//		return ResponseEntity.internalServerError().build();
-//	}
-//}
-//
-//@GetMapping("/booking")
-//public ResponseEntity<byte[]> exportBookingReport(
-//		@RequestParam String year,
-//		@RequestParam(required = false) String bookStatus) {
-//	try {
-//		byte[] report = reportservice.exportBookingReport(year, bookStatus);
-//
-//		return ResponseEntity.ok()
-//				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=Booking_Report.pdf")
-//				.contentType(MediaType.APPLICATION_PDF)
-//				.body(report);
-//	} catch (Exception e) {
-//		return ResponseEntity.internalServerError().body(("Error: " + e.getMessage()).getBytes());
-//	}
-//}
