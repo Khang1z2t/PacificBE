@@ -70,6 +70,7 @@ public class TourDetailServiceImpl implements TourDetailService {
         tourDetailRepository.save(tourDetail);
         tour.setStatus(TourStatus.PUBLISHED.toString());
         tourRepository.save(tour);
+
         return tourMapper.toTourDetailResponse(tourDetail);
     }
 
