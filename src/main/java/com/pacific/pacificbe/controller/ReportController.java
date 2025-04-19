@@ -150,6 +150,10 @@ public class ReportController {
 				exportExcelService.exportToExcel(response, stats, "Report");
 				break;
 			case "tour":
+				exportExcelService.exportToExcel(response, stats, "Report");
+				break;
+			case "user":
+				exportExcelService.exportToExcel(response, stats, "Report");
 				break;
 			default:
 				throw new IllegalArgumentException("Loại xuất không được hỗ trợ: " + exportType);

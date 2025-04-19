@@ -153,7 +153,6 @@ public class TourServiceImpl implements TourService {
         }
 
         tour = tourRepository.save(tour);
-        cacheService.evictAllToursCache();
         return tourMapper.toTourResponse(tour);
     }
 

@@ -2,6 +2,8 @@ package com.pacific.pacificbe.services.impl;
 
 import com.pacific.pacificbe.dto.request.CreateItineraryRequest;
 import com.pacific.pacificbe.dto.request.CreateTourDetailRequest;
+import com.pacific.pacificbe.dto.request.UpdateTourDetailRequest;
+import com.pacific.pacificbe.dto.request.UpdateTourRequest;
 import com.pacific.pacificbe.dto.response.TourDetailResponse;
 import com.pacific.pacificbe.dto.response.showTour.DetailTourResponse;
 import com.pacific.pacificbe.exception.AppException;
@@ -68,6 +70,42 @@ public class TourDetailServiceImpl implements TourDetailService {
         tourDetailRepository.save(tourDetail);
         tour.setStatus(TourStatus.PUBLISHED.toString());
         tourRepository.save(tour);
+        return tourMapper.toTourDetailResponse(tourDetail);
+    }
+
+    @Override
+    @Transactional
+    public TourDetailResponse updateTourDetail(UpdateTourDetailRequest request) {
+
+        TourDetail tourDetail = tourDetailRepository.findById(request.getTourDetailId()).orElseThrow(
+                () -> new AppException(ErrorCode.TOUR_DETAIL_NOT_FOUND));
+
+//        TourDetail tourDetail = new TourDetail();
+        tourDetail.setPriceAdults(request.getPriceAdults());
+        tourDetail.setPriceChildren(request.getPriceChildren());
+        tourDetail.setStartDate(request.getStartDate());
+        tourDetail.setEndDate(request.getEndDate());
+        tourDetail.setQuantity(request.getQuantity());
+
+        Hotel hotel = hotelRepository.findById(request.getHotelId())
+                .orElseThrow(() -> new AppException(ErrorCode.HOTEL_NOT_FOUND));
+        tourDetail.setHotel(hotel);
+
+        Transport transport = transportRepository.findById(request.getTransportId())
+                .orElseThrow(() -> new AppException(ErrorCode.TRANSPORT_NOT_FOUND));
+
+        Guide guide = guideRepository.findById(request.getGuideId())
+                .orElseThrow(() -> new AppException(ErrorCode.GUIDE_NOT_FOUND));
+
+        tourDetail.setGuide(guide);
+        tourDetail.setHotel(hotel);
+        tourDetail.setTransport(transport);
+        tourDetail.setActive(true);
+        tourDetail = tourDetailRepository.save(tourDetail);
+
+        tourDetail.setStatus(TourDetailStatus.OPEN.toString());
+        tourDetailRepository.save(tourDetail);
+
         return tourMapper.toTourDetailResponse(tourDetail);
     }
 
