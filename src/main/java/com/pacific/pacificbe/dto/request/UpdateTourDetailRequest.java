@@ -23,8 +23,6 @@ public class UpdateTourDetailRequest {
     BigDecimal priceChildren;
     @Schema(description = "Số lượng người", example = "10")
     Integer quantity;
-    @Schema(description = "Id của tour", example = "1")
-    String tourDetailId;
     @Schema(description = "id của hdv", example = "1")
     String guideId;
     @Schema(description = "Id của khách sạn", example = "1")

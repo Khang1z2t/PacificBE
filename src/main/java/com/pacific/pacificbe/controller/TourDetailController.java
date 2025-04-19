@@ -29,9 +29,9 @@ public class TourDetailController {
 
     @PostMapping(UrlMapping.UPDATE_TOUR_DETAIL)
     @Operation(summary = "Cập nhật chi tiết tour")
-    public ResponseEntity<ApiResponse<TourDetailResponse>> updateTourDetail(@RequestBody UpdateTourDetailRequest request) {
+    public ResponseEntity<ApiResponse<TourDetailResponse>> updateTourDetail(@RequestBody UpdateTourDetailRequest request, @PathVariable String id) {
         return ResponseEntity.ok(
-                new ApiResponse<>(200, "Cập nhật chi tiết tour thành công", tourDetailService.updateTourDetail(request)));
+                new ApiResponse<>(200, "Cập nhật chi tiết tour thành công", tourDetailService.updateTourDetail(request,id)));
     }
 
     @GetMapping(UrlMapping.GET_ALL_TOUR_DETAILS)

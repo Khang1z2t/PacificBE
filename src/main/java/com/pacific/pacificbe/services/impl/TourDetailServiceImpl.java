@@ -75,9 +75,9 @@ public class TourDetailServiceImpl implements TourDetailService {
 
     @Override
     @Transactional
-    public TourDetailResponse updateTourDetail(UpdateTourDetailRequest request) {
+    public TourDetailResponse updateTourDetail(UpdateTourDetailRequest request, String tourDetailId) {
 
-        TourDetail tourDetail = tourDetailRepository.findById(request.getTourDetailId()).orElseThrow(
+        TourDetail tourDetail = tourDetailRepository.findById(tourDetailId).orElseThrow(
                 () -> new AppException(ErrorCode.TOUR_DETAIL_NOT_FOUND));
 
 //        TourDetail tourDetail = new TourDetail();

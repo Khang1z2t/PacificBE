@@ -11,7 +11,7 @@ import java.util.List;
 public interface TourDetailService {
     TourDetailResponse addTourDetail(CreateTourDetailRequest request);
 
-    TourDetailResponse updateTourDetail(UpdateTourDetailRequest request);
+    TourDetailResponse updateTourDetail(UpdateTourDetailRequest request, String tourDetailId);
 
     List<TourDetailResponse> getAll();
 

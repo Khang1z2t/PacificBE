@@ -81,7 +81,7 @@ public class UrlMapping {
     public static final String GET_TOUR_DETAIL_BY_CATEGORY = "/category/{category}";
     public static final String GET_ALL_TOUR_DETAILS = "/all";
     public static final String ADD_TOUR_DETAIL = "/add";
-    public static final String UPDATE_TOUR_DETAIL = "/update";
+    public static final String UPDATE_TOUR_DETAIL = "/update/{id}";
     public static final String DELETE_TOUR_DETAIL = "/delete/{id}";
     public static final String GET_TOUR_DETAIL_MONTH = "/month/{tourId}";
     public static final String GET_TOUR_DETAIL_DAY = "/day";
