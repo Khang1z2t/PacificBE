@@ -46,7 +46,9 @@ public class TourMapper {
     }
 
     public TourDetailResponse toTourDetailResponse(TourDetail tourDetail) {
-        return modelMapper.map(tourDetail, TourDetailResponse.class);
+        TourDetailResponse response = modelMapper.map(tourDetail, TourDetailResponse.class);
+        response.setDuration(tourDetail.getTour().getDuration());
+        return response;
     }
 
     public List<TourResponse> toTourResponseList(List<Tour> tours) {

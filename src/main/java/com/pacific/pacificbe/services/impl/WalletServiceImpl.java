@@ -201,7 +201,7 @@ public class WalletServiceImpl implements WalletService {
             dto.setType(t.getType());
             dto.setStatus(t.getStatus());
             dto.setDescription(t.getDescription());
-            dto.setCreatedAt(t.getCreatedAt());
+            dto.setCreatedAt(t.getUpdatedAt());
             if (t.getBooking() != null) {
                 dto.setBookingNo(t.getBooking().getBookingNo());
             } else {
