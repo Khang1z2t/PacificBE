@@ -39,5 +39,5 @@ src/main/resources/credentials.json
 
 
 # Local configuration files
-docs/plan.md
-docs/requirements.md
+#docs/plan.md
+#docs/requirements.md
