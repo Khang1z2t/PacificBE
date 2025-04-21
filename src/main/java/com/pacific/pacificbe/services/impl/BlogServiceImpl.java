@@ -3,23 +3,43 @@ package com.pacific.pacificbe.services.impl;
 import com.pacific.pacificbe.dto.request.BlogRequest;
 import com.pacific.pacificbe.dto.request.UpdateBlogRequest;
 import com.pacific.pacificbe.dto.request.UpdateStatusBlogRequest;
-import com.pacific.pacificbe.dto.response.BlogResponse;
+import com.pacific.pacificbe.dto.response.blog.BlogCategoryResponse;
+import com.pacific.pacificbe.dto.response.blog.BlogResponse;
 import com.pacific.pacificbe.exception.AppException;
 import com.pacific.pacificbe.exception.ErrorCode;
 import com.pacific.pacificbe.mapper.BlogMapper;
 import com.pacific.pacificbe.model.Blog;
+import com.pacific.pacificbe.model.BlogCategory;
 import com.pacific.pacificbe.model.Image;
-import com.pacific.pacificbe.repository.BlogRepository;
-import com.pacific.pacificbe.repository.ImageRepository;
+import com.pacific.pacificbe.model.Tour;
+import com.pacific.pacificbe.repository.*;
 import com.pacific.pacificbe.services.BlogService;
+import com.pacific.pacificbe.services.GoogleDriveService;
+import com.pacific.pacificbe.utils.AuthUtils;
+import com.pacific.pacificbe.utils.HtmlSanitizerUtil;
+import com.pacific.pacificbe.utils.IdUtil;
+import com.pacific.pacificbe.utils.SlugUtils;
 import com.pacific.pacificbe.utils.enums.BlogStatus;
+import com.pacific.pacificbe.utils.enums.FolderType;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.safety.Safelist;
+import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -28,32 +48,44 @@ public class BlogServiceImpl implements BlogService {
     private final BlogRepository blogRepository;
     private final ImageRepository imageRepository;
     private final BlogMapper blogMapper;
+    private final HtmlSanitizerUtil htmlSanitizerUtil;
+    private final UserRepository userRepository;
+    private final SlugUtils slugUtils;
+    private final BlogCategoryRepository blogCategoryRepository;
+    private final TourRepository tourRepository;
+    private final IdUtil idUtil;
+    private final GoogleDriveService googleDriveService;
 
     @Override
+    @Transactional
     public BlogResponse createBlog(BlogRequest request) {
-        if (blogRepository.existsByTitle(request.getTitle())) {
-            throw new AppException(ErrorCode.TITLE_NOT_FOUND);
-        }
+        String userId = AuthUtils.getCurrentUserId();
+        var user = userRepository.findById(userId)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
+        String updatedContent = processHtmlContent(request.getContent());
         Blog blog = new Blog();
         blog.setTitle(request.getTitle());
-        blog.setContent(request.getContent());
-        blog.setStatus(BlogStatus.DRAFT);
-        blog.setAuthor(request.getAuthor());
-
-        final Blog savedBlog = blogRepository.save(blog);
-
-        if (request.getImageUrls() != null && !request.getImageUrls().isEmpty()) {
-            List<Image> images = request.getImageUrls().stream().map(url -> {
-                Image image = new Image();
-                image.setImageUrl(url);
-                return image;
-            }).collect(Collectors.toList());
-
-            imageRepository.saveAll(images);
+        blog.setContent(updatedContent);
+        blog.setStatus(request.getStatus());
+        blog.setMetaTitle(request.getMetaTitle());
+        blog.setMetaDescription(request.getMetaDescription());
+        blog.setUser(user);
+        blog.setViewCount(0);
+        blog.setLikeCount(0);
+        BlogCategory category = null;
+        if (request.getCategoryId() != null) {
+            category = blogCategoryRepository.findById(request.getCategoryId())
+                    .orElseThrow(() -> new IllegalArgumentException("Category not found"));
+            blog.setCategory(category);
         }
-
-        return blogMapper.toBlogResponse(savedBlog);
+        blog.setSlug(slugUtils.generateSlug(request.getTitle(), category));
+        if (request.getTourId() != null && !request.getTourId().isEmpty()) {
+            List<Tour> tours = tourRepository.findAllById(request.getTourId());
+            blog.setTours(tours);
+        }
+        blogRepository.save(blog);
+        return blogMapper.toBlogResponse(blog);
     }
 
 
@@ -79,7 +111,6 @@ public class BlogServiceImpl implements BlogService {
         // Cập nhật thông tin cơ bản
         blog.setTitle(request.getTitle());
         blog.setContent(request.getContent());
-        blog.setAuthor(request.getAuthor());
         blog.setStatus(BlogStatus.valueOf(request.getStatus()));
 
         // Xóa ảnh cũ trong DB
@@ -126,5 +157,59 @@ public class BlogServiceImpl implements BlogService {
     @Override
     public BlogResponse updateBlogStatus(String id, UpdateStatusBlogRequest request) {
         return updateStatus(id, request);
+    }
+
+    @Override
+    public BlogResponse getBlogById(String id) {
+        Blog blog = blogRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.BLOG_NOT_FOUND));
+        return blogMapper.toBlogResponse(blog);
+    }
+
+    @Override
+    public BlogResponse getBlogBySlug(String slug) {
+        Blog blog = blogRepository.findBySlug(slug)
+                .orElseThrow(() -> new AppException(ErrorCode.BLOG_NOT_FOUND));
+        return blogMapper.toBlogResponse(blog);
+    }
+
+    @Override
+    public List<BlogCategoryResponse> getAllBlogCategories() {
+        var blogCategory = blogCategoryRepository.findAll();
+        return blogMapper.toBlogCategoryResponseList(blogCategory);
+    }
+
+    private String processHtmlContent(String html) {
+        String safeHtml = htmlSanitizerUtil.sanitize(html);
+        Document doc = Jsoup.parse(safeHtml);
+        Elements imgTags = doc.select("img[src^=data:image/]");
+        for (Element img : imgTags) {
+            String src = img.attr("src");
+            if (src.startsWith("data:image/")) {
+                try {
+                    // Trích xuất phần Base64 (bỏ header như "data:image/jpeg;base64,")
+                    String base64String = src.split(",")[1];
+
+                    byte[] imageBytes = Base64.getDecoder().decode(base64String);
+
+                    MultipartFile multipartFile = new MockMultipartFile(
+                            "file",
+                            "image-blog.jpg",
+                            "image/jpeg",
+                            imageBytes
+                    );
+
+                    String imageId = idUtil.getIdImage(
+                            googleDriveService.uploadImageToDrive(multipartFile, FolderType.RESOURCES));
+
+                    String srcAttr = "${config.imageConfig.getImage('" + imageId + "')}";
+                    img.attr("src", srcAttr);
+                } catch (Exception e) {
+                    log.error("Error while processing image in blog: {}", e.getMessage());
+                    img.attr("src", "/images/placeholder.jpg");
+                }
+            }
+        }
+        return doc.body().html();
     }
 }

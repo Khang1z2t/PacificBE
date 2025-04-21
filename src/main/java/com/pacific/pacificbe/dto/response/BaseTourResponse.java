@@ -28,6 +28,7 @@ public class BaseTourResponse {
 
     String destinationId;
     String categoryId;
+    String slug;
 
     Boolean active;
     LocalDateTime createdAt;

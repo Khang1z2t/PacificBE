@@ -1,10 +1,9 @@
 package com.pacific.pacificbe.dto.request;
 
 import com.pacific.pacificbe.utils.enums.BlogStatus;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -12,22 +11,15 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@SuperBuilder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class BlogRequest {
     private String title;
     private String content;
-    private List<String> imageUrls;
-    private String author;
+    private String metaTitle;
+    private String metaDescription;
 
-    @Builder.Default
-    private BlogStatus status = BlogStatus.DRAFT;
-
-    @Builder.Default
-    private Boolean active = true;
-
-    @Builder.Default
-    private LocalDateTime createdAt = LocalDateTime.now();
-
-    @Builder.Default
-    private LocalDateTime updatedAt = LocalDateTime.now();
+    private BlogStatus status;
+    private String categoryId;
+    private List<String> tourId;
 }

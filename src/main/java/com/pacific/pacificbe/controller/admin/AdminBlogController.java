@@ -2,7 +2,9 @@ package com.pacific.pacificbe.controller.admin;
 
 import com.pacific.pacificbe.dto.ApiResponse;
 import com.pacific.pacificbe.dto.request.*;
-import com.pacific.pacificbe.dto.response.BlogResponse;
+import com.pacific.pacificbe.dto.request.blog.BlogCategoryRequest;
+import com.pacific.pacificbe.dto.response.blog.BlogCategoryResponse;
+import com.pacific.pacificbe.dto.response.blog.BlogResponse;
 import com.pacific.pacificbe.exception.AppException;
 import com.pacific.pacificbe.exception.ErrorCode;
 import com.pacific.pacificbe.services.BlogService;
@@ -62,6 +64,13 @@ public class AdminBlogController {
         return ResponseEntity.ok(new ApiResponse<>(200, "Cập nhật thông tin thành công", updatedBlog));
     }
 
+    @GetMapping(UrlMapping.GET_BLOG_BY_SLUG)
+    @Operation(summary = "Lấy thông tin bài blog theo slug")
+    public ResponseEntity<ApiResponse<BlogResponse>> getBlogBySlug(@PathVariable String slug) {
+        return ResponseEntity.ok(new ApiResponse<>(200,
+                "Lấy thông tin thành công", blogService.getBlogBySlug(slug)));
+    }
+
     @PatchMapping(UrlMapping.UPDATE_STATUS_BLOG)
     @Operation(summary = "Cập nhật trạng thái bài blog")
     public ResponseEntity<ApiResponse<BlogResponse>> updateStatusBlog(
@@ -93,6 +102,21 @@ public class AdminBlogController {
         }
 
         return ResponseEntity.ok(new ApiResponse<>(200, "Upload ảnh thành công", imageUrls));
+    }
+
+    @GetMapping(UrlMapping.GET_BLOG_CATEGORY)
+    @Operation(summary = "Lấy danh sách tất cả danh mục blog")
+    public ResponseEntity<ApiResponse<List<BlogCategoryResponse>>> getAllBlogCategories() {
+        List<BlogCategoryResponse> categories = blogService.getAllBlogCategories();
+        return ResponseEntity.ok(new ApiResponse<>(200, "Lấy danh mục thành công", categories));
+    }
+
+    @PostMapping(UrlMapping.CREATE_BLOG_CATEGORY)
+    @Operation(summary = "Tạo mới một danh mục blog")
+    public ResponseEntity<ApiResponse<BlogCategoryResponse>> createBlogCategory(@Valid @RequestBody BlogCategoryRequest request) {
+//        BlogCategoryResponse newCategory = blogService.createBlogCategory(request);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(new ApiResponse<>(201, "Api đang trong quá trình thực hiện", null));
     }
 
 }

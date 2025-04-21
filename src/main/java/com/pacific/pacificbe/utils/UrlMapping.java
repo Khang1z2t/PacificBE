@@ -257,9 +257,15 @@ public class UrlMapping {
     ;
     public static final String CREATE_BLOG = "/create";
     public static final String UPDATE_BLOG = "/update/{id}";
+    public static final String GET_BLOG_BY_ID = "/{id}";
+    public static final String GET_BLOG_BY_SLUG = "/slug/{slug}";
     public static final String UPDATE_STATUS_BLOG = "/updateStatus/{id}";
     public static final String UPLOAD_IMAGE = "/upload-images";
     public static final String DELETE_BLOG = "/delete/{id}";
+    public static final String CREATE_BLOG_CATEGORY = "/category/add";
+    public static final String GET_BLOG_CATEGORY = "/category/all";
+    public static final String GET_BLOG_CATEGORY_BY_ID = "/category/{id}";
+    public static final String UPDATE_BLOG_CATEGORY = "/category/update/{id}";
     /* =========================== End Admin Blog API ===================================== */
 
     /* =========================== Start Rating API ===================================== */

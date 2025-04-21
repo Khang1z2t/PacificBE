@@ -11,9 +11,7 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Nationalized;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.util.LinkedHashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Getter
 @Setter
@@ -54,6 +52,10 @@ public class Tour extends BaseEntity {
     @Column(name = "title", nullable = false)
     private String title;
 
+    @Size(max = 255)
+    @Column(name = "slug", unique = true)
+    private String slug;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
@@ -76,6 +78,9 @@ public class Tour extends BaseEntity {
 
     @OneToMany(mappedBy = "tour")
     private Set<Voucher> vouchers = new LinkedHashSet<>();
+
+    @ManyToMany(mappedBy = "tours")
+    private List<Blog> blogs = new ArrayList<>();
 
     @PostLoad
     @PostPersist
