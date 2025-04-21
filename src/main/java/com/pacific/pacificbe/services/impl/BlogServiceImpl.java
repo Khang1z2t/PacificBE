@@ -39,6 +39,8 @@ import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.pacific.pacificbe.utils.Constant.MAX_META_DESCRIPTION_LENGTH;
+
 @Slf4j
 @Service
 @Transactional
@@ -68,8 +70,8 @@ public class BlogServiceImpl implements BlogService {
         blog.setTitle(request.getTitle());
         blog.setContent(updatedContent);
         blog.setStatus(request.getStatus());
-        blog.setMetaTitle(request.getMetaTitle());
-        blog.setMetaDescription(request.getMetaDescription());
+        blog.setMetaTitle(request.getTitle());
+        blog.setMetaDescription(generateMetaDescription(updatedContent));
         blog.setUser(user);
         blog.setViewCount(0);
         blog.setLikeCount(0);
@@ -211,5 +213,30 @@ public class BlogServiceImpl implements BlogService {
             }
         }
         return doc.body().html();
+    }
+
+    private String generateMetaDescription(String htmlContent) {
+        if (htmlContent == null || htmlContent.trim().isEmpty()) {
+            return "";
+        }
+        // Loại bỏ HTML và lấy văn bản thuần túy
+        String plainText = Jsoup.parse(htmlContent).text();
+
+        // Loại bỏ khoảng trắng dư thừa và chuẩn hóa
+        plainText = plainText.replaceAll("\\s+", " ").trim();
+
+        // Cắt tối đa 160 ký tự
+        if (plainText.length() <= MAX_META_DESCRIPTION_LENGTH) {
+            return plainText;
+        }
+
+        // Cắt và thêm dấu ba chấm
+        String truncated = plainText.substring(0, MAX_META_DESCRIPTION_LENGTH).trim();
+        // Đảm bảo không cắt giữa từ
+        int lastSpace = truncated.lastIndexOf(" ");
+        if (lastSpace > 0) {
+            truncated = truncated.substring(0, lastSpace);
+        }
+        return truncated + "...";
     }
 }

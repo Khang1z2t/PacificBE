@@ -16,8 +16,6 @@ import java.util.List;
 public class BlogRequest {
     private String title;
     private String content;
-    private String metaTitle;
-    private String metaDescription;
 
     private BlogStatus status;
     private String categoryId;
