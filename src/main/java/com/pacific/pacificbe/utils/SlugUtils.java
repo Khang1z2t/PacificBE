@@ -13,16 +13,21 @@ public class SlugUtils {
     private final BlogRepository blogRepository;
 
     public String generateSlug(String title) {
+        // data test
+        // title = "Chữ tiếng Việt có đầy đủ ă â đ ê ô ơ ư và các dấu sắc, huyền, hỏi, ngã, nặng: á à ả ã ạ, ấ ầ ẩ ẫ ậ, é è ẻ ẽ ẹ, í ì ỉ ĩ ị, ó ò ỏ õ ọ, ú ù ủ ũ ụ, ý ỳ ỷ ỹ ỵ.";
         if (title == null || title.trim().isEmpty()) {
             return "";
         }
         String noAccents = Normalizer.normalize(title, Normalizer.Form.NFD)
-                .replaceAll("\\p{M}", "");
+                .replaceAll("\\p{M}", "")
+                .replaceAll("đ", "d")
+                .replaceAll("Đ", "d");
 
         String slug = noAccents.toLowerCase()
                 .replaceAll("[^a-z0-9\\s-]", "") // Loại bỏ ký tự đặc biệt
                 .replaceAll("\\s+", "-")         // Thay khoảng trắng bằng dấu gạch nối
-                .replaceAll("-+", "-")           // Loại bỏ nhiều dấu gạch nối liên tiếp
+                .replaceAll("-+", "-")
+                .replaceAll("^-|-$", "") // Loại bỏ nhiều dấu gạch nối liên tiếp
                 .trim();
         return ensureUniqueSlug(slug);
     }
