@@ -116,25 +116,25 @@ public interface BookingRepository extends JpaRepository<Booking, String> {
 
     List<Booking> findByUser(User user);
 
-    @Query("SELECT b FROM Booking b WHERE b.user = :user " +
-            "AND (:bookingNo IS NULL OR :bookingNo = '' OR LOWER(b.bookingNo) LIKE LOWER(CONCAT('%', :bookingNo, '%'))) " +
-            "AND (:status IS NULL OR :status = '' OR b.status = :status) " +
-            "AND (:startDate IS NULL OR b.createdAt >= :startDate) " +
-            "AND (:endDate IS NULL OR b.createdAt <= :endDate) " +
-            "AND (:tourDetailId IS NULL OR b.tourDetail.id = :tourDetailId) " +
-            "AND (:paymentMethod IS NULL OR :paymentMethod = '' OR b.paymentMethod = :paymentMethod) " +
-            "AND (:minAmount IS NULL OR b.totalAmount >= :minAmount) " +
-            "AND (:maxAmount IS NULL OR b.totalAmount <= :maxAmount)")
-    List<Booking> findAllByUser(@Param("user") User user,
-                                @Param("bookingNo") String bookingNo,
-                                @Param("status") String status,
-                                @Param("startDate") LocalDateTime startDate,
-                                @Param("endDate") LocalDateTime endDate,
-                                @Param("tourDetailId") String tourDetailId,
-                                @Param("paymentMethod") String paymentMethod,
-                                @Param("minAmount") BigDecimal minAmount,
-                                @Param("maxAmount") BigDecimal maxAmount,
-                                Sort sort);
+//    @Query("SELECT b FROM Booking b WHERE b.user = :user " +
+//            "AND (:bookingNo IS NULL OR :bookingNo = '' OR LOWER(b.bookingNo) LIKE LOWER(CONCAT('%', :bookingNo, '%'))) " +
+//            "AND (:status IS NULL OR :status = '' OR b.status = :status) " +
+//            "AND (:startDate IS NULL OR b.createdAt >= :startDate) " +
+//            "AND (:endDate IS NULL OR b.createdAt <= :endDate) " +
+//            "AND (:tourDetailId IS NULL OR b.tourDetail.id = :tourDetailId) " +
+//            "AND (:paymentMethod IS NULL OR :paymentMethod = '' OR b.paymentMethod = :paymentMethod) " +
+//            "AND (:minAmount IS NULL OR b.totalAmount >= :minAmount) " +
+//            "AND (:maxAmount IS NULL OR b.totalAmount <= :maxAmount)")
+//    List<Booking> findAllByUser(@Param("user") User user,
+//                                @Param("bookingNo") String bookingNo,
+//                                @Param("status") String status,
+//                                @Param("startDate") LocalDateTime startDate,
+//                                @Param("endDate") LocalDateTime endDate,
+//                                @Param("tourDetailId") String tourDetailId,
+//                                @Param("paymentMethod") String paymentMethod,
+//                                @Param("minAmount") BigDecimal minAmount,
+//                                @Param("maxAmount") BigDecimal maxAmount,
+//                                Sort sort);
 
     List<Booking> findByStatusIn(List<String> statuses);
 
@@ -249,7 +249,7 @@ public interface BookingRepository extends JpaRepository<Booking, String> {
             """, nativeQuery = true)
     List<MonthlyRevenueDTO> getMonthlyRevenueThisYear();
 
-//    Tìm theo userId
+    //    Tìm theo userId
     List<Booking> findByUserId(String userId);
 
     @Query("SELECT b FROM Booking b WHERE b.user.id = :userId AND b.status = :status")
@@ -258,4 +258,9 @@ public interface BookingRepository extends JpaRepository<Booking, String> {
     @Query("SELECT b FROM Booking b WHERE b.user.id = :userId AND b.status IN :statuses")
     List<Booking> findByUserIdAndStatuses(@Param("userId") String userId, @Param("statuses") List<String> statuses);
 
+    @Query("select b from Booking b where b.user = ?1 order by b.updatedAt DESC")
+    List<Booking> findByUserOrderByUpdatedAtDesc(User user);
+
+    @Query("select b from Booking b where b.user.id = :userId and b.active = true and (coalesce(:bookingNo, '') = '' or b.bookingNo = :bookingNo) order by b.updatedAt DESC")
+    List<Booking> findByUserAndBookingNoOrderByUpdatedAtDesc(@Param("userId") String userId, @Param("bookingNo") String bookingNo);
 }

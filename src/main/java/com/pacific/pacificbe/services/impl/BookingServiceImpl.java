@@ -138,29 +138,11 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingResponse> getAllByUser(String bookingNo, String status,
-                                              LocalDateTime startDate, LocalDateTime endDate,
-                                              String tourDetailId, String paymentMethod,
-                                              BigDecimal minAmount, BigDecimal maxAmount) {
-        var userID = AuthUtils.getCurrentUserId();
-        var user = userRepository.findById(userID).orElseThrow(
-                () -> new AppException(ErrorCode.USER_NOT_FOUND));
-
-        String sortBy = "createdAt";
-        String sortDirection = "DESC";
-
-        Sort sort = Sort.by(sortDirection.equalsIgnoreCase("ASC") ?
-                Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
-        if (!Arrays.asList("createdAt", "totalAmount", "status").contains(sortBy)) {
-            sort = Sort.by(Sort.Direction.DESC, "createdAt");
-        }
-
+    public List<BookingResponse> getAllByUser(String bookingNo) {
+        String userID = AuthUtils.getCurrentUserId();
         List<Booking> bookings = bookingRepository
-                .findAllByUser(user,
-                        bookingNo, status,
-                        startDate, endDate,
-                        tourDetailId, paymentMethod,
-                        minAmount, maxAmount, sort);
+                .findByUserAndBookingNoOrderByUpdatedAtDesc(userID,
+                        bookingNo);
         return bookingMapper.toBookingResponses(bookings);
     }
 

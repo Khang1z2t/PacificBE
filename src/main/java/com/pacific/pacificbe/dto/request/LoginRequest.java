@@ -11,10 +11,10 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class LoginRequest {
-    @Schema(description = "Tên đăng nhập", example = "khang")
+    @Schema(description = "Tên đăng nhập", example = "khang1z2t")
     @JsonProperty(value = "identifier", required = true)
     String identifier;
-    @Schema(description = "Mật khẩu của tài khoản", example = "12345678")
+    @Schema(description = "Mật khẩu của tài khoản", example = "khang1z2t")
     @JsonProperty(value = "password", required = true)
     String password;
 }

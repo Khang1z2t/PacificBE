@@ -27,10 +27,7 @@ public interface BookingService {
 
     List<BookingResponse> getAllBookings();
 
-    List<BookingResponse> getAllByUser(String bookingNo, String status,
-                                       LocalDateTime startDate, LocalDateTime endDate,
-                                       String tourDetailId, String paymentMethod,
-                                       BigDecimal minAmount, BigDecimal maxAmount);
+    List<BookingResponse> getAllByUser(String bookingNo);
 
     BookingResponse getBookingById(String bookingId);
 

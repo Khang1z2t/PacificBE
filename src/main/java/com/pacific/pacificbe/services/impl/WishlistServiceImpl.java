@@ -5,6 +5,7 @@ import com.pacific.pacificbe.exception.AppException;
 import com.pacific.pacificbe.exception.ErrorCode;
 import com.pacific.pacificbe.mapper.WishlistMapper;
 import com.pacific.pacificbe.model.Tour;
+import com.pacific.pacificbe.model.User;
 import com.pacific.pacificbe.model.Wishlist;
 import com.pacific.pacificbe.repository.TourRepository;
 import com.pacific.pacificbe.repository.UserRepository;
@@ -32,13 +33,10 @@ public class WishlistServiceImpl implements WishlistService {
     @Override
     public WishlistResponse addWishlist(String id) {
         String userId = AuthUtils.getCurrentUserId();
-        if (userId == null) {
-            throw new AppException(ErrorCode.USER_NOT_AUTHENTICATED);
-        }
         Wishlist wishlist = new Wishlist();
         Tour tour = tourRepository.findById(id).orElseThrow(
                 () -> new AppException(ErrorCode.TOUR_NOT_FOUND));
-        var user = userRepository.findById(userId).orElseThrow(
+        User user = userRepository.findById(userId).orElseThrow(
                 () -> new AppException(ErrorCode.USER_NOT_FOUND));
         wishlist.setTour(tour);
         wishlist.setUser(user);
@@ -49,10 +47,7 @@ public class WishlistServiceImpl implements WishlistService {
     @Override
     public List<WishlistResponse> getAllWishlistByUser() {
         String userId = AuthUtils.getCurrentUserId();
-        if (userId == null) {
-            throw new AppException(ErrorCode.USER_NOT_AUTHENTICATED);
-        }
-        var user = userRepository.findById(userId).orElseThrow(
+        User user = userRepository.findById(userId).orElseThrow(
                 () -> new AppException(ErrorCode.USER_NOT_FOUND));
         List<Wishlist> wishlists = wishlistRepository.findAllByUser(user);
         return wishlistMapper.toWishlistResponseList(wishlists);
@@ -61,10 +56,7 @@ public class WishlistServiceImpl implements WishlistService {
     @Override
     public Boolean deleteWishlist(String id) {
         String userId = AuthUtils.getCurrentUserId();
-        if (userId == null) {
-            throw new AppException(ErrorCode.USER_NOT_AUTHENTICATED);
-        }
-        var user = userRepository.findById(userId).orElseThrow(
+        User user = userRepository.findById(userId).orElseThrow(
                 () -> new AppException(ErrorCode.USER_NOT_FOUND));
         wishlistRepository.deleteByIdAndUser(id, user);
         return true;

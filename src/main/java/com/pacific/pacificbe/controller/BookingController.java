@@ -39,20 +39,12 @@ public class BookingController {
 
     @GetMapping(UrlMapping.GET_BOOKING_BY_USER)
     @Operation(summary = "Lấy danh sách đơn đặt tour của người dùng (yêu cầu token)")
-    public ResponseEntity<ApiResponse<List<BookingResponse>>> getBookingByUser(@RequestParam(required = false) String bookingNo,
-                                                                               @RequestParam(required = false) String status,
-                                                                               @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
-                                                                               @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate,
-                                                                               @RequestParam(required = false) String tourDetailId,
-                                                                               @RequestParam(required = false) String paymentMethod,
-                                                                               @RequestParam(required = false) BigDecimal minAmount,
-                                                                               @RequestParam(required = false) BigDecimal maxAmount
+    public ResponseEntity<ApiResponse<List<BookingResponse>>> getBookingByUser(@RequestParam(required = false) String bookingNo
 //                                                                               @RequestParam(defaultValue = "createdAt") String sortBy,
 //                                                                               @RequestParam(defaultValue = "DESC") String sortDirection
     ) {
         return ResponseEntity.ok(
-                new ApiResponse<>(200, null, bookingService.getAllByUser(bookingNo, status,
-                        startDate, endDate, tourDetailId, paymentMethod, minAmount, maxAmount)));
+                new ApiResponse<>(200, null, bookingService.getAllByUser(bookingNo)));
     }
 
     @GetMapping(UrlMapping.GET_BOOKING_BY_ID)

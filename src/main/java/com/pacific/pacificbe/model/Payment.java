@@ -1,5 +1,6 @@
 package com.pacific.pacificbe.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -50,7 +51,8 @@ public class Payment extends BaseEntity {
     private Set<Booking> bookings = new LinkedHashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId")
+    @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User user;
 
 }

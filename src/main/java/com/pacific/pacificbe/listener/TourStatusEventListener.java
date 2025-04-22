@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 @RequiredArgsConstructor
 public class TourStatusEventListener {
-
     private final TourRepository tourRepository;
 
     @Async
@@ -23,11 +22,15 @@ public class TourStatusEventListener {
     @Transactional
     public void handleTourStatusChangedEvent(TourStatusChangedEvent event) {
         TourDetail tourDetail = event.getTourDetail();
-        Tour tour = tourDetail.getTour();
-        if (tour != null) {
-            tour.updateStatus();
-            tourRepository.save(tour);
-            log.info("Updated Tour ID: {} status to {}", tour.getId(), tour.getStatus());
+        String tourId = tourDetail.getTour() != null ? tourDetail.getTour().getId() : null;
+        
+        if (tourId != null) {
+            Tour tour = tourRepository.findById(tourId).orElse(null);
+            if (tour != null) {
+                tour.updateStatus();
+                tourRepository.save(tour);
+                log.info("Updated Tour ID: {} status to {}", tour.getId(), tour.getStatus());
+            }
         }
     }
 }
