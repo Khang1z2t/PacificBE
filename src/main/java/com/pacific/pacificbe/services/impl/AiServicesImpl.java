@@ -250,9 +250,6 @@ public class AiServicesImpl implements AiServices {
                         "Trả lời câu hỏi: %s",
                 context, previousContext, sentimentTone, query);
 
-        // Log prompt
-        log.info("Prompt gửi đi: {}", prompt);
-
         // Gọi Gemini API
         try {
             GeminiRequest request = GeminiRequest.builder()
