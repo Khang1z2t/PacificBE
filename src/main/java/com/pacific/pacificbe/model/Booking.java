@@ -6,14 +6,12 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Nationalized;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -33,7 +31,7 @@ public class Booking extends BaseEntity {
 
     @Size(max = 255)
     @Nationalized
-    @Column(name = "booker_full_name", length = 255)
+    @Column(name = "booker_full_name")
     private String bookerFullName;
 
     @Size(max = 20)
@@ -42,7 +40,7 @@ public class Booking extends BaseEntity {
 
     @Size(max = 255)
 //    @Email(message = "Email should be valid")
-    @Column(name = "booker_email", length = 255)
+    @Column(name = "booker_email")
     private String bookerEmail;
 
     @Size(max = 500)

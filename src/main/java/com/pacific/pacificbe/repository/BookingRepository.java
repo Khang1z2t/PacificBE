@@ -9,10 +9,8 @@ import com.pacific.pacificbe.model.Booking;
 import com.pacific.pacificbe.model.User;
 import com.pacific.pacificbe.utils.enums.BookingStatus;
 import com.pacific.pacificbe.utils.enums.TourDetailStatus;
-import jakarta.validation.constraints.Size;
 
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
