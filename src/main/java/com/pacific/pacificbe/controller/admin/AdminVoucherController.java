@@ -41,7 +41,7 @@ public class AdminVoucherController {
     @GetMapping(UrlMapping.GET_VOUCHER_BY_CODE)
     @Operation(summary = "Lấy thông tin voucher theo mã")
     public ResponseEntity<ApiResponse<VoucherResponse>> getVoucherByCode(@RequestParam String codeVoucher) {
-        return ResponseEntity.ok(new ApiResponse<>(200,"Lấy thông tin thành công", voucherService.getVoucherByCode(codeVoucher)));
+        return ResponseEntity.ok(new ApiResponse<>(200, "Lấy thông tin thành công", voucherService.getVoucherByCode(codeVoucher)));
     }
 
     @PostMapping(UrlMapping.CREATE_VOUCHER)
@@ -79,6 +79,12 @@ public class AdminVoucherController {
             @RequestParam(required = false) String tourId,
             @RequestParam(required = false, defaultValue = "0") BigDecimal orderValue) {
         return ResponseEntity.ok(new ApiResponse<>(200, null, voucherService.checkVoucherCode(codeVoucher, orderValue, tourId)));
+    }
+
+    @PostMapping(UrlMapping.GET_ALL_VOUCHER_IDS)
+    @Operation(summary = "Lấy mọi voucher theo danh sách id")
+    public ResponseEntity<ApiResponse<List<VoucherResponse>>> getAllVoucherIds(@RequestBody List<String> voucherIds) {
+        return ResponseEntity.ok(new ApiResponse<>(200, null, voucherService.getVouchersByIds(voucherIds)));
     }
 
 }

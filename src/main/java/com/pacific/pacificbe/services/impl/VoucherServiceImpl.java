@@ -266,6 +266,12 @@ public class VoucherServiceImpl implements VoucherService {
                 .build();
     }
 
+    @Override
+    public List<VoucherResponse> getVouchersByIds(List<String> ids) {
+        List<Voucher> vouchers = voucherRepository.findAllById(ids);
+        return voucherMapper.toVoucherResponseList(vouchers);
+    }
+
     private void checkValidApplyTo(VoucherRequest request, Voucher voucher) {
         String applyToUppercase = request.getApplyTo().toUpperCase();
         if (EnumUtils.isValidEnum(ApplyTo.class, request.getApplyTo().toUpperCase())) {

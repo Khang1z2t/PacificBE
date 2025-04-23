@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -111,4 +112,6 @@ public interface TourRepository extends JpaRepository<Tour, String> {
 
     List<Tour> findByDestinationCityContainingIgnoreCase(String city);
 
+    @Query("select t from Tour t left join t.tourDetails tourDetails where tourDetails.id in ?1")
+    List<Tour> findByTourDetails_IdIn(Collection<String> ids);
 }

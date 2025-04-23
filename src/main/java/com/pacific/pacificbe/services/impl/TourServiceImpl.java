@@ -196,6 +196,11 @@ public class TourServiceImpl implements TourService {
         return tourMapper.toTourResponse(tour);
     }
 
+    @Override
+    public List<TourResponse> getToursByTourDetailIds(List<String> ids) {
+        List<Tour> tours = tourRepository.findByTourDetails_IdIn(ids);
+        return tourMapper.toTourResponseList(tours);
+    }
 
     public void queueImagesForUpload(MultipartFile[] images, String tourId) {
         try {

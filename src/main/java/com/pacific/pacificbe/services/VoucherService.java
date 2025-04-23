@@ -27,4 +27,6 @@ public interface VoucherService {
     Boolean checkVoucher(String codeVoucher, BigDecimal orderValue, String tourId);
 
     VoucherCodeResponse checkVoucherCode(String codeVoucher, BigDecimal orderValue, String tourId);
+
+    List<VoucherResponse> getVouchersByIds(List<String> ids);
 }

@@ -60,6 +60,7 @@ public class UrlMapping {
     /*============================ Start Tour API ===================================*/
     public static final String TOURS = API + "/tours";
     public static final String GET_TOUR_BY_ID = "/{id}";
+    public static final String GET_TOUR_BY_IDS = "/tour-detail/ids";
     public static final String GET_TOUR_BY_NO = "/no/{tourNo}";
     public static final String GET_TOUR_BY_TOUR_DETAIL_ID = "/tour-detail/{id}";
     public static final String GET_TOUR_BY_DATE = "/date/{startDate}/{endDate}";
@@ -91,7 +92,7 @@ public class UrlMapping {
     /*============================ Start Booking API ===================================*/
     public static final String BOOKINGS = API + "/bookings";
     public static final String GET_ALL_BOOKINGS = "/all";
-    public static final String  GET_BOOKING_BY_ID = "/book/{id}";
+    public static final String GET_BOOKING_BY_ID = "/book/{id}";
     public static final String GET_BOOKING_BY_NO = "/book/no/{bookingNo}";
     public static final String GET_BOOKING_BY_USER = "/book/user";
     public static final String BOOK_TOUR = "/tour/{id}";
@@ -218,11 +219,11 @@ public class UrlMapping {
     /* =========================== End Wallet API ===================================== */
 
 
-
     /* =========================== Start Admin Voucher API ===================================== */
     public static final String ADMIN_VOUCHER = API + "/admin/voucher";
     public static final String CREATE_VOUCHER = "/create";
     public static final String GET_ALL_VOUCHERS = "/all";
+    public static final String GET_ALL_VOUCHER_IDS = "/all/ids";
     public static final String GET_VOUCHER_BY_ID = "/{id}";
     public static final String GET_VOUCHER_BY_CODE = "/codeVoucher";
     public static final String UPDATE_VOUCHER = "/update/{id}";
@@ -233,7 +234,7 @@ public class UrlMapping {
 
     /* =========================== Start Other URL ===================================== */
     public static final String FE_URL = "http://localhost:3000";
-//    Trong truong hop deploy
+    //    Trong truong hop deploy
 //    public static final String FE_URL = "https://pacific-vn.vercel.app";
     public static final String GOOGLE_REDIRECT = FE_URL + "/google/redirect";
     public static final String PAYMENT_FAIL = FE_URL + "/checkout/fail";

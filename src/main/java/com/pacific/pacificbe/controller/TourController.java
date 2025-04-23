@@ -126,4 +126,11 @@ public class TourController {
                                                                  @PathVariable LocalDateTime endDate) {
         return ResponseEntity.ok(tourService.getToursByDate(startDate, endDate));
     }
+
+    @PostMapping(UrlMapping.GET_TOUR_BY_IDS)
+    @Operation(summary = "Lấy danh sách tour theo danh sách id")
+    public ResponseEntity<List<TourResponse>> getToursByTourDetailIds(@RequestBody List<String> ids) {
+        return ResponseEntity.ok(tourService.getToursByTourDetailIds(ids));
+    }
+
 }

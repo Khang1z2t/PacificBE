@@ -36,4 +36,6 @@ public interface TourService {
 
     TourResponse getTourByTourDetailId(String tourDetailId);
 
+    List<TourResponse> getToursByTourDetailIds(List<String> ids);
+
 }
