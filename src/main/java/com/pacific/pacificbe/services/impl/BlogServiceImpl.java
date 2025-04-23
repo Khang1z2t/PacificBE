@@ -18,6 +18,7 @@ import com.pacific.pacificbe.utils.IdUtil;
 import com.pacific.pacificbe.utils.SlugUtils;
 import com.pacific.pacificbe.utils.enums.BlogStatus;
 import com.pacific.pacificbe.utils.enums.FolderType;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
@@ -27,11 +28,13 @@ import org.jsoup.safety.Safelist;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.Duration;
 import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -54,6 +57,7 @@ public class BlogServiceImpl implements BlogService {
     private final TourRepository tourRepository;
     private final IdUtil idUtil;
     private final GoogleDriveService googleDriveService;
+    private final RedisTemplate<Object, Object> redisTemplate;
 
     @Override
     @Transactional
@@ -134,9 +138,16 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public BlogResponse getBlogBySlug(String slug) {
+    public BlogResponse getBlogBySlug(String slug, HttpServletRequest request) {
         Blog blog = blogRepository.findBySlug(slug)
                 .orElseThrow(() -> new AppException(ErrorCode.BLOG_NOT_FOUND));
+        String clientIp = request.getRemoteAddr();
+        String viewCacheKey = "blog:view:" + slug + ":" + clientIp;
+        if (Boolean.TRUE.equals(redisTemplate.opsForValue().setIfAbsent(viewCacheKey, "viewed", Duration.ofMinutes(5)))) {
+            redisTemplate.opsForValue().increment("blog:views:" + slug);
+            blog.setViewCount(blog.getViewCount() + 1);
+            blogRepository.save(blog);
+        }
         return blogMapper.toBlogResponse(blog);
     }
 

@@ -12,6 +12,7 @@ import com.pacific.pacificbe.services.GoogleDriveService;
 import com.pacific.pacificbe.utils.UrlMapping;
 import com.pacific.pacificbe.utils.enums.FolderType;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -48,10 +49,11 @@ public class AdminBlogController {
         return ResponseEntity.ok(new ApiResponse<>(200, "Lấy thông tin thành công", blog));
     }
 
-    @PostMapping(value = UrlMapping.CREATE_BLOG)
+    @PostMapping(value = UrlMapping.CREATE_BLOG, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "Tạo mới một bài Blog")
-    public ResponseEntity<ApiResponse<BlogResponse>> createBlog(@Valid @RequestBody BlogRequest request) {
-        BlogResponse newBlog = blogService.createBlog(request, null);
+    public ResponseEntity<ApiResponse<BlogResponse>> createBlog(@Valid @RequestBody BlogRequest request,
+                                                                @RequestParam(required = false) MultipartFile thumbnail) {
+        BlogResponse newBlog = blogService.createBlog(request, thumbnail);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new ApiResponse<>(201, "Tạo bài blog thành công", newBlog));
     }
@@ -68,9 +70,10 @@ public class AdminBlogController {
 
     @GetMapping(UrlMapping.GET_BLOG_BY_SLUG)
     @Operation(summary = "Lấy thông tin bài blog theo slug")
-    public ResponseEntity<ApiResponse<BlogResponse>> getBlogBySlug(@PathVariable String slug) {
+    public ResponseEntity<ApiResponse<BlogResponse>> getBlogBySlug(@PathVariable String slug,
+                                                                   HttpServletRequest request) {
         return ResponseEntity.ok(new ApiResponse<>(200,
-                "Lấy thông tin thành công", blogService.getBlogBySlug(slug)));
+                "Lấy thông tin thành công", blogService.getBlogBySlug(slug, request)));
     }
 
     @PatchMapping(UrlMapping.UPDATE_STATUS_BLOG)
