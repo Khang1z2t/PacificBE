@@ -39,6 +39,7 @@ import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.pacific.pacificbe.utils.Constant.BLOG_VIEW_KEYS;
 import static com.pacific.pacificbe.utils.Constant.MAX_META_DESCRIPTION_LENGTH;
 
 @Slf4j
@@ -76,6 +77,7 @@ public class BlogServiceImpl implements BlogService {
         blog.setUser(user);
         blog.setViewCount(0);
         blog.setLikeCount(0);
+        blog.setThumbnailUrl("https://placehold.co/600x400?text=Blog");
         return getBlogResponse(request, thumbnail, blog);
     }
 
@@ -142,11 +144,15 @@ public class BlogServiceImpl implements BlogService {
         Blog blog = blogRepository.findBySlug(slug)
                 .orElseThrow(() -> new AppException(ErrorCode.BLOG_NOT_FOUND));
         String clientIp = request.getRemoteAddr();
-        String viewCacheKey = "blog:view:" + slug + ":" + clientIp;
-        if (Boolean.TRUE.equals(redisTemplate.opsForValue().setIfAbsent(viewCacheKey, "viewed", Duration.ofMinutes(5)))) {
-            redisTemplate.opsForValue().increment("blog:views:" + slug);
-            blog.setViewCount(blog.getViewCount() + 1);
-            blogRepository.save(blog);
+        String viewCacheKey = BLOG_VIEW_KEYS + slug + ":" + clientIp;
+        String viewsKey = BLOG_VIEW_KEYS + slug;
+
+        // Kiểm tra xem client đã xem blog này trong 30 phút qua chưa
+        if (Boolean.TRUE.equals(redisTemplate.opsForValue().setIfAbsent(viewCacheKey, "viewed", Duration.ofMinutes(30)))) {
+            // Nếu chưa xem, tăng lượt xem trong Redis
+            redisTemplate.opsForValue().increment(viewsKey);
+            // Đặt TTL cho viewsKey để tránh tích lũy vĩnh viễn
+            redisTemplate.expire(viewsKey, Duration.ofHours(1));
         }
         return blogMapper.toBlogResponse(blog);
     }
