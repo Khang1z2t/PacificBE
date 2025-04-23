@@ -16,7 +16,7 @@ public interface BlogService {
 
     List<BlogResponse> getAllBlogs();
 
-    BlogResponse updateBlog(String id, UpdateBlogRequest request);
+    BlogResponse updateBlog(String id, BlogRequest request, MultipartFile thumbnail);
 
     BlogResponse updateStatus(String id, UpdateStatusBlogRequest request);
 

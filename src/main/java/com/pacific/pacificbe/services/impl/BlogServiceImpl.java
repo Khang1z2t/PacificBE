@@ -72,25 +72,8 @@ public class BlogServiceImpl implements BlogService {
         blog.setUser(user);
         blog.setViewCount(0);
         blog.setLikeCount(0);
-        if (thumbnail != null && !thumbnail.isEmpty()) {
-            String thumbnailUrl = googleDriveService.uploadImageToDrive(thumbnail, FolderType.RESOURCES);
-            blog.setThumbnailUrl(thumbnailUrl);
-        }
-        BlogCategory category = null;
-        if (request.getCategoryId() != null) {
-            category = blogCategoryRepository.findById(request.getCategoryId())
-                    .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
-            blog.setCategory(category);
-        }
-        blog.setSlug(slugUtils.generateSlug(request.getTitle(), category));
-        if (request.getTourId() != null && !request.getTourId().isEmpty()) {
-            List<Tour> tours = tourRepository.findAllById(request.getTourId());
-            blog.setTours(tours);
-        }
-        blogRepository.save(blog);
-        return blogMapper.toBlogResponse(blog);
+        return getBlogResponse(request, thumbnail, blog);
     }
-
 
     @Override
     public BlogResponse getBlogByTitle(String title) {
@@ -106,35 +89,17 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public BlogResponse updateBlog(String id, UpdateBlogRequest request) {
+    public BlogResponse updateBlog(String id, BlogRequest request, MultipartFile thumbnail) {
         Blog blog = blogRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.BLOG_NOT_FOUND));
-
-        // Cập nhật thông tin cơ bản
+        String updatedContent = processHtmlContent(request.getContent());
         blog.setTitle(request.getTitle());
-        blog.setContent(request.getContent());
-        blog.setStatus(BlogStatus.valueOf(request.getStatus()));
-
-        // Xóa ảnh cũ trong DB
-
-        final Blog savedBlog = blog;
-
-        // Cập nhật danh sách ảnh mới
-        if (request.getImageUrls() != null && !request.getImageUrls().isEmpty()) {
-            List<Image> images = request.getImageUrls().stream().map(url -> {
-                Image image = new Image();
-                image.setImageUrl(url);
-                return image;
-            }).collect(Collectors.toList());
-
-            imageRepository.saveAll(images);
-        }
-
-        // Lưu thay đổi vào DB
-        blog = blogRepository.save(blog);
-        return blogMapper.toBlogResponse(blog);
+        blog.setContent(updatedContent);
+        blog.setStatus(request.getStatus());
+        blog.setMetaTitle(request.getTitle());
+        blog.setMetaDescription(generateMetaDescription(updatedContent));
+        return getBlogResponse(request, thumbnail, blog);
     }
-
 
     @Override
     public BlogResponse updateStatus(String id, UpdateStatusBlogRequest request) {
@@ -239,4 +204,25 @@ public class BlogServiceImpl implements BlogService {
         }
         return truncated + "...";
     }
+
+    private BlogResponse getBlogResponse(BlogRequest request, MultipartFile thumbnail, Blog blog) {
+        if (thumbnail != null && !thumbnail.isEmpty()) {
+            String thumbnailUrl = googleDriveService.uploadImageToDrive(thumbnail, FolderType.RESOURCES);
+            blog.setThumbnailUrl(thumbnailUrl);
+        }
+        BlogCategory category = null;
+        if (request.getCategoryId() != null) {
+            category = blogCategoryRepository.findById(request.getCategoryId())
+                    .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
+            blog.setCategory(category);
+        }
+        blog.setSlug(slugUtils.generateSlug(request.getTitle(), category));
+        if (request.getTourId() != null && !request.getTourId().isEmpty()) {
+            List<Tour> tours = tourRepository.findAllById(request.getTourId());
+            blog.setTours(tours);
+        }
+        blogRepository.save(blog);
+        return blogMapper.toBlogResponse(blog);
+    }
+
 }

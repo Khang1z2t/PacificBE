@@ -50,19 +50,19 @@ public class AdminBlogController {
 
     @PostMapping(value = UrlMapping.CREATE_BLOG, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "Tạo mới một bài Blog")
-    public ResponseEntity<ApiResponse<BlogResponse>> createBlog(@Valid @ModelAttribute BlogRequest request,
-                                                                @RequestParam(required = false) MultipartFile thumbnail) {
-        BlogResponse newBlog = blogService.createBlog(request, thumbnail);
+    public ResponseEntity<ApiResponse<BlogResponse>> createBlog(@Valid @RequestBody BlogRequest request) {
+        BlogResponse newBlog = blogService.createBlog(request, null);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new ApiResponse<>(201, "Tạo bài blog thành công", newBlog));
     }
 
-    @PutMapping(UrlMapping.UPDATE_BLOG)
+    @PutMapping(value = UrlMapping.UPDATE_BLOG, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "Cập nhật thông tin bài blog")
     public ResponseEntity<ApiResponse<BlogResponse>> updateBlog(
             @PathVariable String id,
-            @Valid @RequestBody UpdateBlogRequest request) {
-        BlogResponse updatedBlog = blogService.updateBlog(id, request);
+            @Valid @ModelAttribute BlogRequest request,
+            @RequestParam(required = false) MultipartFile thumbnail) {
+        BlogResponse updatedBlog = blogService.updateBlog(id, request, thumbnail);
         return ResponseEntity.ok(new ApiResponse<>(200, "Cập nhật thông tin thành công", updatedBlog));
     }
 
