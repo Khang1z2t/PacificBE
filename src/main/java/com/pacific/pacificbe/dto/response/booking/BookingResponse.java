@@ -1,5 +1,7 @@
-package com.pacific.pacificbe.dto.response;
+package com.pacific.pacificbe.dto.response.booking;
 
+import com.pacific.pacificbe.dto.response.PaymentResponse;
+import com.pacific.pacificbe.dto.response.ReviewResponseBooking;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 

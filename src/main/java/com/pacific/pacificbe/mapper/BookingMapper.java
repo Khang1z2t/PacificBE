@@ -1,8 +1,8 @@
 package com.pacific.pacificbe.mapper;
 
 import com.pacific.pacificbe.dto.request.BookingRequest;
-import com.pacific.pacificbe.dto.response.BookingDetailResponse;
-import com.pacific.pacificbe.dto.response.BookingResponse;
+import com.pacific.pacificbe.dto.response.booking.BookingDetailResponse;
+import com.pacific.pacificbe.dto.response.booking.BookingResponse;
 import com.pacific.pacificbe.dto.response.ReviewResponseBooking;
 import com.pacific.pacificbe.model.*;
 import lombok.RequiredArgsConstructor;

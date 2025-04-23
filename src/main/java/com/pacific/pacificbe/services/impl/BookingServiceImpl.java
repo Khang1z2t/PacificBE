@@ -4,6 +4,8 @@ import com.pacific.pacificbe.dto.request.BookingDetailRequest;
 import com.pacific.pacificbe.dto.request.BookingRequest;
 import com.pacific.pacificbe.dto.request.CancelBookingRequest;
 import com.pacific.pacificbe.dto.response.*;
+import com.pacific.pacificbe.dto.response.booking.BookingResponse;
+import com.pacific.pacificbe.dto.response.booking.BookingStatusStats;
 import com.pacific.pacificbe.dto.response.report.BookingRevenueReportDTO;
 import com.pacific.pacificbe.dto.response.report.Revenue;
 import com.pacific.pacificbe.dto.response.report.TourAndBookReport;

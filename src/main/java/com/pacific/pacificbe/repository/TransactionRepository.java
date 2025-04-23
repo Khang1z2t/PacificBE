@@ -22,4 +22,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, String
 
     @Query(value = "SELECT TOP 1 wt.id FROM transactions wt WHERE wt.id LIKE CONCAT('T', FORMAT(GETDATE(), 'ddMMyy'), '%') ORDER BY CAST(SUBSTRING(wt.id, 8, 4) AS INTEGER) DESC", nativeQuery = true)
     String findLatestWalletTransactionIdOfToday();
+
+    @Query("select t from Transaction t where t.user.id = ?1")
+    List<Transaction> findByUser_Id(String id);
 }

@@ -1,12 +1,11 @@
 package com.pacific.pacificbe.services;
 
 import com.pacific.pacificbe.dto.request.VoucherRequest;
-import com.pacific.pacificbe.dto.response.VoucherCodeResponse;
-import com.pacific.pacificbe.dto.response.VoucherResponse;
+import com.pacific.pacificbe.dto.response.voucher.VoucherCodeResponse;
+import com.pacific.pacificbe.dto.response.voucher.VoucherResponse;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 
 public interface VoucherService {
 
