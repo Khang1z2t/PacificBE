@@ -12,11 +12,13 @@ import com.pacific.pacificbe.services.GoogleDriveService;
 import com.pacific.pacificbe.utils.UrlMapping;
 import com.pacific.pacificbe.utils.enums.FolderType;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -47,28 +49,31 @@ public class AdminBlogController {
         return ResponseEntity.ok(new ApiResponse<>(200, "Lấy thông tin thành công", blog));
     }
 
-    @PostMapping(UrlMapping.CREATE_BLOG)
+    @PostMapping(value = UrlMapping.CREATE_BLOG, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "Tạo mới một bài Blog")
-    public ResponseEntity<ApiResponse<BlogResponse>> createBlog(@Valid @RequestBody BlogRequest request) {
-        BlogResponse newBlog = blogService.createBlog(request);
+    public ResponseEntity<ApiResponse<BlogResponse>> createBlog(@Valid @RequestBody BlogRequest request,
+                                                                @RequestParam(required = false) MultipartFile thumbnail) {
+        BlogResponse newBlog = blogService.createBlog(request, thumbnail);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new ApiResponse<>(201, "Tạo bài blog thành công", newBlog));
     }
 
-    @PutMapping(UrlMapping.UPDATE_BLOG)
+    @PutMapping(value = UrlMapping.UPDATE_BLOG, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "Cập nhật thông tin bài blog")
     public ResponseEntity<ApiResponse<BlogResponse>> updateBlog(
             @PathVariable String id,
-            @Valid @RequestBody UpdateBlogRequest request) {
-        BlogResponse updatedBlog = blogService.updateBlog(id, request);
+            @Valid @ModelAttribute BlogRequest request,
+            @RequestParam(required = false) MultipartFile thumbnail) {
+        BlogResponse updatedBlog = blogService.updateBlog(id, request, thumbnail);
         return ResponseEntity.ok(new ApiResponse<>(200, "Cập nhật thông tin thành công", updatedBlog));
     }
 
     @GetMapping(UrlMapping.GET_BLOG_BY_SLUG)
     @Operation(summary = "Lấy thông tin bài blog theo slug")
-    public ResponseEntity<ApiResponse<BlogResponse>> getBlogBySlug(@PathVariable String slug) {
+    public ResponseEntity<ApiResponse<BlogResponse>> getBlogBySlug(@PathVariable String slug,
+                                                                   HttpServletRequest request) {
         return ResponseEntity.ok(new ApiResponse<>(200,
-                "Lấy thông tin thành công", blogService.getBlogBySlug(slug)));
+                "Lấy thông tin thành công", blogService.getBlogBySlug(slug, request)));
     }
 
     @PatchMapping(UrlMapping.UPDATE_STATUS_BLOG)

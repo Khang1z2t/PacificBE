@@ -15,4 +15,5 @@ import lombok.experimental.SuperBuilder;
 public class BlogCategorySimpleResponse {
     private String id;
     private String name;
+    private String slug;
 }

@@ -8,14 +8,16 @@ import org.springframework.stereotype.Component;
 @Component
 public class HtmlSanitizerUtil {
     private final Safelist BLOG_SAFE_LIST = Safelist.relaxed()
-            .addTags("iframe", "video", "source", "figure", "figcaption", "u", "s", "span")
+            .addTags("iframe", "video", "source", "figure", "figcaption", "u", "s", "span", "img")
             .addAttributes("iframe", "src", "width", "height", "allowfullscreen", "frameborder")
             .addAttributes("video", "controls", "width", "height")
             .addAttributes("source", "src", "type")
-            .addAttributes(":all", "class", "style") // nếu bạn muốn giữ style hoặc class từ editor
+            .addAttributes("img", "src", "alt", "width", "height")
+            .addAttributes(":all", "class", "style")
             .addProtocols("iframe", "src", "http", "https")
             .addProtocols("video", "src", "http", "https")
-            .addProtocols("source", "src", "http", "https");
+            .addProtocols("source", "src", "http", "https")
+            .addProtocols("img", "src", "http", "https", "data");
 
     public String sanitize(String html) {
         if (html == null || html.isBlank()) return "";
