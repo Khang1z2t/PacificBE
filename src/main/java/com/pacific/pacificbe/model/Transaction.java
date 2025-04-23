@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @Entity
-@Table(name = "transaction")
+@Table(name = "transactions")
 public class Transaction extends BaseEntity {
     @Id
     @Size(max = 255)
