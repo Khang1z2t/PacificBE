@@ -16,6 +16,10 @@ import com.pacific.pacificbe.dto.RatingLevel;
 import com.pacific.pacificbe.dto.TopTour;
 import com.pacific.pacificbe.dto.response.RatingStats;
 import com.pacific.pacificbe.dto.response.RevenueStats;
+import com.pacific.pacificbe.dto.response.booking.BookingResponse;
+import com.pacific.pacificbe.dto.response.user.UserVipResponse;
+import com.pacific.pacificbe.mapper.BookingMapper;
+import com.pacific.pacificbe.mapper.UserMapper;
 import com.pacific.pacificbe.model.Booking;
 import com.pacific.pacificbe.repository.BookingRepository;
 import com.pacific.pacificbe.repository.ReviewRepository;
@@ -49,53 +53,9 @@ public class ReportServiceImpl implements ReportService {
     private final UserRepository userRepository;
     private final TourDetailRepository tourDetailRepository;
     private final ReviewRepository reviewRepository;
+    private final BookingMapper bookingMapper;
+    private final UserMapper userMapper;
 
-    @Override
-    public byte[] exportReport(String reportFileName, List<?> data, Map<String, Object> parameters) throws Exception {
-        // Load file .jasper từ thư mục resources
-        InputStream reportStream = new ClassPathResource("reportJasper/" + reportFileName + ".jasper").getInputStream();
-
-        // Tạo nguồn dữ liệu cho báo cáo
-        JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(data);
-
-        // Điền dữ liệu vào báo cáo
-        JasperPrint jasperPrint = JasperFillManager.fillReport(reportStream, parameters, dataSource);
-
-        // Xuất ra file PDF
-        return JasperExportManager.exportReportToPdf(jasperPrint);
-    }
-
-    @Override
-    public byte[] exportBookingReport(String year, String bookStatus) throws Exception {
-        // Load file báo cáo từ thư mục resources/reports/
-        InputStream reportStream = new ClassPathResource("reports/booking_report.jasper").getInputStream();
-        JasperReport jasperReport = (JasperReport) JRLoader.loadObject(reportStream);
-
-        // Truy vấn dữ liệu từ database
-        String sql = """ 
-                SELECT MONTH(b.created_at) AS bookingMonth,
-                SUM(b.total_amount) AS totalRevenue
-                FROM booking b
-                WHERE YEAR(b.created_at) = ?
-                AND (? IS NULL OR LOWER(b.booking_status) LIKE LOWER(CONCAT('%', ?, '%')))
-                GROUP BY MONTH(b.created_at), YEAR(b.created_at), b.booking_status
-                ORDER BY bookingMonth
-                """;
-
-        List<Map<String, Object>> data = jdbcTemplate.queryForList(sql, year, bookStatus, bookStatus);
-
-        // Chuyển dữ liệu sang JasperReports
-        JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(data);
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("ReportTitle", "Booking Revenue Report");
-        parameters.put("Year", year);
-        parameters.put("BookingStatus", bookStatus);
-
-        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
-
-        // Xuất báo cáo ra PDF
-        return JasperExportManager.exportReportToPdf(jasperPrint);
-    }
 
     @Override
     public RevenueStats getRevenueStats(String period) {
@@ -302,5 +262,19 @@ public class ReportServiceImpl implements ReportService {
         LocalDateTime endDateTime = endDate.atTime(LocalTime.MAX);
         Pageable pageable = PageRequest.of(0, limit);
         return bookingRepository.getTopBookedTours(startDateTime, endDateTime, pageable);
+    }
+
+    @Override
+    public List<BookingResponse> getAllByBookStatus(LocalDate startDate, LocalDate endDate) {
+        LocalDateTime startDateTime = startDate.atStartOfDay();
+        LocalDateTime endDateTime = endDate.atTime(LocalTime.MAX);
+
+        List<Booking> bookings = bookingRepository.findByCreatedAt(startDateTime,endDateTime);
+        return bookingMapper.toBookingResponses(bookings);
+    }
+
+    @Override
+    public List<UserVipResponse> getAllUserVip() {
+        return userRepository.findAllUserVip();
     }
 }

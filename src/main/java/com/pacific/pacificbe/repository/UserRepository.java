@@ -1,6 +1,7 @@
 package com.pacific.pacificbe.repository;
 
 import com.pacific.pacificbe.dto.response.TopBookedUsersResponse;
+import com.pacific.pacificbe.dto.response.user.UserVipResponse;
 import com.pacific.pacificbe.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -41,4 +42,18 @@ public interface UserRepository extends JpaRepository<User, String> {
             "GROUP BY u.id, u.firstName, u.lastName, u.email " +
             "ORDER BY COUNT(b.id) DESC")
     List<TopBookedUsersResponse> findTopBookedUsers();
+
+    @Query("""
+        SELECT new com.pacific.pacificbe.dto.response.user.UserVipResponse(
+            u.id,
+            CONCAT(u.firstName, ' ', u.lastName),
+            COUNT(b.id),
+            SUM(b.totalAmount)
+        )
+        FROM User u
+        JOIN Booking b ON u.id = b.user.id
+        GROUP BY u.id, u.firstName, u.lastName
+        ORDER BY COUNT(b.id) DESC
+        """)
+    List<UserVipResponse> findAllUserVip();
 }

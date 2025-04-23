@@ -10,6 +10,7 @@ import com.pacific.pacificbe.dto.response.report.Revenue;
 import com.pacific.pacificbe.dto.response.report.TourAndBookReport;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface BookingService {
@@ -40,4 +41,5 @@ public interface BookingService {
     List<BookingStatusStats> getBookingStatusStats();
 
     List<BookingResponse> getAllByStatus(String status);
+
 }

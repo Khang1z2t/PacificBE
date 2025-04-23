@@ -236,7 +236,7 @@ public interface BookingRepository extends JpaRepository<Booking, String> {
 
     // Doanh thu từng tháng trong năm nay
     @Query(value = """
-            SELECT 
+            SELECT
                 MONTH(b.created_at) AS month,
                 SUM(b.total_amount) AS revenue
             FROM booking b
@@ -261,4 +261,14 @@ public interface BookingRepository extends JpaRepository<Booking, String> {
 
     @Query("select b from Booking b where b.user.id = :userId and b.active = true and (coalesce(:bookingNo, '') = '' or b.bookingNo = :bookingNo) order by b.updatedAt DESC")
     List<Booking> findByUserAndBookingNoOrderByUpdatedAtDesc(@Param("userId") String userId, @Param("bookingNo") String bookingNo);
+
+    @Query("""
+        select b
+        from Booking b
+        where upper(b.status) like upper('PAID') or
+              upper(b.status) like upper('COMPLETED') and
+              b.createdAt between :startDate and :endDate
+        """)
+    List<Booking> findByCreatedAt(@Param("startDate") LocalDateTime startDate,
+                                  @Param("endDate") LocalDateTime endDate);
 }

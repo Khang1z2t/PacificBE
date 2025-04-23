@@ -4,16 +4,14 @@ import com.pacific.pacificbe.dto.DetailRatingStats;
 import com.pacific.pacificbe.dto.TopTour;
 import com.pacific.pacificbe.dto.response.RatingStats;
 import com.pacific.pacificbe.dto.response.RevenueStats;
+import com.pacific.pacificbe.dto.response.booking.BookingResponse;
+import com.pacific.pacificbe.dto.response.user.UserVipResponse;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
 public interface ReportService {
-
-    byte[] exportReport(String reportFileName, List<?> data, Map<String, Object> parameters) throws Exception;
-
-    byte[] exportBookingReport(String year, String bookStatus) throws Exception;
 
     RevenueStats getRevenueStats(String period);
 
@@ -22,4 +20,8 @@ public interface ReportService {
     List<DetailRatingStats> getDetailedRatingDistribution(LocalDate startDate, LocalDate endDate); // API mới
 
     public List<TopTour> getTopBookedTours(int limit, LocalDate startDate, LocalDate endDate);
+
+    List<BookingResponse> getAllByBookStatus(LocalDate startDate, LocalDate endDate);
+
+    List<UserVipResponse> getAllUserVip();
 }

@@ -2,19 +2,23 @@ package com.pacific.pacificbe.controller;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.pacific.pacificbe.dto.ApiResponse;
 import com.pacific.pacificbe.dto.DetailRatingStats;
 import com.pacific.pacificbe.dto.TopTour;
+import com.pacific.pacificbe.dto.response.booking.BookingResponse;
 import com.pacific.pacificbe.dto.response.booking.BookingStatusStats;
 import com.pacific.pacificbe.dto.response.RatingStats;
 import com.pacific.pacificbe.dto.response.RevenueStats;
 import com.pacific.pacificbe.dto.response.YearlyRevenueOverviewDTO;
+import com.pacific.pacificbe.dto.response.*;
 import com.pacific.pacificbe.dto.response.report.BookingRevenueReportDTO;
 import com.pacific.pacificbe.dto.response.report.Revenue;
 import com.pacific.pacificbe.dto.response.report.TourAndBookReport;
 import com.pacific.pacificbe.dto.response.showTour.TourBookingCount;
+import com.pacific.pacificbe.dto.response.user.UserVipResponse;
 import com.pacific.pacificbe.services.BookingService;
 import com.pacific.pacificbe.services.ExportExcelService;
 import com.pacific.pacificbe.services.TourService;
@@ -141,17 +145,27 @@ public class ReportController {
 	@GetMapping(UrlMapping.EXPORT_EXCEL)
 	@Operation(summary = "xuất báo cáo theo excel")
 	public void exportToExcel(HttpServletResponse response,
-							  @RequestParam String exportType ) throws IOException {
+							  @RequestParam String exportType,
+							  @RequestParam(defaultValue = "99") int limit,
+							  @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+							  @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) throws IOException {
 		List<BookingStatusStats> stats = bookingService.getBookingStatusStats();
+
+		List<BookingResponse> book = reportservice.getAllByBookStatus(startDate, endDate);
+
+		List<TopTour> topTours = reportservice.getTopBookedTours(limit, startDate, endDate);
+
+		List<UserVipResponse> vipUsers = reportservice.getAllUserVip();
+
 		switch (exportType.toLowerCase()) {
 			case "booking":
-				exportExcelService.exportToExcel(response, stats, "Report");
+				exportExcelService.exportToExcel(response, book, "Report_Booking");
 				break;
 			case "tour":
-				exportExcelService.exportToExcel(response, stats, "Report");
+				exportExcelService.exportToExcel(response, topTours, "Report_Tour");
 				break;
 			case "user":
-				exportExcelService.exportToExcel(response, stats, "Report");
+				exportExcelService.exportToExcel(response, vipUsers, "Report_User");
 				break;
 			default:
 				throw new IllegalArgumentException("Loại xuất không được hỗ trợ: " + exportType);
