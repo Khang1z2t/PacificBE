@@ -169,7 +169,7 @@ public class BlogServiceImpl implements BlogService {
                     String imageId = idUtil.getIdImage(
                             googleDriveService.uploadImageToDrive(multipartFile, FolderType.RESOURCES));
 
-                    String srcAttr = "${config.imageConfig.getImage('" + imageId + "')}";
+                    String srcAttr = "${config.imageConfig.getImage(" + imageId + ")}";
                     img.attr("src", srcAttr);
                 } catch (Exception e) {
                     log.error("Error while processing image in blog: {}", e.getMessage());

@@ -48,7 +48,7 @@ public class AdminBlogController {
         return ResponseEntity.ok(new ApiResponse<>(200, "Lấy thông tin thành công", blog));
     }
 
-    @PostMapping(value = UrlMapping.CREATE_BLOG, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = UrlMapping.CREATE_BLOG)
     @Operation(summary = "Tạo mới một bài Blog")
     public ResponseEntity<ApiResponse<BlogResponse>> createBlog(@Valid @RequestBody BlogRequest request) {
         BlogResponse newBlog = blogService.createBlog(request, null);

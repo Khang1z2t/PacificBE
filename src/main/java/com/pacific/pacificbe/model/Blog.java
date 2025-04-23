@@ -85,6 +85,7 @@ public class Blog extends BaseEntity {
             joinColumns = @JoinColumn(name = "blog_id"),
             inverseJoinColumns = @JoinColumn(name = "tour_id")
     )
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Tour> tours = new ArrayList<>();
 
 }
