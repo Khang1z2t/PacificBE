@@ -7,6 +7,7 @@ import com.pacific.pacificbe.dto.response.tour.TourSimpleResponse;
 import com.pacific.pacificbe.dto.response.user.UserSimpleResponse;
 import com.pacific.pacificbe.model.Blog;
 import com.pacific.pacificbe.model.BlogCategory;
+import com.pacific.pacificbe.utils.IdUtil;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -21,9 +22,11 @@ import java.util.stream.Collectors;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class BlogMapper {
     final ModelMapper modelMapper;
+    private final IdUtil idUtil;
 
     public BlogResponse toBlogResponse(Blog blog) {
         BlogResponse response = modelMapper.map(blog, BlogResponse.class);
+        response.setThumbnail(idUtil.getIdImage(blog.getThumbnailUrl()));
         response.setUser(modelMapper.map(blog.getUser(), UserSimpleResponse.class));
         response.setCategory(modelMapper.map(blog.getCategory(), BlogCategorySimpleResponse.class));
         response.setTours(blog.getTours().stream()

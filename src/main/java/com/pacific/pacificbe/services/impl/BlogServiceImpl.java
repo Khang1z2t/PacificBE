@@ -8,10 +8,7 @@ import com.pacific.pacificbe.dto.response.blog.BlogResponse;
 import com.pacific.pacificbe.exception.AppException;
 import com.pacific.pacificbe.exception.ErrorCode;
 import com.pacific.pacificbe.mapper.BlogMapper;
-import com.pacific.pacificbe.model.Blog;
-import com.pacific.pacificbe.model.BlogCategory;
-import com.pacific.pacificbe.model.Image;
-import com.pacific.pacificbe.model.Tour;
+import com.pacific.pacificbe.model.*;
 import com.pacific.pacificbe.repository.*;
 import com.pacific.pacificbe.services.BlogService;
 import com.pacific.pacificbe.services.GoogleDriveService;
@@ -60,9 +57,9 @@ public class BlogServiceImpl implements BlogService {
 
     @Override
     @Transactional
-    public BlogResponse createBlog(BlogRequest request) {
+    public BlogResponse createBlog(BlogRequest request, MultipartFile thumbnail) {
         String userId = AuthUtils.getCurrentUserId();
-        var user = userRepository.findById(userId)
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
         String updatedContent = processHtmlContent(request.getContent());
@@ -75,6 +72,10 @@ public class BlogServiceImpl implements BlogService {
         blog.setUser(user);
         blog.setViewCount(0);
         blog.setLikeCount(0);
+        if (thumbnail != null && !thumbnail.isEmpty()) {
+            String thumbnailUrl = googleDriveService.uploadImageToDrive(thumbnail, FolderType.RESOURCES);
+            blog.setThumbnailUrl(thumbnailUrl);
+        }
         BlogCategory category = null;
         if (request.getCategoryId() != null) {
             category = blogCategoryRepository.findById(request.getCategoryId())

@@ -64,6 +64,10 @@ public class Blog extends BaseEntity {
     @Column(name = "like_count", columnDefinition = "INT DEFAULT 0")
     private int likeCount;
 
+    @Size(max = 255)
+    @Column(name = "thumbnail_url")
+    private String thumbnailUrl;
+
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)

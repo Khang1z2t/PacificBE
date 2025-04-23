@@ -25,6 +25,7 @@ public class BlogResponse {
     String metaDescription;
     Integer viewCount;
     Integer likeCount;
+    String thumbnail;
     UserSimpleResponse user;
     BlogCategorySimpleResponse category;
     List<TourSimpleResponse> tours;

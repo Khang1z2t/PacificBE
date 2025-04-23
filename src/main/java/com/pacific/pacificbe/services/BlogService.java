@@ -5,11 +5,12 @@ import com.pacific.pacificbe.dto.request.UpdateBlogRequest;
 import com.pacific.pacificbe.dto.request.UpdateStatusBlogRequest;
 import com.pacific.pacificbe.dto.response.blog.BlogCategoryResponse;
 import com.pacific.pacificbe.dto.response.blog.BlogResponse;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 public interface BlogService {
-    BlogResponse createBlog(BlogRequest request);
+    BlogResponse createBlog(BlogRequest request, MultipartFile thumbnail);
 
     BlogResponse getBlogByTitle(String title);
 

@@ -17,6 +17,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -47,10 +48,11 @@ public class AdminBlogController {
         return ResponseEntity.ok(new ApiResponse<>(200, "Lấy thông tin thành công", blog));
     }
 
-    @PostMapping(UrlMapping.CREATE_BLOG)
+    @PostMapping(value = UrlMapping.CREATE_BLOG, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "Tạo mới một bài Blog")
-    public ResponseEntity<ApiResponse<BlogResponse>> createBlog(@Valid @RequestBody BlogRequest request) {
-        BlogResponse newBlog = blogService.createBlog(request);
+    public ResponseEntity<ApiResponse<BlogResponse>> createBlog(@Valid @ModelAttribute BlogRequest request,
+                                                                @RequestParam(required = false) MultipartFile thumbnail) {
+        BlogResponse newBlog = blogService.createBlog(request, thumbnail);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new ApiResponse<>(201, "Tạo bài blog thành công", newBlog));
     }
