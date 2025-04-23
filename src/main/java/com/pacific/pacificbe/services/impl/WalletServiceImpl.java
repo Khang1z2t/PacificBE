@@ -1,7 +1,7 @@
 package com.pacific.pacificbe.services.impl;
 
 import com.pacific.pacificbe.dto.request.refundFunction.RefundRequestDTO;
-import com.pacific.pacificbe.dto.response.BookingResponse;
+import com.pacific.pacificbe.dto.response.booking.BookingResponse;
 import com.pacific.pacificbe.dto.response.refundFunction.*;
 import com.pacific.pacificbe.exception.AppException;
 import com.pacific.pacificbe.exception.ErrorCode;
@@ -186,10 +186,7 @@ public class WalletServiceImpl implements WalletService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
-        List<Transaction> transactions = transactionRepository.findAll()
-                .stream()
-                .filter(t -> t.getUser().getId().equals(user.getId()))
-                .collect(Collectors.toList());
+        List<Transaction> transactions = transactionRepository.findByUser_Id(user.getId());
 
         return transactions.stream().map(t -> {
             TransactionResponseDto dto = new TransactionResponseDto();

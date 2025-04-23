@@ -2,8 +2,8 @@ package com.pacific.pacificbe.services;
 
 import com.pacific.pacificbe.dto.request.BookingRequest;
 import com.pacific.pacificbe.dto.request.CancelBookingRequest;
-import com.pacific.pacificbe.dto.response.BookingResponse;
-import com.pacific.pacificbe.dto.response.BookingStatusStats;
+import com.pacific.pacificbe.dto.response.booking.BookingResponse;
+import com.pacific.pacificbe.dto.response.booking.BookingStatusStats;
 import com.pacific.pacificbe.dto.response.YearlyRevenueOverviewDTO;
 import com.pacific.pacificbe.dto.response.report.BookingRevenueReportDTO;
 import com.pacific.pacificbe.dto.response.report.Revenue;

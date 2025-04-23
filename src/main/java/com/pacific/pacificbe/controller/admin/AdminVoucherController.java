@@ -2,9 +2,7 @@ package com.pacific.pacificbe.controller.admin;
 
 import com.pacific.pacificbe.dto.ApiResponse;
 import com.pacific.pacificbe.dto.request.VoucherRequest;
-import com.pacific.pacificbe.dto.response.VoucherResponse;
-import com.pacific.pacificbe.exception.AppException;
-import com.pacific.pacificbe.exception.ErrorCode;
+import com.pacific.pacificbe.dto.response.voucher.VoucherResponse;
 import com.pacific.pacificbe.services.VoucherService;
 import com.pacific.pacificbe.utils.UrlMapping;
 import io.swagger.v3.oas.annotations.Operation;

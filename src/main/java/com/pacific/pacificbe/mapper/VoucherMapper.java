@@ -1,7 +1,7 @@
 package com.pacific.pacificbe.mapper;
 
 import com.pacific.pacificbe.dto.request.VoucherRequest;
-import com.pacific.pacificbe.dto.response.VoucherResponse;
+import com.pacific.pacificbe.dto.response.voucher.VoucherResponse;
 import com.pacific.pacificbe.model.Voucher;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;

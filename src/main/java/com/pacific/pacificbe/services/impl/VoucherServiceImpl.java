@@ -1,8 +1,8 @@
 package com.pacific.pacificbe.services.impl;
 
 import com.pacific.pacificbe.dto.request.VoucherRequest;
-import com.pacific.pacificbe.dto.response.VoucherCodeResponse;
-import com.pacific.pacificbe.dto.response.VoucherResponse;
+import com.pacific.pacificbe.dto.response.voucher.VoucherCodeResponse;
+import com.pacific.pacificbe.dto.response.voucher.VoucherResponse;
 import com.pacific.pacificbe.exception.AppException;
 import com.pacific.pacificbe.exception.ErrorCode;
 import com.pacific.pacificbe.mapper.VoucherMapper;
@@ -25,7 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Transactional
 @Service

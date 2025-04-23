@@ -1,7 +1,7 @@
 package com.pacific.pacificbe.services;
 
 import com.pacific.pacificbe.dto.request.refundFunction.RefundRequestDTO;
-import com.pacific.pacificbe.dto.response.BookingResponse;
+import com.pacific.pacificbe.dto.response.booking.BookingResponse;
 import com.pacific.pacificbe.dto.response.refundFunction.*;
 
 import java.math.BigDecimal;

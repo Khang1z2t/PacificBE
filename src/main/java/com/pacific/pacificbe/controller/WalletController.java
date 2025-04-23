@@ -2,7 +2,7 @@ package com.pacific.pacificbe.controller;
 
 import com.pacific.pacificbe.dto.ApiResponse;
 import com.pacific.pacificbe.dto.request.refundFunction.RefundRequestDTO;
-import com.pacific.pacificbe.dto.response.BookingResponse;
+import com.pacific.pacificbe.dto.response.booking.BookingResponse;
 import com.pacific.pacificbe.dto.response.refundFunction.*;
 import com.pacific.pacificbe.services.WalletService;
 import com.pacific.pacificbe.utils.UrlMapping;
