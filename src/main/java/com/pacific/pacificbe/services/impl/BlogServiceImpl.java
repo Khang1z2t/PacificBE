@@ -79,7 +79,7 @@ public class BlogServiceImpl implements BlogService {
         BlogCategory category = null;
         if (request.getCategoryId() != null) {
             category = blogCategoryRepository.findById(request.getCategoryId())
-                    .orElseThrow(() -> new IllegalArgumentException("Category not found"));
+                    .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
             blog.setCategory(category);
         }
         blog.setSlug(slugUtils.generateSlug(request.getTitle(), category));
@@ -101,9 +101,8 @@ public class BlogServiceImpl implements BlogService {
 
     @Override
     public List<BlogResponse> getAllBlogs() {
-        return blogRepository.findAll().stream()
-                .map(blogMapper::toBlogResponse)
-                .collect(Collectors.toList());
+        List<Blog> blogs = blogRepository.findAll();
+        return blogMapper.toBlogResponseList(blogs);
     }
 
     @Override

@@ -26,7 +26,7 @@ public class BlogMapper {
 
     public BlogResponse toBlogResponse(Blog blog) {
         BlogResponse response = modelMapper.map(blog, BlogResponse.class);
-        response.setThumbnail(idUtil.getIdImage(blog.getThumbnailUrl()));
+        response.setThumbnail(blog.getThumbnailUrl() != null ? idUtil.getIdImage(blog.getThumbnailUrl()) : null);
         response.setUser(modelMapper.map(blog.getUser(), UserSimpleResponse.class));
         response.setCategory(modelMapper.map(blog.getCategory(), BlogCategorySimpleResponse.class));
         response.setTours(blog.getTours().stream()
