@@ -23,6 +23,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,7 +72,7 @@ public class AdminBlogController {
 
     @GetMapping(UrlMapping.GET_BLOG_BY_SLUG)
     @Operation(summary = "Lấy thông tin bài blog theo slug")
-    public ResponseEntity<ApiResponse<BlogResponse>> getBlogBySlug(@PathVariable String slug,
+    public ResponseEntity<ApiResponse<BlogResponse>> getBlogBySlug(@RequestParam String slug,
                                                                    HttpServletRequest request) {
         return ResponseEntity.ok(new ApiResponse<>(200,
                 "Lấy thông tin thành công", blogService.getBlogBySlug(slug, request)));
