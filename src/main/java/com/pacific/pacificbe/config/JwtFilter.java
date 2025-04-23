@@ -1,7 +1,12 @@
 package com.pacific.pacificbe.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pacific.pacificbe.dto.ApiResponse;
+import com.pacific.pacificbe.exception.AppException;
+import com.pacific.pacificbe.exception.ErrorCode;
 import com.pacific.pacificbe.services.JwtService;
 import com.pacific.pacificbe.services.impl.CustomUserDetailsServiceImpl;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -11,6 +16,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -44,6 +50,13 @@ public class JwtFilter extends OncePerRequestFilter {
 
         try {
             userId = jwtService.extractUserId(jwt);
+        } catch (ExpiredJwtException e) {
+            log.warn("JWT token has expired: {}", e.getMessage());
+            ApiResponse<?> apiResponse = new ApiResponse<>(ErrorCode.TOKEN_EXPIRED.getCode(), ErrorCode.TOKEN_EXPIRED.getMessage(), null);
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+            new ObjectMapper().writeValue(response.getWriter(), apiResponse);
+            return;
         } catch (Exception e) {
             log.warn("Failed to extract userId from JWT: {}", e.getMessage());
             filterChain.doFilter(request, response);

@@ -9,11 +9,11 @@ import com.pacific.pacificbe.mapper.BookingMapper;
 import com.pacific.pacificbe.model.Booking;
 import com.pacific.pacificbe.model.SystemWallet;
 import com.pacific.pacificbe.model.User;
-import com.pacific.pacificbe.model.WalletTransaction;
+import com.pacific.pacificbe.model.Transaction;
 import com.pacific.pacificbe.repository.BookingRepository;
 import com.pacific.pacificbe.repository.SystemWalletRepository;
 import com.pacific.pacificbe.repository.UserRepository;
-import com.pacific.pacificbe.repository.WalletTransactionRepository;
+import com.pacific.pacificbe.repository.TransactionRepository;
 import com.pacific.pacificbe.services.WalletService;
 import com.pacific.pacificbe.utils.AuthUtils;
 import com.pacific.pacificbe.utils.IdUtil;
@@ -30,7 +30,6 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Transactional
@@ -42,7 +41,7 @@ public class WalletServiceImpl implements WalletService {
     private final UserRepository userRepository;
     private final BookingRepository bookingRepository;
     private final SystemWalletRepository systemWalletRepository;
-    private final WalletTransactionRepository walletTransactionRepository;
+    private final TransactionRepository transactionRepository;
 
     private final String SYSTEM_WALLET_ID = "SYSTEM_WALLET"; // Replace with actual wallet ID
     private final IdUtil idUtil;
@@ -75,9 +74,9 @@ public class WalletServiceImpl implements WalletService {
         SystemWallet systemWallet = systemWalletRepository.findById(SYSTEM_WALLET_ID)
                 .orElseThrow(() -> new AppException(ErrorCode.WALLET_NOT_FOUND));
 
-        String lastTransactionId = walletTransactionRepository.findLatestWalletTransactionIdOfToday();
+        String lastTransactionId = transactionRepository.findLatestWalletTransactionIdOfToday();
 
-        WalletTransaction transaction = new WalletTransaction();
+        Transaction transaction = new Transaction();
         transaction.setId(idUtil.generateTransactionId(lastTransactionId));
         transaction.setWallet(systemWallet);
         transaction.setBooking(booking);
@@ -86,7 +85,7 @@ public class WalletServiceImpl implements WalletService {
         transaction.setType(WalletStatus.REFUND_REQUEST.toString());
         transaction.setStatus(WalletStatus.PENDING.toString());
         transaction.setDescription(request.getReasons());
-        walletTransactionRepository.save(transaction);
+        transactionRepository.save(transaction);
         return bookingMapper.toBookingResponse(booking);
     }
 
@@ -116,17 +115,17 @@ public class WalletServiceImpl implements WalletService {
             systemWallet.setBalance(systemWallet.getBalance().subtract(refundAmount));
             systemWalletRepository.save(systemWallet);
 
-            WalletTransaction transaction = walletTransactionRepository.findByBookingIdAndType(booking.getId(), WalletStatus.REFUND_REQUEST.toString());
+            Transaction transaction = transactionRepository.findByBookingIdAndType(booking.getId(), WalletStatus.REFUND_REQUEST.toString());
             transaction.setType(WalletStatus.REFUNDED.toString());
             transaction.setStatus(WalletStatus.COMPLETED.toString());
             transaction.setDescription("Hoàn tiền cho booking " + booking.getBookingNo());
-            walletTransactionRepository.save(transaction);
+            transactionRepository.save(transaction);
 
             booking.setStatus(BookingStatus.CANCELLED.toString());
         } else {
-            WalletTransaction transaction = walletTransactionRepository.findByBookingIdAndType(booking.getId(), WalletStatus.REFUND_REQUEST.toString());
+            Transaction transaction = transactionRepository.findByBookingIdAndType(booking.getId(), WalletStatus.REFUND_REQUEST.toString());
             transaction.setStatus(WalletStatus.REJECTED.toString());
-            walletTransactionRepository.save(transaction);
+            transactionRepository.save(transaction);
             booking.setStatus(BookingStatus.PAID.toString());
         }
 
@@ -143,9 +142,9 @@ public class WalletServiceImpl implements WalletService {
         user.setDeposit(user.getDeposit().add(amount));
         userRepository.save(user);
 
-        String lastTransactionId = walletTransactionRepository.findLatestWalletTransactionIdOfToday();
+        String lastTransactionId = transactionRepository.findLatestWalletTransactionIdOfToday();
 
-        WalletTransaction transaction = new WalletTransaction();
+        Transaction transaction = new Transaction();
         transaction.setId(idUtil.generateTransactionId(lastTransactionId));
         transaction.setWallet(systemWalletRepository.findById(SYSTEM_WALLET_ID).orElseThrow());
         transaction.setUser(user);
@@ -153,7 +152,7 @@ public class WalletServiceImpl implements WalletService {
         transaction.setType(WalletStatus.DEPOSIT.toString());
         transaction.setStatus(WalletStatus.COMPLETED.toString());
         transaction.setDescription("Nạp tiền vào ví " + amount);
-        walletTransactionRepository.save(transaction);
+        transactionRepository.save(transaction);
     }
 
     @Override
@@ -169,9 +168,9 @@ public class WalletServiceImpl implements WalletService {
         user.setDeposit(user.getDeposit().subtract(amount));
         userRepository.save(user);
 
-        String lastTransactionId = walletTransactionRepository.findLatestWalletTransactionIdOfToday();
+        String lastTransactionId = transactionRepository.findLatestWalletTransactionIdOfToday();
 
-        WalletTransaction transaction = new WalletTransaction();
+        Transaction transaction = new Transaction();
         transaction.setId(idUtil.generateTransactionId(lastTransactionId));
         transaction.setWallet(systemWalletRepository.findById(SYSTEM_WALLET_ID).orElseThrow());
         transaction.setUser(user);
@@ -179,7 +178,7 @@ public class WalletServiceImpl implements WalletService {
         transaction.setType(WalletStatus.WITHDRAW.toString());
         transaction.setStatus(WalletStatus.COMPLETED.toString());
         transaction.setDescription("Rút tiền " + amount);
-        walletTransactionRepository.save(transaction);
+        transactionRepository.save(transaction);
     }
 
     @Override
@@ -187,7 +186,7 @@ public class WalletServiceImpl implements WalletService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
-        List<WalletTransaction> transactions = walletTransactionRepository.findAll()
+        List<Transaction> transactions = transactionRepository.findAll()
                 .stream()
                 .filter(t -> t.getUser().getId().equals(user.getId()))
                 .collect(Collectors.toList());
@@ -257,11 +256,11 @@ public class WalletServiceImpl implements WalletService {
             }
 
             // Lấy lý do từ wallet_transaction
-            List<WalletTransaction> transactions = walletTransactionRepository.findByBookingId(booking.getId());
+            List<Transaction> transactions = transactionRepository.findByBookingId(booking.getId());
             String reason = transactions.stream()
                     .filter(t -> WalletStatus.REFUND_REQUEST.toString().equals(t.getType()))
                     .findFirst()
-                    .map(WalletTransaction::getDescription)
+                    .map(Transaction::getDescription)
                     .orElse("Không cung cấp lý do");
 
             dto.setReason(reason);
@@ -279,11 +278,11 @@ public class WalletServiceImpl implements WalletService {
                 .orElseThrow(() -> new AppException(ErrorCode.WALLET_NOT_FOUND));
 
         // Tính tổng tiền đã hoàn (từ các giao dịch REFUND thành công)
-        BigDecimal totalRefunded = walletTransactionRepository.sumRefundedAmount()
+        BigDecimal totalRefunded = transactionRepository.sumRefundedAmount()
                 .orElse(BigDecimal.ZERO);
 
         // Đếm tổng giao dịch
-        long totalTransactions = walletTransactionRepository.count();
+        long totalTransactions = transactionRepository.count();
 
         SystemBalanceResponseDto response = new SystemBalanceResponseDto();
         response.setBalance(wallet.getBalance());

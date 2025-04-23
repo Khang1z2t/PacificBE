@@ -9,14 +9,12 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Nationalized;
 
 import java.math.BigDecimal;
-import java.time.Instant;
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "wallet_transaction")
-public class WalletTransaction extends BaseEntity {
+@Table(name = "transaction")
+public class Transaction extends BaseEntity {
     @Id
     @Size(max = 255)
     @Column(name = "id", nullable = false)

@@ -46,7 +46,7 @@ public class VNPAYServiceImpl implements VNPAYService {
     private final QrUtil qrUtil;
     private final CalendarUtil calendarUtil;
     private final SystemWalletRepository systemWalletRepository;
-    private final WalletTransactionRepository walletTransactionRepository;
+    private final TransactionRepository transactionRepository;
     private final IdUtil idUtil;
 
     @Override
@@ -54,12 +54,7 @@ public class VNPAYServiceImpl implements VNPAYService {
         if (vnpayRequest.getAmount() <= 0) {
             return "/";
         }
-
         String userId = AuthUtils.getCurrentUserId();
-        if (userId == null) {
-            throw new AppException(ErrorCode.USER_NOT_AUTHENTICATED);
-        }
-
         String baseUrl = vnpayRequest.getUrlReturn();
         if (baseUrl == null || baseUrl.isEmpty()) {
             baseUrl = request.getScheme() + "://" + request.getServerName();
@@ -187,10 +182,10 @@ public class VNPAYServiceImpl implements VNPAYService {
         String[] parts = orderInfo.split("\\|");
         String userId = parts[0];
         String bookingNo = parts[1];
-        var user = userRepository.findById(userId).orElseThrow(
+        User user = userRepository.findById(userId).orElseThrow(
                 () -> new AppException(ErrorCode.USER_NOT_FOUND));
 //        tối giản code, hay vì return lỗi ở dưới thì return ở trên
-        var booking = bookingRepository.findByBookingNo(bookingNo)
+        Booking booking = bookingRepository.findByBookingNo(bookingNo)
                 .orElseThrow(() -> new AppException(ErrorCode.BOOKING_NOT_FOUND));
 
         if ("00".equals(request.getVnp_ResponseCode())) {
@@ -234,10 +229,10 @@ public class VNPAYServiceImpl implements VNPAYService {
             systemWallet.setUpdatedAt(LocalDateTime.now());
             systemWalletRepository.save(systemWallet);
 
-            String lastTransactionId = walletTransactionRepository.findLatestWalletTransactionIdOfToday();
+            String lastTransactionId = transactionRepository.findLatestWalletTransactionIdOfToday();
 
             // Ghi log giao dịch vào wallet_transaction
-            WalletTransaction transaction = new WalletTransaction();
+            Transaction transaction = new Transaction();
             transaction.setId(idUtil.generateTransactionId(lastTransactionId));
             transaction.setWallet(systemWallet);
             transaction.setBooking(booking);
@@ -246,7 +241,7 @@ public class VNPAYServiceImpl implements VNPAYService {
             transaction.setType(WalletStatus.WITHDRAW.toString());
             transaction.setStatus(WalletStatus.COMPLETED.toString());
             transaction.setDescription("Thanh toán: " + bookingNo);
-            walletTransactionRepository.save(transaction);
+            transactionRepository.save(transaction);
             return new RedirectView(UrlMapping.PAYMENT_SUCCESS);
         } else {
 //                Payment payment = new Payment();

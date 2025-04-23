@@ -24,6 +24,7 @@ public enum ErrorCode {
     PASSWORD_NOT_MATCH(1014, "Password not match", HttpStatus.BAD_REQUEST),
     INVALID_OTP(1014, "Invalid OTP", HttpStatus.BAD_REQUEST),
     CANT_CHANGE_USERNAME(1015, "Can't change username", HttpStatus.BAD_REQUEST),
+    TOKEN_EXPIRED(1016, "Token expired", HttpStatus.UNAUTHORIZED),
 
     USER_ROLE_INVALID(1015, "Invalid role, must be " +
             getEnumValues(UserRole.class), HttpStatus.BAD_REQUEST),

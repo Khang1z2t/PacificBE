@@ -1,6 +1,5 @@
 package com.pacific.pacificbe.services;
 
-import com.pacific.pacificbe.model.User;
 import io.jsonwebtoken.Claims;
 import org.springframework.security.core.userdetails.UserDetails;
 

@@ -1,5 +1,6 @@
 package com.pacific.pacificbe.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.pacific.pacificbe.dto.response.BookingResponse;
 import com.pacific.pacificbe.dto.response.report.BookingRevenueReportDTO;
@@ -18,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 
@@ -30,7 +32,17 @@ import java.util.List;
 public class ApiResponse<T> {
     @Builder.Default
     private int code = 200;
+    @Builder.Default
     private String message = null;
     private T data;
+    @Builder.Default
+    private LocalDateTime timestamp = LocalDateTime.now();
+
+    public ApiResponse(int code, String message, T data) {
+        this.code = code;
+        this.message = message;
+        this.data = data;
+        this.timestamp = LocalDateTime.now();
+    }
 
 }

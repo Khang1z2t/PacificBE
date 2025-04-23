@@ -80,6 +80,11 @@ public class Booking extends BaseEntity {
     @JoinColumn(name = "payment_id")
     private Payment payment;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.SET_NULL)
+    @JoinColumn(name = "transaction_id")
+    private Transaction transaction;
+
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "tour_detail_id", nullable = false)

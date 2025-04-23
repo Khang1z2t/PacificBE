@@ -1,0 +1,25 @@
+package com.pacific.pacificbe.repository;
+
+import com.pacific.pacificbe.model.Transaction;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Optional;
+
+public interface TransactionRepository extends JpaRepository<Transaction, String> {
+
+
+    Transaction findByBookingIdAndType(String bookingId, String type);
+
+    List<Transaction> findByStatus(String status);
+
+    List<Transaction> findByBookingId(String bookingId);
+
+    @Query("SELECT COALESCE(SUM(t.amount), 0) FROM Transaction t WHERE t.type = 'REFUNDED' AND t.status = 'COMPLETED'")
+    Optional<BigDecimal> sumRefundedAmount();
+
+    @Query(value = "SELECT TOP 1 wt.id FROM transaction wt WHERE wt.id LIKE CONCAT('T', FORMAT(GETDATE(), 'ddMMyy'), '%') ORDER BY CAST(SUBSTRING(wt.id, 8, 4) AS INTEGER) DESC", nativeQuery = true)
+    String findLatestWalletTransactionIdOfToday();
+}

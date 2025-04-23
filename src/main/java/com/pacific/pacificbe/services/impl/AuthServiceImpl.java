@@ -21,6 +21,7 @@ import com.pacific.pacificbe.utils.IdUtil;
 import com.pacific.pacificbe.utils.UrlMapping;
 import com.pacific.pacificbe.utils.enums.UserRole;
 import com.pacific.pacificbe.utils.enums.UserStatus;
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -125,20 +126,28 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public UserResponse authenticateToken() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User) authentication.getPrincipal();
-        if (!user.isActive()) throw new AppException(ErrorCode.USER_NOT_ACTIVE);
-        if (user.getUsername().equals(user.getEmail().split("@")[0])) {
-            if (!user.getStatus().equals(UserStatus.REQUIRE_USERNAME_PASSWORD_CHANGE.toString())) {
-                user.setStatus(UserStatus.REQUIRE_USERNAME_CHANGE.toString());
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            User user = (User) authentication.getPrincipal();
+            if (!user.isActive()) throw new AppException(ErrorCode.USER_NOT_ACTIVE);
+            if (user.getUsername().equals(user.getEmail().split("@")[0])) {
+                if (!user.getStatus().equals(UserStatus.REQUIRE_USERNAME_PASSWORD_CHANGE.toString())) {
+                    user.setStatus(UserStatus.REQUIRE_USERNAME_CHANGE.toString());
+                }
+            } else if (user.getStatus().equals(UserStatus.REQUIRE_USERNAME_PASSWORD_CHANGE.toString())) {
+                user.setStatus(UserStatus.REQUIRE_PASSWORD_CHANGE.toString());
+            } else {
+                user.setStatus(UserStatus.ACTIVE.toString());
             }
-        } else if (user.getStatus().equals(UserStatus.REQUIRE_USERNAME_PASSWORD_CHANGE.toString())) {
-            user.setStatus(UserStatus.REQUIRE_PASSWORD_CHANGE.toString());
-        } else {
-            user.setStatus(UserStatus.ACTIVE.toString());
+            userRepository.save(user);
+            return userMapper.toUserResponse(user);
+        } catch (ExpiredJwtException e) {
+            throw new AppException(ErrorCode.TOKEN_EXPIRED);
+        } catch (Exception e) {
+            // Handle other authentication errors
+            throw new AppException(ErrorCode.UNAUTHENTICATED);
         }
-        userRepository.save(user);
-        return userMapper.toUserResponse(user);
+
     }
 
     @Override
