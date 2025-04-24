@@ -110,6 +110,9 @@ public class Booking extends BaseEntity {
     @OneToMany(mappedBy = "booking")
     private List<BookingDetail> bookingDetails = new ArrayList<>();
 
+    @OneToMany(mappedBy = "booking")
+    private List<Payment> payments = new ArrayList<>();
+
     @Size(max = 225)
     @Column(name = "booking_no", length = 225)
     private String bookingNo;

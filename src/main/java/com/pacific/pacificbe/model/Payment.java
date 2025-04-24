@@ -7,8 +7,10 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Nationalized;
+import org.springframework.data.annotation.CreatedDate;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -33,6 +35,11 @@ public class Payment extends BaseEntity {
     @Column(name = "payment_method", length = 50)
     private String paymentMethod;
 
+    @Size(max = 255)
+    @Nationalized
+    @Column(name = "txn_ref")
+    private String txnRef;
+
     @Size(max = 20)
     @Nationalized
     @ColumnDefault("'pending'")
@@ -47,8 +54,13 @@ public class Payment extends BaseEntity {
     @Column(name = "transaction_id", length = 50)
     private String transactionId;
 
-    @OneToMany(mappedBy = "payment")
-    private Set<Booking> bookings = new LinkedHashSet<>();
+    @Column(name = "expire_at")
+    private LocalDateTime expireAt;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "booking_id")
+    @JsonIgnore
+    private Booking booking;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
