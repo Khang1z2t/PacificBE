@@ -70,7 +70,7 @@ public class AdminBlogController {
         return ResponseEntity.ok(new ApiResponse<>(200, "Cập nhật thông tin thành công", updatedBlog));
     }
 
-    @GetMapping(UrlMapping.GET_BLOG_BY_SLUG)
+    @GetMapping
     @Operation(summary = "Lấy thông tin bài blog theo slug")
     public ResponseEntity<ApiResponse<BlogResponse>> getBlogBySlug(@RequestParam String slug,
                                                                    HttpServletRequest request) {

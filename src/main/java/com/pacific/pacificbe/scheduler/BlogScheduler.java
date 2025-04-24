@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Set;
 
-import static com.pacific.pacificbe.utils.Constant.BLOG_VIEW_KEYS;
+import static com.pacific.pacificbe.utils.Constant.BLOG_VIEW_COUNT_KEYS;
 
 @Slf4j
 @Component
@@ -24,24 +24,27 @@ public class BlogScheduler {
     @Scheduled(fixedRate = 300000) // Mỗi 5 phút
     @Transactional
     public void updateBlogView() {
-        Set<String> viewKeys = redisTemplate.keys(BLOG_VIEW_KEYS + "*");
+        Set<String> viewKeys = redisTemplate.keys(BLOG_VIEW_COUNT_KEYS + "[^:]*");
         if (viewKeys.isEmpty()) {
             return;
         }
         for (String key : viewKeys) {
-            String slug = key.replace(BLOG_VIEW_KEYS, "");
+            String slug = key.replace(BLOG_VIEW_COUNT_KEYS, "");
             String viewCountStr = redisTemplate.opsForValue().get(key);
             if (viewCountStr != null) {
-                int views = Integer.parseInt(viewCountStr);
-                if (views > 0) {
-                    // Cập nhật viewCount trong cơ sở dữ liệu
-                    Blog blog = blogRepository.findBySlug(slug).orElse(null);
-                    if (blog != null) {
-                        blog.setViewCount(blog.getViewCount() + views);
-                        blogRepository.save(blog);
+                try {
+                    int views = Integer.parseInt(viewCountStr);
+                    if (views > 0) {
+                        Blog blog = blogRepository.findBySlug(slug).orElse(null);
+                        if (blog != null) {
+                            blog.setViewCount(blog.getViewCount() + views);
+                            blogRepository.save(blog);
+                            log.info("Update blog view count: {}, blog: {}", blog.getViewCount(), blog.getTitle());
+                        }
+                        redisTemplate.delete(key);
                     }
-                    // Xóa key sau khi cập nhật
-                    redisTemplate.delete(key);
+                } catch (NumberFormatException e) {
+                    log.warn("Skipping key {} with non-numeric value: {}", key, viewCountStr);
                 }
             }
         }
