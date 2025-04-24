@@ -20,13 +20,13 @@ public class ApiResponse<T> {
     private String message = null;
     private T data;
     @Builder.Default
-    private LocalDateTime timestamp = LocalDateTime.now();
+    private Long timestamp = System.currentTimeMillis();
 
     public ApiResponse(int code, String message, T data) {
         this.code = code;
         this.message = message;
         this.data = data;
-        this.timestamp = LocalDateTime.now();
+        this.timestamp = System.currentTimeMillis();
     }
 
 }

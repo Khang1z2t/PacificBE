@@ -103,8 +103,8 @@ public class TourController {
 
     @PostMapping(UrlMapping.DELETE_TOUR)
     @Operation(summary = "Xóa tour theo id (Xóa bình thường là set active = false)")
-    public ResponseEntity<Boolean> deleteTour(@PathVariable String id, @RequestParam(required = true) boolean active) {
-        return ResponseEntity.ok(tourService.deleteTour(id, active));
+    public ResponseEntity<Boolean> deleteTour(@PathVariable String id, @RequestParam(required = false, defaultValue = "true") Boolean active) {
+        return ResponseEntity.ok(tourService.deleteTour(id, active != null && active));
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")

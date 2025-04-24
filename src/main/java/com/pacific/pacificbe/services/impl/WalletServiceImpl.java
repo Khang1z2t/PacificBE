@@ -32,6 +32,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.pacific.pacificbe.utils.Constant.SYS_WALLET_ID;
+
 @Transactional
 @Service
 @Slf4j
@@ -43,7 +45,6 @@ public class WalletServiceImpl implements WalletService {
     private final SystemWalletRepository systemWalletRepository;
     private final TransactionRepository transactionRepository;
 
-    private final String SYSTEM_WALLET_ID = "SYSTEM_WALLET"; // Replace with actual wallet ID
     private final IdUtil idUtil;
     private final BookingMapper bookingMapper;
 
@@ -71,7 +72,7 @@ public class WalletServiceImpl implements WalletService {
         booking.setNotes(reasonInfo);
         bookingRepository.save(booking);
 
-        SystemWallet systemWallet = systemWalletRepository.findById(SYSTEM_WALLET_ID)
+        SystemWallet systemWallet = systemWalletRepository.findById(SYS_WALLET_ID)
                 .orElseThrow(() -> new AppException(ErrorCode.WALLET_NOT_FOUND));
 
         String lastTransactionId = transactionRepository.findLatestWalletTransactionIdOfToday();
@@ -99,7 +100,7 @@ public class WalletServiceImpl implements WalletService {
         }
 
         if (request.isApproved()) {
-            SystemWallet systemWallet = systemWalletRepository.findById(SYSTEM_WALLET_ID)
+            SystemWallet systemWallet = systemWalletRepository.findById(SYS_WALLET_ID)
                     .orElseThrow(() -> new AppException(ErrorCode.WALLET_NOT_FOUND));
 
             BigDecimal refundAmount = booking.getTotalAmount().multiply(BigDecimal.valueOf(0.8));
@@ -146,7 +147,7 @@ public class WalletServiceImpl implements WalletService {
 
         Transaction transaction = new Transaction();
         transaction.setId(idUtil.generateTransactionId(lastTransactionId));
-        transaction.setWallet(systemWalletRepository.findById(SYSTEM_WALLET_ID).orElseThrow());
+        transaction.setWallet(systemWalletRepository.findById(SYS_WALLET_ID).orElseThrow());
         transaction.setUser(user);
         transaction.setAmount(amount);
         transaction.setType(WalletStatus.DEPOSIT.toString());
@@ -172,7 +173,7 @@ public class WalletServiceImpl implements WalletService {
 
         Transaction transaction = new Transaction();
         transaction.setId(idUtil.generateTransactionId(lastTransactionId));
-        transaction.setWallet(systemWalletRepository.findById(SYSTEM_WALLET_ID).orElseThrow());
+        transaction.setWallet(systemWalletRepository.findById(SYS_WALLET_ID).orElseThrow());
         transaction.setUser(user);
         transaction.setAmount(amount);
         transaction.setType(WalletStatus.WITHDRAW.toString());
@@ -271,7 +272,7 @@ public class WalletServiceImpl implements WalletService {
     @Override
     public SystemBalanceResponseDto getSystemBalance() {
 // Lấy ví hệ thống (giả sử chỉ có một ví hệ thống với ID cố định)
-        SystemWallet wallet = systemWalletRepository.findById(SYSTEM_WALLET_ID)
+        SystemWallet wallet = systemWalletRepository.findById(SYS_WALLET_ID)
                 .orElseThrow(() -> new AppException(ErrorCode.WALLET_NOT_FOUND));
 
         // Tính tổng tiền đã hoàn (từ các giao dịch REFUND thành công)
@@ -290,7 +291,7 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     public void depositSystemWallet(BigDecimal amount) {
-        SystemWallet systemWallet = systemWalletRepository.findById(SYSTEM_WALLET_ID)
+        SystemWallet systemWallet = systemWalletRepository.findById(SYS_WALLET_ID)
                 .orElseThrow(() -> new AppException(ErrorCode.WALLET_NOT_FOUND));
 
         systemWallet.setBalance(systemWallet.getBalance().add(amount));
@@ -300,7 +301,7 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     public void withdrawSystemWallet(BigDecimal amount) {
-        SystemWallet systemWallet = systemWalletRepository.findById(SYSTEM_WALLET_ID)
+        SystemWallet systemWallet = systemWalletRepository.findById(SYS_WALLET_ID)
                 .orElseThrow(() -> new AppException(ErrorCode.WALLET_NOT_FOUND));
 
         if (systemWallet.getBalance().compareTo(amount) < 0) {

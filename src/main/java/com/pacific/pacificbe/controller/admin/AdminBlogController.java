@@ -89,8 +89,9 @@ public class AdminBlogController {
 
     @DeleteMapping(UrlMapping.DELETE_BLOG)
     @Operation(summary = "Xóa bài blog theo ID")
-    public ResponseEntity<ApiResponse<Void>> deleteBlog(@PathVariable String id) {
-        blogService.deleteBlog(id);
+    public ResponseEntity<ApiResponse<Void>> deleteBlog(@PathVariable String id,
+                                                        @RequestParam(required = false, defaultValue = "true") Boolean active) {
+        blogService.deleteBlog(id, active != null && active);
         return ResponseEntity.ok(new ApiResponse<>(200, "Xóa bài blog thành công", null));
     }
 
@@ -121,9 +122,26 @@ public class AdminBlogController {
     @PostMapping(UrlMapping.CREATE_BLOG_CATEGORY)
     @Operation(summary = "Tạo mới một danh mục blog")
     public ResponseEntity<ApiResponse<BlogCategoryResponse>> createBlogCategory(@Valid @RequestBody BlogCategoryRequest request) {
-//        BlogCategoryResponse newCategory = blogService.createBlogCategory(request);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new ApiResponse<>(201, "Api đang trong quá trình thực hiện", null));
+                .body(new ApiResponse<>(201, "Api đang trong quá trình thực hiện",
+                        blogService.createBlogCategory(request)));
+    }
+
+    @PostMapping(UrlMapping.UPDATE_BLOG_CATEGORY)
+    @Operation(summary = "Cập nhật thông tin danh mục blog")
+    public ResponseEntity<ApiResponse<BlogCategoryResponse>> updateBlogCategory(
+            @PathVariable String id,
+            @Valid @RequestBody BlogCategoryRequest request) {
+        BlogCategoryResponse updatedCategory = blogService.updateBlogCategory(id, request);
+        return ResponseEntity.ok(new ApiResponse<>(200, "Cập nhật danh mục thành công", updatedCategory));
+    }
+
+    @DeleteMapping(UrlMapping.DELETE_BLOG_CATEGORY)
+    @Operation(summary = "Xóa danh mục blog theo ID")
+    public ResponseEntity<ApiResponse<Void>> deleteBlogCategory(@PathVariable String id,
+                                                                 @RequestParam(required = false, defaultValue = "true") Boolean active) {
+        blogService.deleteBlogCategory(id, active != null && active);
+        return ResponseEntity.ok(new ApiResponse<>(200, "Xóa danh mục blog thành công", null));
     }
 
 }

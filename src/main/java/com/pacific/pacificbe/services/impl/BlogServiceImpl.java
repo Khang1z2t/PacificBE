@@ -3,6 +3,7 @@ package com.pacific.pacificbe.services.impl;
 import com.pacific.pacificbe.dto.request.BlogRequest;
 import com.pacific.pacificbe.dto.request.UpdateBlogRequest;
 import com.pacific.pacificbe.dto.request.UpdateStatusBlogRequest;
+import com.pacific.pacificbe.dto.request.blog.BlogCategoryRequest;
 import com.pacific.pacificbe.dto.response.blog.BlogCategoryResponse;
 import com.pacific.pacificbe.dto.response.blog.BlogResponse;
 import com.pacific.pacificbe.exception.AppException;
@@ -35,6 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -116,13 +118,12 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public void deleteBlog(String id) {
+    public void deleteBlog(String id, boolean active) {
         Blog blog = blogRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.BLOG_NOT_FOUND));
-
-        // Xóa ảnh trước
-
-        blogRepository.delete(blog);
+        blog.setActive(active);
+        blog.setDeleteAt(active ? null : LocalDateTime.now());
+        blogRepository.save(blog);
     }
 
     @Override
@@ -141,13 +142,15 @@ public class BlogServiceImpl implements BlogService {
     public BlogResponse getBlogBySlug(String slug, HttpServletRequest request) {
         Blog blog = blogRepository.findBySlug(slug)
                 .orElseThrow(() -> new AppException(ErrorCode.BLOG_NOT_FOUND));
-        String clientIp = request.getRemoteAddr();
-        String viewCacheKey = BLOG_VIEW_CLIENT_KEYS + slug + ":" + clientIp;
-        String viewsKey = BLOG_VIEW_COUNT_KEYS + slug;
+        if (blog.getStatus().equals(BlogStatus.PUBLISHED)) {
+            String clientIp = request.getRemoteAddr();
+            String viewCacheKey = BLOG_VIEW_CLIENT_KEYS + slug + ":" + clientIp;
+            String viewsKey = BLOG_VIEW_COUNT_KEYS + slug;
 
-        if (Boolean.TRUE.equals(redisTemplate.opsForValue().setIfAbsent(viewCacheKey, "viewed", Duration.ofMinutes(30)))) {
-            redisTemplate.opsForValue().increment(viewsKey);
-            redisTemplate.expire(viewsKey, Duration.ofHours(1));
+            if (Boolean.TRUE.equals(redisTemplate.opsForValue().setIfAbsent(viewCacheKey, "viewed", Duration.ofMinutes(30)))) {
+                redisTemplate.opsForValue().increment(viewsKey);
+                redisTemplate.expire(viewsKey, Duration.ofHours(1));
+            }
         }
         return blogMapper.toBlogResponse(blog);
     }
@@ -156,6 +159,38 @@ public class BlogServiceImpl implements BlogService {
     public List<BlogCategoryResponse> getAllBlogCategories() {
         var blogCategory = blogCategoryRepository.findAll();
         return blogMapper.toBlogCategoryResponseList(blogCategory);
+    }
+
+    @Override
+    public BlogCategoryResponse createBlogCategory(BlogCategoryRequest request) {
+        BlogCategory blogCategory = new BlogCategory();
+        blogCategory.setName(request.getName());
+        blogCategory.setSlug(slugUtils.generateSlug(request.getName()));
+        blogCategory.setMetaTitle(request.getMetaTitle());
+        blogCategory.setMetaDescription(request.getMetaDescription());
+        blogCategoryRepository.save(blogCategory);
+        return blogMapper.toBlogCategoryResponse(blogCategory);
+    }
+
+    @Override
+    public BlogCategoryResponse updateBlogCategory(String id, BlogCategoryRequest request) {
+        BlogCategory blogCategory = blogCategoryRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
+        blogCategory.setName(request.getName());
+        blogCategory.setSlug(slugUtils.generateSlug(request.getName()));
+        blogCategory.setMetaTitle(request.getMetaTitle());
+        blogCategory.setMetaDescription(request.getMetaDescription());
+        blogCategoryRepository.save(blogCategory);
+        return blogMapper.toBlogCategoryResponse(blogCategory);
+    }
+
+    @Override
+    public void deleteBlogCategory(String id, boolean active) {
+        BlogCategory blogCategory = blogCategoryRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
+        blogCategory.setActive(active);
+        blogCategory.setDeleteAt(active ? null : LocalDateTime.now());
+        blogCategoryRepository.save(blogCategory);
     }
 
     private String processHtmlContent(String html) {

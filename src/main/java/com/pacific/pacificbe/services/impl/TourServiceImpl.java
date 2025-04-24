@@ -163,12 +163,9 @@ public class TourServiceImpl implements TourService {
         Tour tour = tourRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.TOUR_NOT_FOUND));
         tour.setActive(active);
-        tour.setDeleteAt(LocalDateTime.now());
-        if (active) {
-            tour.setStatus(TourStatus.PUBLISHED.toString());
-        } else {
-            tour.setStatus(TourStatus.UNAVAILABLE.toString());
-        }
+        tour.setDeleteAt(active ? null : LocalDateTime.now());
+        tour.setStatus(active ? TourStatus.PUBLISHED.toString() : TourStatus.UNAVAILABLE.toString());
+
         tourRepository.save(tour);
         return true;
     }

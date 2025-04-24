@@ -75,9 +75,55 @@ public class VNPAYServiceImpl implements VNPAYService {
                 bookingNo = parts[1];
             }
         }
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        Booking booking = bookingRepository.findByBookingNo(bookingNo)
+                .orElseThrow(() -> new AppException(ErrorCode.BOOKING_NOT_FOUND));
 
         // Tạo vnp_TxnRef duy nhất cho mỗi lần thanh toán
-        String vnp_TxnRef = bookingNo + "_" + System.currentTimeMillis();
+        Payment payment = paymentRepository.findByBooking_IdAndStatus(booking.getId(), PaymentStatus.PENDING.toString())
+                .orElse(null);
+        String vnp_TxnRef = null;
+
+        if (payment != null && payment.getExpireAt().isAfter(LocalDateTime.now())) {
+            // Sử dụng Payment PENDING hiện tại
+            vnp_TxnRef = payment.getTxnRef();
+            log.info("Sử dụng Payment PENDING {} với vnp_TxnRef {} cho booking {}",
+                    payment.getId(), vnp_TxnRef, bookingNo);
+        } else {
+            // Đánh dấu Payment cũ là EXPIRED nếu có
+            if (payment != null) {
+                payment.setStatus(PaymentStatus.EXPIRED.toString());
+                payment.setUpdatedAt(LocalDateTime.now());
+                paymentRepository.save(payment);
+                log.info("Đánh dấu Payment {} là EXPIRED cho booking {}", payment.getId(), bookingNo);
+            }
+
+            // Tạo Payment mới
+            vnp_TxnRef = bookingNo + "_" + System.currentTimeMillis();
+            if (paymentRepository.existsByTxnRef(vnp_TxnRef)) {
+                throw new AppException(ErrorCode.UNCATEGORIZED_EXCEPTION);
+            }
+
+            payment = new Payment();
+            payment.setCreatedAt(LocalDateTime.now());
+            payment.setUser(user);
+            payment.setBooking(booking);
+            payment.setTotalAmount(new BigDecimal(vnpayRequest.getAmount()));
+            payment.setStatus(PaymentStatus.PENDING.toString());
+            payment.setTxnRef(vnp_TxnRef);
+            payment.setPaymentMethod("VNPAY");
+
+            payment.setExpireAt(LocalDateTime.now().plusMinutes(30));
+            paymentRepository.save(payment);
+
+            // Cập nhật Payment hiện tại cho Booking
+            booking.setPayment(payment);
+            bookingRepository.save(booking);
+
+            log.info("Tạo Payment mới {} với vnp_TxnRef {} cho booking {}",
+                    payment.getId(), vnp_TxnRef, bookingNo);
+        }
 
         String vnp_Version = "2.1.0";
         String vnp_Command = "pay";
@@ -92,7 +138,7 @@ public class VNPAYServiceImpl implements VNPAYService {
         vnp_Params.put("vnp_Amount", String.valueOf(vnpayRequest.getAmount() * 100));
         vnp_Params.put("vnp_CurrCode", "VND");
         vnp_Params.put("vnp_TxnRef", vnp_TxnRef);
-        vnp_Params.put("vnp_OrderInfo", vnpayRequest.getOrderInfo());
+        vnp_Params.put("vnp_OrderInfo", vnpayRequest.getOrderInfo() + "|" + vnp_TxnRef);
         vnp_Params.put("vnp_OrderType", orderType);
         vnp_Params.put("vnp_Locale", "vn");
 
@@ -105,7 +151,7 @@ public class VNPAYServiceImpl implements VNPAYService {
         String vnp_CreateDate = formatter.format(cld.getTime());
         vnp_Params.put("vnp_CreateDate", vnp_CreateDate);
 
-        cld.add(Calendar.MINUTE, 15);
+        cld.add(Calendar.MINUTE, 30);
         String vnp_ExpireDate = formatter.format(cld.getTime());
         vnp_Params.put("vnp_ExpireDate", vnp_ExpireDate);
 
@@ -182,27 +228,54 @@ public class VNPAYServiceImpl implements VNPAYService {
         String[] parts = orderInfo.split("\\|");
         String userId = parts[0];
         String bookingNo = parts[1];
+        String vnp_TxnRef = parts[2];
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new AppException(ErrorCode.USER_NOT_FOUND));
 //        tối giản code, hay vì return lỗi ở dưới thì return ở trên
         Booking booking = bookingRepository.findByBookingNo(bookingNo)
                 .orElseThrow(() -> new AppException(ErrorCode.BOOKING_NOT_FOUND));
+        Payment payment = paymentRepository.findByTxnRef(vnp_TxnRef).orElseThrow(
+                () -> new AppException(ErrorCode.PAYMENT_NOT_FOUND));
 
-        if ("00".equals(request.getVnp_ResponseCode())) {
-            Payment payment = new Payment();
-            payment.setTransactionId(request.getVnp_TransactionNo());
-            payment.setActive(true);
-            payment.setTotalAmount(
-                    new BigDecimal(request.getVnp_Amount())
-                            .divide(new BigDecimal(100), RoundingMode.HALF_UP)
-                            .setScale(2, RoundingMode.HALF_UP)
-            );
+        String lastTransactionId = transactionRepository.findLatestWalletTransactionIdOfToday();
+        BigDecimal paymentAmount = new BigDecimal(request.getVnp_Amount())
+                .divide(new BigDecimal(100), RoundingMode.HALF_UP)
+                .setScale(2, RoundingMode.HALF_UP);
+
+        boolean isSuccess = "00".equals(request.getVnp_ResponseCode());
+        if (isSuccess) {
             payment.setStatus(PaymentStatus.COMPLETED.toString());
-            payment.setUser(user);
-            payment.setNote(bookingNo);
-            paymentRepository.save(payment);
+            payment.setNote(request.getVnp_TransactionNo());
+            payment.setTransactionId(idUtil.generateTransactionId(lastTransactionId));
+        } else {
+            payment.setStatus(payment.getExpireAt().isAfter(LocalDateTime.now())
+                    ? PaymentStatus.PENDING.toString()
+                    : PaymentStatus.EXPIRED.toString());
+        }
+        paymentRepository.save(payment);
+
+        if (isSuccess) {
+            SystemWallet systemWallet = systemWalletRepository.findById("SYSTEM_WALLET")
+                    .orElseThrow(() -> new AppException(ErrorCode.WALLET_NOT_FOUND));
+            // Cập nhật số dư cho system_wallet
+            systemWallet.setBalance(systemWallet.getBalance().add(paymentAmount));
+            systemWallet.setUpdatedAt(LocalDateTime.now());
+            systemWalletRepository.save(systemWallet);
+
+            // Ghi log giao dịch vào wallet_transaction
+            Transaction transaction = new Transaction();
+            transaction.setId(idUtil.generateTransactionId(lastTransactionId));
+            transaction.setWallet(systemWallet);
+            transaction.setBooking(booking);
+            transaction.setUser(user);
+            transaction.setAmount(paymentAmount);
+            transaction.setType(WalletStatus.WITHDRAW.toString());
+            transaction.setStatus(WalletStatus.COMPLETED.toString());
+            transaction.setDescription("Thanh toán: " + bookingNo);
+            transactionRepository.save(transaction);
 
             booking.setStatus(BookingStatus.PAID.toString());
+            booking.setTransaction(transaction);
             bookingRepository.save(booking);
             // Gửi email xác nhận thanh toán thành công
             String qrCodeData = booking.getBookingNo();
@@ -219,41 +292,8 @@ public class VNPAYServiceImpl implements VNPAYService {
                     getBookingTicket(booking),
                     attachments);
             log.info("Gửi email xác nhận thanh toán thành công cho booking: {}", booking.getBookingNo());
-//            Gui tien vao vi system
-
-            // Cập nhật số dư cho system_wallet
-            SystemWallet systemWallet = systemWalletRepository.findById("SYSTEM_WALLET")
-                    .orElseThrow(() -> new AppException(ErrorCode.WALLET_NOT_FOUND));
-            BigDecimal paymentAmount = payment.getTotalAmount();
-            systemWallet.setBalance(systemWallet.getBalance().add(paymentAmount));
-            systemWallet.setUpdatedAt(LocalDateTime.now());
-            systemWalletRepository.save(systemWallet);
-
-            String lastTransactionId = transactionRepository.findLatestWalletTransactionIdOfToday();
-
-            // Ghi log giao dịch vào wallet_transaction
-            Transaction transaction = new Transaction();
-            transaction.setId(idUtil.generateTransactionId(lastTransactionId));
-            transaction.setWallet(systemWallet);
-            transaction.setBooking(booking);
-            transaction.setUser(user);
-            transaction.setAmount(paymentAmount);
-            transaction.setType(WalletStatus.WITHDRAW.toString());
-            transaction.setStatus(WalletStatus.COMPLETED.toString());
-            transaction.setDescription("Thanh toán: " + bookingNo);
-            transactionRepository.save(transaction);
             return new RedirectView(UrlMapping.PAYMENT_SUCCESS);
         } else {
-//                Payment payment = new Payment();
-//                payment.setTransactionId(request.getVnp_TransactionNo());
-//                payment.setActive(true);
-//                payment.setTotalAmount(new BigDecimal(request.getVnp_Amount()).divide(new BigDecimal(100)).setScale(2, RoundingMode.HALF_UP));
-//                payment.setStatus(PaymentStatus.FAILED.toString());
-//                payment.setUser(user);
-//                payment.setNote(bookingNo);
-//                paymentRepository.save(payment);
-//                booking.setStatus(BookingStatus.PENDING.toString());
-//                bookingRepository.save(booking);
             return new RedirectView(UrlMapping.PAYMENT_FAIL);
         }
     }

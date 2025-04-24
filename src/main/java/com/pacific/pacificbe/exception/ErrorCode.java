@@ -123,6 +123,7 @@ public enum ErrorCode {
     CANNOT_GENERATE_QR(2001, "Cannot generate QR code", HttpStatus.INTERNAL_SERVER_ERROR),
 
     //Vi (Wallet)
+    PAYMENT_NOT_FOUND(2000, "Payment not found", HttpStatus.NOT_FOUND),
     WALLET_NOT_FOUND(2002, "Wallet not found", HttpStatus.NOT_FOUND),
     WALLET_NOT_ENOUGH(2003, "Wallet not enough", HttpStatus.NOT_FOUND),
     INVALID_REFUND_AMOUNT(2004, "Invalid refund amount", HttpStatus.NOT_FOUND),

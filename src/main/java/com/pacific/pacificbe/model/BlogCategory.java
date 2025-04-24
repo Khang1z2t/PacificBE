@@ -13,7 +13,7 @@ import org.hibernate.annotations.Nationalized;
 @Table(name = "blog_categories", indexes = {
         @Index(name = "idx_blog_category_slug", columnList = "slug")
 })
-public class BlogCategory {
+public class BlogCategory extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id")
