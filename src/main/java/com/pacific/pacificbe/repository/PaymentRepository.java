@@ -12,9 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Repository
-public interface PaymentRepository extends JpaRepository<Payment, String>{
+public interface PaymentRepository extends JpaRepository<Payment, String> {
     List<Payment> findAllByUser(User user);
 
-    @Query("select p from Payment p inner join p.bookings bookings where bookings.user.id = ?1 and p.user.id = ?2")
-    List<Payment> findByUserId(@Nullable String id, @Nullable String id1);
 }
