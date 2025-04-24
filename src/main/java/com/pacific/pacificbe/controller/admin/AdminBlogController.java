@@ -53,7 +53,7 @@ public class AdminBlogController {
 
     @PostMapping(value = UrlMapping.CREATE_BLOG, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "Tạo mới một bài Blog")
-    public ResponseEntity<ApiResponse<BlogResponse>> createBlog(@Valid @RequestBody BlogRequest request,
+    public ResponseEntity<ApiResponse<BlogResponse>> createBlog(@Valid @ModelAttribute BlogRequest request,
                                                                 @RequestParam(required = false) MultipartFile thumbnail) {
         BlogResponse newBlog = blogService.createBlog(request, thumbnail);
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -70,7 +70,7 @@ public class AdminBlogController {
         return ResponseEntity.ok(new ApiResponse<>(200, "Cập nhật thông tin thành công", updatedBlog));
     }
 
-    @GetMapping
+    @GetMapping(value = UrlMapping.GET_BLOG_BY_SLUG)
     @Operation(summary = "Lấy thông tin bài blog theo slug")
     public ResponseEntity<ApiResponse<BlogResponse>> getBlogBySlug(@RequestParam String slug,
                                                                    HttpServletRequest request) {
