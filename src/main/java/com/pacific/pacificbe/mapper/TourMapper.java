@@ -1,10 +1,7 @@
 package com.pacific.pacificbe.mapper;
 
 import com.pacific.pacificbe.dto.request.CreateTourRequest;
-import com.pacific.pacificbe.dto.response.BaseTourResponse;
-import com.pacific.pacificbe.dto.response.TourDetailResponse;
-import com.pacific.pacificbe.dto.response.TourByIdResponse;
-import com.pacific.pacificbe.dto.response.TourResponse;
+import com.pacific.pacificbe.dto.response.*;
 import com.pacific.pacificbe.model.Tour;
 import com.pacific.pacificbe.model.TourDetail;
 import com.pacific.pacificbe.utils.IdUtil;
@@ -79,7 +76,7 @@ public class TourMapper {
             tourResponse.setCategoryId(tour.getCategory().getId());
         }
         if (tour.getDestination() != null) {
-            tourResponse.setDestinationId(tour.getDestination().getId());
+            tourResponse.setDestination(modelMapper.map(tour.getDestination(), DestinationResponse.class));
         }
 
         if (tour.getTourDetails() != null) {

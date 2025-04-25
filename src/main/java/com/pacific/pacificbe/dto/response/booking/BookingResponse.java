@@ -2,6 +2,7 @@ package com.pacific.pacificbe.dto.response.booking;
 
 import com.pacific.pacificbe.dto.response.PaymentResponse;
 import com.pacific.pacificbe.dto.response.ReviewResponseBooking;
+import com.pacific.pacificbe.dto.response.voucher.VoucherSimpleResponse;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -29,7 +30,7 @@ public class BookingResponse {
     String specialRequests;
     String tourDetailId;
     String status;
-    String voucherId;
+    VoucherSimpleResponse voucher;
     String userId;
     LocalDateTime startDate;
     String notes;

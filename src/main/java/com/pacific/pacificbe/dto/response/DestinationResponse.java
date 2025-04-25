@@ -1,13 +1,17 @@
 package com.pacific.pacificbe.dto.response;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
+
 import java.util.UUID;
 
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class DestinationResponse {
-    private UUID id;
+    private String id;
     private String city;
     private String country;
     private String fullAddress;

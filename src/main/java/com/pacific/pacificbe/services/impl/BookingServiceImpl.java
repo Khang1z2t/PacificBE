@@ -165,11 +165,12 @@ public class BookingServiceImpl implements BookingService {
     @Transactional
     public BookingResponse bookingTour(String tourDetailId, BookingRequest request) {
         String userId = AuthUtils.getCurrentUserId();
-        var user = userRepository.findById(userId)
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
-        var tourDetail = tourDetailRepository.findById(tourDetailId)
+        TourDetail tourDetail = tourDetailRepository.findById(tourDetailId)
                 .orElseThrow(() -> new AppException(ErrorCode.TOUR_DETAIL_NOT_FOUND));
+        
 
         String lastBookingNo = bookingRepository.findLatestBookingNoOfToday();
 

@@ -4,6 +4,7 @@ import com.pacific.pacificbe.dto.request.BookingRequest;
 import com.pacific.pacificbe.dto.response.booking.BookingDetailResponse;
 import com.pacific.pacificbe.dto.response.booking.BookingResponse;
 import com.pacific.pacificbe.dto.response.ReviewResponseBooking;
+import com.pacific.pacificbe.dto.response.voucher.VoucherSimpleResponse;
 import com.pacific.pacificbe.model.*;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -40,7 +41,7 @@ public class BookingMapper {
         }
 
         if (booking.getVoucher() != null) {
-            bookingResponse.setVoucherId(booking.getVoucher().getId());
+            bookingResponse.setVoucher(modelMapper.map(booking.getVoucher(), VoucherSimpleResponse.class));
         }
 
         List<BookingDetailResponse> detailResponses = booking.getBookingDetails().stream()
