@@ -6,6 +6,7 @@ public class Constant {
     public static final String BLOG_VIEW_COUNT_KEYS = "blog:views:"; // Cho số lượt xem
     public static final String BLOG_VIEW_CLIENT_KEYS = "blog:view:client:";
     public static final String SYS_WALLET_ID = "SYSTEM_WALLET";
+    public static final String OTP_KEY = "otp:";
     public static final Integer MAX_ATTEMPTS = 5;
     public static final Long MAX_FILE_SIZE = 10485760L; // 10MB
     public static final Integer MAX_META_DESCRIPTION_LENGTH = 160;
