@@ -16,10 +16,6 @@ public class UpdateTourRequest {
     String description;
     @Schema(description = "Độ dài tour", example = "3")
     Integer duration;
-    @Schema(description = "Trạng thái tour", example = "PUBLISHED/DRAFT")
-    String status;
-    @Schema(description = "Hoạt động hay không", example = "true")
-    Boolean active;
     @Schema(description = "Id của category", example = "8ab68a08-4d28-43f7-9b37-61bfdc02cd48")
     String categoryId;
     @Schema(description = "Id của điểm đến")

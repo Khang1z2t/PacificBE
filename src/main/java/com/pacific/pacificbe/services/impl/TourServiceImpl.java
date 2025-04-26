@@ -125,7 +125,6 @@ public class TourServiceImpl implements TourService {
         tour.setTitle(request.getTitle());
         tour.setDescription(request.getDescription());
         tour.setDuration(request.getDuration());
-        tour.setStatus(request.getStatus());
         Category category = categoryRepository.findById(request.getCategoryId())
                 .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
         tour.setCategory(category);

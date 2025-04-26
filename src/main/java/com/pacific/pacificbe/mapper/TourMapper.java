@@ -83,7 +83,6 @@ public class TourMapper {
         }
 
         tourResponse.setStatus(tour.getStatus());
-        System.out.println("tour ID: " + tour.getId() + "TourStatus: " + tour.getStatus());
         if (tour.getTourDetails() != null) {
             tourResponse.setRatingAvg(tour.getTourDetails().stream()
                     .map(TourDetail::getRatingAvg)

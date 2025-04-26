@@ -25,18 +25,19 @@ public interface TourDetailRepository extends JpaRepository<TourDetail, String> 
 
     //Tìm tháng tour theo id tour
     @Query(value = """
-            SELECT\s
+            SELECT
                     createdMonth,
                     tour_id,
                     STRING_AGG(status, ',') AS status
                 FROM (
-                    SELECT DISTINCT\s
+                    SELECT DISTINCT
                         FORMAT(td.start_date, 'yyyy-MM') AS createdMonth,
                         td.tour_id,
                         td.status
                     FROM tour_details td
-                    WHERE td.tour_id = :tourId\s
-                        OR LOWER(td.tour_id) LIKE LOWER(CONCAT('%', :tourId, '%'))
+                    WHERE (td.tour_id = :tourId
+                        OR LOWER(td.tour_id) LIKE LOWER(CONCAT('%', :tourId, '%')))
+                        AND td.status != 'CLOSED'
                 ) AS distinct_statuses
                 GROUP BY createdMonth, tour_id
             """, nativeQuery = true)
