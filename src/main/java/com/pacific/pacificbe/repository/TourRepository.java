@@ -114,4 +114,6 @@ public interface TourRepository extends JpaRepository<Tour, String> {
 
     @Query("select t from Tour t left join t.tourDetails tourDetails where tourDetails.id in ?1")
     List<Tour> findByTourDetails_IdIn(Collection<String> ids);
+
+    List<Tour> findByDestination_RegionLikeIgnoreCase(String region);
 }

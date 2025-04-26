@@ -195,6 +195,12 @@ public class TourServiceImpl implements TourService {
         return tourMapper.toTourResponseList(tours);
     }
 
+    @Override
+    public List<TourResponse> getToursByDestinationRegion(String region) {
+        List<Tour> tours = tourRepository.findByDestination_RegionLikeIgnoreCase(region);
+        return tourMapper.toTourResponseList(tours);
+    }
+
     public void queueImagesForUpload(MultipartFile[] images, String tourId) {
         try {
             for (MultipartFile image : images) {

@@ -10,6 +10,7 @@ import com.pacific.pacificbe.dto.request.UpdateTourRequest;
 import com.pacific.pacificbe.dto.response.tour.TourByIdResponse;
 import com.pacific.pacificbe.dto.response.tour.TourResponse;
 import com.pacific.pacificbe.dto.response.showTour.TourDateResponse;
+import com.pacific.pacificbe.model.Tour;
 import com.pacific.pacificbe.services.GoogleDriveService;
 import com.pacific.pacificbe.services.TourService;
 import com.pacific.pacificbe.utils.UrlMapping;
@@ -62,6 +63,12 @@ public class TourController {
     @Operation(summary = "Lấy tour theo tour detail id")
     public ResponseEntity<ApiResponse<TourResponse>> getTourByTourDetailId(@PathVariable String id) {
         return ResponseEntity.ok(new ApiResponse<>(200, "Hoàn thành", tourService.getTourByTourDetailId(id)));
+    }
+
+    @GetMapping(UrlMapping.GET_TOUR_BY_DESTINATION_REGION)
+    @Operation(summary = "Lấy danh sách tour theo vùng miền")
+    public ResponseEntity<ApiResponse<List<TourResponse>>> getToursByDestinationRegion(@PathVariable String region) {
+        return ResponseEntity.ok(new ApiResponse<>(200, "Hoàn thành", tourService.getToursByDestinationRegion(region)));
     }
 
     @PostMapping(value = UrlMapping.ADD_TOUR, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

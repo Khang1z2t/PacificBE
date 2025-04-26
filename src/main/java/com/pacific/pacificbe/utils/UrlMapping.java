@@ -62,6 +62,7 @@ public class UrlMapping {
     public static final String GET_TOUR_BY_ID = "/{id}";
     public static final String GET_TOUR_BY_IDS = "/tour-detail/ids";
     public static final String GET_TOUR_BY_NO = "/no/{tourNo}";
+    public static final String GET_TOUR_BY_DESTINATION_REGION = "/destination/{region}";
     public static final String GET_TOUR_BY_TOUR_DETAIL_ID = "/tour-detail/{id}";
     public static final String GET_TOUR_BY_DATE = "/date/{startDate}/{endDate}";
     public static final String ADD_TOUR_THUMBNAIL = "/add-thumbnail/{id}";
