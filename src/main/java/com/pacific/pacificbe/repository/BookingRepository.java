@@ -7,6 +7,7 @@ import com.pacific.pacificbe.dto.response.report.Revenue;
 import com.pacific.pacificbe.dto.response.report.TourAndBookReport;
 import com.pacific.pacificbe.model.Booking;
 import com.pacific.pacificbe.model.User;
+import com.pacific.pacificbe.model.Voucher;
 import com.pacific.pacificbe.utils.enums.BookingStatus;
 import com.pacific.pacificbe.utils.enums.TourDetailStatus;
 
@@ -271,4 +272,7 @@ public interface BookingRepository extends JpaRepository<Booking, String> {
         """)
     List<Booking> findByCreatedAt(@Param("startDate") LocalDateTime startDate,
                                   @Param("endDate") LocalDateTime endDate);
+
+    @Query("select (count(b) > 0) from Booking b where b.voucher.id = ?1")
+    boolean existsByVoucher_Id(String id);
 }

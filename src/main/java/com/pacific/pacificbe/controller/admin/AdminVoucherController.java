@@ -65,9 +65,16 @@ public class AdminVoucherController {
 
     @DeleteMapping(UrlMapping.DELETE_VOUCHER)
     @Operation(summary = "Xóa voucher")
-    public ResponseEntity<ApiResponse<String>> deleteVoucher(@PathVariable String id) {
-        voucherService.deleteVoucher(id);
+    public ResponseEntity<ApiResponse<String>> deleteVoucher(@PathVariable String id, @RequestParam Boolean active) {
+        voucherService.deleteVoucher(id, active != null && active);
         return ResponseEntity.ok(new ApiResponse<>(200, "Xóa thành công", "Voucher đã được xóa"));
+    }
+
+    @DeleteMapping(UrlMapping.DELETE_VOUCHER_FORCE)
+    @Operation(summary = "Xóa vĩnh viễn voucher")
+    public ResponseEntity<ApiResponse<String>> deleteVoucherForce(@PathVariable String id) {
+        voucherService.deleteVoucherForce(id);
+        return ResponseEntity.ok(new ApiResponse<>(200, "Xóa thành công", "Voucher đã được xóa vĩnh viễn"));
     }
 
     @GetMapping(UrlMapping.CHECK_VOUCHER)

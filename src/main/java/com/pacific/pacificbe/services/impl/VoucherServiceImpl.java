@@ -80,12 +80,23 @@ public class VoucherServiceImpl implements VoucherService {
     }
 
     @Override
-    public void deleteVoucher(String id) {
+    public void deleteVoucher(String id, boolean active) {
         Voucher voucher = voucherRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.VOUCHER_NOT_FOUND));
         voucher.setDeleteAt(LocalDateTime.now());
         voucher.setStatus(VoucherStatus.INACTIVE.toString());
+        voucher.setActive(active);
         voucherRepository.save(voucher);
+    }
+
+    @Override
+    public void deleteVoucherForce(String id) {
+        Voucher voucher = voucherRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.VOUCHER_NOT_FOUND));
+        if (bookingRepository.existsByVoucher_Id(voucher.getId())) {
+            return;
+        }
+        voucherRepository.delete(voucher);
     }
 
     @Override

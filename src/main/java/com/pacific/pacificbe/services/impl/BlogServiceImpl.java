@@ -122,9 +122,7 @@ public class BlogServiceImpl implements BlogService {
     public void deleteBlog(String id, boolean active) {
         Blog blog = blogRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.BLOG_NOT_FOUND));
-        blog.setActive(active);
-        blog.setDeleteAt(active ? null : LocalDateTime.now());
-        blogRepository.save(blog);
+        blogRepository.delete(blog);
     }
 
     @Override

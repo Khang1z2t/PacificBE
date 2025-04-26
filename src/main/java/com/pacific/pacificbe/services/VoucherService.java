@@ -15,7 +15,9 @@ public interface VoucherService {
 
     VoucherResponse updateVoucher(String id, VoucherRequest request);
 
-    void deleteVoucher(String id);
+    void deleteVoucher(String id, boolean active);
+
+    void deleteVoucherForce(String id);
 
     VoucherResponse updateStatus(String id, String status);
 

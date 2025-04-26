@@ -230,6 +230,7 @@ public class UrlMapping {
     public static final String UPDATE_VOUCHER = "/update/{id}";
     public static final String UPDATE_STATUS_VOUCHER = "/updateStatus/{id}";
     public static final String DELETE_VOUCHER = "/delete/{id}";
+    public static final String DELETE_VOUCHER_FORCE = "/delete-force/{id}";
     public static final String CHECK_VOUCHER = "/check-voucher";
     /* =========================== End Admin Voucher API ===================================== */
 
