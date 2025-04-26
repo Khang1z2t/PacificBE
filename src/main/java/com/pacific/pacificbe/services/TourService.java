@@ -6,6 +6,7 @@ import com.pacific.pacificbe.dto.response.tour.TourByIdResponse;
 import com.pacific.pacificbe.dto.response.tour.TourResponse;
 import com.pacific.pacificbe.dto.response.showTour.TourBookingCount;
 import com.pacific.pacificbe.dto.response.showTour.TourDateResponse;
+import com.pacific.pacificbe.model.Tour;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
@@ -37,4 +38,5 @@ public interface TourService {
 
     List<TourResponse> getToursByTourDetailIds(List<String> ids);
 
+    List<TourResponse> getToursByDestinationRegion(String region);
 }
