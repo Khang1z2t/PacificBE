@@ -43,11 +43,12 @@ public class TourController {
             @RequestParam(required = false) BigDecimal maxPrice,
             @RequestParam(required = false) String categoryId,
             @RequestParam(required = false) LocalDateTime startDate,
-            @RequestParam(required = false) LocalDateTime endDate
+            @RequestParam(required = false) LocalDateTime endDate,
+            @RequestParam(required = false) String region
     ) {
         return ResponseEntity.ok(
                 ApiResponse.<List<TourResponse>>builder()
-                        .data(tourService.getAllTours(title, minPrice, maxPrice, categoryId, startDate, endDate))
+                        .data(tourService.getAllTours(title, minPrice, maxPrice, categoryId, startDate, endDate, region))
                         .build()
         );
     }
@@ -63,12 +64,6 @@ public class TourController {
     @Operation(summary = "Lấy tour theo tour detail id")
     public ResponseEntity<ApiResponse<TourResponse>> getTourByTourDetailId(@PathVariable String id) {
         return ResponseEntity.ok(new ApiResponse<>(200, "Hoàn thành", tourService.getTourByTourDetailId(id)));
-    }
-
-    @GetMapping(UrlMapping.GET_TOUR_BY_DESTINATION_REGION)
-    @Operation(summary = "Lấy danh sách tour theo vùng miền")
-    public ResponseEntity<ApiResponse<List<TourResponse>>> getToursByDestinationRegion(@PathVariable String region) {
-        return ResponseEntity.ok(new ApiResponse<>(200, "Hoàn thành", tourService.getToursByDestinationRegion(region)));
     }
 
     @PostMapping(value = UrlMapping.ADD_TOUR, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

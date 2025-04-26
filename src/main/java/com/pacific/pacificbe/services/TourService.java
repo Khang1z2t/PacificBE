@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface TourService {
-    List<TourResponse> getAllTours(String title, BigDecimal minPrice, BigDecimal maxPrice, String categoryId, LocalDateTime startDate, LocalDateTime endDate);
+    List<TourResponse> getAllTours(String title, BigDecimal minPrice, BigDecimal maxPrice, String categoryId, LocalDateTime startDate, LocalDateTime endDate, String region);
 
     TourByIdResponse getTourById(String id);
 
@@ -38,5 +38,4 @@ public interface TourService {
 
     List<TourResponse> getToursByTourDetailIds(List<String> ids);
 
-    List<TourResponse> getToursByDestinationRegion(String region);
 }

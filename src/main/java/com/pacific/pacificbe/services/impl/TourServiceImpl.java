@@ -47,10 +47,10 @@ public class TourServiceImpl implements TourService {
     private final RedisTemplate<Object, Object> redisTemplate;
     private final CacheService cacheService;
 
-    @Cacheable(value = "allTours", key = "#title + '-' + #minPrice + '-' + #maxPrice + '-' + #categoryId + '-' + #startDate + '-' + #endDate")
+    @Cacheable(value = "allTours", key = "#title + '-' + #minPrice + '-' + #maxPrice + '-' + #categoryId + '-' + #startDate + '-' + #endDate+ '-' + #region")
     @Override
-    public List<TourResponse> getAllTours(String title, BigDecimal minPrice, BigDecimal maxPrice, String categoryId, LocalDateTime startDate, LocalDateTime endDate) {
-        List<Tour> tours = tourRepository.findAllWithFilters(title, minPrice, maxPrice, categoryId, startDate, endDate);
+    public List<TourResponse> getAllTours(String title, BigDecimal minPrice, BigDecimal maxPrice, String categoryId, LocalDateTime startDate, LocalDateTime endDate, String region) {
+        List<Tour> tours = tourRepository.findAllWithFilters(title, minPrice, maxPrice, categoryId, startDate, endDate, region);
         return tourMapper.toTourResponseList(tours);
     }
 
@@ -190,11 +190,6 @@ public class TourServiceImpl implements TourService {
         return tourMapper.toTourResponseList(tours);
     }
 
-    @Override
-    public List<TourResponse> getToursByDestinationRegion(String region) {
-        List<Tour> tours = tourRepository.findByDestination_RegionLikeIgnoreCase(region);
-        return tourMapper.toTourResponseList(tours);
-    }
 
     public void queueImagesForUpload(MultipartFile[] images, String tourId) {
         try {

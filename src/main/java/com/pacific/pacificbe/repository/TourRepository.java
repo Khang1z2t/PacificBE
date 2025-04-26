@@ -41,10 +41,12 @@ public interface TourRepository extends JpaRepository<Tour, String> {
                   AND (:startDate IS NULL OR :endDate IS NULL OR start_date BETWEEN :startDate AND :endDate)
                 GROUP BY tour_id
             ) price_summary ON price_summary.tour_id = t.id
+            LEFT JOIN destination d ON d.id = t.destination_id
             WHERE (:title IS NULL OR LOWER(TRIM(t.title)) LIKE CONCAT('%', LOWER(TRIM(:title)), '%'))
               AND (:categoryId IS NULL OR t.category_id = :categoryId)
               AND (:minPrice IS NULL OR price_summary.min_price >= :minPrice OR price_summary.min_price IS NULL)
               AND (:maxPrice IS NULL OR price_summary.max_price <= :maxPrice OR price_summary.max_price IS NULL)
+              AND (:region IS NULL OR LOWER(TRIM(d.region)) LIKE CONCAT('%', LOWER(TRIM(:region)), '%'))
               AND t.active = 1
             """, nativeQuery = true)
     List<Tour> findAllWithFilters(
@@ -53,7 +55,8 @@ public interface TourRepository extends JpaRepository<Tour, String> {
             @Param("maxPrice") BigDecimal maxPrice,
             @Param("categoryId") String categoryId,
             @Param("startDate") LocalDateTime startDate,
-            @Param("endDate") LocalDateTime endDate);
+            @Param("endDate") LocalDateTime endDate,
+            @Param("region") String region);
 
     List<Tour> findToursByActiveIsTrue();
 
@@ -115,5 +118,4 @@ public interface TourRepository extends JpaRepository<Tour, String> {
     @Query("select t from Tour t left join t.tourDetails tourDetails where tourDetails.id in ?1")
     List<Tour> findByTourDetails_IdIn(Collection<String> ids);
 
-    List<Tour> findByDestination_RegionLikeIgnoreCase(String region);
 }
