@@ -32,8 +32,6 @@ public interface TourService {
 
     Boolean deleteTourForce(String id);
 
-    List<TourDateResponse> getToursByDate(LocalDateTime startDate, LocalDateTime endDate);
-
     TourResponse getTourByTourDetailId(String tourDetailId);
 
     List<TourResponse> getToursByTourDetailIds(List<String> ids);

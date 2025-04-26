@@ -116,13 +116,6 @@ public class TourController {
         return ResponseEntity.ok(googleDriveService.uploadImageToDrive(file, FolderType.TOUR));
     }
 
-    @GetMapping(UrlMapping.GET_TOUR_BY_DATE)
-    @Operation(summary = "Lấy danh sách tour theo ngày")
-    public ResponseEntity<List<TourDateResponse>> getToursByDate(@PathVariable LocalDateTime startDate,
-                                                                 @PathVariable LocalDateTime endDate) {
-        return ResponseEntity.ok(tourService.getToursByDate(startDate, endDate));
-    }
-
     @PostMapping(UrlMapping.GET_TOUR_BY_IDS)
     @Operation(summary = "Lấy danh sách tour theo danh sách id")
     public ResponseEntity<List<TourResponse>> getToursByTourDetailIds(@RequestBody List<String> ids) {

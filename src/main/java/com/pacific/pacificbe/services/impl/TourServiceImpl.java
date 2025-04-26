@@ -171,11 +171,6 @@ public class TourServiceImpl implements TourService {
     }
 
     @Override
-    public List<TourDateResponse> getToursByDate(LocalDateTime startDate, LocalDateTime endDate) {
-        return tourRepository.findToursByDate(startDate, endDate);
-    }
-
-    @Override
     public TourResponse getTourByTourDetailId(String tourDetailId) {
         var tourDetail = tourDetailRepository.findById(tourDetailId).orElseThrow(
                 () -> new AppException(ErrorCode.TOUR_DETAIL_NOT_FOUND));

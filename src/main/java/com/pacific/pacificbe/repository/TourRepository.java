@@ -80,30 +80,6 @@ public interface TourRepository extends JpaRepository<Tour, String> {
             """, nativeQuery = true)
     List<TourBookingCount> findTourBookingCounts(@Param("tourId") String tourId);
 
-
-    @Query(value = """
-            select
-                t.id,
-                t.title,
-                t.description,
-                t.duration,
-                t.status,
-                t.thumbnail_url,
-                t.available,
-                t.category_id,
-                t.destination_id,
-                t.active,
-                t.created_at,
-                t.updated_at,
-                t.delete_at
-            from tour t
-                join tour_details td on t.id = td.tour_id
-            where
-                td.start_date is null or td.start_date between :startDate and :endDate
-            """, nativeQuery = true)
-    List<TourDateResponse> findToursByDate(@Param("startDate") LocalDateTime startDate,
-                                           @Param("endDate") LocalDateTime endDate);
-
     Optional<Tour> findByTourDetails_Id(String id);
 
     @Query(value = "SELECT * FROM tour t WHERE t.active = 1 AND t.status = :status", nativeQuery = true)
