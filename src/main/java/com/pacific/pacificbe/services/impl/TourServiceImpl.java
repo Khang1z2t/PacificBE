@@ -38,8 +38,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class TourServiceImpl implements TourService {
-    TourRepository tourRepository;
-    TourMapper tourMapper;
+    private final TourRepository tourRepository;
+    private final TourMapper tourMapper;
     private final CategoryRepository categoryRepository;
     private final DestinationRepository destinationRepository;
     private final GoogleDriveService googleDriveService;
@@ -47,10 +47,7 @@ public class TourServiceImpl implements TourService {
     private final RedisTemplate<Object, Object> redisTemplate;
     private final CacheService cacheService;
 
-    @Cacheable(
-            value = "allTours",
-//            condition = "#result != null && !#result.length == 0",
-            key = "#title + '-' + #minPrice + '-' + #maxPrice + '-' + #categoryId + '-' + #startDate + '-' + #endDate")
+    @Cacheable(value = "allTours", key = "#title + '-' + #minPrice + '-' + #maxPrice + '-' + #categoryId + '-' + #startDate + '-' + #endDate")
     @Override
     public List<TourResponse> getAllTours(String title, BigDecimal minPrice, BigDecimal maxPrice, String categoryId, LocalDateTime startDate, LocalDateTime endDate) {
         List<Tour> tours = tourRepository.findAllWithFilters(title, minPrice, maxPrice, categoryId, startDate, endDate);
@@ -121,7 +118,6 @@ public class TourServiceImpl implements TourService {
 
     @Override
     @Transactional
-    @CacheEvict(value = "allTours", allEntries = true)
     public TourResponse updateTour(String id, UpdateTourRequest request, MultipartFile thumbnail, MultipartFile[] images) {
         Tour tour = tourRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.TOUR_NOT_FOUND));
@@ -130,7 +126,6 @@ public class TourServiceImpl implements TourService {
         tour.setDescription(request.getDescription());
         tour.setDuration(request.getDuration());
         tour.setStatus(request.getStatus());
-
         Category category = categoryRepository.findById(request.getCategoryId())
                 .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
         tour.setCategory(category);
@@ -149,6 +144,7 @@ public class TourServiceImpl implements TourService {
         }
 
         tour = tourRepository.save(tour);
+        cacheService.evictAllToursCache();
         return tourMapper.toTourResponse(tour);
     }
 
@@ -160,7 +156,7 @@ public class TourServiceImpl implements TourService {
                 .orElseThrow(() -> new AppException(ErrorCode.TOUR_NOT_FOUND));
         tour.setActive(active);
         tour.setDeleteAt(active ? null : LocalDateTime.now());
-        tour.setStatus(active ? TourStatus.PUBLISHED.toString() : TourStatus.UNAVAILABLE.toString());
+//        tour.setStatus(active ? TourStatus.PUBLISHED.toString() : TourStatus.UNAVAILABLE.toString());
 
         tourRepository.save(tour);
         return true;
