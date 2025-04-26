@@ -43,4 +43,11 @@ public class Subscriber {
     @Column(name = "unsubscribe_token")
     private String unsubscribeToken;
 
+    @PrePersist
+    public void onCreate() {
+        if (!this.active) {
+            this.active = true;
+        }
+    }
+
 }

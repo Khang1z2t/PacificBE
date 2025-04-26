@@ -2,7 +2,6 @@ package com.pacific.pacificbe.controller;
 
 import com.pacific.pacificbe.dto.ApiResponse;
 import com.pacific.pacificbe.dto.request.TransportRequest;
-import com.pacific.pacificbe.dto.response.TourResponse;
 import com.pacific.pacificbe.dto.response.TransportResponse;
 import com.pacific.pacificbe.services.TransportService;
 import com.pacific.pacificbe.utils.UrlMapping;

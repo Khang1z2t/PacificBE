@@ -33,6 +33,7 @@ build/
 .vscode/
 
 .env
+.env.uat
 src/main/resources/.env
 src/main/resources/.env.development
 src/main/resources/credentials.json

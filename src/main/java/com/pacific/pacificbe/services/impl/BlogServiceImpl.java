@@ -59,6 +59,7 @@ public class BlogServiceImpl implements BlogService {
     private final IdUtil idUtil;
     private final GoogleDriveService googleDriveService;
     private final RedisTemplate<String, String> redisTemplate;
+    private final SubscriberRepository subscriberRepository;
 
     @Override
     @Transactional
@@ -191,6 +192,32 @@ public class BlogServiceImpl implements BlogService {
         blogCategory.setActive(active);
         blogCategory.setDeleteAt(active ? null : LocalDateTime.now());
         blogCategoryRepository.save(blogCategory);
+    }
+
+    @Override
+    public Boolean subscribeBlog(String email, String name) {
+        long timestamp = System.currentTimeMillis();
+        Subscriber subscriber = subscriberRepository.findByEmail(email).orElse(null);
+        if (subscriber == null) {
+            subscriber = new Subscriber();
+            subscriber.setEmail(email);
+            subscriber.setName(name);
+            subscriber.setUnsubscribeToken(idUtil.generateUnsubscribeToken(email, timestamp));
+        }
+        subscriber.setActive(true);
+        subscriberRepository.save(subscriber);
+        return true;
+    }
+
+    @Override
+    public Boolean unsubscribeBlog(String token) {
+        Subscriber subscriber = subscriberRepository.findByUnsubscribeToken(token).orElse(null);
+        if (subscriber == null) {
+            return false;
+        }
+        subscriber.setActive(false);
+        subscriberRepository.save(subscriber);
+        return true;
     }
 
     private String processHtmlContent(String html) {

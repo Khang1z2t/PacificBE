@@ -6,7 +6,7 @@ EXPOSE 8080
 
 COPY target/*.jar app.jar
 
-COPY .env .env
+COPY .env.uat .env
 
 RUN apt-get update && apt-get install -y bash
 

@@ -1,20 +1,16 @@
 package com.pacific.pacificbe.services.impl;
 
-import com.pacific.pacificbe.dto.request.CreateItineraryRequest;
 import com.pacific.pacificbe.dto.request.CreateTourDetailRequest;
 import com.pacific.pacificbe.dto.request.UpdateTourDetailRequest;
-import com.pacific.pacificbe.dto.request.UpdateTourRequest;
-import com.pacific.pacificbe.dto.response.TourDetailResponse;
+import com.pacific.pacificbe.dto.response.tour.TourDetailResponse;
 import com.pacific.pacificbe.dto.response.showTour.DetailTourResponse;
 import com.pacific.pacificbe.exception.AppException;
 import com.pacific.pacificbe.exception.ErrorCode;
-import com.pacific.pacificbe.mapper.TourDetailMapper;
 import com.pacific.pacificbe.mapper.TourMapper;
 import com.pacific.pacificbe.model.*;
 import com.pacific.pacificbe.repository.*;
 import com.pacific.pacificbe.services.TourDetailService;
 import com.pacific.pacificbe.utils.enums.BookingStatus;
-import com.pacific.pacificbe.utils.enums.GuideStatus;
 import com.pacific.pacificbe.utils.enums.TourDetailStatus;
 import com.pacific.pacificbe.utils.enums.TourStatus;
 import lombok.AccessLevel;

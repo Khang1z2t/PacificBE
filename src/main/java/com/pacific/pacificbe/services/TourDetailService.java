@@ -2,8 +2,7 @@ package com.pacific.pacificbe.services;
 
 import com.pacific.pacificbe.dto.request.CreateTourDetailRequest;
 import com.pacific.pacificbe.dto.request.UpdateTourDetailRequest;
-import com.pacific.pacificbe.dto.request.UpdateTourRequest;
-import com.pacific.pacificbe.dto.response.TourDetailResponse;
+import com.pacific.pacificbe.dto.response.tour.TourDetailResponse;
 import com.pacific.pacificbe.dto.response.showTour.DetailTourResponse;
 
 import java.util.List;

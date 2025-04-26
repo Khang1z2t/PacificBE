@@ -1,5 +1,6 @@
-package com.pacific.pacificbe.dto.response;
+package com.pacific.pacificbe.dto.response.tour;
 
+import com.pacific.pacificbe.dto.response.DestinationResponse;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;

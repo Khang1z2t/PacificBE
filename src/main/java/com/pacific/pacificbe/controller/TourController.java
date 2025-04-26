@@ -1,16 +1,14 @@
 package com.pacific.pacificbe.controller;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
 import com.pacific.pacificbe.dto.ApiResponse;
 import com.pacific.pacificbe.dto.request.CreateTourRequest;
 import com.pacific.pacificbe.dto.request.UpdateTourRequest;
-import com.pacific.pacificbe.dto.response.PagedTourResponse;
-import com.pacific.pacificbe.dto.response.TourByIdResponse;
-import com.pacific.pacificbe.dto.response.TourResponse;
+import com.pacific.pacificbe.dto.response.tour.TourByIdResponse;
+import com.pacific.pacificbe.dto.response.tour.TourResponse;
 import com.pacific.pacificbe.dto.response.showTour.TourDateResponse;
 import com.pacific.pacificbe.services.GoogleDriveService;
 import com.pacific.pacificbe.services.TourService;
@@ -20,10 +18,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

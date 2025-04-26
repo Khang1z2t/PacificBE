@@ -3,7 +3,7 @@ package com.pacific.pacificbe.controller;
 import com.pacific.pacificbe.dto.ApiResponse;
 import com.pacific.pacificbe.dto.request.CreateTourDetailRequest;
 import com.pacific.pacificbe.dto.request.UpdateTourDetailRequest;
-import com.pacific.pacificbe.dto.response.TourDetailResponse;
+import com.pacific.pacificbe.dto.response.tour.TourDetailResponse;
 import com.pacific.pacificbe.dto.response.showTour.DetailTourResponse;
 import com.pacific.pacificbe.services.TourDetailService;
 import com.pacific.pacificbe.utils.UrlMapping;

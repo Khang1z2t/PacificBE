@@ -139,9 +139,24 @@ public class AdminBlogController {
     @DeleteMapping(UrlMapping.DELETE_BLOG_CATEGORY)
     @Operation(summary = "Xóa danh mục blog theo ID")
     public ResponseEntity<ApiResponse<Void>> deleteBlogCategory(@PathVariable String id,
-                                                                 @RequestParam(required = false, defaultValue = "true") Boolean active) {
+                                                                @RequestParam(required = false, defaultValue = "true") Boolean active) {
         blogService.deleteBlogCategory(id, active != null && active);
         return ResponseEntity.ok(new ApiResponse<>(200, "Xóa danh mục blog thành công", null));
+    }
+
+    @PostMapping(UrlMapping.SUBSCRIBE_BLOG)
+    @Operation(summary = "Đăng ký nhận thông báo khi có bài viết mới")
+    public ResponseEntity<ApiResponse<Boolean>> subscribeBlog(@RequestParam String email,
+                                                              @RequestParam(required = false) String name) {
+        return ResponseEntity.ok(new ApiResponse<>(200,
+                "Đăng ký nhận thông báo thành công", blogService.subscribeBlog(email, name)));
+    }
+
+    @PostMapping(UrlMapping.UNSUBSCRIBE_BLOG)
+    @Operation(summary = "Hủy đăng ký nhận thông báo khi có bài viết mới")
+    public ResponseEntity<ApiResponse<Boolean>> unsubscribeBlog(@PathVariable String token) {
+        return ResponseEntity.ok(new ApiResponse<>(200,
+                "Hủy đăng ký nhận thông báo thành công", blogService.unsubscribeBlog(token)));
     }
 
 }

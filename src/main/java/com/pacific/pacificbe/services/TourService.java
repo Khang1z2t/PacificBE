@@ -2,14 +2,13 @@ package com.pacific.pacificbe.services;
 
 import com.pacific.pacificbe.dto.request.CreateTourRequest;
 import com.pacific.pacificbe.dto.request.UpdateTourRequest;
-import com.pacific.pacificbe.dto.response.TourByIdResponse;
-import com.pacific.pacificbe.dto.response.TourResponse;
+import com.pacific.pacificbe.dto.response.tour.TourByIdResponse;
+import com.pacific.pacificbe.dto.response.tour.TourResponse;
 import com.pacific.pacificbe.dto.response.showTour.TourBookingCount;
 import com.pacific.pacificbe.dto.response.showTour.TourDateResponse;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 

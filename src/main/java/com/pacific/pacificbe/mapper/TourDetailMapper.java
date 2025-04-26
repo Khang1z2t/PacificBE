@@ -1,7 +1,7 @@
 package com.pacific.pacificbe.mapper;
 
 import com.pacific.pacificbe.dto.request.CreateTourDetailRequest;
-import com.pacific.pacificbe.dto.response.TourDetailResponse;
+import com.pacific.pacificbe.dto.response.tour.TourDetailResponse;
 import com.pacific.pacificbe.model.TourDetail;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;

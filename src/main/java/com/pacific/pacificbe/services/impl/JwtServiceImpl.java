@@ -19,6 +19,8 @@ import java.util.function.Function;
 public class JwtServiceImpl implements JwtService {
     @Value("${jwt.secretKey}")
     private String SECRET_KEY;
+    @Value("${jwt.expiration}")
+    private long JWT_EXPIRATION;
 
     @Override
     public String extractUserId(String token) {
@@ -59,7 +61,7 @@ public class JwtServiceImpl implements JwtService {
                 .setSubject(userId) // Sử dụng userId thay vì username
                 .setIssuer("Pacific TNI")
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
+                .setExpiration(new Date(System.currentTimeMillis() + JWT_EXPIRATION))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }

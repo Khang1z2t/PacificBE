@@ -2,6 +2,10 @@ package com.pacific.pacificbe.mapper;
 
 import com.pacific.pacificbe.dto.request.CreateTourRequest;
 import com.pacific.pacificbe.dto.response.*;
+import com.pacific.pacificbe.dto.response.tour.BaseTourResponse;
+import com.pacific.pacificbe.dto.response.tour.TourByIdResponse;
+import com.pacific.pacificbe.dto.response.tour.TourDetailResponse;
+import com.pacific.pacificbe.dto.response.tour.TourResponse;
 import com.pacific.pacificbe.model.Tour;
 import com.pacific.pacificbe.model.TourDetail;
 import com.pacific.pacificbe.utils.IdUtil;
@@ -15,7 +19,6 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor

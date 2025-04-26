@@ -268,6 +268,9 @@ public class UrlMapping {
     public static final String GET_BLOG_CATEGORY_BY_ID = "/category/{id}";
     public static final String UPDATE_BLOG_CATEGORY = "/category/update/{id}";
     public static final String DELETE_BLOG_CATEGORY = "/category/delete/{id}";
+
+    public static final String SUBSCRIBE_BLOG = "/subscribe";
+    public static final String UNSUBSCRIBE_BLOG = "/unsubscribe/{token}";
     /* =========================== End Admin Blog API ===================================== */
 
     /* =========================== Start Rating API ===================================== */

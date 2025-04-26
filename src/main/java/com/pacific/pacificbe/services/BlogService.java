@@ -38,4 +38,7 @@ public interface BlogService {
 
     void deleteBlogCategory(String id, boolean active);
 
+    Boolean subscribeBlog(String email, String name);
+    Boolean unsubscribeBlog(String token);
+
 }

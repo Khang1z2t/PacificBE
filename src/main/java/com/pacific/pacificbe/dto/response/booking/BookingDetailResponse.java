@@ -20,7 +20,6 @@ public class BookingDetailResponse {
     Instant birthday;
     String ageGroup;
     BigDecimal price;
-    String bookingId;
 
     LocalDateTime createdAt;
     LocalDateTime updatedAt;

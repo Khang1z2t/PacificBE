@@ -1,4 +1,4 @@
-package com.pacific.pacificbe.dto.response;
+package com.pacific.pacificbe.dto.response.tour;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;

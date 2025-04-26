@@ -1,7 +1,10 @@
 package com.pacific.pacificbe.utils;
 
+import jakarta.xml.bind.DatatypeConverter;
 import org.springframework.stereotype.Component;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -96,6 +99,17 @@ public class IdUtil {
             return this.createNewID(chars);
         } else {
             return this.createIDFromLastID(chars, lastTransactionId);
+        }
+    }
+
+    public String generateUnsubscribeToken(String email, long timestamp) {
+        try {
+            String input = email + timestamp;
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(input.getBytes(StandardCharsets.UTF_8));
+            return DatatypeConverter.printHexBinary(hash).toLowerCase();
+        } catch (Exception e) {
+            throw new RuntimeException("Error generating token", e);
         }
     }
 

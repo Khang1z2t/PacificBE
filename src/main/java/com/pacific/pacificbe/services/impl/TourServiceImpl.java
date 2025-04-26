@@ -5,8 +5,8 @@ import com.pacific.pacificbe.services.CacheService;
 import com.pacific.pacificbe.utils.Constant;
 import com.pacific.pacificbe.dto.request.CreateTourRequest;
 import com.pacific.pacificbe.dto.request.UpdateTourRequest;
-import com.pacific.pacificbe.dto.response.TourByIdResponse;
-import com.pacific.pacificbe.dto.response.TourResponse;
+import com.pacific.pacificbe.dto.response.tour.TourByIdResponse;
+import com.pacific.pacificbe.dto.response.tour.TourResponse;
 import com.pacific.pacificbe.dto.response.showTour.TourBookingCount;
 import com.pacific.pacificbe.dto.response.showTour.TourDateResponse;
 import com.pacific.pacificbe.exception.AppException;
@@ -16,7 +16,6 @@ import com.pacific.pacificbe.model.*;
 import com.pacific.pacificbe.repository.*;
 import com.pacific.pacificbe.services.GoogleDriveService;
 import com.pacific.pacificbe.services.TourService;
-import com.pacific.pacificbe.utils.IdUtil;
 import com.pacific.pacificbe.utils.enums.FolderType;
 import com.pacific.pacificbe.utils.enums.TourStatus;
 import lombok.AccessLevel;
@@ -25,7 +24,6 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,9 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Slf4j
 @Service
