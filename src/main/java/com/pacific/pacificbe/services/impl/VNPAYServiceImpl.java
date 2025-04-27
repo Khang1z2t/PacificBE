@@ -272,10 +272,11 @@ public class VNPAYServiceImpl implements VNPAYService {
             transaction.setType(WalletStatus.WITHDRAW.toString());
             transaction.setStatus(WalletStatus.COMPLETED.toString());
             transaction.setDescription("Thanh toán: " + bookingNo);
-            transactionRepository.save(transaction);
+            transactionRepository.saveAndFlush(transaction);
 
-            booking.setStatus(BookingStatus.PAID.toString());
+//            Transaction Save -> Booking Save
             booking.setTransaction(transaction);
+            booking.setStatus(BookingStatus.PAID.toString());
             bookingRepository.save(booking);
             // Gửi email xác nhận thanh toán thành công
             String qrCodeData = booking.getBookingNo();
