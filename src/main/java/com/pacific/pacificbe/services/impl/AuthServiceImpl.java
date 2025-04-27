@@ -5,6 +5,8 @@ import com.pacific.pacificbe.dto.request.oauth2.GoogleTokenRequest;
 import com.pacific.pacificbe.dto.response.AuthenticationResponse;
 import com.pacific.pacificbe.dto.response.UserRegisterResponse;
 import com.pacific.pacificbe.dto.response.UserResponse;
+import com.pacific.pacificbe.dto.response.oauth2.GoogleTokenResponse;
+import com.pacific.pacificbe.dto.response.oauth2.GoogleUserResponse;
 import com.pacific.pacificbe.exception.AppException;
 import com.pacific.pacificbe.exception.ErrorCode;
 import com.pacific.pacificbe.mapper.UserMapper;
@@ -39,8 +41,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
 
-@Service
 @Slf4j
+@Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
     private final GoogleClient googleClient;
@@ -212,39 +214,50 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public RedirectView loginGoogleCallback(String code, String error) {
         if (error != null) {
+            log.error("Error from google: {}", error);
             String url = UrlMapping.GOOGLE_REDIRECT + "?error=" + error;
             return new RedirectView(url);
         }
-        var response = googleClient.exchangeToken(GoogleTokenRequest.builder()
-                .clientId(googleClientId)
-                .clientSecret(googleClientSecret)
-                .redirectUri(googleRedirectUri)
-                .grantType(googleGrantType)
-                .code(code)
-                .build());
+        try {
+            log.debug("Exchanging token with Google API...");
+            GoogleTokenResponse response = googleClient.exchangeToken(GoogleTokenRequest.builder()
+                    .clientId(googleClientId)
+                    .clientSecret(googleClientSecret)
+                    .redirectUri(googleRedirectUri)
+                    .grantType(googleGrantType)
+                    .code(code)
+                    .build());
+            log.info("Successfully exchanged token. Access token: {}", response.getAccessToken());
 
-        var userInfo = googleUserClient.getUserInfo("Bearer " + response.getAccessToken());
-        var user = userRepository.findByEmail(userInfo.getEmail()).orElseGet(
-                () -> userRepository.save(User.builder()
-                        .email(userInfo.getEmail())
-                        .username(userInfo.getEmail().split("@")[0])
-                        .firstName(userInfo.getGivenName())
-                        .lastName(userInfo.getFamilyName())
-                        .avatarUrl(idUtil.getIdAvatar(userInfo.getPicture()))
-                        .status(UserStatus.REQUIRE_USERNAME_PASSWORD_CHANGE.toString())
-                        .password(passwordEncoder.encode(idUtil.generateRandomPassword()))
-                        .role(UserRole.USER.toString())
-                        .emailVerified(true)
-                        .active(true)
-                        .build()));
+            log.debug("Fetching user info from Google...");
+            GoogleUserResponse userInfo = googleUserClient.getUserInfo("Bearer " + response.getAccessToken());
+            log.info("User info retrieved: email={}", userInfo.getEmail());
+            User user = userRepository.findByEmail(userInfo.getEmail()).orElseGet(
+                    () -> userRepository.save(User.builder()
+                            .email(userInfo.getEmail())
+                            .username(userInfo.getEmail().split("@")[0])
+                            .firstName(userInfo.getGivenName())
+                            .lastName(userInfo.getFamilyName())
+                            .avatarUrl(idUtil.getIdAvatar(userInfo.getPicture()))
+                            .status(UserStatus.REQUIRE_USERNAME_PASSWORD_CHANGE.toString())
+                            .password(passwordEncoder.encode(idUtil.generateRandomPassword()))
+                            .role(UserRole.USER.toString())
+                            .emailVerified(true)
+                            .active(true)
+                            .build()));
 
-        Map<String, Object> extraClaims = new HashMap<>();
-        extraClaims.put("scope", "read write trust oauth2 google");
+            Map<String, Object> extraClaims = new HashMap<>();
+            extraClaims.put("scope", "read write trust oauth2 google");
 
-        var accessToken = jwtService.generateToken(extraClaims, user);
+            var accessToken = jwtService.generateToken(extraClaims, user);
 
-        String url = UrlMapping.GOOGLE_REDIRECT + "?access_token=" + accessToken + "&refresh_token=" + accessToken;
-        return new RedirectView(url);
+            String url = UrlMapping.GOOGLE_REDIRECT + "?access_token=" + accessToken + "&refresh_token=" + accessToken;
+            return new RedirectView(url);
+        } catch (Exception e) {
+            log.error("Error during Google login callback: {}", e.getMessage(), e);
+            String url = UrlMapping.GOOGLE_REDIRECT + "?error=server_error";
+            return new RedirectView(url);
+        }
     }
 
     @Override
