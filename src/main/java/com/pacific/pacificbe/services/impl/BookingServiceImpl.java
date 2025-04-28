@@ -215,29 +215,9 @@ public class BookingServiceImpl implements BookingService {
                     String.format("Tour chỉ còn %d chỗ trống, không đủ cho %d vé yêu cầu", availableSeats, requestedSeats));
         }
 
-
         int adultNum = 0;
         int childrenNum = 0;
         BigDecimal totalPrice = BigDecimal.ZERO;
-        Voucher voucher = null;
-        if (request.getVoucherCode() != null && !request.getVoucherCode().isEmpty()) {
-            voucher = voucherRepository.findByCodeVoucher(request.getVoucherCode())
-                    .orElseThrow(() -> new AppException(ErrorCode.INVALID_VOUCHER));
-
-            // Kiểm tra tính hợp lệ của voucher
-            boolean isValid = voucherService.checkVoucher(
-                    voucher.getCodeVoucher(),
-                    totalPrice,
-                    tourDetail.getTour().getId()
-            );
-            if (!isValid) {
-                throw new AppException(ErrorCode.INVALID_VOUCHER, "Voucher không áp dụng được");
-            }
-            if (voucher.getQuantity() <= 0) {
-                throw new AppException(ErrorCode.VOUCHER_OUT_OF_STOCK, "Voucher đã hết số lượng");
-            }
-        }
-
         // Tạo booking
         Booking booking = new Booking();
         booking.setBookerFullName(request.getBookerFullName());
@@ -250,13 +230,13 @@ public class BookingServiceImpl implements BookingService {
         booking.setTourDetail(tourDetail);
         booking.setActive(true);
         booking.setBookingNo(generatorBookingNo(bookingRepository.findLatestBookingNoOfToday()));
-        booking.setVoucher(voucher);
         booking.setStatus(BookingStatus.PENDING.toString());
 
         Hotel hotel = tourDetail.getHotel();
         Transport transport = tourDetail.getTransport();
         totalPrice = totalPrice.add(hotel.getCost());
         totalPrice = totalPrice.add(transport.getCost());
+
         // Xử lý booking details
         List<BookingDetail> bookingDetails = new ArrayList<>();
         for (BookingDetailRequest bookingDetailRequest : request.getBookingDetails()) {
@@ -282,18 +262,38 @@ public class BookingServiceImpl implements BookingService {
         }
         booking.setBookingDetails(bookingDetails);
 
-        int totalNumber = adultNum + childrenNum;
-        booking.setAdultNum(adultNum);
-        booking.setChildrenNum(childrenNum);
-        booking.setTotalNumber(totalNumber);
-        booking.setBookingDetails(bookingDetails);
-
         // Cập nhật giá cuối cùng với voucher
+        Voucher voucher = null;
+        if (request.getVoucherCode() != null && !request.getVoucherCode().isEmpty()) {
+            voucher = voucherRepository.findByCodeVoucher(request.getVoucherCode())
+                    .orElseThrow(() -> new AppException(ErrorCode.INVALID_VOUCHER));
+
+            // Kiểm tra tính hợp lệ của voucher
+            boolean isValid = voucherService.checkVoucher(
+                    voucher.getCodeVoucher(),
+                    totalPrice,
+                    tourDetail.getTour().getId()
+            );
+            if (!isValid) {
+                throw new AppException(ErrorCode.INVALID_VOUCHER, "Voucher không áp dụng được");
+            }
+            if (voucher.getQuantity() <= 0) {
+                throw new AppException(ErrorCode.VOUCHER_OUT_OF_STOCK, "Voucher đã hết số lượng");
+            }
+        }
+        booking.setVoucher(voucher);
+
         BigDecimal finalTotalPrice = getFinalPrice(totalPrice, booking);
         if (voucher != null && finalTotalPrice.compareTo(voucher.getMinOrderValue()) < 0) {
             throw new AppException(ErrorCode.INVALID_VOUCHER_MIN_ORDER);
         }
         booking.setTotalAmount(finalTotalPrice);
+
+        int totalNumber = adultNum + childrenNum;
+        booking.setAdultNum(adultNum);
+        booking.setChildrenNum(childrenNum);
+        booking.setTotalNumber(totalNumber);
+        booking.setBookingDetails(bookingDetails);
 
         // Giảm quantity của voucher sau khi xác nhận booking thành công
         if (voucher != null) {
