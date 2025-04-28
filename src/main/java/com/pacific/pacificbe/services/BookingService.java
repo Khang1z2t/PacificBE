@@ -32,7 +32,7 @@ public interface BookingService {
 
     BookingResponse getBookingByBookingNo(String bookingNo);
 
-    BookingResponse bookingTour(String tourDetailId, BookingRequest request);
+    BookingResponse bookingTour(String tourDetailId, BookingRequest request, String idempotencyKey);
 
     BookingResponse cancelBookingFromUser(String bookingId, CancelBookingRequest request);
 

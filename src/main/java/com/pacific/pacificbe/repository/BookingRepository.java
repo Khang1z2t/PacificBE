@@ -6,6 +6,7 @@ import com.pacific.pacificbe.dto.response.report.BookingRevenueReportDTO;
 import com.pacific.pacificbe.dto.response.report.Revenue;
 import com.pacific.pacificbe.dto.response.report.TourAndBookReport;
 import com.pacific.pacificbe.model.Booking;
+import com.pacific.pacificbe.model.TourDetail;
 import com.pacific.pacificbe.model.User;
 import com.pacific.pacificbe.model.Voucher;
 import com.pacific.pacificbe.utils.enums.BookingStatus;
@@ -275,4 +276,10 @@ public interface BookingRepository extends JpaRepository<Booking, String> {
 
     @Query("select (count(b) > 0) from Booking b where b.voucher.id = ?1")
     boolean existsByVoucher_Id(String id);
+
+    @Query("select (count(b) > 0) from Booking b where b.user = ?1 and b.tourDetail = ?2 and b.tourDetail.startDate = ?3")
+    boolean existsByUserAndTourDetailAndTourDetail_StartDate(User user, TourDetail tourDetail, LocalDateTime startDate);
+
+    @Query("select b from Booking b where b.idempotencyKey = ?1")
+    Optional<Booking> findByIdempotencyKey(String idempotencyKey);
 }

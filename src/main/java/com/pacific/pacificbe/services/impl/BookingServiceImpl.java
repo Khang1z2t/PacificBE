@@ -149,34 +149,94 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public BookingResponse getBookingById(String bookingId) {
-        var booking = bookingRepository.findById(bookingId).orElseThrow(
+        Booking booking = bookingRepository.findById(bookingId).orElseThrow(
                 () -> new AppException(ErrorCode.BOOKING_NOT_FOUND));
         return bookingMapper.toBookingResponse(booking);
     }
 
     @Override
     public BookingResponse getBookingByBookingNo(String bookingNo) {
-        var booking = bookingRepository.findByBookingNo(bookingNo).orElseThrow(
+        Booking booking = bookingRepository.findByBookingNo(bookingNo).orElseThrow(
                 () -> new AppException(ErrorCode.BOOKING_NOT_FOUND));
         return bookingMapper.toBookingResponse(booking);
     }
 
     @Override
     @Transactional
-    public BookingResponse bookingTour(String tourDetailId, BookingRequest request) {
+    public BookingResponse bookingTour(String tourDetailId, BookingRequest request, String idempotencyKey) {
         String userId = AuthUtils.getCurrentUserId();
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
-        TourDetail tourDetail = tourDetailRepository.findById(tourDetailId)
-                .orElseThrow(() -> new AppException(ErrorCode.TOUR_DETAIL_NOT_FOUND));
-        
+        if (idempotencyKey != null && !idempotencyKey.isEmpty()) {
+            Optional<Booking> existingBooking = bookingRepository.findByIdempotencyKey(idempotencyKey);
+            if (existingBooking.isPresent()) {
+                return bookingMapper.toBookingResponse(existingBooking.get());
+            }
+        }
 
-        String lastBookingNo = bookingRepository.findLatestBookingNoOfToday();
+        TourDetail tourDetail = tourDetailRepository.findByIdWithLock(tourDetailId)
+                .orElseThrow(() -> new AppException(ErrorCode.TOUR_DETAIL_NOT_FOUND));
+
+//        LocalDateTime tourDate = tourDetail.getStartDate();
+//        boolean hasExistingBooking = bookingRepository.existsByUserAndTourDetailAndTourDetail_StartDate(user, tourDetail, tourDate);
+//        if (hasExistingBooking) {
+//            throw new AppException(ErrorCode.BOOKING_ALREADY_EXISTS,
+//                    "Bạn đã có booking cho tour này trong ngày " +
+//                            tourDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + ".");
+//        }
+
+//        sẽ thay thế bằng
+//        LocalDateTime tourDate = tourDetail.getStartDate();
+//        for (BookingDetailRequest detail : request.getBookingDetails()) {
+//            if (detail.getCccd() != null && !detail.getCccd().isEmpty()) {
+//                // Kiểm tra định dạng CCCD (ví dụ: 12 số)
+//                if (!detail.getCccd().matches("\\d{12}")) {
+//                    throw new AppException(ErrorCode.INVALID_CCCD,
+//                            String.format("CCCD %s không hợp lệ, phải có đúng 12 số", detail.getCccd()));
+//                }
+//
+//                // Kiểm tra trùng lặp CCCD
+//                boolean hasExistingBooking = bookingRepository.existsByCccdAndTourDetailAndTourDetailStartDate(
+//                        detail.getCccd(), tourDetail, tourDate);
+//                if (hasExistingBooking) {
+//                    throw new AppException(ErrorCode.DUPLICATE_CCCD,
+//                            String.format("CCCD %s đã được sử dụng để đặt tour này vào ngày %s",
+//                                    detail.getCccd(),
+//                                    tourDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))));
+//                }
+//            }
+//        }
+
+        int availableSeats = tourDetail.getQuantity();
+        int requestedSeats = request.getBookingDetails().size();
+        if (requestedSeats > availableSeats) {
+            throw new AppException(ErrorCode.INSUFFICIENT_SEATS,
+                    String.format("Tour chỉ còn %d chỗ trống, không đủ cho %d vé yêu cầu", availableSeats, requestedSeats));
+        }
+
 
         int adultNum = 0;
         int childrenNum = 0;
         BigDecimal totalPrice = BigDecimal.ZERO;
+        Voucher voucher = null;
+        if (request.getVoucherCode() != null && !request.getVoucherCode().isEmpty()) {
+            voucher = voucherRepository.findByCodeVoucher(request.getVoucherCode())
+                    .orElseThrow(() -> new AppException(ErrorCode.INVALID_VOUCHER));
+
+            // Kiểm tra tính hợp lệ của voucher
+            boolean isValid = voucherService.checkVoucher(
+                    voucher.getCodeVoucher(),
+                    totalPrice,
+                    tourDetail.getTour().getId()
+            );
+            if (!isValid) {
+                throw new AppException(ErrorCode.INVALID_VOUCHER, "Voucher không áp dụng được");
+            }
+            if (voucher.getQuantity() <= 0) {
+                throw new AppException(ErrorCode.VOUCHER_OUT_OF_STOCK, "Voucher đã hết số lượng");
+            }
+        }
 
         // Tạo booking
         Booking booking = new Booking();
@@ -189,16 +249,14 @@ public class BookingServiceImpl implements BookingService {
         booking.setUser(user);
         booking.setTourDetail(tourDetail);
         booking.setActive(true);
-        booking.setBookingNo(generatorBookingNo(lastBookingNo));
+        booking.setBookingNo(generatorBookingNo(bookingRepository.findLatestBookingNoOfToday()));
+        booking.setVoucher(voucher);
         booking.setStatus(BookingStatus.PENDING.toString());
 
         Hotel hotel = tourDetail.getHotel();
         Transport transport = tourDetail.getTransport();
         totalPrice = totalPrice.add(hotel.getCost());
         totalPrice = totalPrice.add(transport.getCost());
-        // Lưu booking trước để có ID
-        bookingRepository.save(booking);
-
         // Xử lý booking details
         List<BookingDetail> bookingDetails = new ArrayList<>();
         for (BookingDetailRequest bookingDetailRequest : request.getBookingDetails()) {
@@ -222,30 +280,13 @@ public class BookingServiceImpl implements BookingService {
             bookingDetails.add(bookingDetail);
             bookingDetailRepository.save(bookingDetail);
         }
+        booking.setBookingDetails(bookingDetails);
 
         int totalNumber = adultNum + childrenNum;
         booking.setAdultNum(adultNum);
         booking.setChildrenNum(childrenNum);
         booking.setTotalNumber(totalNumber);
         booking.setBookingDetails(bookingDetails);
-
-        Voucher voucher = null;
-        if (request.getVoucherCode() != null && !request.getVoucherCode().isEmpty()) {
-            voucher = voucherRepository.findByCodeVoucher(request.getVoucherCode())
-                    .orElseThrow(() -> new AppException(ErrorCode.INVALID_VOUCHER));
-
-            // Kiểm tra tính hợp lệ của voucher
-            boolean isValid = voucherService.checkVoucher(
-                    voucher.getCodeVoucher(),
-                    totalPrice,
-                    tourDetail.getTour().getId()
-            );
-
-            if (!isValid) {
-                voucher = null;
-            }
-        }
-        booking.setVoucher(voucher);
 
         // Cập nhật giá cuối cùng với voucher
         BigDecimal finalTotalPrice = getFinalPrice(totalPrice, booking);
@@ -267,8 +308,8 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional
     public BookingResponse cancelBookingFromUser(String bookingId, CancelBookingRequest request) {
-        var userId = AuthUtils.getCurrentUserId();
-        var user = userRepository.findById(userId)
+        String userId = AuthUtils.getCurrentUserId();
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         Booking booking = bookingRepository.findById(bookingId).orElseThrow(
                 () -> new AppException(ErrorCode.BOOKING_NOT_FOUND));

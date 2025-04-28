@@ -75,6 +75,18 @@ public class Booking extends BaseEntity {
     @Column(name = "total_number")
     private Integer totalNumber;
 
+    @Size(max = 225)
+    @Column(name = "booking_no", length = 225, unique = true, updatable = false)
+    private String bookingNo;
+
+    @Size(max = 255)
+    @Column(name = "idempotency_key", unique = true)
+    private String idempotencyKey;
+
+    @Size(max = 100)
+    @Column(name = "status", length = 100)
+    private String status;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.SET_NULL)
     @JoinColumn(name = "payment_id")
@@ -112,13 +124,5 @@ public class Booking extends BaseEntity {
 
     @OneToMany(mappedBy = "booking")
     private List<Payment> payments = new ArrayList<>();
-
-    @Size(max = 225)
-    @Column(name = "booking_no", length = 225)
-    private String bookingNo;
-
-    @Size(max = 100)
-    @Column(name = "status", length = 100)
-    private String status;
 
 }

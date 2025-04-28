@@ -16,5 +16,8 @@ public class PaymentResponse {
     LocalDateTime createdAt;
     String note; //base64
     String status;
-    String transactionId;
+    private String txnRef;
+    private LocalDateTime expireAt;
+
+
 }

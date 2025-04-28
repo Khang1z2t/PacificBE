@@ -54,8 +54,10 @@ public class BookingController {
 
     @PostMapping(UrlMapping.BOOK_TOUR)
     @Operation(summary = "Đặt tour")
-    public ResponseEntity<ApiResponse<BookingResponse>> bookTour(@PathVariable String id, @RequestBody BookingRequest request) {
-        return ResponseEntity.ok(new ApiResponse<>(200, null, bookingService.bookingTour(id, request)));
+    public ResponseEntity<ApiResponse<BookingResponse>> bookTour(@PathVariable String id,
+                                                                 @RequestBody BookingRequest request,
+                                                                 @RequestHeader("X-Idempotency-Key") String idempotencyKey) {
+        return ResponseEntity.ok(new ApiResponse<>(200, null, bookingService. bookingTour(id, request, idempotencyKey)));
     }
 
     @PostMapping(UrlMapping.CANCEL_BOOKING)

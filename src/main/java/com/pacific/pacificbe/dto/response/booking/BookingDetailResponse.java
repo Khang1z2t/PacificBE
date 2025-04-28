@@ -21,7 +21,7 @@ public class BookingDetailResponse {
     String ageGroup;
     BigDecimal price;
 
-    LocalDateTime createdAt;
-    LocalDateTime updatedAt;
-    LocalDateTime deleteAt;
+//    LocalDateTime createdAt;
+//    LocalDateTime updatedAt;
+//    LocalDateTime deleteAt;
 }
