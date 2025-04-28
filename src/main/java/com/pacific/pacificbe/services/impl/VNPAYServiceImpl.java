@@ -57,8 +57,8 @@ public class VNPAYServiceImpl implements VNPAYService {
             return "/";
         }
         if (!authUtils.allowedRedirectUrls.contains(redirectTo)) {
-            log.warn("Invalid redirect_to: {}, using default: {}", redirectTo, authUtils.allowedRedirectUrls.get(0));
-            redirectTo = authUtils.allowedRedirectUrls.get(0);
+            log.warn("Invalid redirect_to: {}, using default: {}", redirectTo, authUtils.allowedRedirectUrls.getFirst());
+            redirectTo = authUtils.allowedRedirectUrls.getFirst();
         }
         String state = Base64.getUrlEncoder().encodeToString(redirectTo.getBytes());
         String userId = AuthUtils.getCurrentUserId();
@@ -152,7 +152,7 @@ public class VNPAYServiceImpl implements VNPAYService {
         vnp_Params.put("vnp_ReturnUrl", urlReturn);
         vnp_Params.put("vnp_IpAddr", vnp_IpAddr);
 
-        Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
+        Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Asia/Ho_Chi_Minh"));
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
         String vnp_CreateDate = formatter.format(cld.getTime());
         vnp_Params.put("vnp_CreateDate", vnp_CreateDate);
@@ -160,6 +160,10 @@ public class VNPAYServiceImpl implements VNPAYService {
         cld.add(Calendar.MINUTE, 30);
         String vnp_ExpireDate = formatter.format(cld.getTime());
         vnp_Params.put("vnp_ExpireDate", vnp_ExpireDate);
+
+        log.info("VNPAY parameters: vnp_TxnRef: {}, vnp_Amount: {}, vnp_OrderInfo: {}, vnp_ReturnUrl: {}, vnp_CreateDate: {}, vnp_ExpireDate: {}",
+                vnp_TxnRef, vnp_Params.get("vnp_Amount"), vnp_Params.get("vnp_OrderInfo"), vnp_Params.get("vnp_ReturnUrl"),
+                vnp_CreateDate, vnp_ExpireDate);
 
         List<String> fieldNames = new ArrayList<>(vnp_Params.keySet());
         Collections.sort(fieldNames);
@@ -189,6 +193,7 @@ public class VNPAYServiceImpl implements VNPAYService {
         String salt = vnpayConfig.vnp_HashSecret;
         String vnp_SecureHash = vnpayConfig.hmacSHA512(salt, hashData.toString());
         queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
+        log.info("Generated VNPAY payment URL: {}", vnpayConfig.vnp_PayUrl + "?" + queryUrl);
         return vnpayConfig.vnp_PayUrl + "?" + queryUrl;
     }
 
@@ -240,10 +245,10 @@ public class VNPAYServiceImpl implements VNPAYService {
         try {
             redirectTo = new String(Base64.getUrlDecoder().decode(state));
             if (!authUtils.allowedRedirectUrls.contains(redirectTo)) {
-                redirectTo = authUtils.allowedRedirectUrls.get(0);
+                redirectTo = authUtils.allowedRedirectUrls.getFirst();
             }
         } catch (Exception e) {
-            redirectTo = authUtils.allowedRedirectUrls.get(0);
+            redirectTo = authUtils.allowedRedirectUrls.getFirst();
         }
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new AppException(ErrorCode.USER_NOT_FOUND));
@@ -311,10 +316,8 @@ public class VNPAYServiceImpl implements VNPAYService {
                     getBookingTicket(booking),
                     attachments);
             log.info("Gửi email xác nhận thanh toán thành công cho booking: {}", booking.getBookingNo());
-            return new RedirectView(url);
-        } else {
-            return new RedirectView(url);
         }
+        return new RedirectView(url);
     }
 
     private String getBookingConfirm(Booking booking) {

@@ -3,10 +3,13 @@ package com.pacific.pacificbe.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.pacific.pacificbe.repository.TourRepository;
 import com.pacific.pacificbe.repository.UserRepository;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.modelmapper.ModelMapper;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.TaskScheduler;
@@ -62,12 +65,17 @@ public class ApplicationConfig {
         return new ThreadPoolTaskScheduler();
     }
 
-//    @Bean
-//    public ObjectMapper objectMapper() {
-//        ObjectMapper mapper = new ObjectMapper();
-//        mapper.registerModule(new JavaTimeModule());
-//        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-//        mapper.setTimeZone(TimeZone.getTimeZone("UTC"));
-//        return mapper;
-//    }
+    @Bean
+    CommandLineRunner runner(TourRepository tourRepository) {
+        return args -> {
+            // Code khởi tạo dữ liệu hoặc thực hiện các tác vụ khác khi ứng dụng khởi động
+
+//            System.out.println(tourRepository.findAllWithFilters(null, null, null, null, null, null));
+        };
+    }
+
+   @PostConstruct
+    public void init() {
+        TimeZone.setDefault(TimeZone.getTimeZone("Asia/Ho_Chi_Minh"));
+    }
 }
