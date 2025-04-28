@@ -36,16 +36,13 @@ public class SecurityConfig {
 
     private final String[] PUBLIC_ENDPOINTS = {
             // -- Swagger UI v3 (OpenAPI)
+            "/",
             "/swagger-ui.html",
             "/swagger-ui/**",
             "/api-docs/**",
             "/v3/api-docs/**",
-            "/login/**",// new
-            "/api/**",
-            "/oauth2/**", // new
             // -- Api v1
             "/api/**",
-            "/api/tours/test-img",
     };
 
     @Bean

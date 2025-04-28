@@ -62,7 +62,7 @@ public class WalletServiceImpl implements WalletService {
 
         String reasonInfo = String.format(
                 "[Cancellation] Reason: %s|CancelledBy: %s|DateRequested: %s",
-                request.getReasons() != null ? request.getReasons() : "N/A",
+                request.getReasons() != null ? request.getReasons().trim() : "N/A",
                 "User" + " - " + booking.getUser().getId(),
                 LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"))
         );

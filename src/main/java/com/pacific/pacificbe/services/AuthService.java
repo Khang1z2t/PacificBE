@@ -26,9 +26,9 @@ public interface AuthService {
 
     boolean resetPassword(ResetUserPasswordRequest request);
 
-    String getGoogleUrl();
+    String getGoogleUrl(String redirectTo);
 
-    RedirectView loginGoogleCallback(String code, String error);
+    RedirectView loginGoogleCallback(String code, String error, String state);
 
     boolean changePassword(ChangePasswordRequest request);
 

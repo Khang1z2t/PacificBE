@@ -7,6 +7,7 @@ import com.pacific.pacificbe.integration.google.GeminiClient;
 import com.pacific.pacificbe.model.*;
 import com.pacific.pacificbe.repository.*;
 import com.pacific.pacificbe.services.AiServices;
+import com.pacific.pacificbe.utils.AuthUtils;
 import io.github.bucket4j.Bucket;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +26,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import static com.pacific.pacificbe.utils.UrlMapping.FE_URL;
 
 @Slf4j
 @Service
@@ -41,6 +41,7 @@ public class AiServicesImpl implements AiServices {
     final WishlistRepository wishlistRepository;
     final GeminiClient geminiClient;
     final RateLimiterService rateLimiterService;
+    private final AuthUtils authUtils;
 
     @Value("${google.ai.api.key}")
     String apiKey;
@@ -49,7 +50,16 @@ public class AiServicesImpl implements AiServices {
 
     @Override
     @Cacheable(value = "aiResponses", key = "#query", unless = "#result == null")
-    public String processQuery(String query) {
+    public String processQuery(String query, String redirectTo) {
+        String feUrl = redirectTo;
+        try {
+            if (!authUtils.allowedRedirectUrls.contains(redirectTo)) {
+                feUrl = authUtils.allowedRedirectUrls.get(0);
+            }
+        } catch (Exception e) {
+            feUrl = authUtils.allowedRedirectUrls.get(0);
+        }
+
         // Kiểm tra quyền và câu hỏi nhạy cảm
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         boolean isAdmin = auth != null && auth.getAuthorities().stream()
@@ -159,16 +169,12 @@ public class AiServicesImpl implements AiServices {
             if (!topBooked.isEmpty()) {
                 context.append("Các tour được đặt nhiều nhất:\n");
                 for (Map.Entry<String, Long> entry : topBooked) {
-                    Tour tour = tours.stream()
+                    tours.stream()
                             .filter(t -> t.getId().equals(entry.getKey()))
-                            .findFirst()
-                            .orElse(null);
-                    if (tour != null) {
-                        context.append(String.format("- %s (Tour ID: %s): Được đặt %d lần\n",
-                                tour.getTitle(),
-                                tour.getId(),
-                                entry.getValue()));
-                    }
+                            .findFirst().ifPresent(tour -> context.append(String.format("- %s (Tour ID: %s): Được đặt %d lần\n",
+                                    tour.getTitle(),
+                                    tour.getId(),
+                                    entry.getValue())));
                 }
             }
 
@@ -218,7 +224,7 @@ public class AiServicesImpl implements AiServices {
                         "- Sử dụng gạch đầu dòng (-) cho danh sách, tối đa 3 mục (tour hoặc voucher), mỗi mục trên một dòng riêng.\n" +
                         "- Không hiển thị Tour ID trong câu trả lời.\n" +
                         "- Chèn link tên tour bằng định dạng Markdown: [Tên Tour](URL).\n" +
-                        "- URL tour: " + FE_URL + "/tour-chi-tiet/{tourId} (thay tourId bằng ID thực tế).\n" +
+                        "- URL tour: " + feUrl + "/tour-chi-tiet/{tourId} (thay tourId bằng ID thực tế).\n" +
                         "- Ưu tiên tour phù hợp với sở thích người dùng (nếu có).\n" +
                         "- Khi hỏi 'tour nào được đặt nhiều nhất', liệt kê tối đa 3 tour có số lượng đặt cao nhất.\n" +
                         "- Khi hỏi về voucher, liệt kê tối đa 3 voucher đang active, ưu tiên voucher liên quan đến tour được hỏi.\n" +
@@ -229,16 +235,16 @@ public class AiServicesImpl implements AiServices {
                         "- Ví dụ:\n" +
                         "  Câu hỏi: 'Tour nào rẻ nhất?'\n" +
                         "  Trả lời:\n" +
-                        "    - [Khám phá Sao Thổ cực hot 7N6Đ](" + FE_URL + "/tour-chi-tiet/xxxx-xxxx-xxxx): 20.000 VNĐ/người lớn, 6.000 VNĐ/trẻ em, khởi hành 09/04/2025\n" +
+                        "    - [Khám phá Sao Thổ cực hot 7N6Đ](" + feUrl + "/tour-chi-tiet/xxxx-xxxx-xxxx): 20.000 VNĐ/người lớn, 6.000 VNĐ/trẻ em, khởi hành 09/04/2025\n" +
                         "  Câu hỏi: 'Tour nào được đặt nhiều nhất?'\n" +
                         "  Trả lời:\n" +
-                        "    - [Tour Đà Nẵng 3N2Đ](" + FE_URL + "/tour-chi-tiet/xxxx-xxxx-xxxx): Được đặt 50 lần\n" +
+                        "    - [Tour Đà Nẵng 3N2Đ](" + feUrl + "/tour-chi-tiet/xxxx-xxxx-xxxx): Được đặt 50 lần\n" +
                         "  Câu hỏi: 'Có voucher nào đang giảm giá?'\n" +
                         "  Trả lời:\n" +
                         "    - Mã SUMMER2025: Giảm 500.000 VNĐ, hết hạn 30/06/2025, áp dụng cho tour Đà Nẵng\n" +
                         "  Câu hỏi: 'Chi tiết tour Đà Nẵng 3N2Đ?'\n" +
                         "  Trả lời:\n" +
-                        "    - [Tour Đà Nẵng 3N2Đ](" + FE_URL + "/tour-chi-tiet/xxxx-xxxx-xxxx):\n" +
+                        "    - [Tour Đà Nẵng 3N2Đ](" + feUrl + "/tour-chi-tiet/xxxx-xxxx-xxxx):\n" +
                         "      - Giá: 4 triệu VNĐ/người lớn\n" +
                         "      - Mô tả: Khám phá Bà Nà, Hội An\n" +
                         "      - Thời lượng: 3 ngày\n" +
@@ -246,7 +252,7 @@ public class AiServicesImpl implements AiServices {
                         "      - Voucher áp dụng: Mã SUMMER2025 giảm 500.000 VNĐ\n" +
                         "  Câu hỏi: 'Tôi có booking nào?'\n" +
                         "  Trả lời:\n" +
-                        "    - [Tour Đà Nẵng 3N2Đ](" + FE_URL + "/tour-chi-tiet/xxxx-xxxx-xxxx): Trạng thái xác nhận, đặt ngày 15/04/2025\n" +
+                        "    - [Tour Đà Nẵng 3N2Đ](" + feUrl + "/tour-chi-tiet/xxxx-xxxx-xxxx): Trạng thái xác nhận, đặt ngày 15/04/2025\n" +
                         "Trả lời câu hỏi: %s",
                 context, previousContext, sentimentTone, query);
 

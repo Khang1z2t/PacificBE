@@ -11,6 +11,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static com.pacific.pacificbe.utils.Constant.SYS_WALLET_ID;
 
 @Component
@@ -32,4 +35,9 @@ public class AuthUtils {
         return systemWalletRepository.findById(SYS_WALLET_ID).orElseThrow(
                 () -> new AppException(ErrorCode.WALLET_NOT_FOUND));
     }
+
+    public final List<String> allowedRedirectUrls = Arrays.asList(
+            Constant.FE_LOCAL_URL,
+            Constant.FE_PROD_URL
+    );
 }

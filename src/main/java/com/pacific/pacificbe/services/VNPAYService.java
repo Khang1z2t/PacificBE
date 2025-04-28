@@ -18,7 +18,7 @@ import java.util.*;
 
 public interface VNPAYService {
 
-    String createOrder(HttpServletRequest request, VNPAYRequest vnpayRequest);
+    String createOrder(HttpServletRequest request, VNPAYRequest vnpayRequest, String redirectTo);
 
 //    String createOrder(HttpServletRequest request, int amount, String orderInfor, String urlReturn, String userId);
 

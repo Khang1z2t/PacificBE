@@ -238,9 +238,9 @@ public class UrlMapping {
 //    public static final String FE_URL = "http://localhost:3000";
     //    Trong truong hop deploy
     public static final String FE_URL = "https://pacific-vn.vercel.app";
-    public static final String GOOGLE_REDIRECT = FE_URL + "/google/redirect";
-    public static final String PAYMENT_FAIL = FE_URL + "/checkout/fail";
-    public static final String PAYMENT_SUCCESS = FE_URL + "/checkout/success";
+    public static final String GOOGLE_REDIRECT = "/google/redirect";
+    public static final String PAYMENT_FAIL =  "/checkout/fail";
+    public static final String PAYMENT_SUCCESS =  "/checkout/success";
     /* =========================== End Other URL ===================================== */
 
     /* =========================== Start Destination API ===================================== */

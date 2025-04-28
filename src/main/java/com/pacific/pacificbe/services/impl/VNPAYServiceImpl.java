@@ -21,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.view.RedirectView;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -48,12 +49,18 @@ public class VNPAYServiceImpl implements VNPAYService {
     private final SystemWalletRepository systemWalletRepository;
     private final TransactionRepository transactionRepository;
     private final IdUtil idUtil;
+    private final AuthUtils authUtils;
 
     @Override
-    public String createOrder(HttpServletRequest request, VNPAYRequest vnpayRequest) {
+    public String createOrder(HttpServletRequest request, VNPAYRequest vnpayRequest, String redirectTo) {
         if (vnpayRequest.getAmount() <= 0) {
             return "/";
         }
+        if (!authUtils.allowedRedirectUrls.contains(redirectTo)) {
+            log.warn("Invalid redirect_to: {}, using default: {}", redirectTo, authUtils.allowedRedirectUrls.get(0));
+            redirectTo = authUtils.allowedRedirectUrls.get(0);
+        }
+        String state = Base64.getUrlEncoder().encodeToString(redirectTo.getBytes());
         String userId = AuthUtils.getCurrentUserId();
         String baseUrl = vnpayRequest.getUrlReturn();
         if (baseUrl == null || baseUrl.isEmpty()) {
@@ -63,7 +70,6 @@ public class VNPAYServiceImpl implements VNPAYService {
             }
             vnpayRequest.setUrlReturn(baseUrl);
         }
-
         String orderInfo = vnpayRequest.getOrderInfo();
         String bookingNo = orderInfo;
         if (orderInfo != null && !orderInfo.contains("|")) {
@@ -138,7 +144,7 @@ public class VNPAYServiceImpl implements VNPAYService {
         vnp_Params.put("vnp_Amount", String.valueOf(vnpayRequest.getAmount() * 100));
         vnp_Params.put("vnp_CurrCode", "VND");
         vnp_Params.put("vnp_TxnRef", vnp_TxnRef);
-        vnp_Params.put("vnp_OrderInfo", vnpayRequest.getOrderInfo() + "|" + vnp_TxnRef);
+        vnp_Params.put("vnp_OrderInfo", vnpayRequest.getOrderInfo() + "|" + vnp_TxnRef + "|" + state);
         vnp_Params.put("vnp_OrderType", orderType);
         vnp_Params.put("vnp_Locale", "vn");
 
@@ -229,6 +235,16 @@ public class VNPAYServiceImpl implements VNPAYService {
         String userId = parts[0];
         String bookingNo = parts[1];
         String vnp_TxnRef = parts[2];
+        String state = parts[3];
+        String redirectTo;
+        try {
+            redirectTo = new String(Base64.getUrlDecoder().decode(state));
+            if (!authUtils.allowedRedirectUrls.contains(redirectTo)) {
+                redirectTo = authUtils.allowedRedirectUrls.get(0);
+            }
+        } catch (Exception e) {
+            redirectTo = authUtils.allowedRedirectUrls.get(0);
+        }
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new AppException(ErrorCode.USER_NOT_FOUND));
 //        tối giản code, hay vì return lỗi ở dưới thì return ở trên
@@ -253,7 +269,9 @@ public class VNPAYServiceImpl implements VNPAYService {
                     : PaymentStatus.EXPIRED.toString());
         }
         paymentRepository.save(payment);
-
+        String redirectBaseUrl = isSuccess ? redirectTo + UrlMapping.PAYMENT_SUCCESS :
+                redirectTo + UrlMapping.PAYMENT_FAIL;
+        String url = UriComponentsBuilder.fromUriString(redirectBaseUrl).build().toUriString();
         if (isSuccess) {
             SystemWallet systemWallet = systemWalletRepository.findById("SYSTEM_WALLET")
                     .orElseThrow(() -> new AppException(ErrorCode.WALLET_NOT_FOUND));
@@ -293,9 +311,9 @@ public class VNPAYServiceImpl implements VNPAYService {
                     getBookingTicket(booking),
                     attachments);
             log.info("Gửi email xác nhận thanh toán thành công cho booking: {}", booking.getBookingNo());
-            return new RedirectView(UrlMapping.PAYMENT_SUCCESS);
+            return new RedirectView(url);
         } else {
-            return new RedirectView(UrlMapping.PAYMENT_FAIL);
+            return new RedirectView(url);
         }
     }
 

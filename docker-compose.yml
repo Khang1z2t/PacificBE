@@ -31,6 +31,8 @@ services:
       - redis-data:/data
     networks:
       - app-network
+    command:
+      redis-server --requirepass "yuno-is-the-best"
     healthcheck:
       test: [ "CMD", "redis-cli", "ping" ]
       interval: 10s

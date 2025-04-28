@@ -19,6 +19,7 @@ import com.pacific.pacificbe.services.JwtService;
 import com.pacific.pacificbe.services.MailService;
 import com.pacific.pacificbe.services.OtpService;
 import com.pacific.pacificbe.utils.AuthUtils;
+import com.pacific.pacificbe.utils.Constant;
 import com.pacific.pacificbe.utils.IdUtil;
 import com.pacific.pacificbe.utils.UrlMapping;
 import com.pacific.pacificbe.utils.enums.UserRole;
@@ -35,11 +36,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.view.RedirectView;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+
+import static com.pacific.pacificbe.utils.UrlMapping.GOOGLE_REDIRECT;
 
 @Slf4j
 @Service
@@ -55,6 +58,7 @@ public class AuthServiceImpl implements AuthService {
     private final MailService mailService;
     private final UserMapper userMapper;
     private final AuthenticationManager authenticationManager;
+    private final AuthUtils authUtils;
     @Value("${oauth2.google.clientId}")
     private String googleClientId;
     @Value("${oauth2.google.clientSecret}")
@@ -203,19 +207,49 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public String getGoogleUrl() {
-        return "https://accounts.google.com/o/oauth2/auth"
-                + "?client_id=" + googleClientId
-                + "&redirect_uri=" + googleRedirectUri
-                + "&response_type=code"
-                + "&scope=openid%20profile%20email";
+    public String getGoogleUrl(String redirectTo) {
+//        return "https://accounts.google.com/o/oauth2/auth"
+//                + "?client_id=" + googleClientId
+//                + "&redirect_uri=" + googleRedirectUri
+//                + "&response_type=code"
+//                + "&scope=openid%20profile%20email";
+        if (!authUtils.allowedRedirectUrls.contains(redirectTo)) {
+            log.warn("Invalid redirect_to: {}, using default: {}", redirectTo, authUtils.allowedRedirectUrls.get(0));
+            redirectTo = authUtils.allowedRedirectUrls.get(0);
+        }
+        String state = Base64.getUrlEncoder().encodeToString(redirectTo.getBytes());
+        return UriComponentsBuilder.fromUriString("https://accounts.google.com/o/oauth2/auth")
+                .queryParam("client_id", googleClientId)
+                .queryParam("redirect_uri", googleRedirectUri)
+                .queryParam("response_type", "code")
+                .queryParam("scope", "openid profile email")
+                .queryParam("state", state) // Thêm state chứa redirectTo
+                .build()
+                .toUriString();
     }
 
     @Override
-    public RedirectView loginGoogleCallback(String code, String error) {
+    public RedirectView loginGoogleCallback(String code, String error, String state) {
+        log.debug("Google login callback: code={}, error={}, state={}", code, error, state);
+        String redirectTo;
+        try {
+            redirectTo = new String(Base64.getUrlDecoder().decode(state));
+            if (!authUtils.allowedRedirectUrls.contains(redirectTo)) {
+                log.warn("Invalid redirect_to: {}", redirectTo);
+                redirectTo = authUtils.allowedRedirectUrls.get(0);
+            }
+        } catch (Exception e) {
+            log.error("Invalid state parameter: {}", state, e);
+            redirectTo = authUtils.allowedRedirectUrls.get(0);
+        }
+        String redirectBaseUrl = redirectTo + GOOGLE_REDIRECT;
+        log.debug("Redirecting to: {}", redirectBaseUrl);
         if (error != null) {
             log.error("Error from google: {}", error);
-            String url = UrlMapping.GOOGLE_REDIRECT + "?error=" + error;
+            String url = UriComponentsBuilder.fromUriString(redirectBaseUrl)
+                    .queryParam("error", error)
+                    .build()
+                    .toUriString();
             return new RedirectView(url);
         }
         try {
@@ -251,11 +285,18 @@ public class AuthServiceImpl implements AuthService {
 
             var accessToken = jwtService.generateToken(extraClaims, user);
 
-            String url = UrlMapping.GOOGLE_REDIRECT + "?access_token=" + accessToken + "&refresh_token=" + accessToken;
+            String url = UriComponentsBuilder.fromUriString(redirectBaseUrl)
+                    .queryParam("access_token", accessToken)
+                    .queryParam("refresh_token", accessToken)
+                    .build()
+                    .toUriString();
             return new RedirectView(url);
         } catch (Exception e) {
             log.error("Error during Google login callback: {}", e.getMessage(), e);
-            String url = UrlMapping.GOOGLE_REDIRECT + "?error=server_error";
+            String url = UriComponentsBuilder.fromUriString(redirectBaseUrl)
+                    .queryParam("error", "server_error")
+                    .build()
+                    .toUriString();
             return new RedirectView(url);
         }
     }

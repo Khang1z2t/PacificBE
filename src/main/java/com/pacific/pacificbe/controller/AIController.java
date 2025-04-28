@@ -11,6 +11,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
@@ -23,8 +24,9 @@ public class AIController {
     private final AiServices aiServices;
 
     @PostMapping(UrlMapping.AI_QUERY)
-    public ResponseEntity<String> processAiQuery(@RequestBody Map<String, String> request) {
-        String answer = aiServices.processQuery(request.get("query"));
+    public ResponseEntity<String> processAiQuery(@RequestBody Map<String, String> request,
+                                                 @RequestParam(required = false) String redirectTo) {
+        String answer = aiServices.processQuery(request.get("query"), redirectTo);
         return ResponseEntity.ok(answer);
     }
 }

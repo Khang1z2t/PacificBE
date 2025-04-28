@@ -35,14 +35,16 @@ public class AuthController {
 
     @GetMapping(UrlMapping.OAUTH2_GOOGLE)
     @Operation(summary = "API đăng nhập bằng google")
-    ResponseEntity<ApiResponse<String>> loginGoogle() {
-        return ResponseEntity.ok(new ApiResponse<>(200, "Thành công", authService.getGoogleUrl()));
+    ResponseEntity<ApiResponse<String>> loginGoogle(@RequestParam(required = false) String redirectTo) {
+        return ResponseEntity.ok(new ApiResponse<>(200, "Thành công", authService.getGoogleUrl(redirectTo)));
     }
 
     @GetMapping(UrlMapping.OAUTH2_GOOGLE_CALLBACK)
     @Operation(summary = "API callback đăng nhập bằng google")
-    RedirectView loginGoogleCallback(@RequestParam(required = false) String code, @RequestParam(required = false) String error) {
-        return authService.loginGoogleCallback(code, error);
+    RedirectView loginGoogleCallback(@RequestParam(required = false) String code,
+                                     @RequestParam(required = false) String error,
+                                     @RequestParam(required = false) String state) {
+        return authService.loginGoogleCallback(code, error, state);
     }
 
     @GetMapping(UrlMapping.AUTHENTICATE_TOKEN)

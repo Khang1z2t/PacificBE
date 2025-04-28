@@ -390,7 +390,7 @@ public class BookingServiceImpl implements BookingService {
         // Tạo thông tin hủy
         String reasonInfo = String.format(
                 "[Cancellation] Reason: %s|CancelledBy: %s|DateRequested: %s",
-                request.getReason() != null ? request.getReason() : "N/A",
+                request.getReason() != null ? request.getReason().trim() : "N/A",
                 role + " - " + booking.getUser().getId(),
                 LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"))
         );

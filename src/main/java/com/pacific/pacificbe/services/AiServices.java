@@ -1,5 +1,5 @@
 package com.pacific.pacificbe.services;
 
 public interface AiServices {
-    public String processQuery(String query);
+    String processQuery(String query, String redirectTo);
 }

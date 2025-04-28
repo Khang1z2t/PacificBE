@@ -29,6 +29,7 @@ public class CheckOutController {
     @Operation(summary = "Thanh toán tour")
     public String checkoutTour(@RequestParam("amount") double orderTotal,
                                @RequestParam("orderInfo") String orderInfo,
+                               @RequestParam(required = false) String redirectTo,
                                HttpServletRequest request) {
         int amount = (int) Math.round(orderTotal);
         VNPAYRequest vnpayRequest = VNPAYRequest.builder()
@@ -36,7 +37,7 @@ public class CheckOutController {
                 .orderInfo(orderInfo) // Gửi orderInfo trực tiếp, logic ghép userId sẽ xử lý trong service
                 .urlReturn("") // Để trống, service sẽ tự tạo baseUrl
                 .build();
-        return vnPayService.createOrder(request, vnpayRequest);
+        return vnPayService.createOrder(request, vnpayRequest, redirectTo);
     }
 
     @GetMapping(UrlMapping.CHECKOUT_RETURN)
