@@ -68,6 +68,13 @@ public class AuthServiceImpl implements AuthService {
     @Value("${oauth2.google.grantType}")
     private String googleGrantType;
 
+    @Value("${oauth2.facebook.clientId}")
+    private String facebookClientId;
+    @Value("${oauth2.facebook.clientSecret}")
+    private String facebookClientSecret;
+    @Value("${oauth2.facebook.redirectUri}")
+    private String facebookRedirectUri;
+
     @Override
     public AuthenticationResponse loginUser(LoginRequest request) {
         // Mọi logic đều xử lý ở service
@@ -208,14 +215,9 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public String getGoogleUrl(String redirectTo) {
-//        return "https://accounts.google.com/o/oauth2/auth"
-//                + "?client_id=" + googleClientId
-//                + "&redirect_uri=" + googleRedirectUri
-//                + "&response_type=code"
-//                + "&scope=openid%20profile%20email";
         if (!authUtils.allowedRedirectUrls.contains(redirectTo)) {
-            log.warn("Invalid redirect_to: {}, using default: {}", redirectTo, authUtils.allowedRedirectUrls.get(0));
-            redirectTo = authUtils.allowedRedirectUrls.get(0);
+            log.warn("Invalid redirect_to: {}, using default: {}", redirectTo, authUtils.allowedRedirectUrls.getFirst());
+            redirectTo = authUtils.allowedRedirectUrls.getFirst();
         }
         String state = Base64.getUrlEncoder().encodeToString(redirectTo.getBytes());
         return UriComponentsBuilder.fromUriString("https://accounts.google.com/o/oauth2/auth")
@@ -236,11 +238,11 @@ public class AuthServiceImpl implements AuthService {
             redirectTo = new String(Base64.getUrlDecoder().decode(state));
             if (!authUtils.allowedRedirectUrls.contains(redirectTo)) {
                 log.warn("Invalid redirect_to: {}", redirectTo);
-                redirectTo = authUtils.allowedRedirectUrls.get(0);
+                redirectTo = authUtils.allowedRedirectUrls.getFirst();
             }
         } catch (Exception e) {
             log.error("Invalid state parameter: {}", state, e);
-            redirectTo = authUtils.allowedRedirectUrls.get(0);
+            redirectTo = authUtils.allowedRedirectUrls.getFirst();
         }
         String redirectBaseUrl = redirectTo + GOOGLE_REDIRECT;
         log.debug("Redirecting to: {}", redirectBaseUrl);
@@ -299,6 +301,27 @@ public class AuthServiceImpl implements AuthService {
                     .toUriString();
             return new RedirectView(url);
         }
+    }
+
+    @Override
+    public String getFacebookUrl(String redirectTo) {
+        if (!authUtils.allowedRedirectUrls.contains(redirectTo)) {
+            redirectTo = authUtils.allowedRedirectUrls.getFirst();
+        }
+        String state = Base64.getUrlEncoder().encodeToString(redirectTo.getBytes());
+        return UriComponentsBuilder.fromUriString("https://www.facebook.com/v21.0/dialog/oauth")
+                .queryParam("client_id", facebookClientId)
+                .queryParam("redirect_uri", facebookRedirectUri)
+                .queryParam("response_type", "code")
+                .queryParam("scope", "public_profile,email")
+                .queryParam("state", state)
+                .build()
+                .toUriString();
+    }
+
+    @Override
+    public RedirectView loginFacebookCallback(String code, String error, String state) {
+        return null;
     }
 
     @Override

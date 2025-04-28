@@ -30,6 +30,10 @@ public interface AuthService {
 
     RedirectView loginGoogleCallback(String code, String error, String state);
 
+    String getFacebookUrl(String redirectTo);
+
+    RedirectView loginFacebookCallback(String code, String error, String state);
+
     boolean changePassword(ChangePasswordRequest request);
 
     boolean updateUsername(String username);

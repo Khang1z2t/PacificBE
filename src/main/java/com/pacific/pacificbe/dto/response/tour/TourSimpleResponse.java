@@ -11,6 +11,7 @@ import lombok.experimental.FieldDefaults;
 public class TourSimpleResponse {
     String id;
     String title;
+    String description;
     String thumbnail;
     String slug;
 }
