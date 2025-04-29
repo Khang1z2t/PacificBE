@@ -52,9 +52,14 @@ public class User extends BaseEntity implements UserDetails {
     @Column(name = "deposit", precision = 18, scale = 2)
     private BigDecimal deposit;
 
+    @Size(max = 50)
+    @Nationalized
+    @Column(name = "username", nullable = false, length = 50, unique = true)
+    private String username;
+
     @Size(max = 100)
     @Nationalized
-    @Column(name = "email", length = 100)
+    @Column(name = "email", length = 100, unique = true)
     private String email;
 
     @Column(name = "email_verified")
@@ -99,11 +104,6 @@ public class User extends BaseEntity implements UserDetails {
     @ColumnDefault("'active'")
     @Column(name = "status", length = 50)
     private String status;
-
-    @Size(max = 50)
-    @Nationalized
-    @Column(name = "username", nullable = false, length = 50)
-    private String username;
 
     @Column(name = "username_last_changed")
     private LocalDateTime usernameLastChanged;

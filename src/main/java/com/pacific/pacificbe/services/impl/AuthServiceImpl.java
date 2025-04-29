@@ -107,11 +107,13 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public UserRegisterResponse registerUser(UserRegisterRequest request) {
         if (userRepository.existsByUsername(request.getUsername())) {
-            throw new AppException(ErrorCode.USER_ALREADY_EXISTS);
-        } else if (userRepository.existsByEmail(request.getEmail())) {
-            throw new AppException(ErrorCode.EMAIL_ALREADY_EXISTS);
-        } else if (userRepository.existsByUsernameAndEmail(request.getUsername(), request.getEmail())) {
-            throw new AppException(ErrorCode.USER_ALREADY_EXISTS);
+            throw new AppException(ErrorCode.USER_ALREADY_EXISTS, "Tên người dùng đã tồn tại");
+        }
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new AppException(ErrorCode.EMAIL_ALREADY_EXISTS, "Email đã tồn tại");
+        }
+        if (userRepository.existsByUsernameAndEmail(request.getUsername(), request.getEmail())) {
+            throw new AppException(ErrorCode.USER_ALREADY_EXISTS, "Tài khoản đã tồn tại");
         }
 
         User user = userMapper.toUser(request);
@@ -119,6 +121,7 @@ public class AuthServiceImpl implements AuthService {
         user.setActive(true);
         user.setRole(UserRole.USER.toString());
         user.setAvatarUrl("https://drive.google.com/file/d/1_RTHRBB6K8yU2nsiSJU5LHU2d9FPbfvX/view?usp=drive_link");
+        user.setStatus(UserStatus.ACTIVE.toString());
         user = userRepository.save(user);
 
         Map<String, Object> extraClaims = new HashMap<>();
@@ -158,9 +161,9 @@ public class AuthServiceImpl implements AuthService {
             throw new AppException(ErrorCode.TOKEN_EXPIRED);
         } catch (Exception e) {
             // Handle other authentication errors
+            log.error("Error during authentication: {}", e.getMessage(), e);
             throw new AppException(ErrorCode.UNAUTHENTICATED);
         }
-
     }
 
     @Override

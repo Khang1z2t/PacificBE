@@ -6,14 +6,8 @@ import com.pacific.pacificbe.dto.response.refundFunction.*;
 import com.pacific.pacificbe.exception.AppException;
 import com.pacific.pacificbe.exception.ErrorCode;
 import com.pacific.pacificbe.mapper.BookingMapper;
-import com.pacific.pacificbe.model.Booking;
-import com.pacific.pacificbe.model.SystemWallet;
-import com.pacific.pacificbe.model.Transaction;
-import com.pacific.pacificbe.model.User;
-import com.pacific.pacificbe.repository.BookingRepository;
-import com.pacific.pacificbe.repository.SystemWalletRepository;
-import com.pacific.pacificbe.repository.UserRepository;
-import com.pacific.pacificbe.repository.TransactionRepository;
+import com.pacific.pacificbe.model.*;
+import com.pacific.pacificbe.repository.*;
 import com.pacific.pacificbe.services.WalletService;
 import com.pacific.pacificbe.utils.AuthUtils;
 import com.pacific.pacificbe.utils.IdUtil;
@@ -40,6 +34,8 @@ import static com.pacific.pacificbe.utils.Constant.SYS_WALLET_ID;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class WalletServiceImpl implements WalletService {
+    private final TourDetailRepository tourDetailRepository;
+    private final VoucherRepository voucherRepository;
     private final UserRepository userRepository;
     private final BookingRepository bookingRepository;
     private final SystemWalletRepository systemWalletRepository;
@@ -123,6 +119,19 @@ public class WalletServiceImpl implements WalletService {
             transactionRepository.save(transaction);
 
             booking.setStatus(BookingStatus.CANCELLED.toString());
+
+            Voucher voucher = booking.getVoucher();
+            TourDetail tourDetail = booking.getTourDetail();
+            if (voucher != null) {
+                voucher.setQuantity(voucher.getQuantity() + 1);
+                voucherRepository.save(voucher);
+                booking.setVoucher(null);
+            }
+            if (tourDetail != null) {
+                tourDetail.setQuantity(tourDetail.getQuantity() + 1);
+                tourDetailRepository.save(tourDetail);
+            }
+
         } else {
             Transaction transaction = transactionRepository.findByBookingIdAndType(booking.getId(), WalletStatus.REFUND_REQUEST.toString());
             transaction.setStatus(WalletStatus.REJECTED.toString());

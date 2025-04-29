@@ -113,9 +113,6 @@ public class Booking extends BaseEntity {
     @JoinColumn(name = "voucher_id")
     private Voucher voucher;
 
-    @OneToMany(mappedBy = "booking")
-    private Set<Invoice> invoices = new LinkedHashSet<>();
-
     @OneToOne(mappedBy = "booking")
     private Review review;
 

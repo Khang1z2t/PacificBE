@@ -178,14 +178,6 @@ public class BookingServiceImpl implements BookingService {
         TourDetail tourDetail = tourDetailRepository.findByIdWithLock(tourDetailId)
                 .orElseThrow(() -> new AppException(ErrorCode.TOUR_DETAIL_NOT_FOUND));
 
-//        LocalDateTime tourDate = tourDetail.getStartDate();
-//        boolean hasExistingBooking = bookingRepository.existsByUserAndTourDetailAndTourDetail_StartDate(user, tourDetail, tourDate);
-//        if (hasExistingBooking) {
-//            throw new AppException(ErrorCode.BOOKING_ALREADY_EXISTS,
-//                    "Bạn đã có booking cho tour này trong ngày " +
-//                            tourDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + ".");
-//        }
-
 //        sẽ thay thế bằng
 //        LocalDateTime tourDate = tourDetail.getStartDate();
 //        for (BookingDetailRequest detail : request.getBookingDetails()) {
@@ -214,6 +206,8 @@ public class BookingServiceImpl implements BookingService {
             throw new AppException(ErrorCode.INSUFFICIENT_SEATS,
                     String.format("Tour chỉ còn %d chỗ trống, không đủ cho %d vé yêu cầu", availableSeats, requestedSeats));
         }
+        tourDetail.setQuantity(availableSeats - requestedSeats);
+        tourDetailRepository.save(tourDetail);
 
         int adultNum = 0;
         int childrenNum = 0;
@@ -231,6 +225,8 @@ public class BookingServiceImpl implements BookingService {
         booking.setActive(true);
         booking.setBookingNo(generatorBookingNo(bookingRepository.findLatestBookingNoOfToday()));
         booking.setStatus(BookingStatus.PENDING.toString());
+        bookingRepository.save(booking);
+
 
         Hotel hotel = tourDetail.getHotel();
         Transport transport = tourDetail.getTransport();
@@ -294,14 +290,13 @@ public class BookingServiceImpl implements BookingService {
         booking.setChildrenNum(childrenNum);
         booking.setTotalNumber(totalNumber);
         booking.setBookingDetails(bookingDetails);
+        bookingRepository.save(booking);
 
         // Giảm quantity của voucher sau khi xác nhận booking thành công
         if (voucher != null) {
             voucher.setQuantity(voucher.getQuantity() - 1);
             voucherRepository.save(voucher);
         }
-
-        bookingRepository.save(booking);
         return bookingMapper.toBookingResponse(booking);
     }
 
