@@ -13,4 +13,5 @@ public class Constant {
 
     public static final String FE_LOCAL_URL = "http://localhost:3000";
     public static final String FE_PROD_URL = "https://pacific-vn.vercel.app";
+    public static final String FE_PROD_URL_2 = "https://pacifictravel.id.vn";
 }

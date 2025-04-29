@@ -56,10 +56,7 @@ public class VNPAYServiceImpl implements VNPAYService {
         if (vnpayRequest.getAmount() <= 0) {
             return "/";
         }
-        if (!authUtils.allowedRedirectUrls.contains(redirectTo)) {
-            log.warn("Invalid redirect_to: {}, using default: {}", redirectTo, authUtils.allowedRedirectUrls.getFirst());
-            redirectTo = authUtils.allowedRedirectUrls.getFirst();
-        }
+        redirectTo = authUtils.getRedirectUrl(redirectTo);
         String state = Base64.getUrlEncoder().encodeToString(redirectTo.getBytes());
         String userId = AuthUtils.getCurrentUserId();
         String baseUrl = vnpayRequest.getUrlReturn();
@@ -241,15 +238,7 @@ public class VNPAYServiceImpl implements VNPAYService {
         String bookingNo = parts[1];
         String vnp_TxnRef = parts[2];
         String state = parts[3];
-        String redirectTo;
-        try {
-            redirectTo = new String(Base64.getUrlDecoder().decode(state));
-            if (!authUtils.allowedRedirectUrls.contains(redirectTo)) {
-                redirectTo = authUtils.allowedRedirectUrls.getFirst();
-            }
-        } catch (Exception e) {
-            redirectTo = authUtils.allowedRedirectUrls.getFirst();
-        }
+        String redirectTo = authUtils.getRedirectUrl(state);
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new AppException(ErrorCode.USER_NOT_FOUND));
 //        tối giản code, hay vì return lỗi ở dưới thì return ở trên

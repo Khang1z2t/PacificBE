@@ -51,14 +51,7 @@ public class AiServicesImpl implements AiServices {
     @Override
     @Cacheable(value = "aiResponses", key = "#query", unless = "#result == null")
     public String processQuery(String query, String redirectTo) {
-        String feUrl = redirectTo;
-        try {
-            if (!authUtils.allowedRedirectUrls.contains(redirectTo)) {
-                feUrl = authUtils.allowedRedirectUrls.get(0);
-            }
-        } catch (Exception e) {
-            feUrl = authUtils.allowedRedirectUrls.get(0);
-        }
+        String feUrl = authUtils.getRedirectUrl(redirectTo);;
 
         // Kiểm tra quyền và câu hỏi nhạy cảm
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();

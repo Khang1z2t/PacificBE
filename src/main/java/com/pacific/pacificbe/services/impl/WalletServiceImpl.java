@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -95,11 +96,42 @@ public class WalletServiceImpl implements WalletService {
             throw new AppException(ErrorCode.INVALID_STATUS);
         }
 
+        String cancellationReason = booking.getNotes();
+        if (cancellationReason == null || !cancellationReason.startsWith("[Cancellation]")) {
+            throw new AppException(ErrorCode.UNCATEGORIZED_EXCEPTION, "Missing or invalid cancellation reason");
+        }
+
+        LocalDateTime dateRequested = extractDateRequested(cancellationReason);
+        TourDetail tourDetail = booking.getTourDetail();
+        Transaction paymentTransaction = transactionRepository.findByBookingIdAndType(booking.getId(),
+                WalletStatus.COMPLETED.toString());
+
+        LocalDateTime paymentTime = paymentTransaction.getCreatedAt();
+        long hoursSincePayment = ChronoUnit.HOURS.between(paymentTime, dateRequested);
+        BigDecimal refundPercentage;
+        if (hoursSincePayment <= 12) { // Hoặc <= 24 nếu muốn 1 ngày
+            refundPercentage = BigDecimal.valueOf(1.0); // 100% nếu trong 12 giờ
+        } else {
+            // Dựa vào ngày khởi hành tour
+            long daysUntilTour = ChronoUnit.DAYS.between(dateRequested, tourDetail.getStartDate());
+            if (daysUntilTour >= 30) {
+                refundPercentage = BigDecimal.valueOf(1.0); // 100%
+            } else if (daysUntilTour >= 15) {
+                refundPercentage = BigDecimal.valueOf(0.9); // 90%
+            } else if (daysUntilTour >= 7) {
+                refundPercentage = BigDecimal.valueOf(0.8); // 80%
+            } else if (daysUntilTour >= 3) {
+                refundPercentage = BigDecimal.valueOf(0.7); // 70%
+            } else {
+                refundPercentage = BigDecimal.valueOf(0.6); // 60%
+            }
+        }
+
         if (request.isApproved()) {
             SystemWallet systemWallet = systemWalletRepository.findById(SYS_WALLET_ID)
                     .orElseThrow(() -> new AppException(ErrorCode.WALLET_NOT_FOUND));
 
-            BigDecimal refundAmount = booking.getTotalAmount().multiply(BigDecimal.valueOf(0.8));
+            BigDecimal refundAmount = booking.getTotalAmount().multiply(refundPercentage);
 
             if (systemWallet.getBalance().compareTo(refundAmount) < 0) {
                 throw new AppException(ErrorCode.WALLET_NOT_ENOUGH);
@@ -109,19 +141,26 @@ public class WalletServiceImpl implements WalletService {
             user.setDeposit(user.getDeposit().add(refundAmount));
             userRepository.save(user);
 
+            // Cập nhật ví hệ thống
             systemWallet.setBalance(systemWallet.getBalance().subtract(refundAmount));
             systemWalletRepository.save(systemWallet);
 
-            Transaction transaction = transactionRepository.findByBookingIdAndType(booking.getId(), WalletStatus.REFUND_REQUEST.toString());
+            // Cập nhật giao dịch
+            Transaction transaction = transactionRepository.findByBookingIdAndType(
+                    booking.getId(), WalletStatus.REFUND_REQUEST.toString());
             transaction.setType(WalletStatus.REFUNDED.toString());
             transaction.setStatus(WalletStatus.COMPLETED.toString());
-            transaction.setDescription("Hoàn tiền cho booking " + booking.getBookingNo());
+            transaction.setDescription(String.format(
+                    "Hoàn tiền %s%% (%s) cho booking %s. Lý do: %s",
+                    refundPercentage.multiply(BigDecimal.valueOf(100)),
+                    refundAmount,
+                    booking.getBookingNo(),
+                    extractReason(cancellationReason)));
             transactionRepository.save(transaction);
 
             booking.setStatus(BookingStatus.CANCELLED.toString());
 
             Voucher voucher = booking.getVoucher();
-            TourDetail tourDetail = booking.getTourDetail();
             if (voucher != null) {
                 voucher.setQuantity(voucher.getQuantity() + 1);
                 voucherRepository.save(voucher);
@@ -131,9 +170,9 @@ public class WalletServiceImpl implements WalletService {
                 tourDetail.setQuantity(tourDetail.getQuantity() + 1);
                 tourDetailRepository.save(tourDetail);
             }
-
         } else {
-            Transaction transaction = transactionRepository.findByBookingIdAndType(booking.getId(), WalletStatus.REFUND_REQUEST.toString());
+            Transaction transaction = transactionRepository.findByBookingIdAndType(booking.getId(),
+                    WalletStatus.REFUND_REQUEST.toString());
             transaction.setStatus(WalletStatus.REJECTED.toString());
             transactionRepository.save(transaction);
             booking.setStatus(BookingStatus.PAID.toString());
@@ -321,6 +360,24 @@ public class WalletServiceImpl implements WalletService {
         systemWallet.setUpdatedAt(LocalDateTime.now());
         systemWalletRepository.save(systemWallet);
 
+    }
+
+    private LocalDateTime extractDateRequested(String cancellationReason) {
+        try {
+            String dateStr = cancellationReason.split("\\|")[2].split(": ")[1]; // Lấy "19/04/2025 15:34:47"
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+            return LocalDateTime.parse(dateStr, formatter);
+        } catch (Exception e) {
+            throw new AppException(ErrorCode.UNCATEGORIZED_EXCEPTION, "Failed to parse DateRequested: " + e.getMessage());
+        }
+    }
+
+    private String extractReason(String cancellationReason) {
+        try {
+            return cancellationReason.split("\\|")[0].split(": ")[1]; // Lấy "test api hoàn mệt voãi ko duyệt t trừ điểm"
+        } catch (Exception e) {
+            return "Không có lý do cụ thể";
+        }
     }
 
 }

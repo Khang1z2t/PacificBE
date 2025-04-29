@@ -6,6 +6,7 @@ import com.pacific.pacificbe.model.SystemWallet;
 import com.pacific.pacificbe.model.User;
 import com.pacific.pacificbe.repository.SystemWalletRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,6 +17,7 @@ import java.util.List;
 
 import static com.pacific.pacificbe.utils.Constant.SYS_WALLET_ID;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class AuthUtils {
@@ -36,8 +38,23 @@ public class AuthUtils {
                 () -> new AppException(ErrorCode.WALLET_NOT_FOUND));
     }
 
-    public final List<String> allowedRedirectUrls = Arrays.asList(
+    public String getRedirectUrl(String redirectUrl) {
+        String defaultUrl = allowedRedirectUrls.getFirst();
+
+        if (redirectUrl == null || !allowedRedirectUrls.contains(redirectUrl)) {
+            if (redirectUrl != null) {
+                log.warn("Invalid redirect_to: {}, using default: {}", redirectUrl, defaultUrl);
+            }
+            return defaultUrl;
+        }
+
+        return redirectUrl;
+    }
+
+    private final List<String> allowedRedirectUrls = Arrays.asList(
             Constant.FE_LOCAL_URL,
-            Constant.FE_PROD_URL
+            Constant.FE_PROD_URL,
+            Constant.FE_PROD_URL_2
     );
+
 }

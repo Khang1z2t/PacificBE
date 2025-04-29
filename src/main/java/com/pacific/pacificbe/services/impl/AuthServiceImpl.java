@@ -218,10 +218,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public String getGoogleUrl(String redirectTo) {
-        if (!authUtils.allowedRedirectUrls.contains(redirectTo)) {
-            log.warn("Invalid redirect_to: {}, using default: {}", redirectTo, authUtils.allowedRedirectUrls.getFirst());
-            redirectTo = authUtils.allowedRedirectUrls.getFirst();
-        }
+        redirectTo = authUtils.getRedirectUrl(redirectTo);
         String state = Base64.getUrlEncoder().encodeToString(redirectTo.getBytes());
         return UriComponentsBuilder.fromUriString("https://accounts.google.com/o/oauth2/auth")
                 .queryParam("client_id", googleClientId)
@@ -236,17 +233,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public RedirectView loginGoogleCallback(String code, String error, String state) {
         log.debug("Google login callback: code={}, error={}, state={}", code, error, state);
-        String redirectTo;
-        try {
-            redirectTo = new String(Base64.getUrlDecoder().decode(state));
-            if (!authUtils.allowedRedirectUrls.contains(redirectTo)) {
-                log.warn("Invalid redirect_to: {}", redirectTo);
-                redirectTo = authUtils.allowedRedirectUrls.getFirst();
-            }
-        } catch (Exception e) {
-            log.error("Invalid state parameter: {}", state, e);
-            redirectTo = authUtils.allowedRedirectUrls.getFirst();
-        }
+        String redirectTo = authUtils.getRedirectUrl(state);
         String redirectBaseUrl = redirectTo + GOOGLE_REDIRECT;
         log.debug("Redirecting to: {}", redirectBaseUrl);
         if (error != null) {
@@ -308,9 +295,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public String getFacebookUrl(String redirectTo) {
-        if (!authUtils.allowedRedirectUrls.contains(redirectTo)) {
-            redirectTo = authUtils.allowedRedirectUrls.getFirst();
-        }
+        redirectTo = authUtils.getRedirectUrl(redirectTo);
         String state = Base64.getUrlEncoder().encodeToString(redirectTo.getBytes());
         return UriComponentsBuilder.fromUriString("https://www.facebook.com/v21.0/dialog/oauth")
                 .queryParam("client_id", facebookClientId)
