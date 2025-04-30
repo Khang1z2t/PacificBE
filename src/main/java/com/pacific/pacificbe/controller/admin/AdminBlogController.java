@@ -89,9 +89,8 @@ public class AdminBlogController {
 
     @DeleteMapping(UrlMapping.DELETE_BLOG)
     @Operation(summary = "Xóa bài blog theo ID")
-    public ResponseEntity<ApiResponse<Void>> deleteBlog(@PathVariable String id,
-                                                        @RequestParam(required = false, defaultValue = "true") Boolean active) {
-        blogService.deleteBlog(id, active != null && active);
+    public ResponseEntity<ApiResponse<Void>> deleteBlog(@PathVariable String id) {
+        blogService.deleteBlog(id);
         return ResponseEntity.ok(new ApiResponse<>(200, "Xóa bài blog thành công", null));
     }
 
@@ -138,9 +137,8 @@ public class AdminBlogController {
 
     @DeleteMapping(UrlMapping.DELETE_BLOG_CATEGORY)
     @Operation(summary = "Xóa danh mục blog theo ID")
-    public ResponseEntity<ApiResponse<Void>> deleteBlogCategory(@PathVariable String id,
-                                                                @RequestParam(required = false, defaultValue = "true") Boolean active) {
-        blogService.deleteBlogCategory(id, active != null && active);
+    public ResponseEntity<ApiResponse<Void>> deleteBlogCategory(@PathVariable String id) {
+        blogService.deleteBlogCategory(id);
         return ResponseEntity.ok(new ApiResponse<>(200, "Xóa danh mục blog thành công", null));
     }
 

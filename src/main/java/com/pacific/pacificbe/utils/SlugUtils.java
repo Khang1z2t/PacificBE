@@ -1,16 +1,20 @@
 package com.pacific.pacificbe.utils;
 
 import com.pacific.pacificbe.model.BlogCategory;
+import com.pacific.pacificbe.repository.BlogCategoryRepository;
 import com.pacific.pacificbe.repository.BlogRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.text.Normalizer;
 
+import static com.pacific.pacificbe.utils.Constant.BLOG_CATE_DEFAULT_ID;
+
 @Component
 @RequiredArgsConstructor
 public class SlugUtils {
     private final BlogRepository blogRepository;
+    private final BlogCategoryRepository blogCategoryRepository;
 
     public String generateSlug(String title) {
         // data test
@@ -33,6 +37,9 @@ public class SlugUtils {
     }
 
     public String generateSlug(String title, BlogCategory category) {
+        if (category == null) {
+            category = blogCategoryRepository.findById(BLOG_CATE_DEFAULT_ID).orElse(null);
+        }
         String slug = generateSlug(title);
         String finalSlug = slug;
         if (category != null && category.getSlug() != null && !category.getSlug().isEmpty()) {
