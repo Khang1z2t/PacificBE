@@ -22,7 +22,7 @@ public interface BlogService {
 
     BlogResponse updateStatus(String id, UpdateStatusBlogRequest request);
 
-    void deleteBlog(String id, boolean active);
+    void deleteBlog(String id);
 
     BlogResponse updateBlogStatus(String id, UpdateStatusBlogRequest request);
 
@@ -36,7 +36,7 @@ public interface BlogService {
 
     BlogCategoryResponse updateBlogCategory(String id, BlogCategoryRequest request);
 
-    void deleteBlogCategory(String id, boolean active);
+    void deleteBlogCategory(String id);
 
     Boolean subscribeBlog(String email, String name);
     Boolean unsubscribeBlog(String token);

@@ -119,7 +119,7 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public void deleteBlog(String id, boolean active) {
+    public void deleteBlog(String id) {
         Blog blog = blogRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.BLOG_NOT_FOUND));
         blogRepository.delete(blog);
@@ -184,12 +184,23 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public void deleteBlogCategory(String id, boolean active) {
+    public void deleteBlogCategory(String id) {
+        if (id.equals(BLOG_CATE_DEFAULT_ID)) {
+            throw new AppException(ErrorCode.CATEGORY_NOT_FOUND, "Không thể xóa danh mục mặc định");
+        }
         BlogCategory blogCategory = blogCategoryRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
-        blogCategory.setActive(active);
-        blogCategory.setDeleteAt(active ? null : LocalDateTime.now());
-        blogCategoryRepository.save(blogCategory);
+        BlogCategory otherCategory = blogCategoryRepository.findById(BLOG_CATE_DEFAULT_ID).orElse(null);
+        List<Blog> blogsToUpdate = blogRepository.findByCategory(blogCategory).stream()
+                .map(blog -> {
+                    blog.setCategory(otherCategory);
+                    String newSlug = slugUtils.generateSlug(blog.getTitle(), otherCategory);
+                    blog.setSlug(newSlug);
+                    return blog;
+                })
+                .collect(Collectors.toList());
+        blogRepository.saveAll(blogsToUpdate);
+        blogCategoryRepository.delete(blogCategory);
     }
 
     @Override
