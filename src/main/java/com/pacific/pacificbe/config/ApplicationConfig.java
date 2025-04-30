@@ -8,6 +8,7 @@ import com.pacific.pacificbe.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -25,6 +26,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.TimeZone;
 
+@Slf4j
 @Configuration
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true)
@@ -68,6 +70,7 @@ public class ApplicationConfig {
     @Bean
     CommandLineRunner runner(TourRepository tourRepository) {
         return args -> {
+            log.info("App đã được chạy với bản build mới nhất: {}", System.getProperty("user.dir"));
             // Code khởi tạo dữ liệu hoặc thực hiện các tác vụ khác khi ứng dụng khởi động
 
 //            System.out.println(tourRepository.findAllWithFilters(null, null, null, null, null, null));
