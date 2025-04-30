@@ -12,8 +12,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.pacific.pacificbe.utils.Constant.SYS_WALLET_ID;
 
@@ -41,14 +45,24 @@ public class AuthUtils {
     public String getRedirectUrl(String redirectUrl) {
         String defaultUrl = allowedRedirectUrls.getFirst();
 
-        if (redirectUrl == null || !allowedRedirectUrls.contains(redirectUrl)) {
-            if (redirectUrl != null) {
-                log.warn("Invalid redirect_to: {}, using default: {}", redirectUrl, defaultUrl);
-            }
+        if (redirectUrl == null) {
+            log.warn("Redirect URL is null: returning default URL {}", defaultUrl);
             return defaultUrl;
         }
 
-        return redirectUrl;
+        String domain = getDomainFromUrl(redirectUrl);
+        if (domain == null) {
+            log.warn("Invalid redirect URL: {}. Returning default URL {}", redirectUrl, defaultUrl);
+            return defaultUrl;
+        }
+
+        String matchedUrl = domainToUrl.get(domain);
+        if (matchedUrl == null) {
+            log.warn("Invalid domain: {}. Returning default URL {}", domain, defaultUrl);
+            return defaultUrl;
+        }
+
+        return matchedUrl;
     }
 
     private final List<String> allowedRedirectUrls = Arrays.asList(
@@ -57,4 +71,24 @@ public class AuthUtils {
             Constant.FE_PROD_URL_2
     );
 
+    private final Map<String, String> domainToUrl = allowedRedirectUrls.stream()
+            .collect(Collectors.toMap(
+                    this::getDomainFromUrl,
+                    url -> url,
+                    (u1, u2) -> u1 // Keep the first URL if there are duplicates
+            ));
+
+    private String getDomainFromUrl(String url) {
+        try {
+            URI uri = new URI(url);
+            String host = uri.getHost();
+            if (host == null) {
+                return null;
+            }
+            return host.startsWith("www.") ? host.substring(4) : host;
+        } catch (URISyntaxException e) {
+            log.warn("Invalid URL format: {}", url);
+            return null;
+        }
+    }
 }
