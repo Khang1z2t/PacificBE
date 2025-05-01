@@ -192,11 +192,10 @@ public class BlogServiceImpl implements BlogService {
                 .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
         BlogCategory otherCategory = blogCategoryRepository.findById(BLOG_CATE_DEFAULT_ID).orElse(null);
         List<Blog> blogsToUpdate = blogRepository.findByCategory(blogCategory).stream()
-                .map(blog -> {
+                .peek(blog -> {
                     blog.setCategory(otherCategory);
                     String newSlug = slugUtils.generateSlug(blog.getTitle(), otherCategory);
                     blog.setSlug(newSlug);
-                    return blog;
                 })
                 .collect(Collectors.toList());
         blogRepository.saveAll(blogsToUpdate);

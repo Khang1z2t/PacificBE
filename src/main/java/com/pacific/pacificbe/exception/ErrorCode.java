@@ -131,7 +131,9 @@ public enum ErrorCode {
     WALLET_NOT_FOUND(2002, "Wallet not found", HttpStatus.NOT_FOUND),
     WALLET_NOT_ENOUGH(2003, "Wallet not enough", HttpStatus.NOT_FOUND),
     INVALID_REFUND_AMOUNT(2004, "Invalid refund amount", HttpStatus.NOT_FOUND),
-    WALLET_TRANSACTION_NOT_FOUND(2003, "Wallet transaction not found", HttpStatus.NOT_FOUND);
+    WALLET_TRANSACTION_NOT_FOUND(2003, "Wallet transaction not found", HttpStatus.NOT_FOUND),
+    OAUTH_PROVIDER_NOT_FOUND(2004, "OAuth not support", HttpStatus.NOT_FOUND),
+    ;
 
     //  ^---------------------
     //  Lưu ý ở đây phải kết thúc enum bằng dấu ; chứ không phải dấu ,

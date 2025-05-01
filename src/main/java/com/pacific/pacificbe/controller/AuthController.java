@@ -56,9 +56,18 @@ public class AuthController {
     @GetMapping(UrlMapping.OAUTH2_FACEBOOK_CALLBACK)
     @Operation(summary = "API callback đăng nhập bằng facebook")
     RedirectView loginFacebookCallback(@RequestParam(required = false) String code,
-                                        @RequestParam(required = false) String error,
-                                        @RequestParam(required = false) String state) {
+                                       @RequestParam(required = false) String error,
+                                       @RequestParam(required = false) String state) {
         return authService.loginFacebookCallback(code, error, state);
+    }
+
+    @GetMapping(UrlMapping.OAUTH2_CALLBACK)
+    @Operation(summary = "API callback đăng nhập bằng google hoặc facebook (hoặc các dịch vụ khác)")
+    RedirectView loginCallback(@RequestParam(required = false) String type,
+                               @RequestParam(required = false) String code,
+                               @RequestParam(required = false) String error,
+                               @RequestParam(required = false) String state) {
+        return authService.loginOAuthCallback(type, code, error, state);
     }
 
 

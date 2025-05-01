@@ -151,7 +151,7 @@ public class AdminBlogController {
     }
 
     @PostMapping(UrlMapping.UNSUBSCRIBE_BLOG)
-    @Operation(summary = "Hủy đăng ký nhận thông báo khi có bài viết mới")
+    @Operation(summary = "Hủy đăng ký nhận thông báo khi có bài viết mới (token đã được mã hóa)")
     public ResponseEntity<ApiResponse<Boolean>> unsubscribeBlog(@PathVariable String token) {
         return ResponseEntity.ok(new ApiResponse<>(200,
                 "Hủy đăng ký nhận thông báo thành công", blogService.unsubscribeBlog(token)));

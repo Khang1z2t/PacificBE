@@ -34,6 +34,8 @@ public interface AuthService {
 
     RedirectView loginFacebookCallback(String code, String error, String state);
 
+    RedirectView loginOAuthCallback(String type, String code, String error, String state);
+
     boolean changePassword(ChangePasswordRequest request);
 
     boolean updateUsername(String username);
