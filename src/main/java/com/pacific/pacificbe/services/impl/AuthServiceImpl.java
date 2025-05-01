@@ -254,7 +254,8 @@ public class AuthServiceImpl implements AuthService {
                 .findFirst()
                 .orElseThrow(() -> new AppException(ErrorCode.OAUTH_PROVIDER_NOT_FOUND));
 
-        String redirectTo = authUtils.getRedirectUrl(state);
+        String stateUrl = new String(Base64.getUrlDecoder().decode(state));
+        String redirectTo = authUtils.getRedirectUrl(stateUrl);
         String redirectBaseUrl = redirectTo + OAUTH2_REDIRECT;
         log.debug("Redirecting to: {}", redirectBaseUrl);
         if (error != null) {
