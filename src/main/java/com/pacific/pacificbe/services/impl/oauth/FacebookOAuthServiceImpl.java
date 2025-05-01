@@ -1,4 +1,4 @@
-package com.pacific.pacificbe.services.impl;
+package com.pacific.pacificbe.services.impl.oauth;
 
 import com.pacific.pacificbe.dto.request.oauth2.FacebookTokenRequest;
 import com.pacific.pacificbe.dto.request.oauth2.OAuthTokenRequest;
@@ -10,11 +10,15 @@ import com.pacific.pacificbe.exception.AppException;
 import com.pacific.pacificbe.exception.ErrorCode;
 import com.pacific.pacificbe.integration.facebook.FacebookClient;
 import com.pacific.pacificbe.services.OAuthService;
+import com.pacific.pacificbe.utils.AuthUtils;
 import com.pacific.pacificbe.utils.enums.OAuthProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import java.util.Base64;
 
 @Slf4j
 @Service
@@ -22,12 +26,27 @@ import org.springframework.stereotype.Service;
 public class FacebookOAuthServiceImpl implements OAuthService {
 
     private final FacebookClient facebookClient;
+    private final AuthUtils authUtils;
     @Value("${oauth2.facebook.clientId}")
     private String facebookClientId;
     @Value("${oauth2.facebook.clientSecret}")
     private String facebookClientSecret;
     @Value("${oauth2.facebook.redirectUri}")
     private String facebookRedirectUri;
+
+    @Override
+    public String getAuthorizationUrl(String redirectTo) {
+        redirectTo = authUtils.getRedirectUrl(redirectTo);
+        String state = Base64.getUrlEncoder().encodeToString(redirectTo.getBytes());
+        return UriComponentsBuilder.fromUriString("https://www.facebook.com/v21.0/dialog/oauth")
+                .queryParam("client_id", facebookClientId)
+                .queryParam("redirect_uri", facebookRedirectUri)
+                .queryParam("response_type", "code")
+                .queryParam("scope", "public_profile,email")
+                .queryParam("state", state)
+                .build()
+                .toUriString();
+    }
 
     @Override
     public OAuthTokenResponse exchangeToken(OAuthTokenRequest request) {

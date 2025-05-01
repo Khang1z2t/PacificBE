@@ -1,4 +1,4 @@
-package com.pacific.pacificbe.services.impl;
+package com.pacific.pacificbe.services.impl.oauth;
 
 import com.pacific.pacificbe.dto.request.oauth2.GoogleTokenRequest;
 import com.pacific.pacificbe.dto.request.oauth2.OAuthTokenRequest;
@@ -9,11 +9,15 @@ import com.pacific.pacificbe.dto.response.oauth2.OAuthUserResponse;
 import com.pacific.pacificbe.integration.google.GoogleClient;
 import com.pacific.pacificbe.integration.google.GoogleUserClient;
 import com.pacific.pacificbe.services.OAuthService;
+import com.pacific.pacificbe.utils.AuthUtils;
 import com.pacific.pacificbe.utils.enums.OAuthProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import java.util.Base64;
 
 @Slf4j
 @Service
@@ -21,6 +25,7 @@ import org.springframework.stereotype.Service;
 public class GoogleOAuthServiceImpl implements OAuthService {
     private final GoogleClient googleClient;
     private final GoogleUserClient googleUserClient;
+    private final AuthUtils authUtils;
     @Value("${oauth2.google.clientId}")
     private String googleClientId;
     @Value("${oauth2.google.clientSecret}")
@@ -30,6 +35,20 @@ public class GoogleOAuthServiceImpl implements OAuthService {
     @Value("${oauth2.google.grantType}")
     private String googleGrantType;
 
+
+    @Override
+    public String getAuthorizationUrl(String redirectTo) {
+        redirectTo = authUtils.getRedirectUrl(redirectTo);
+        String state = Base64.getUrlEncoder().encodeToString(redirectTo.getBytes());
+        return UriComponentsBuilder.fromUriString("https://accounts.google.com/o/oauth2/auth")
+                .queryParam("client_id", googleClientId)
+                .queryParam("redirect_uri", googleRedirectUri)
+                .queryParam("response_type", "code")
+                .queryParam("scope", "openid profile email")
+                .queryParam("state", state) // Thêm state chứa redirectTo
+                .build()
+                .toUriString();
+    }
 
     @Override
     public OAuthTokenResponse exchangeToken(OAuthTokenRequest request) {

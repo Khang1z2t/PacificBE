@@ -218,32 +218,18 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public String getGoogleUrl(String redirectTo) {
-        redirectTo = authUtils.getRedirectUrl(redirectTo);
-        String state = Base64.getUrlEncoder().encodeToString(redirectTo.getBytes());
-        return UriComponentsBuilder.fromUriString("https://accounts.google.com/o/oauth2/auth")
-                .queryParam("client_id", googleClientId)
-                .queryParam("redirect_uri", googleRedirectUri)
-                .queryParam("response_type", "code")
-                .queryParam("scope", "openid profile email")
-                .queryParam("state", state) // Thêm state chứa redirectTo
-                .build()
-                .toUriString();
+    public String getOAuthUrl(String providerType, String redirectTo) {
+        OAuthProvider provider = OAuthProvider.fromString(providerType);
+        return oAuthServices.stream()
+                .filter(service -> service.getProviderType() == provider)
+                .findFirst()
+                .map(service -> {
+                    String redirectUrl = authUtils.getRedirectUrl(redirectTo);
+                    return service.getAuthorizationUrl(redirectUrl);
+                })
+                .orElseThrow(() -> new AppException(ErrorCode.OAUTH_PROVIDER_NOT_FOUND, "Không tìm thấy provider: " + providerType));
     }
 
-    @Override
-    public String getFacebookUrl(String redirectTo) {
-        redirectTo = authUtils.getRedirectUrl(redirectTo);
-        String state = Base64.getUrlEncoder().encodeToString(redirectTo.getBytes());
-        return UriComponentsBuilder.fromUriString("https://www.facebook.com/v21.0/dialog/oauth")
-                .queryParam("client_id", facebookClientId)
-                .queryParam("redirect_uri", facebookRedirectUri)
-                .queryParam("response_type", "code")
-                .queryParam("scope", "public_profile,email")
-                .queryParam("state", state)
-                .build()
-                .toUriString();
-    }
 
     @Override
     public RedirectView loginOAuthCallback(String type, String code, String error, String state) {

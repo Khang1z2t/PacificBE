@@ -6,6 +6,7 @@ import com.pacific.pacificbe.dto.response.oauth2.OAuthUserResponse;
 import com.pacific.pacificbe.utils.enums.OAuthProvider;
 
 public interface OAuthService {
+    String getAuthorizationUrl(String redirectTo);
     OAuthTokenResponse exchangeToken(OAuthTokenRequest request);
     OAuthUserResponse getUserInfo(String accessToken);
     String getClientId();

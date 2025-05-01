@@ -8,7 +8,6 @@ import io.swagger.v3.oas.models.servers.Server;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -19,8 +18,8 @@ public class SwaggerConfig {
     public OpenAPI customizeOpenAPI() {
         final String securitySchemeName = "bearerAuth";
         List<Server> servers = Arrays.asList(
-                new Server().url("http://localhost:8080").description("Local server"),
-                new Server().url("https://khangyuno.id.vn").description("UAT server")
+                new Server().url("https://khangyuno.id.vn").description("UAT server"),
+                new Server().url("http://localhost:8080").description("Local server")
         );
 
         return new OpenAPI()

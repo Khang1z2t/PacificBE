@@ -27,10 +27,7 @@ public class UrlMapping {
     public static final String AUTH = API + "/auth";
     public static final String LOGIN = "/login";
     public static final String REGISTER = "/register";
-    public static final String OAUTH2_GOOGLE = "/oauth2/google";
-    public static final String OAUTH2_GOOGLE_CALLBACK = "/oauth2/google/callback";
-    public static final String OAUTH2_FACEBOOK = "/oauth2/facebook";
-    public static final String OAUTH2_FACEBOOK_CALLBACK = "/oauth2/facebook/callback";
+    public static final String OAUTH2_GOOGLE = "/oauth2/{provider}";
     public static final String OAUTH2_CALLBACK = "/oauth2/callback";
     /*============================ End auth API ===================================*/
 
