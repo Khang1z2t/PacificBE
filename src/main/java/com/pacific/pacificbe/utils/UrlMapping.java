@@ -31,6 +31,7 @@ public class UrlMapping {
     public static final String OAUTH2_GOOGLE_CALLBACK = "/oauth2/google/callback";
     public static final String OAUTH2_FACEBOOK = "/oauth2/facebook";
     public static final String OAUTH2_FACEBOOK_CALLBACK = "/oauth2/facebook/callback";
+    public static final String OAUTH2_CALLBACK = "/oauth2/callback";
     /*============================ End auth API ===================================*/
 
     /*============================ Start Transport API ===================================*/
@@ -238,7 +239,9 @@ public class UrlMapping {
 //    public static final String FE_URL = "http://localhost:3000";
     //    Trong truong hop deploy
     public static final String FE_URL = "https://pacific-vn.vercel.app";
+    public static final String OAUTH2_REDIRECT = "/oauth2/redirect";
     public static final String GOOGLE_REDIRECT = "/google/redirect";
+    public static final String FACEBOOK_REDIRECT = "/facebook/redirect";
     public static final String PAYMENT_FAIL =  "/checkout/fail";
     public static final String PAYMENT_SUCCESS =  "/checkout/success";
     /* =========================== End Other URL ===================================== */

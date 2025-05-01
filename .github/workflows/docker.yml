@@ -50,11 +50,6 @@ jobs:
           docker build -t khang1z2t/pacific-be:latest .
           docker push khang1z2t/pacific-be:latest
 
-      - name: Build and push Docker image
-        run: |
-          docker build -t khang1z2t/pacific-be:latest .
-          docker push khang1z2t/pacific-be:latest
-
   deploy:
     runs-on: ubuntu-latest
     needs: build

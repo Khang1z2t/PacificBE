@@ -11,22 +11,32 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class FacebookTokenResponse {
-    String accessToken;
-    Long expiresIn;
-    String tokenType;
-    ErrorResponse error;
+public class FacebookUserResponse {
+    String id;
+    String name;
+    String email;
+    String firstName;
+    String lastName;
+    Picture picture;
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @FieldDefaults(level = AccessLevel.PRIVATE)
+    public static class Picture {
+        DataResponse data;
+    }
 
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
     @FieldDefaults(level = AccessLevel.PRIVATE)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-    public static class ErrorResponse {
-        String message;
-        String type;
-        int code;
-        int errorSubcode;
-        String fbtraceId;
+    public static class DataResponse {
+        int height;
+        int width;
+        String url;
+        boolean isSilhouette;
     }
+
 }
