@@ -34,15 +34,10 @@ public class AuthController {
     }
 
     @GetMapping(UrlMapping.OAUTH2_GOOGLE)
-    @Operation(summary = "API đăng nhập bằng google")
-    ResponseEntity<ApiResponse<String>> loginGoogle(@RequestParam(required = false) String redirectTo) {
-        return ResponseEntity.ok(new ApiResponse<>(200, "Thành công", authService.getGoogleUrl(redirectTo)));
-    }
-
-    @GetMapping(UrlMapping.OAUTH2_FACEBOOK)
-    @Operation(summary = "API đăng nhập bằng facebook")
-    ResponseEntity<ApiResponse<String>> loginFacebook(@RequestParam(required = false) String redirectTo) {
-        return ResponseEntity.ok(new ApiResponse<>(200, "Thành công", authService.getFacebookUrl(redirectTo)));
+    @Operation(summary = "API lấy url đăng nhập bằng google, facebook (hoặc các dịch vụ khác)")
+    ResponseEntity<ApiResponse<String>> loginGoogle(@PathVariable String provider,
+                                                    @RequestParam(required = false) String redirectTo) {
+        return ResponseEntity.ok(new ApiResponse<>(200, "Thành công", authService.getOAuthUrl(provider, redirectTo)));
     }
 
     @GetMapping(UrlMapping.OAUTH2_CALLBACK)

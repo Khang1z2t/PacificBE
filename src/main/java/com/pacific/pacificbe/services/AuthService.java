@@ -26,9 +26,7 @@ public interface AuthService {
 
     boolean resetPassword(ResetUserPasswordRequest request);
 
-    String getGoogleUrl(String redirectTo);
-
-    String getFacebookUrl(String redirectTo);
+    String getOAuthUrl(String providerType, String redirectTo);
 
     RedirectView loginOAuthCallback(String type, String code, String error, String state);
 
