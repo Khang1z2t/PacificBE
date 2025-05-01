@@ -238,7 +238,8 @@ public class VNPAYServiceImpl implements VNPAYService {
         String bookingNo = parts[1];
         String vnp_TxnRef = parts[2];
         String state = parts[3];
-        String redirectTo = authUtils.getRedirectUrl(state);
+        String stateUrl = new String(Base64.getUrlDecoder().decode(state));
+        String redirectTo = authUtils.getRedirectUrl(stateUrl);
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new AppException(ErrorCode.USER_NOT_FOUND));
 //        tối giản code, hay vì return lỗi ở dưới thì return ở trên
