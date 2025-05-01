@@ -68,8 +68,6 @@ public class AuthServiceImpl implements AuthService {
     private String googleClientSecret;
     @Value("${oauth2.google.redirectUri}")
     private String googleRedirectUri;
-    @Value("${oauth2.google.grantType}")
-    private String googleGrantType;
 
     @Value("${oauth2.facebook.clientId}")
     private String facebookClientId;
@@ -234,69 +232,6 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public RedirectView loginGoogleCallback(String code, String error, String state) {
-        log.debug("Google login callback: code={}, error={}, state={}", code, error, state);
-        String redirectTo = authUtils.getRedirectUrl(state);
-        String redirectBaseUrl = redirectTo + GOOGLE_REDIRECT;
-        log.debug("Redirecting to: {}", redirectBaseUrl);
-        if (error != null) {
-            log.error("Error from google: {}", error);
-            String url = UriComponentsBuilder.fromUriString(redirectBaseUrl)
-                    .queryParam("error", error)
-                    .build()
-                    .toUriString();
-            return new RedirectView(url);
-        }
-        try {
-            log.debug("Exchanging token with Google API...");
-            GoogleTokenResponse response = googleClient.exchangeToken(GoogleTokenRequest.builder()
-                    .clientId(googleClientId)
-                    .clientSecret(googleClientSecret)
-                    .redirectUri(googleRedirectUri)
-                    .grantType(googleGrantType)
-                    .code(code)
-                    .build());
-            log.info("Successfully exchanged token. Access token: {}", response.getAccessToken());
-
-            log.debug("Fetching user info from Google...");
-            GoogleUserResponse userInfo = googleUserClient.getUserInfo("Bearer " + response.getAccessToken());
-            log.info("User info retrieved: email={}", userInfo.getEmail());
-            User user = userRepository.findByEmail(userInfo.getEmail()).orElseGet(
-                    () -> userRepository.save(User.builder()
-                            .email(userInfo.getEmail())
-                            .username(userInfo.getEmail().split("@")[0] + "-google")
-                            .firstName(userInfo.getGivenName())
-                            .lastName(userInfo.getFamilyName())
-                            .avatarUrl(idUtil.getIdAvatar(userInfo.getPicture()))
-                            .status(UserStatus.REQUIRE_USERNAME_PASSWORD_CHANGE.toString())
-                            .password(passwordEncoder.encode(idUtil.generateRandomPassword()))
-                            .role(UserRole.USER.toString())
-                            .emailVerified(true)
-                            .active(true)
-                            .build()));
-
-            Map<String, Object> extraClaims = new HashMap<>();
-            extraClaims.put("scope", "read write trust oauth2 google");
-
-            String accessToken = jwtService.generateToken(extraClaims, user);
-
-            String url = UriComponentsBuilder.fromUriString(redirectBaseUrl)
-                    .queryParam("access_token", accessToken)
-                    .queryParam("refresh_token", accessToken)
-                    .build()
-                    .toUriString();
-            return new RedirectView(url);
-        } catch (Exception e) {
-            log.error("Error during Google login callback: {}", e.getMessage(), e);
-            String url = UriComponentsBuilder.fromUriString(redirectBaseUrl)
-                    .queryParam("error", "server_error")
-                    .build()
-                    .toUriString();
-            return new RedirectView(url);
-        }
-    }
-
-    @Override
     public String getFacebookUrl(String redirectTo) {
         redirectTo = authUtils.getRedirectUrl(redirectTo);
         String state = Base64.getUrlEncoder().encodeToString(redirectTo.getBytes());
@@ -308,68 +243,6 @@ public class AuthServiceImpl implements AuthService {
                 .queryParam("state", state)
                 .build()
                 .toUriString();
-    }
-
-    @Override
-    public RedirectView loginFacebookCallback(String code, String error, String state) {
-        log.debug("Facebook login callback: code={}, error={}, state={}", code, error, state);
-        String redirectTo = authUtils.getRedirectUrl(state);
-        String redirectBaseUrl = redirectTo + FACEBOOK_REDIRECT;
-        log.debug("Redirecting to: {}", redirectBaseUrl);
-        if (error != null) {
-            log.error("Error from facebook: {}", error);
-            String url = UriComponentsBuilder.fromUriString(redirectBaseUrl)
-                    .queryParam("error", error)
-                    .build()
-                    .toUriString();
-            return new RedirectView(url);
-        }
-        try {
-            FacebookTokenResponse response = facebookClient.exchangeToken(FacebookTokenRequest.builder()
-                    .clientId(facebookClientId)
-                    .clientSecret(facebookClientSecret)
-                    .redirectUri(facebookRedirectUri)
-                    .code(code)
-                    .build());
-            log.info("Successfully exchanged token. Access token: {}", response.getAccessToken());
-            log.debug("Fetching user info from Facebook...");
-            FacebookUserResponse userInfo = facebookClient.getUserInfo(response.getAccessToken(),
-                    "id,name,email,first_name,last_name,picture");
-            log.info("User info retrieved: email={}", userInfo.getEmail());
-            User user = userRepository.findByEmail(userInfo.getEmail()).orElseGet(
-                    () -> userRepository.save(User.builder()
-                            .email(userInfo.getEmail())
-                            .username(userInfo.getEmail().split("@")[0] + "-facebook")
-                            .firstName(userInfo.getFirstName())
-                            .lastName(userInfo.getLastName())
-                            .avatarUrl(DEFAULT_AVATAR)
-                            .status(UserStatus.REQUIRE_USERNAME_PASSWORD_CHANGE.toString())
-                            .password(passwordEncoder.encode(idUtil.generateRandomPassword()))
-                            .role(UserRole.USER.toString())
-                            .emailVerified(true)
-                            .active(true)
-                            .build()));
-
-            Map<String, Object> extraClaims = new HashMap<>();
-            extraClaims.put("scope", "read write trust oauth2 facebook");
-
-            String accessToken = jwtService.generateToken(extraClaims, user);
-
-            String url = UriComponentsBuilder.fromUriString(redirectBaseUrl)
-                    .queryParam("access_token", accessToken)
-                    .queryParam("refresh_token", accessToken)
-                    .build()
-                    .toUriString();
-            return new RedirectView(url);
-
-        } catch (Exception e) {
-            log.error("Error during Facebook login callback: {}", e.getMessage(), e);
-            String url = UriComponentsBuilder.fromUriString(redirectBaseUrl)
-                    .queryParam("error", "server_error")
-                    .build()
-                    .toUriString();
-            return new RedirectView(url);
-        }
     }
 
     @Override

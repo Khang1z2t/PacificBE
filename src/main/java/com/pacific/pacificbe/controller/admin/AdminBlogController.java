@@ -23,8 +23,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -151,7 +149,7 @@ public class AdminBlogController {
     }
 
     @PostMapping(UrlMapping.UNSUBSCRIBE_BLOG)
-    @Operation(summary = "Hủy đăng ký nhận thông báo khi có bài viết mới (token đã được mã hóa)")
+    @Operation(summary = "Hủy đăng ký nhận thông báo khi có bài viết mới")
     public ResponseEntity<ApiResponse<Boolean>> unsubscribeBlog(@PathVariable String token) {
         return ResponseEntity.ok(new ApiResponse<>(200,
                 "Hủy đăng ký nhận thông báo thành công", blogService.unsubscribeBlog(token)));

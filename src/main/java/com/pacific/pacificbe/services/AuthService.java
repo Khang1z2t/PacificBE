@@ -28,11 +28,7 @@ public interface AuthService {
 
     String getGoogleUrl(String redirectTo);
 
-    RedirectView loginGoogleCallback(String code, String error, String state);
-
     String getFacebookUrl(String redirectTo);
-
-    RedirectView loginFacebookCallback(String code, String error, String state);
 
     RedirectView loginOAuthCallback(String type, String code, String error, String state);
 
