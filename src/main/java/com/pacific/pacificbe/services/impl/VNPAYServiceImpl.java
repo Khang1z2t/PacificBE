@@ -349,7 +349,7 @@ public class VNPAYServiceImpl implements VNPAYService {
             emailBody = emailBody.replace("{{bookingLink}}", bookingUrl);
             return emailBody;
         } catch (Exception e) {
-            log.warn("Error while getting booking confirm: ", e);
+            log.warn("Error while getting booking confirm: {}", e.getMessage());
             throw new AppException(ErrorCode.CANT_SEND_MAIL);
         }
     }
@@ -390,7 +390,8 @@ public class VNPAYServiceImpl implements VNPAYService {
 
             return emailBody;
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            log.warn("Error while getting booking ticket: {}", e.getMessage());
+            throw new AppException(ErrorCode.CANT_SEND_MAIL);
         }
     }
 }
