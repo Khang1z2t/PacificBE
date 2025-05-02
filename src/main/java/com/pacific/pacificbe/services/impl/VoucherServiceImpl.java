@@ -262,17 +262,20 @@ public class VoucherServiceImpl implements VoucherService {
     public VoucherCodeResponse checkVoucherCode(String codeVoucher, BigDecimal orderValue, String tourId) {
         var isValid = checkVoucher(codeVoucher, orderValue, tourId);
         BigDecimal discountValue = BigDecimal.ZERO;
+        BigDecimal maxDiscountAmount = BigDecimal.ZERO;
         String code = null;
         if (isValid) {
             var voucher = voucherRepository.findByCodeVoucher(codeVoucher)
                     .orElseThrow(() -> new AppException(ErrorCode.VOUCHER_NOT_FOUND));
-            discountValue = voucher.getDiscountValue();
             code = voucher.getCodeVoucher();
+            discountValue = voucher.getDiscountValue();
+            maxDiscountAmount = voucher.getMaxDiscountAmount();
         }
         return VoucherCodeResponse.builder()
                 .isValid(isValid)
                 .voucherCode(code)
                 .discountValue(discountValue)
+                .maxDiscountAmount(maxDiscountAmount)
                 .build();
     }
 

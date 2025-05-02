@@ -30,7 +30,7 @@ public class Voucher extends BaseEntity {
     @Size(max = 255)
     @NotNull
     @Nationalized
-    @Column(name = "code_voucher", nullable = false)
+    @Column(name = "code_voucher", nullable = false, unique = true)
     private String codeVoucher;
 
     @NotNull

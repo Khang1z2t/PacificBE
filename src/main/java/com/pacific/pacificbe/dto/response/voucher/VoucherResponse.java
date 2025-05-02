@@ -15,6 +15,7 @@ public class VoucherResponse {
     private String title;
     private String codeVoucher;
     private BigDecimal discountValue;
+    private BigDecimal maxDiscountAmount;
     private Integer quantity;
     private Integer userLimit;
     private BigDecimal minOrderValue;
