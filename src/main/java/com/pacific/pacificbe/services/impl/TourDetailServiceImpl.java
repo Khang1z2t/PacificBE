@@ -9,6 +9,7 @@ import com.pacific.pacificbe.exception.ErrorCode;
 import com.pacific.pacificbe.mapper.TourMapper;
 import com.pacific.pacificbe.model.*;
 import com.pacific.pacificbe.repository.*;
+import com.pacific.pacificbe.services.CacheService;
 import com.pacific.pacificbe.services.TourDetailService;
 import com.pacific.pacificbe.utils.enums.BookingStatus;
 import com.pacific.pacificbe.utils.enums.TourDetailStatus;
@@ -36,6 +37,7 @@ public class TourDetailServiceImpl implements TourDetailService {
     private final TourMapper tourMapper;
     private final GuideRepository guideRepository;
     private final ReviewRepository reviewRepository;
+    private final CacheService cacheService;
 
     @Override
     @Transactional
@@ -67,6 +69,7 @@ public class TourDetailServiceImpl implements TourDetailService {
         tourDetailRepository.save(tourDetail);
         tour.setStatus(TourStatus.PUBLISHED.toString());
         tourRepository.save(tour);
+        cacheService.evictAllToursCache();
         return tourMapper.toTourDetailResponse(tourDetail);
     }
 
@@ -102,7 +105,7 @@ public class TourDetailServiceImpl implements TourDetailService {
 
         tourDetail.setStatus(TourDetailStatus.OPEN.toString());
         tourDetailRepository.save(tourDetail);
-
+        cacheService.evictAllToursCache();
         return tourMapper.toTourDetailResponse(tourDetail);
     }
 

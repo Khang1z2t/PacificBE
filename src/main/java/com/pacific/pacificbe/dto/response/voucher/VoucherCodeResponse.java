@@ -14,4 +14,5 @@ public class VoucherCodeResponse {
     String voucherCode;
     boolean isValid;
     BigDecimal discountValue;
+    BigDecimal maxDiscountAmount;
 }
