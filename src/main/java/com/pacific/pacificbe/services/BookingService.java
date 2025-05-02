@@ -42,4 +42,8 @@ public interface BookingService {
 
     List<BookingResponse> getAllByStatus(String status);
 
+    LocalDateTime extractDateRequested(String cancellationReason);
+
+    String extractReason(String cancellationReason);
+
 }

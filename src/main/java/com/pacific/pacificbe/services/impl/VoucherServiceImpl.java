@@ -94,6 +94,11 @@ public class VoucherServiceImpl implements VoucherService {
         Voucher voucher = voucherRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.VOUCHER_NOT_FOUND));
         if (bookingRepository.existsByVoucher_Id(voucher.getId())) {
+            log.warn("Voucher id {} đã được sử dụng, không thể bị xóa", voucher.getId());
+            voucher.setStatus(VoucherStatus.INACTIVE.toString());
+            voucher.setActive(false);
+            voucher.setDeleteAt(LocalDateTime.now());
+            voucherRepository.save(voucher);
             return;
         }
         voucherRepository.delete(voucher);

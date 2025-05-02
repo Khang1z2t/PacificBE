@@ -13,27 +13,30 @@ import com.pacific.pacificbe.exception.AppException;
 import com.pacific.pacificbe.exception.ErrorCode;
 import com.pacific.pacificbe.mapper.BookingMapper;
 import com.pacific.pacificbe.model.*;
-import com.pacific.pacificbe.repository.BookingDetailRepository;
-import com.pacific.pacificbe.repository.BookingRepository;
-import com.pacific.pacificbe.repository.TourDetailRepository;
-import com.pacific.pacificbe.repository.UserRepository;
-import com.pacific.pacificbe.repository.VoucherRepository;
+import com.pacific.pacificbe.repository.*;
 import com.pacific.pacificbe.services.BookingService;
+import com.pacific.pacificbe.services.MailService;
 import com.pacific.pacificbe.services.VoucherService;
 import com.pacific.pacificbe.utils.AuthUtils;
+import com.pacific.pacificbe.utils.Constant;
 import com.pacific.pacificbe.utils.IdUtil;
+import com.pacific.pacificbe.utils.UrlMapping;
 import com.pacific.pacificbe.utils.enums.AgeGroup;
 import com.pacific.pacificbe.utils.enums.BookingStatus;
 import com.pacific.pacificbe.utils.enums.GenderEnums;
+import com.pacific.pacificbe.utils.enums.WalletStatus;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.FileCopyUtils;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -56,6 +59,9 @@ public class BookingServiceImpl implements BookingService {
     private final IdUtil idUtil;
     private final BookingDetailRepository bookingDetailRepository;
     private final VoucherService voucherService;
+    private final SystemWalletRepository systemWalletRepository;
+    private final TransactionRepository transactionRepository;
+    private final MailService mailService;
 
     @Override
     public List<Revenue> getMonthlyRevenueReport(String years, String bookingStatus) {
@@ -431,13 +437,45 @@ public class BookingServiceImpl implements BookingService {
                 LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"))
         );
 
-        // Cập nhật notes
-        if (booking.getNotes() != null && !booking.getNotes().isEmpty()) {
-            booking.setNotes(reasonInfo);
-        } else {
-            booking.setNotes(reasonInfo);
+        if (role.equals("Admin")) {
+            if (booking.getStatus().equals(BookingStatus.PAID.toString())) {
+                SystemWallet systemWallet = systemWalletRepository.findById(Constant.SYS_WALLET_ID).orElseThrow();
+                BigDecimal refundAmount = booking.getTotalAmount();
+                systemWallet.setBalance(systemWallet.getBalance().subtract(refundAmount));
+                systemWalletRepository.save(systemWallet);
+
+                Transaction transaction = new Transaction();
+                transaction.setId(idUtil.generateTransactionId(
+                        transactionRepository.findLatestWalletTransactionIdOfToday()));
+                transaction.setAmount(refundAmount);
+                transaction.setWallet(systemWallet);
+                transaction.setDescription(String.format(
+                        "Hoàn tiền %s cho booking %s. Lý do: %s",
+                        refundAmount,
+                        booking.getBookingNo(),
+                        request.getReason() != null ? request.getReason().trim() : "Không có lý do cụ thể"));
+                transaction.setType(WalletStatus.DEPOSIT.toString());
+                transaction.setStatus(WalletStatus.COMPLETED.toString());
+                transaction.setUser(booking.getUser());
+                transactionRepository.save(transaction);
+
+                User bookingUser = booking.getUser();
+                bookingUser.setDeposit(bookingUser.getDeposit().add(refundAmount));
+                userRepository.save(bookingUser);
+
+                mailService.queueEmail(
+                        booking.getUser().getEmail(),
+                        "Hoàn tiền cho booking " + booking.getBookingNo(),
+                        getCancelBooking(booking, request.getReason() != null ? request.getReason().trim() : "Không có lý do cụ thể")
+                );
+                log.info("Thêm email vào hàng chờ thành công cho booking: {}", booking.getBookingNo());
+            }
+
+            booking.setStatus(BookingStatus.CANCELLED.toString());
         }
 
+
+        booking.setNotes(reasonInfo);
         // Set trạng thái
         if (allowOnHold && request.getRefundRequested()) {
             booking.setStatus(BookingStatus.ON_HOLD.toString());
@@ -452,6 +490,63 @@ public class BookingServiceImpl implements BookingService {
         return bookingMapper.toBookingResponse(booking);
     }
 
-//    TEST AI
+    @Override
+    public LocalDateTime extractDateRequested(String cancellationReason) {
+        try {
+            String dateStr = cancellationReason.split("\\|")[2].split(": ")[1]; // Lấy "19/04/2025 15:34:47"
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+            return LocalDateTime.parse(dateStr, formatter);
+        } catch (Exception e) {
+            throw new AppException(ErrorCode.UNCATEGORIZED_EXCEPTION, "Failed to parse DateRequested: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public String extractReason(String cancellationReason) {
+        try {
+            return cancellationReason.split("\\|")[0].split(": ")[1]; // Lấy "test api hoàn mệt voãi ko duyệt t trừ điểm"
+        } catch (Exception e) {
+            return "Không có lý do cụ thể";
+        }
+    }
+
+    private String getCancelBooking(Booking booking, String reason) {
+        try {
+            byte[] bytes = FileCopyUtils.copyToByteArray(
+                    new ClassPathResource("mail/booking_cancel_admin.html").getInputStream());
+            String emailBody = new String(bytes, StandardCharsets.UTF_8);
+
+            emailBody = emailBody.replace("{{homePageUrl}}", UrlMapping.FE_URL);
+            emailBody = emailBody.replace("{{firstName}}", booking.getUser().getFirstName());
+            emailBody = emailBody.replace("{{lastName}}", booking.getUser().getLastName());
+            emailBody = emailBody.replace("{{bookingNo}}", booking.getBookingNo());
+
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            // Formatter cho giờ
+            DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+
+            TourDetail tourDetail = booking.getTourDetail();
+            emailBody = emailBody.replace("{{tourTitle}}", tourDetail.getTour().getTitle());
+            emailBody = emailBody.replace("{{startTime}}", tourDetail.getStartDate().format(timeFormatter));
+            emailBody = emailBody.replace("{{startDate}}", tourDetail.getStartDate().format(dateFormatter));
+            emailBody = emailBody.replace("{{endDate}}", tourDetail.getEndDate().format(dateFormatter));
+            String peopleInfo;
+            int childrenNum = booking.getChildrenNum() != null ? booking.getChildrenNum() : 0;
+            if (childrenNum > 0) {
+                peopleInfo = booking.getTotalNumber() + " (Người lớn: " + booking.getAdultNum() + ", Trẻ em: " + childrenNum + ")";
+            } else {
+                peopleInfo = booking.getTotalNumber() + " (Người lớn: " + booking.getAdultNum() + ")";
+            }
+            emailBody = emailBody.replace("{{peopleInfo}}", peopleInfo);
+
+            emailBody = emailBody.replace("{{cancelReason}}", reason);
+
+            return emailBody;
+        } catch (Exception e) {
+            log.warn("Error while getting booking cancel: {}", e.getMessage());
+            throw new AppException(ErrorCode.CANT_SEND_MAIL);
+        }
+    }
+
 
 }
