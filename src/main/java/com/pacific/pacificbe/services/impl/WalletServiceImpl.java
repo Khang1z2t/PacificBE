@@ -8,6 +8,7 @@ import com.pacific.pacificbe.exception.ErrorCode;
 import com.pacific.pacificbe.mapper.BookingMapper;
 import com.pacific.pacificbe.model.*;
 import com.pacific.pacificbe.repository.*;
+import com.pacific.pacificbe.services.BookingService;
 import com.pacific.pacificbe.services.WalletService;
 import com.pacific.pacificbe.utils.AuthUtils;
 import com.pacific.pacificbe.utils.IdUtil;
@@ -44,6 +45,7 @@ public class WalletServiceImpl implements WalletService {
 
     private final IdUtil idUtil;
     private final BookingMapper bookingMapper;
+    private final BookingService bookingService;
 
 
     @Override
@@ -101,7 +103,7 @@ public class WalletServiceImpl implements WalletService {
             throw new AppException(ErrorCode.UNCATEGORIZED_EXCEPTION, "Missing or invalid cancellation reason");
         }
 
-        LocalDateTime dateRequested = extractDateRequested(cancellationReason);
+        LocalDateTime dateRequested = bookingService.extractDateRequested(cancellationReason);
         TourDetail tourDetail = booking.getTourDetail();
         Transaction paymentTransaction = transactionRepository.findByBookingIdAndType(booking.getId(),
                 WalletStatus.COMPLETED.toString());
@@ -155,7 +157,7 @@ public class WalletServiceImpl implements WalletService {
                     refundPercentage.multiply(BigDecimal.valueOf(100)),
                     refundAmount,
                     booking.getBookingNo(),
-                    extractReason(cancellationReason)));
+                    bookingService.extractReason(cancellationReason)));
             transactionRepository.save(transaction);
 
             booking.setStatus(BookingStatus.CANCELLED.toString());
@@ -360,24 +362,6 @@ public class WalletServiceImpl implements WalletService {
         systemWallet.setUpdatedAt(LocalDateTime.now());
         systemWalletRepository.save(systemWallet);
 
-    }
-
-    private LocalDateTime extractDateRequested(String cancellationReason) {
-        try {
-            String dateStr = cancellationReason.split("\\|")[2].split(": ")[1]; // Lấy "19/04/2025 15:34:47"
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-            return LocalDateTime.parse(dateStr, formatter);
-        } catch (Exception e) {
-            throw new AppException(ErrorCode.UNCATEGORIZED_EXCEPTION, "Failed to parse DateRequested: " + e.getMessage());
-        }
-    }
-
-    private String extractReason(String cancellationReason) {
-        try {
-            return cancellationReason.split("\\|")[0].split(": ")[1]; // Lấy "test api hoàn mệt voãi ko duyệt t trừ điểm"
-        } catch (Exception e) {
-            return "Không có lý do cụ thể";
-        }
     }
 
 }
