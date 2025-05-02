@@ -11,6 +11,8 @@ import jakarta.mail.internet.MimeMessage;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -27,6 +29,10 @@ import java.util.Map;
 public class MailServiceImpl implements MailService, MailSenderInternal {
     JavaMailSender javaMailSender;
     RedisTemplate<Object, Object> redisTemplate;
+
+//    @Value("${spring.mail.form}")
+//    @NonFinal
+//    private String from;
 
     @Override
     public void queueEmail(String to, String subject, String body) {
@@ -50,6 +56,7 @@ public class MailServiceImpl implements MailService, MailSenderInternal {
             helper.setTo(to);
             helper.setSubject(subject);
             helper.setText(body, true); // true = HTML
+//            helper.setFrom(from);
 
             // Gắn ảnh inline nếu có
             if (attachments != null && !attachments.isEmpty()) {
