@@ -16,6 +16,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.FileCopyUtils;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -99,8 +100,9 @@ public class BookingScheduler {
     @Transactional
     protected String getBookingExpiredMail(Booking booking) {
         try {
-            Path path = new ClassPathResource("mail/booking_expired.html").getFile().toPath();
-            String emailBody = Files.readString(path, StandardCharsets.UTF_8);
+            byte[] bytes = FileCopyUtils.copyToByteArray(
+                    new ClassPathResource("mail/booking_expired.html").getInputStream());
+            String emailBody = new String(bytes, StandardCharsets.UTF_8);
 
             // Formatter cho ngày (không có giờ)
             DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");

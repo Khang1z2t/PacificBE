@@ -20,9 +20,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.servlet.view.RedirectView;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URLEncoder;
@@ -312,8 +314,9 @@ public class VNPAYServiceImpl implements VNPAYService {
 
     private String getBookingConfirm(Booking booking) {
         try {
-            Path path = new ClassPathResource("mail/booking_confirm.html").getFile().toPath();
-            String emailBody = Files.readString(path, StandardCharsets.UTF_8);
+            byte[] bytes = FileCopyUtils.copyToByteArray(
+                    new ClassPathResource("mail/booking_confirm.html").getInputStream());
+            String emailBody = new String(bytes, StandardCharsets.UTF_8);
 
             emailBody = emailBody.replace("{{homePageUrl}}", UrlMapping.FE_URL);
             emailBody = emailBody.replace("{{firstName}}", booking.getUser().getFirstName());
@@ -356,8 +359,9 @@ public class VNPAYServiceImpl implements VNPAYService {
 
     private String getBookingTicket(Booking booking) {
         try {
-            Path path = new ClassPathResource("mail/booking_ticket.html").getFile().toPath();
-            String emailBody = Files.readString(path, StandardCharsets.UTF_8);
+            InputStream resource = new ClassPathResource("mail/booking_ticket.html").getInputStream();
+            byte[] bytes = FileCopyUtils.copyToByteArray(resource);
+            String emailBody = new String(bytes, StandardCharsets.UTF_8);
 
             emailBody = emailBody.replace("{{homePageUrl}}", UrlMapping.FE_URL);
             emailBody = emailBody.replace("{{firstName}}", booking.getUser().getFirstName());

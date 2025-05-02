@@ -33,6 +33,11 @@ jobs:
       - name: Build with Maven
         run: mvn clean package -DskipTests
 
+      - name: Verify JAR contents
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          unzip -l target/*.jar | grep 'mail/.*\.html' || echo "No HTML files found in mail/ directory"
+
       - name: Create .env.uat file
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: echo "${{ secrets.ENV_CONTENT }}" > .env.uat
@@ -64,11 +69,8 @@ jobs:
           port: 22
           script: |
             docker stop pacific-be || true
-            
             docker rm pacific-be || true
-            
             docker rmi khang1z2t/pacific-be:latest || true
-            
             docker run -d --name pacific-be --network pacific-network -p 8080:8080 khang1z2t/pacific-be:latest
-            
             docker image prune -f
+            docker logs pacific-be
