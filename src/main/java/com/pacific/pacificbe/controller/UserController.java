@@ -9,6 +9,7 @@ import com.pacific.pacificbe.repository.UserRepository;
 import com.pacific.pacificbe.services.MailService;
 import com.pacific.pacificbe.services.UserService;
 import com.pacific.pacificbe.utils.IdUtil;
+import com.pacific.pacificbe.utils.QrUtil;
 import com.pacific.pacificbe.utils.UrlMapping;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AccessLevel;
@@ -20,7 +21,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(UrlMapping.USERS)
@@ -31,6 +34,7 @@ public class UserController {
     private final MailService mailService;
     private final UserRepository userRepository;
     private final IdUtil idUtil;
+    private final QrUtil qrUtil;
 
 
     @PreAuthorize("hasAuthority('ADMIN')")
@@ -87,5 +91,20 @@ public class UserController {
     @Operation(summary = "API lấy danh sách người dùng đã đặt tour nhiều nhất")
     ResponseEntity<ApiResponse<List<TopBookedUsersResponse>>> getTopBookedUsers(@RequestParam(defaultValue = "10") int limit) {
         return ResponseEntity.ok(new ApiResponse<>(200, "Thành công", userService.getTopBookedUsers(limit)));
+    }
+
+    @PostMapping("/test-send-mail-attachment")
+    @Operation(summary = "API test gửi mail với file đính kèm")
+    public ResponseEntity<ApiResponse<String>> testSendMailWithAttachment(@RequestParam String email,
+                                                                           @RequestParam String subject,
+                                                                           @RequestParam String content) {
+        byte[] qrCodeBytes = qrUtil
+                .generateQRCode("test-123", 200, 200);
+
+        Map<String, byte[]> attachments = new HashMap<>();
+        attachments.put("qrCode.png", qrCodeBytes);
+        mailService.queueEmail(email, subject, "\"<!DOCTYPE html><html><body><h1>Hello</h1><img src=\\\"cid:qrCode.png\\\" /><p>Check the attached file.</p></body></html>",
+                attachments);
+        return ResponseEntity.ok(new ApiResponse<>(200, null, "Mail đã được thêm vào hàng chờ gửi thành công với file đính kèm"));
     }
 }
