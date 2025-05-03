@@ -268,7 +268,9 @@ public class VNPAYServiceImpl implements VNPAYService {
         paymentRepository.save(payment);
         String redirectBaseUrl = isSuccess ? redirectTo + UrlMapping.PAYMENT_SUCCESS :
                 redirectTo + UrlMapping.PAYMENT_FAIL;
-        String url = UriComponentsBuilder.fromUriString(redirectBaseUrl).build().toUriString();
+        String url = UriComponentsBuilder.fromUriString(redirectBaseUrl)
+                .queryParam("orderNo", bookingNo)
+                .build().toUriString();
         if (isSuccess) {
             SystemWallet systemWallet = systemWalletRepository.findById("SYSTEM_WALLET")
                     .orElseThrow(() -> new AppException(ErrorCode.WALLET_NOT_FOUND));
@@ -298,7 +300,7 @@ public class VNPAYServiceImpl implements VNPAYService {
             byte[] qrCodeBytes = qrUtil.generateQRCode(qrCodeData, 200, 200);
 
             Map<String, byte[]> attachments = new HashMap<>();
-            attachments.put("qrCode", qrCodeBytes);
+            attachments.put("qrCode.png", qrCodeBytes);
 
             mailService.queueEmail(user.getEmail(),
                     "Xác nhận thanh toán thành công cho booking: " + booking.getBookingNo(),
@@ -383,7 +385,7 @@ public class VNPAYServiceImpl implements VNPAYService {
                             booking.getTourDetail().getTour().getTitle());
             emailBody = emailBody.replace("{{calendarLink}}", googleCalendarUrl);
 
-            emailBody = emailBody.replace("{{qrCodeUrl}}", "cid:qrCode");
+            emailBody = emailBody.replace("{{qrCodeUrl}}", "cid:qrCode.png");
 
             emailBody = emailBody.replace("{{ticketNumber}}", booking.getBookingNo());
             BigDecimal roundedAmount = booking.getTotalAmount()

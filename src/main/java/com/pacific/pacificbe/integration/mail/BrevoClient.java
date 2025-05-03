@@ -1,7 +1,9 @@
 package com.pacific.pacificbe.integration.mail;
 
 import com.pacific.pacificbe.dto.request.mail.BrevoEmailRequest;
+import feign.Response;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;

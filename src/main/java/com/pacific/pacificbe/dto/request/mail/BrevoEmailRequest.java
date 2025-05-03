@@ -16,7 +16,7 @@ public class BrevoEmailRequest {
     private List<To> to;
     private String subject;
     private String htmlContent;
-    private Map<String, String> attachment;
+    private List<Attachment> attachment;
 
     @Data
     @NoArgsConstructor
@@ -34,5 +34,15 @@ public class BrevoEmailRequest {
     public static class To {
         String email;
         String name;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @FieldDefaults(level = AccessLevel.PRIVATE)
+    public static class Attachment {
+        private String name;
+        private String content; // Base64 encoded content
+        private String url; // Optional URL for inline images
     }
 }
