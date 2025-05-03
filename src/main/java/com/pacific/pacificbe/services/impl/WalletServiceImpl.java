@@ -105,7 +105,7 @@ public class WalletServiceImpl implements WalletService {
 
         LocalDateTime dateRequested = bookingService.extractDateRequested(cancellationReason);
         TourDetail tourDetail = booking.getTourDetail();
-        Transaction paymentTransaction = transactionRepository.findByBookingIdAndType(booking.getId(),
+        Transaction paymentTransaction = transactionRepository.findByBooking_IdAndStatus(booking.getId(),
                 WalletStatus.COMPLETED.toString());
 
         LocalDateTime paymentTime = paymentTransaction.getCreatedAt();

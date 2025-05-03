@@ -25,4 +25,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, String
 
     @Query("select t from Transaction t where t.user.id = ?1")
     List<Transaction> findByUser_Id(String id);
+
+    @Query("select t from Transaction t where t.booking.id = ?1 and t.status = ?2")
+    Transaction findByBooking_IdAndStatus(String id, String status);
 }

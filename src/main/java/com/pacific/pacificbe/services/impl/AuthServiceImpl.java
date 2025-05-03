@@ -38,6 +38,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.view.RedirectView;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -123,6 +124,8 @@ public class AuthServiceImpl implements AuthService {
         user.setRole(UserRole.USER.toString());
         user.setAvatarUrl(DEFAULT_AVATAR);
         user.setStatus(UserStatus.ACTIVE.toString());
+        user.setDeposit(BigDecimal.ZERO);
+
         user = userRepository.save(user);
 
         Map<String, Object> extraClaims = new HashMap<>();
@@ -277,6 +280,7 @@ public class AuthServiceImpl implements AuthService {
                             .status(UserStatus.REQUIRE_USERNAME_PASSWORD_CHANGE.toString())
                             .password(passwordEncoder.encode(idUtil.generateRandomPassword()))
                             .role(UserRole.USER.toString())
+                            .deposit(BigDecimal.ZERO)
                             .emailVerified(true)
                             .active(true)
                             .build()));
