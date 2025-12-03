@@ -237,7 +237,7 @@ public class UrlMapping {
     //    Trong truong hop deploy
     public static final String FE_URL = "https://pacific-vn.vercel.app";
     public static final String OAUTH2_REDIRECT = "/oauth2/redirect";
-    public static final String GOOGLE_REDIRECT = "/google/redirect";
+    public static final String OAUTH2 = "/oauth2/";
     public static final String FACEBOOK_REDIRECT = "/facebook/redirect";
     public static final String PAYMENT_FAIL =  "/checkout/fail";
     public static final String PAYMENT_SUCCESS =  "/checkout/success";

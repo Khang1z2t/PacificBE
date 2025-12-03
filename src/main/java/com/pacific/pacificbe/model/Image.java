@@ -23,6 +23,11 @@ public class Image extends BaseEntity {
     @Nationalized
     @Column(name = "description")
     private String description;
+    
+    @Size(max = 100)
+    @Nationalized
+    @Column(name = "folder", length = 100)
+    private String folder;
 
     @Size(max = 500)
     @NotNull

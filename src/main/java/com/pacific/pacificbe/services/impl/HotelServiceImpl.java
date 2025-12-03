@@ -9,6 +9,7 @@ import com.pacific.pacificbe.model.Hotel;
 import com.pacific.pacificbe.repository.HotelRepository;
 import com.pacific.pacificbe.services.GoogleDriveService;
 import com.pacific.pacificbe.services.HotelService;
+import com.pacific.pacificbe.services.SupabaseService;
 import com.pacific.pacificbe.utils.enums.FolderType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,7 @@ public class HotelServiceImpl implements HotelService {
     private final HotelRepository hotelRepository;
     private final HotelMapper hotelMapper;
     private final GoogleDriveService googleDriveService;
+    private final SupabaseService supabaseService;
 
     @Override
     public List<HotelResponse> getAllHotels() {
@@ -89,7 +91,7 @@ public class HotelServiceImpl implements HotelService {
             throw new AppException(ErrorCode.INVALID_IMAGE);
         }
         try {
-            return googleDriveService.uploadImageToDrive(file, FolderType.HOTEL);
+            return supabaseService.uploadImage(file, FolderType.HOTEL, true);
         } catch (Exception e) {
             throw new AppException(ErrorCode.UPLOAD_IMAGE_FAILED);
         }

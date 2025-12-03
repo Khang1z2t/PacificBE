@@ -14,7 +14,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class ImageUploadJob implements Serializable {
     private String tourId;
-    private byte[] fileBytes;
+    private String filePath;
     private String originalFileName;
     private int retryCount;
 

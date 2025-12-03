@@ -8,6 +8,7 @@ import com.pacific.pacificbe.mapper.TransportMapper;
 import com.pacific.pacificbe.model.Transport;
 import com.pacific.pacificbe.repository.TransportRepository;
 import com.pacific.pacificbe.services.GoogleDriveService;
+import com.pacific.pacificbe.services.SupabaseService;
 import com.pacific.pacificbe.services.TransportService;
 import com.pacific.pacificbe.utils.enums.FolderType;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,7 @@ public class TransportServiceImpl implements TransportService {
     private final TransportRepository transportRepository;
     private final TransportMapper transportMapper;
     private final GoogleDriveService googleDriveService;
+    private final SupabaseService supabaseService;
 
     @Override
     public List<TransportResponse> getAllTransports() {
@@ -59,7 +61,7 @@ public class TransportServiceImpl implements TransportService {
         transport.setTypeTransport(request.getTypeTransport());
 
         if (image != null && !image.isEmpty()) {
-            String imageUrl = googleDriveService.uploadImageToDrive(image, FolderType.TRANSPORT);
+            String imageUrl = supabaseService.uploadImage(image, FolderType.TRANSPORT, true);
             transport.setImageURL(imageUrl);
         }
         transportRepository.save(transport);
@@ -107,7 +109,7 @@ public class TransportServiceImpl implements TransportService {
         if (file == null || file.isEmpty()) {
             return null;
         }
-        return googleDriveService.uploadImageToDrive(file, FolderType.TRANSPORT);
+        return supabaseService.uploadImage(file, FolderType.TRANSPORT, true);
     }
 
     private Transport buildTransportFromRequest(TransportRequest request, String imageUrl) {

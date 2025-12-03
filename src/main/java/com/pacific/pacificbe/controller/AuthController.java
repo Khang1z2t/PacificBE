@@ -45,8 +45,8 @@ public class AuthController {
     RedirectView loginCallback(@RequestParam(required = false) String type,
                                @RequestParam(required = false) String code,
                                @RequestParam(required = false) String error,
-                               @RequestParam(required = false) String state) {
-        return authService.loginOAuthCallback(type, code, error, state);
+                               @RequestParam(required = false) String redirectUrl) {
+        return authService.loginOAuthCallback(type, code, error, redirectUrl);
     }
 
 

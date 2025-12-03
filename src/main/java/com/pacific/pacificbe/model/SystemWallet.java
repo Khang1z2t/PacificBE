@@ -28,12 +28,12 @@ public class SystemWallet {
     private BigDecimal balance;
 
     @NotNull
-    @ColumnDefault("getdate()")
+    @ColumnDefault("now()")
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
     @NotNull
-    @ColumnDefault("getdate()")
+    @ColumnDefault("now()")
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 

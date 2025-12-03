@@ -38,14 +38,14 @@ public class GoogleOAuthServiceImpl implements OAuthService {
 
     @Override
     public String getAuthorizationUrl(String redirectTo) {
-        redirectTo = authUtils.getRedirectUrl(redirectTo);
-        String state = Base64.getUrlEncoder().encodeToString(redirectTo.getBytes());
+//        redirectTo = authUtils.getRedirectUrl(redirectTo);
+//        String state = Base64.getUrlEncoder().encodeToString(redirectTo.getBytes());
         return UriComponentsBuilder.fromUriString("https://accounts.google.com/o/oauth2/auth")
                 .queryParam("client_id", googleClientId)
-                .queryParam("redirect_uri", googleRedirectUri)
+                .queryParam("redirect_uri", redirectTo)
                 .queryParam("response_type", "code")
                 .queryParam("scope", "openid profile email")
-                .queryParam("state", state) // Thêm state chứa redirectTo
+//                .queryParam("state", state) // Thêm state chứa redirectTo
                 .build()
                 .toUriString();
     }
@@ -55,7 +55,7 @@ public class GoogleOAuthServiceImpl implements OAuthService {
         GoogleTokenResponse response = googleClient.exchangeToken(GoogleTokenRequest.builder()
                 .clientId(googleClientId)
                 .clientSecret(googleClientSecret)
-                .redirectUri(googleRedirectUri)
+                .redirectUri(request.getRedirectUri() != null ? request.getRedirectUri() : googleRedirectUri)
                 .grantType(googleGrantType)
                 .code(request.getCode())
                 .build());
