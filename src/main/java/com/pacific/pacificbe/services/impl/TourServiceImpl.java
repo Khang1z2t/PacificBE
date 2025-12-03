@@ -2,6 +2,7 @@ package com.pacific.pacificbe.services.impl;
 
 import com.pacific.pacificbe.dto.ImageUploadJob;
 import com.pacific.pacificbe.services.CacheService;
+import com.pacific.pacificbe.services.SupabaseService;
 import com.pacific.pacificbe.utils.Constant;
 import com.pacific.pacificbe.dto.request.CreateTourRequest;
 import com.pacific.pacificbe.dto.request.UpdateTourRequest;
@@ -29,9 +30,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -46,6 +50,7 @@ public class TourServiceImpl implements TourService {
     private final TourDetailRepository tourDetailRepository;
     private final RedisTemplate<Object, Object> redisTemplate;
     private final CacheService cacheService;
+    private final SupabaseService supabaseService;
 
     @Cacheable(value = "allTours", key = "#title + '-' + #minPrice + '-' + #maxPrice + '-' + #categoryId + '-' + #startDate + '-' + #endDate+ '-' + #region")
     @Override
@@ -82,7 +87,7 @@ public class TourServiceImpl implements TourService {
             tour.setDestination(destination);
         }
         if (thumbnail != null) {
-            String thumbnailUrl = googleDriveService.uploadImageToDrive(thumbnail, FolderType.TOUR);
+            String thumbnailUrl = supabaseService.uploadImage(thumbnail, FolderType.TOUR, true);
             tour.setThumbnailUrl(thumbnailUrl);
         }
         tour = tourRepository.save(tour);
@@ -99,7 +104,7 @@ public class TourServiceImpl implements TourService {
     public TourResponse addTourThumbnail(String id, MultipartFile thumbnail) {
         Tour tour = tourRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.TOUR_NOT_FOUND));
-        String thumbnailUrl = googleDriveService.uploadImageToDrive(thumbnail, FolderType.TOUR);
+        String thumbnailUrl = supabaseService.uploadImage(thumbnail, FolderType.TOUR, true);
         tour.setThumbnailUrl(thumbnailUrl);
         tourRepository.save(tour); // Thêm save để cập nhật DB
         return tourMapper.toTourResponse(tour);
@@ -134,7 +139,7 @@ public class TourServiceImpl implements TourService {
         tour.setDestination(destination);
 
         if (thumbnail != null) {
-            String thumbnailUrl = googleDriveService.uploadImageToDrive(thumbnail, FolderType.TOUR);
+            String thumbnailUrl = supabaseService.uploadImage(thumbnail, FolderType.TOUR, true);
             tour.setThumbnailUrl(thumbnailUrl);
         }
 
@@ -188,15 +193,31 @@ public class TourServiceImpl implements TourService {
 
     public void queueImagesForUpload(MultipartFile[] images, String tourId) {
         try {
+            String tempDir = System.getProperty("java.io.tmpdir"); // Lấy thư mục tạm của hệ điều hành
+
             for (MultipartFile image : images) {
+                // 1. Tạo file tạm trên ổ cứng (Disk)
+                // Tên file: uuid_tên-gốc.jpg
+                String tempFileName = UUID.randomUUID() + "_" + image.getOriginalFilename();
+                File serverFile = new File(tempDir + File.separator + tempFileName);
+
+                // 2. Ghi dữ liệu xuống đĩa (Không tốn RAM, không tốn Redis)
+                image.transferTo(serverFile);
+
+                // 3. Tạo Job (Chỉ chứa đường dẫn file - String nhẹ hều)
                 ImageUploadJob job = new ImageUploadJob();
                 job.setTourId(tourId);
-                job.setFileBytes(image.getBytes());
+                job.setFilePath(serverFile.getAbsolutePath()); // <-- Quan trọng: Lưu đường dẫn
                 job.setOriginalFileName(image.getOriginalFilename());
+
+                // 4. Đẩy vào Redis (Job này chỉ nặng vài trăm bytes)
                 redisTemplate.opsForList().leftPush(Constant.IMAGE_QUEUE, job);
             }
+        } catch (IOException e) {
+            log.error("Lỗi ghi file tạm: {}", e.getMessage());
+            throw new RuntimeException("Không thể xử lý ảnh đầu vào");
         } catch (Exception e) {
-            log.error("Lỗi upload ảnh lên google drive: {}", e.getMessage());
+            log.error("Lỗi đẩy job vào Redis: {}", e.getMessage());
         }
     }
 

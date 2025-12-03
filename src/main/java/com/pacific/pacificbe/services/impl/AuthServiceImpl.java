@@ -228,23 +228,22 @@ public class AuthServiceImpl implements AuthService {
                 .findFirst()
                 .map(service -> {
                     String redirectUrl = authUtils.getRedirectUrl(redirectTo);
-                    return service.getAuthorizationUrl(redirectUrl);
+                    return service.getAuthorizationUrl(redirectUrl + OAUTH2 + providerType);
                 })
                 .orElseThrow(() -> new AppException(ErrorCode.OAUTH_PROVIDER_NOT_FOUND, "Không tìm thấy provider: " + providerType));
     }
 
 
     @Override
-    public RedirectView loginOAuthCallback(String type, String code, String error, String state) {
-        log.debug("OAuth login callback: type={}, code={}, error={}, state={}", type, code, error, state);
+    public RedirectView loginOAuthCallback(String type, String code, String error, String redirectUrl) {
+        log.debug("OAuth login callback: type={}, code={}, error={}, state={}", type, code, error, redirectUrl);
         OAuthProvider provider = OAuthProvider.fromString(type);
         OAuthService oauthService = oAuthServices.stream()
                 .filter(service -> service.getProviderType() == provider)
                 .findFirst()
                 .orElseThrow(() -> new AppException(ErrorCode.OAUTH_PROVIDER_NOT_FOUND));
 
-        String stateUrl = new String(Base64.getUrlDecoder().decode(state));
-        String redirectTo = authUtils.getRedirectUrl(stateUrl);
+        String redirectTo = authUtils.getRedirectUrl(redirectUrl);
         String redirectBaseUrl = redirectTo + OAUTH2_REDIRECT;
         log.debug("Redirecting to: {}", redirectBaseUrl);
         if (error != null) {
@@ -260,7 +259,7 @@ public class AuthServiceImpl implements AuthService {
             OAuthTokenResponse response = oauthService.exchangeToken(OAuthTokenRequest.builder()
                     .clientId(oauthService.getClientId())
                     .clientSecret(oauthService.getClientSecret())
-                    .redirectUri(oauthService.getRedirectUri())
+                    .redirectUri(redirectTo + OAUTH2 + type)
                     .grantType(oauthService.getGrantType())
                     .code(code)
                     .build());

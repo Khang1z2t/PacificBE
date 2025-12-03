@@ -10,6 +10,7 @@ import com.pacific.pacificbe.mapper.UserMapper;
 import com.pacific.pacificbe.model.User;
 import com.pacific.pacificbe.repository.UserRepository;
 import com.pacific.pacificbe.services.GoogleDriveService;
+import com.pacific.pacificbe.services.SupabaseService;
 import com.pacific.pacificbe.services.UserService;
 import com.pacific.pacificbe.utils.AuthUtils;
 import com.pacific.pacificbe.utils.enums.FolderType;
@@ -35,6 +36,7 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final UserRepository userRepository;
     private final GoogleDriveService googleDriveService;
+    private final SupabaseService supabaseService;
 
     @Override
     public List<UserResponse> getAllUsers() {
@@ -116,7 +118,7 @@ public class UserServiceImpl implements UserService {
         user.setGender(request.getGender());
         user.setBirthday(request.getBirthday());
         if (avatar != null && !avatar.isEmpty()) {
-            user.setAvatarUrl(googleDriveService.uploadImageToDrive(avatar, FolderType.AVATAR));
+            user.setAvatarUrl(supabaseService.uploadImage(avatar, FolderType.AVATAR, true));
         }
         userRepository.save(user);
         return userMapper.toUserResponse(user);

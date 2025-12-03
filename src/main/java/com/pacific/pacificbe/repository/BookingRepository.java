@@ -107,7 +107,7 @@ public interface BookingRepository extends JpaRepository<Booking, String> {
             @Param("username") String username
     );
 
-    @Query(value = "SELECT TOP 1 b.booking_no FROM booking b WHERE b.booking_no LIKE CONCAT('B', FORMAT(GETDATE(), 'ddMMyy'), '%') ORDER BY CAST(SUBSTRING(b.booking_no, 13, 4) AS INTEGER) DESC", nativeQuery = true)
+    @Query(value = "SELECT TOP 1 b.booking_no FROM booking b WHERE b.booking_no LIKE CONCAT('B', FORMAT(NOW(), 'ddMMyy'), '%') ORDER BY CAST(SUBSTRING(b.booking_no, 13, 4) AS INTEGER) DESC", nativeQuery = true)
     String findLatestBookingNoOfToday();
 
     long countByUserIdAndVoucherId(String userId, String voucherId);
@@ -222,7 +222,7 @@ public interface BookingRepository extends JpaRepository<Booking, String> {
     @Query(value = """
             SELECT SUM(b.total_amount)
             FROM booking b
-            WHERE YEAR(b.created_at) = YEAR(GETDATE())
+            WHERE YEAR(b.created_at) = YEAR(NOW())
                 AND b.status = 'COMPLETED'
             """, nativeQuery = true)
     BigDecimal getTotalRevenueThisYear();
@@ -231,7 +231,7 @@ public interface BookingRepository extends JpaRepository<Booking, String> {
     @Query(value = """
             SELECT SUM(b.total_amount)
             FROM booking b
-            WHERE YEAR(b.created_at) = YEAR(GETDATE()) - 1
+            WHERE YEAR(b.created_at) = YEAR(NOW()) - 1
                 AND b.status = 'COMPLETED'
             """, nativeQuery = true)
     BigDecimal getTotalRevenueLastYear();
@@ -242,7 +242,7 @@ public interface BookingRepository extends JpaRepository<Booking, String> {
                 MONTH(b.created_at) AS month,
                 SUM(b.total_amount) AS revenue
             FROM booking b
-            WHERE YEAR(b.created_at) = YEAR(GETDATE())
+            WHERE YEAR(b.created_at) = YEAR(NOW())
                 AND b.status = 'COMPLETED'
             GROUP BY MONTH(b.created_at)
             ORDER BY MONTH(b.created_at)

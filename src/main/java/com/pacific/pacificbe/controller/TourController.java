@@ -12,6 +12,7 @@ import com.pacific.pacificbe.dto.response.tour.TourResponse;
 import com.pacific.pacificbe.dto.response.showTour.TourDateResponse;
 import com.pacific.pacificbe.model.Tour;
 import com.pacific.pacificbe.services.GoogleDriveService;
+import com.pacific.pacificbe.services.SupabaseService;
 import com.pacific.pacificbe.services.TourService;
 import com.pacific.pacificbe.utils.UrlMapping;
 import com.pacific.pacificbe.utils.enums.FolderType;
@@ -34,6 +35,7 @@ public class TourController {
 
     TourService tourService;
     GoogleDriveService googleDriveService;
+    private final SupabaseService supabaseService;
 
     @GetMapping(UrlMapping.GET_ALL_TOURS)
     @Operation(summary = "Lấy danh sách tour")
@@ -113,7 +115,7 @@ public class TourController {
     @PostMapping(value = "/test-img", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> testImg(@RequestParam("file") MultipartFile file) {
 //        https://drive.google.com/file/d/1GTrRDjzn82Kei0vsBQ7FGLN14iRlt5-m/view?usp=drivesdk
-        return ResponseEntity.ok(googleDriveService.uploadImageToDrive(file, FolderType.TOUR));
+        return ResponseEntity.ok(supabaseService.uploadImage(file, FolderType.TOUR, true));
     }
 
     @PostMapping(UrlMapping.GET_TOUR_BY_IDS)

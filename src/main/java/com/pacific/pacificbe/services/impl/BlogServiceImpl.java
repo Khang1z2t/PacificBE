@@ -13,6 +13,7 @@ import com.pacific.pacificbe.model.*;
 import com.pacific.pacificbe.repository.*;
 import com.pacific.pacificbe.services.BlogService;
 import com.pacific.pacificbe.services.GoogleDriveService;
+import com.pacific.pacificbe.services.SupabaseService;
 import com.pacific.pacificbe.utils.AuthUtils;
 import com.pacific.pacificbe.utils.HtmlSanitizerUtil;
 import com.pacific.pacificbe.utils.IdUtil;
@@ -60,6 +61,7 @@ public class BlogServiceImpl implements BlogService {
     private final GoogleDriveService googleDriveService;
     private final RedisTemplate<String, String> redisTemplate;
     private final SubscriberRepository subscriberRepository;
+    private final SupabaseService supabaseService;
 
     @Override
     @Transactional
@@ -249,7 +251,7 @@ public class BlogServiceImpl implements BlogService {
                     );
 
                     String imageId = idUtil.getIdImage(
-                            googleDriveService.uploadImageToDrive(multipartFile, FolderType.RESOURCES));
+                            supabaseService.uploadImage(multipartFile, FolderType.RESOURCES));
 
                     String srcAttr = "${config.imageConfig.getImage(" + imageId + ")}";
                     img.attr("src", srcAttr);
@@ -289,7 +291,7 @@ public class BlogServiceImpl implements BlogService {
 
     private BlogResponse getBlogResponse(BlogRequest request, MultipartFile thumbnail, Blog blog) {
         if (thumbnail != null && !thumbnail.isEmpty()) {
-            String thumbnailUrl = googleDriveService.uploadImageToDrive(thumbnail, FolderType.RESOURCES);
+            String thumbnailUrl = supabaseService.uploadImage(thumbnail, FolderType.RESOURCES, true);
             blog.setThumbnailUrl(thumbnailUrl);
         }
         BlogCategory category = null;

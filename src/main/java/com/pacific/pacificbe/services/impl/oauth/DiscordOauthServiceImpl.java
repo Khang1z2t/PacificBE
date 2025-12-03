@@ -38,14 +38,14 @@ public class DiscordOauthServiceImpl implements OAuthService {
 
     @Override
     public String getAuthorizationUrl(String redirectTo) {
-        redirectTo = authUtils.getRedirectUrl(redirectTo);
-        String state = Base64.getUrlEncoder().encodeToString(redirectTo.getBytes());
+//        redirectTo = authUtils.getRedirectUrl(redirectTo);
+//        String state = Base64.getUrlEncoder().encodeToString(redirectTo.getBytes());
         return UriComponentsBuilder.fromUriString("https://discord.com/api/oauth2/authorize")
                 .queryParam("client_id", discordClientId)
-                .queryParam("redirect_uri", discordRedirectUri)
+                .queryParam("redirect_uri", redirectTo)
                 .queryParam("response_type", "code")
                 .queryParam("scope", "identify email")
-                .queryParam("state", state)
+//                .queryParam("state", state)
                 .build()
                 .toUriString();
     }
@@ -58,7 +58,7 @@ public class DiscordOauthServiceImpl implements OAuthService {
         MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
         formData.add("grant_type", "authorization_code");
         formData.add("code", request.getCode());
-        formData.add("redirect_uri", discordRedirectUri);
+        formData.add("redirect_uri", request.getRedirectUri() != null ? request.getRedirectUri() : discordRedirectUri);
 
         DiscordTokenResponse response = discordClient.exchangeToken(
                 authorization,

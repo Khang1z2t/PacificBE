@@ -28,7 +28,7 @@ public interface TourRepository extends JpaRepository<Tour, String> {
 //              AND (:startDate IS NULL OR td.start_date >= :startDate)
 //              AND (:endDate IS NULL OR td.end_date <= :endDate)
 //              AND (:categoryId IS NULL OR t.category_id = :categoryId)
-//              AND t.active = 1
+//              AND t.active = true
 //            ORDER BY td.price_adults DESC
 //            """, nativeQuery = true)
     @Query(value = """
@@ -37,7 +37,7 @@ public interface TourRepository extends JpaRepository<Tour, String> {
             LEFT JOIN (
                 SELECT tour_id, MIN(price_adults) AS min_price, MAX(price_adults) AS max_price
                 FROM tour_details
-                WHERE active = 1
+                WHERE active = true
                   AND (:startDate IS NULL OR :endDate IS NULL OR start_date BETWEEN :startDate AND :endDate)
                 GROUP BY tour_id
             ) price_summary ON price_summary.tour_id = t.id
@@ -47,7 +47,7 @@ public interface TourRepository extends JpaRepository<Tour, String> {
               AND (:minPrice IS NULL OR price_summary.min_price >= :minPrice OR price_summary.min_price IS NULL)
               AND (:maxPrice IS NULL OR price_summary.max_price <= :maxPrice OR price_summary.max_price IS NULL)
               AND (:region IS NULL OR LOWER(TRIM(d.region)) LIKE CONCAT('%', LOWER(TRIM(:region)), '%'))
-              AND t.active = 1
+              AND t.active = true
             """, nativeQuery = true)
     List<Tour> findAllWithFilters(
             @Param("title") String title,
@@ -82,7 +82,7 @@ public interface TourRepository extends JpaRepository<Tour, String> {
 
     Optional<Tour> findByTourDetails_Id(String id);
 
-    @Query(value = "SELECT * FROM tour t WHERE t.active = 1 AND t.status = :status", nativeQuery = true)
+    @Query(value = "SELECT * FROM tour t WHERE t.active = true AND t.status = :status", nativeQuery = true)
     List<Tour> findAllTour(@Param("status") String status);
 
 
