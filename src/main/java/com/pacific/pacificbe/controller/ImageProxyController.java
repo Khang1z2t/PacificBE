@@ -4,14 +4,19 @@ import com.pacific.pacificbe.integration.google.GoogleImageClient;
 import com.pacific.pacificbe.services.ImageService;
 import com.pacific.pacificbe.utils.UrlMapping;
 import io.github.resilience4j.retry.annotation.Retry;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.net.URI;
 
 @Slf4j
 @RestController
@@ -20,15 +25,11 @@ public class ImageProxyController {
     private final ImageService imageService;
 
     @GetMapping(UrlMapping.PROXY_IMAGE)
-    @Retry(name = "imageRetry")
-    public ResponseEntity<byte[]> proxyImage(@PathVariable String fileId) {
+    public ResponseEntity<Void> proxyImage(@RequestParam("id") String id) {
         try {
-            var imageData = imageService.getImage(fileId);
+            String finalUrl = imageService.getImage(id);
 //            var mediaType = imageService.getImageMediaType(fileId);
-            return ResponseEntity.ok()
-                    .contentType(MediaType.IMAGE_JPEG)
-                    .header("Cache-Control", "max-age=86400")
-                    .body(imageData);
+            return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(finalUrl)).build();
 
         } catch (Exception e) {
             if (e.getMessage().contains("Too Many Requests") || (e.getCause() != null && e.getCause().getMessage().contains("429"))) {
