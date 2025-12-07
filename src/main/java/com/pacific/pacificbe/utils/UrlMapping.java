@@ -313,7 +313,7 @@ public class UrlMapping {
 
 
     /* =========================== Proxy image API ===================================== */
-    public static final String PROXY_IMAGE = API + "/image/{fileId}";
+    public static final String PROXY_IMAGE = API + "/image";
     /* =========================== Proxy image API ===================================== */
 
 

@@ -83,6 +83,10 @@ public class HotelServiceImpl implements HotelService {
     public void deleteHotel(String id) {
         Hotel hotel = hotelRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.HOTEL_NOT_FOUND));
+        String hotelImage = hotel.getImageURL();
+        if (hotelImage != null && !hotelImage.isEmpty()) {
+            supabaseService.deleteImage(hotelImage);
+        }
         hotelRepository.delete(hotel);
     }
 

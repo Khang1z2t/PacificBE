@@ -75,6 +75,11 @@ public class TransportServiceImpl implements TransportService {
 
         transport.setDeleteAt(LocalDateTime.now());
         transport.setActive(false);
+        String imageUrl = transport.getImageURL();
+        if (imageUrl != null && !imageUrl.isEmpty()) {
+            supabaseService.deleteImage(imageUrl);
+            transport.setImageURL(null);
+        }
         transportRepository.save(transport);
         return true;
     }

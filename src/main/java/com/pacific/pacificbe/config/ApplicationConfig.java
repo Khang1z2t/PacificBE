@@ -10,7 +10,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.info.BuildProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.TaskScheduler;
@@ -68,12 +70,19 @@ public class ApplicationConfig {
     }
 
     @Bean
-    CommandLineRunner runner(TourRepository tourRepository) {
+    CommandLineRunner runner(@Autowired(required = false) BuildProperties buildProperties) {
         return args -> {
-            log.info("App đã được chạy với bản build mới nhất: {}", System.getProperty("user.dir"));
-            // Code khởi tạo dữ liệu hoặc thực hiện các tác vụ khác khi ứng dụng khởi động
+            log.info("App đã khởi động!");
 
-//            System.out.println(tourRepository.findAllWithFilters(null, null, null, null, null, null));
+            if (buildProperties != null) {
+                // Khi chạy trên Docker/Render (đã build)
+                log.info("Version: {}", buildProperties.getVersion());
+                log.info("Build Time: {}", buildProperties.getTime());
+            } else {
+                // Khi chạy Local (chưa build)
+                log.info("Build Info: Đang chạy Local (Development Mode)");
+            }
+
         };
     }
 
