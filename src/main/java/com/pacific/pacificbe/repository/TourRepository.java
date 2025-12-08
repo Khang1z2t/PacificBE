@@ -14,23 +14,10 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-
 @Repository
 public interface TourRepository extends JpaRepository<Tour, String> {
 
-    //    @Query(value = """
-//            SELECT t.*
-//            FROM tour t
-//            JOIN tour_details td ON t.id = td.tour_id
-//            WHERE (:title IS NULL OR TRIM(LOWER(t.title)) LIKE CONCAT('%', TRIM(LOWER(:title)), '%'))
-//              AND (:minPrice IS NULL OR td.price_adults >= :minPrice)
-//              AND (:maxPrice IS NULL OR td.price_adults <= :maxPrice)
-//              AND (:startDate IS NULL OR td.start_date >= :startDate)
-//              AND (:endDate IS NULL OR td.end_date <= :endDate)
-//              AND (:categoryId IS NULL OR t.category_id = :categoryId)
-//              AND t.active = true
-//            ORDER BY td.price_adults DESC
-//            """, nativeQuery = true)
+    // --- ĐÃ SỬA LỖI 42P18 (CAST PARAMETER) ---
     @Query(value = """
             SELECT DISTINCT t.*
             FROM tour t
@@ -38,15 +25,25 @@ public interface TourRepository extends JpaRepository<Tour, String> {
                 SELECT tour_id, MIN(price_adults) AS min_price, MAX(price_adults) AS max_price
                 FROM tour_details
                 WHERE active = true
-                  AND (:startDate IS NULL OR :endDate IS NULL OR start_date BETWEEN :startDate AND :endDate)
+                  -- Ép kiểu TIMESTAMP (vì input là LocalDateTime)
+                  AND (CAST(:startDate AS TIMESTAMP) IS NULL OR CAST(:endDate AS TIMESTAMP) IS NULL OR start_date BETWEEN :startDate AND :endDate)
                 GROUP BY tour_id
             ) price_summary ON price_summary.tour_id = t.id
             LEFT JOIN destination d ON d.id = t.destination_id
-            WHERE (:title IS NULL OR LOWER(TRIM(t.title)) LIKE CONCAT('%', LOWER(TRIM(:title)), '%'))
-              AND (:categoryId IS NULL OR t.category_id = :categoryId)
-              AND (:minPrice IS NULL OR price_summary.min_price >= :minPrice OR price_summary.min_price IS NULL)
-              AND (:maxPrice IS NULL OR price_summary.max_price <= :maxPrice OR price_summary.max_price IS NULL)
-              AND (:region IS NULL OR LOWER(TRIM(d.region)) LIKE CONCAT('%', LOWER(TRIM(:region)), '%'))
+            WHERE 
+              -- Ép kiểu TEXT cho chuỗi
+              (CAST(:title AS TEXT) IS NULL OR LOWER(TRIM(t.title)) LIKE CONCAT('%', LOWER(TRIM(:title)), '%'))
+            
+              -- Ép kiểu TEXT cho ID
+              AND (CAST(:categoryId AS TEXT) IS NULL OR t.category_id = :categoryId)
+            
+              -- Ép kiểu NUMERIC cho số tiền (BigDecimal)
+              AND (CAST(:minPrice AS NUMERIC) IS NULL OR price_summary.min_price >= :minPrice OR price_summary.min_price IS NULL)
+              AND (CAST(:maxPrice AS NUMERIC) IS NULL OR price_summary.max_price <= :maxPrice OR price_summary.max_price IS NULL)
+            
+              -- Ép kiểu TEXT cho Region
+              AND (CAST(:region AS TEXT) IS NULL OR LOWER(TRIM(d.region)) LIKE CONCAT('%', LOWER(TRIM(:region)), '%'))
+            
               AND t.active = true
             """, nativeQuery = true)
     List<Tour> findAllWithFilters(
@@ -60,6 +57,7 @@ public interface TourRepository extends JpaRepository<Tour, String> {
 
     List<Tour> findToursByActiveIsTrue();
 
+    // --- CŨNG CẦN SỬA LỖI Ở ĐÂY ---
     @Query(value = """
             SELECT
                 COUNT(t.id) AS bookingCount,
@@ -74,7 +72,7 @@ public interface TourRepository extends JpaRepository<Tour, String> {
                 JOIN tour_details td ON t.id = td.tour_id
                 JOIN booking b ON td.id = b.tour_detail_id
                 JOIN users us ON us.id = b.user_id
-            WHERE :tourId IS NULL OR t.id = :tourId
+            WHERE (CAST(:tourId AS TEXT) IS NULL OR t.id = :tourId) -- Thêm CAST
             GROUP BY td.id, t.id, t.title, td.start_date, td.end_date, b.total_amount, b.booking_no
             ORDER BY t.id ASC
             """, nativeQuery = true)
@@ -93,5 +91,4 @@ public interface TourRepository extends JpaRepository<Tour, String> {
 
     @Query("select t from Tour t left join t.tourDetails tourDetails where tourDetails.id in ?1")
     List<Tour> findByTourDetails_IdIn(Collection<String> ids);
-
 }

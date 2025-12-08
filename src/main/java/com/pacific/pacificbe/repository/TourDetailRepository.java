@@ -26,6 +26,7 @@ public interface TourDetailRepository extends JpaRepository<TourDetail, String> 
 
     void deleteByTourId(String tourId);
 
+    // --- SỬA LẠI NATIVE QUERY CHO CHUẨN POSTGRESQL ---
     //Tìm tháng tour theo id tour
     @Query(value = """
             SELECT
@@ -34,7 +35,7 @@ public interface TourDetailRepository extends JpaRepository<TourDetail, String> 
                     STRING_AGG(status, ',') AS status
                 FROM (
                     SELECT DISTINCT
-                        FORMAT(td.start_date, 'yyyy-MM') AS createdMonth,
+                        TO_CHAR(td.start_date, 'YYYY-MM') AS createdMonth, -- Sửa FORMAT thành TO_CHAR
                         td.tour_id,
                         td.status
                     FROM tour_details td
@@ -44,41 +45,44 @@ public interface TourDetailRepository extends JpaRepository<TourDetail, String> 
                 ) AS distinct_statuses
                 GROUP BY createdMonth, tour_id
             """, nativeQuery = true)
-    List<DetailTourResponse> getTourDetailMonth(
-            String tourId
-    );
+    List<DetailTourResponse> getTourDetailMonth(@Param("tourId") String tourId);
 
     //Tìm ngày tour theo id tour
     @Query(value = """
             SELECT
-                FORMAT(td.start_date, 'dd') AS createdDay,
+                TO_CHAR(td.start_date, 'DD') AS createdDay, -- Sửa FORMAT thành TO_CHAR
                 td.id,
                 td.status
             FROM tour_details td
             WHERE td.tour_id = :tourId
-            AND FORMAT(td.start_date, 'yyyy-MM') = :months
+            AND TO_CHAR(td.start_date, 'YYYY-MM') = :months -- Sửa FORMAT thành TO_CHAR
             """, nativeQuery = true)
     List<DetailTourResponse> getTourDetailDay(
-            String tourId,
-            String months
+            @Param("tourId") String tourId,
+            @Param("months") String months
     );
 
-    // Đếm tổng số tour_details (có thể lọc theo thời gian)
+    // --- SỬA LỖI 42P18 Ở ĐÂY (Dùng CAST) ---
+
+    // Đếm tổng số tour_details
+    // PostgreSQL cần biết :startDate là kiểu date nếu nó bị null
     @Query("SELECT COUNT(td) FROM TourDetail td WHERE " +
-            "(:startDate IS NULL OR td.startDate >= :startDate) AND " +
-            "(:endDate IS NULL OR td.endDate <= :endDate)")
+            "(CAST(:startDate AS date) IS NULL OR td.startDate >= :startDate) AND " +
+            "(CAST(:endDate AS date) IS NULL OR td.endDate <= :endDate)")
     long countTourDetails(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
 
     // Đếm số lượng tour_details theo khoảng rating_avg
     @Query("SELECT COUNT(td) FROM TourDetail td WHERE " +
             "td.ratingAvg >= :minRating AND td.ratingAvg <= :maxRating AND " +
-            "(:startDate IS NULL OR td.startDate >= :startDate) AND " +
-            "(:endDate IS NULL OR td.endDate <= :endDate)")
+            "(CAST(:startDate AS date) IS NULL OR td.startDate >= :startDate) AND " +
+            "(CAST(:endDate AS date) IS NULL OR td.endDate <= :endDate)")
     long countByRatingRange(
             @Param("minRating") float minRating,
             @Param("maxRating") float maxRating,
             @Param("startDate") LocalDate startDate,
             @Param("endDate") LocalDate endDate);
+
+    // --- CÁC QUERY DƯỚI GIỮ NGUYÊN ---
 
     @Query("SELECT td FROM TourDetail td WHERE " +
             "(td.status = 'OPEN' AND td.startDate < :now) OR " +
@@ -118,7 +122,6 @@ public interface TourDetailRepository extends JpaRepository<TourDetail, String> 
     @Query("select t from TourDetail t where t.status = ?1 and t.endDate < ?2")
     List<TourDetail> findByStatusAndEndDateBefore(String status, LocalDateTime endDate);
 
-    //    TEST AI
     List<TourDetail> findByTourIdAndActiveTrue(String tourId);
 
     List<TourDetail> findByPriceAdultsLessThanEqual(BigDecimal price);

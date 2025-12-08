@@ -13,6 +13,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.info.BuildProperties;
+import org.springframework.boot.info.GitProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.TaskScheduler;
@@ -70,19 +71,35 @@ public class ApplicationConfig {
     }
 
     @Bean
-    CommandLineRunner runner(@Autowired(required = false) BuildProperties buildProperties) {
+    CommandLineRunner runner(
+            @Autowired(required = false) BuildProperties buildProperties,
+            @Autowired(required = false) GitProperties gitProperties
+    ) {
         return args -> {
-            log.info("App đã khởi động!");
+            log.info("---------------------------------------------");
 
-            if (buildProperties != null) {
-                // Khi chạy trên Docker/Render (đã build)
-                log.info("Version: {}", buildProperties.getVersion());
-                log.info("Build Time: {}", buildProperties.getTime());
+            // 1. Lấy Base Version từ pom.xml (nếu không có thì default)
+            String version = (buildProperties != null) ? buildProperties.getVersion() : "0.0.1";
+
+            // 2. Xử lý hiển thị
+            if (gitProperties != null) {
+                // --- TRƯỜNG HỢP: PRODUCTION / DOCKER / RENDER ---
+                // Đã build qua maven nên có git info
+                String commitId = gitProperties.getShortCommitId();
+                String branch = gitProperties.getBranch();
+
+                log.info("🚀 App Mode: PRODUCTION / BUILD");
+                log.info("📦 Version:  {} (Commit: {})", version, commitId);
+                log.info("🌿 Branch:   {}", branch);
+                log.info("Build Time: {}", (buildProperties != null ? buildProperties.getTime() : "N/A"));
             } else {
-                // Khi chạy Local (chưa build)
-                log.info("Build Info: Đang chạy Local (Development Mode)");
+                // --- TRƯỜNG HỢP: LOCAL (IDE) ---
+                // Chưa chạy maven build nên chưa có file git.properties
+                log.info("💻 App Mode: LOCAL DEVELOPMENT");
+                log.info("🔧 Version:  {}.dev", version);
             }
 
+            log.info("---------------------------------------------");
         };
     }
 
