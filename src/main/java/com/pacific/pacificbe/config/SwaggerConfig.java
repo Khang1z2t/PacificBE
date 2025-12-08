@@ -18,7 +18,7 @@ public class SwaggerConfig {
     public OpenAPI customizeOpenAPI() {
         final String securitySchemeName = "bearerAuth";
         List<Server> servers = Arrays.asList(
-                new Server().url("https://khangyuno.id.vn").description("UAT server"),
+                new Server().url("https://pacific-be.onrender.com").description("UAT server"),
                 new Server().url("http://localhost:8080").description("Local server")
         );
 
