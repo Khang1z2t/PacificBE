@@ -107,7 +107,13 @@ public interface BookingRepository extends JpaRepository<Booking, String> {
             @Param("username") String username
     );
 
-    @Query(value = "SELECT TOP 1 b.booking_no FROM booking b WHERE b.booking_no LIKE CONCAT('B', FORMAT(NOW(), 'ddMMyy'), '%') ORDER BY CAST(SUBSTRING(b.booking_no, 13, 4) AS INTEGER) DESC", nativeQuery = true)
+    @Query(value = """
+    SELECT b.booking_no 
+    FROM booking b 
+    WHERE b.booking_no LIKE CONCAT('B', TO_CHAR(NOW(), 'DDMMYY'), '%') 
+    ORDER BY CAST(SUBSTRING(b.booking_no, 13, 4) AS INTEGER) DESC 
+    LIMIT 1
+    """, nativeQuery = true)
     String findLatestBookingNoOfToday();
 
     long countByUserIdAndVoucherId(String userId, String voucherId);
