@@ -21,16 +21,14 @@ public class Itinerary extends BaseEntity {
     private String id;
 
     @Nationalized
-    @Lob
-    @Column(name = "day_detail")
+    @Column(name = "day_detail", columnDefinition = "TEXT")
     private String dayDetail;
 
     @Column(name = "day_number")
     private Integer dayNumber;
 
     @Nationalized
-    @Lob
-    @Column(name = "notes")
+    @Column(name = "notes", columnDefinition = "TEXT")
     private String notes;
 
     @Size(max = 255)

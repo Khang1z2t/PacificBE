@@ -42,8 +42,7 @@ public class Support extends BaseEntity {
 
     @NotNull
     @Nationalized
-    @Lob
-    @Column(name = "message", nullable = false)
+    @Column(name = "message", nullable = false, columnDefinition = "TEXT")
     private String message;
 
     @Size(max = 50)
@@ -57,8 +56,7 @@ public class Support extends BaseEntity {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
-    @Lob
     @Nationalized
-    @Column(name = "response_message")
+    @Column(name = "response_message", columnDefinition = "TEXT")
     private String responseMessage;
 }
