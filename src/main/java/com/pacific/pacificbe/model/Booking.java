@@ -65,8 +65,7 @@ public class Booking extends BaseEntity {
     private String specialRequests;
 
     @Nationalized
-    @Lob
-    @Column(name = "notes")
+    @Column(name = "notes", columnDefinition = "TEXT")
     private String notes;
 
     @Column(name = "total_amount", precision = 10, scale = 2)

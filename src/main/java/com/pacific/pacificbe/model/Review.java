@@ -25,8 +25,7 @@ public class Review extends BaseEntity {
     private String id;
 
     @Nationalized
-    @Lob
-    @Column(name = "comment")
+    @Column(name = "comment", columnDefinition = "TEXT")
     private String comment;
 
     @Column(name = "rating", precision = 3, scale = 1)

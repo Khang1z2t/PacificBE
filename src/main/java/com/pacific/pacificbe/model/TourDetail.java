@@ -38,8 +38,7 @@ public class TourDetail extends BaseEntity {
     private String id;
 
     @Nationalized
-    @Lob
-    @Column(name = "descriptions")
+    @Column(name = "descriptions", columnDefinition = "TEXT")
     private String descriptions;
 
     @NotNull
