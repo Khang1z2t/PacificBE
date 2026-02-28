@@ -98,4 +98,10 @@ public class AuthController {
         return ResponseEntity.ok(authService.updateUsername(username));
     }
 
+    @GetMapping(UrlMapping.PING_SERVER)
+    @Operation(summary = "API kiểm tra server còn hoạt động hay không")
+    ResponseEntity<ApiResponse<Long>> pingServer() {
+        return ResponseEntity.ok(new ApiResponse<>(200, "Server is running", System.currentTimeMillis()));
+    }
+
 }
