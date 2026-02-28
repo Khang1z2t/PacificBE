@@ -13,6 +13,7 @@ public class UrlMapping {
     public static final String UPDATE_USERNAME = "/update-username";
     public static final String CHANGE_PASSWORD = "/change-password";
     public static final String UPDATE_PROFILE = "/update-profile";
+    public static final String PING_SERVER = "/ping";
 
     public static final String AI_QUERY = API + "/ai-query";
 
